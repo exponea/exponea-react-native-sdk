@@ -40,3 +40,7 @@ local.properties
 buck-out/
 \.buckd/
 *.keystore
+
+# Package files generated from typescript
+/lib
+/example/js
