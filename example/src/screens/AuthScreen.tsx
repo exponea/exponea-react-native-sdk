@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Image, Dimensions} from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
 import ExponeaInput from '../components/ExponeaInput';
+import logo from '../img/logo.png';
 
 interface AuthScreenProps {
   onStart: (
@@ -29,7 +30,7 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
           },
         ]}
         resizeMode={'contain'}
-        source={require('../img/logo.png')}
+        source={logo}
       />
       <ExponeaInput
         value={projectToken}

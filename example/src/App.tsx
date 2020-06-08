@@ -1,7 +1,8 @@
+import 'react-native-gesture-handler'; // This needs to be first import according to docs
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
 import AuthScreen from './screens/AuthScreen';
-import TrackingScreen from './screens/TrackingScreen';
+import TabNavigation from './screens/TabNavigation';
 
 interface AppState {
   authenticated: boolean;
@@ -14,13 +15,13 @@ export default class App extends React.Component<{}, AppState> {
 
   render(): React.ReactNode {
     return (
-      <View style={styles.container}>
+      <NavigationContainer>
         {this.state.authenticated ? (
-          <TrackingScreen />
+          <TabNavigation />
         ) : (
           <AuthScreen onStart={this.onStart.bind(this)} />
         )}
-      </View>
+      </NavigationContainer>
     );
   }
 
@@ -31,11 +32,3 @@ export default class App extends React.Component<{}, AppState> {
     this.setState({authenticated: true});
   }
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#eee',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
