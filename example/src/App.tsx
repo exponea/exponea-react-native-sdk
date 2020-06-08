@@ -8,24 +8,31 @@
  * https://github.com/facebook/react-native
  */
 
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import React, {Component, ReactNode} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 
-export default class App extends Component<{}> {
+interface AppState {
+  status: string;
+  message: string;
+}
+
+export default class App extends Component<null, AppState> {
   state = {
     status: 'starting',
-    message: '--'
+    message: '--',
   };
-  componentDidMount() {
-    Exponea.sampleMethod('Testing', 123, (message) => {
+
+  componentDidMount(): void {
+    Exponea.sampleMethod('Testing', 123, (message: string) => {
       this.setState({
         status: 'native callback received',
-        message
+        message,
       });
     });
   }
-  render() {
+
+  render(): ReactNode {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>☆Exponea example☆</Text>

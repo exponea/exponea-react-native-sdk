@@ -1,4 +1,11 @@
 module.exports = {
   root: true,
-  extends: '@react-native-community',
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+  extends: [
+    '@react-native-community',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
+  ignorePatterns: ['metro.config.js'],
 };
