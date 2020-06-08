@@ -8,4 +8,14 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
   ],
   ignorePatterns: ['metro.config.js'],
+  rules: {
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        types: {
+          '{}': false,
+        },
+      },
+    ],
+  },
 };
