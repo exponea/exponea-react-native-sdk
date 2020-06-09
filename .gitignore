@@ -44,3 +44,6 @@ buck-out/
 # Package files generated from typescript
 /lib
 /example/js
+
+# Pods
+/ios/Pods
