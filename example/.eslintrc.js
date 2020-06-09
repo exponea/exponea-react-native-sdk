@@ -7,7 +7,7 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
   ],
-  ignorePatterns: ['metro.config.js'],
+  ignorePatterns: ['metro.config.js', 'js'],
   rules: {
     '@typescript-eslint/ban-types': [
       'error',
