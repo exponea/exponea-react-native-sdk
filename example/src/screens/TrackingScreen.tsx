@@ -14,12 +14,24 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
   };
 
   componentDidMount(): void {
-    Exponea.sampleMethod('Testing', 123, (message: string) => {
-      this.setState({
-        status: 'native callback received',
-        message,
-      });
-    });
+    interface SampleSDK {
+      sampleMethod(
+        stringArgument: string,
+        numberArgument: number,
+        callback: (value: string) => void,
+      ): void;
+    }
+    // The native SDK is not yet implemented, for now we'll just call sample method to make sure the bridge is working
+    ((Exponea as unknown) as SampleSDK).sampleMethod(
+      'Testing',
+      123,
+      (message: string) => {
+        this.setState({
+          status: 'native callback received',
+          message,
+        });
+      },
+    );
   }
 
   render(): React.ReactNode {
