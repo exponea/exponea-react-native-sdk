@@ -54,6 +54,10 @@ apply plugin: 'kotlin-android'
 
 if (project == rootProject) {
     apply plugin: "org.jlleitschuh.gradle.ktlint"
+    ktlint {
+        verbose = true
+        android = true
+    }
 }
 
 android {
@@ -90,6 +94,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation "org.robolectric:robolectric:4.2"
 }
 
 def configureReactNativePom(def pom) {

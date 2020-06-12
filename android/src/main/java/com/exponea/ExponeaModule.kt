@@ -10,8 +10,8 @@ class ExponeaModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
         return "Exponea"
     }
 
-    @ReactMethod
-    fun sampleMethod(stringArgument: String, numberArgument: Int, callback: Callback) { // TODO: Implement some actually useful functionality
+    @ReactMethod // TODO: Implement some actually useful functionality
+    fun sampleMethod(stringArgument: String, numberArgument: Int, callback: Callback) {
         callback.invoke("Kotlin received numberArgument: $numberArgument stringArgument: $stringArgument")
     }
 }
