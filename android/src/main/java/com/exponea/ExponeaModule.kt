@@ -1,8 +1,10 @@
 package com.exponea
 
 import com.exponea.sdk.Exponea
+import com.exponea.sdk.models.CustomerIds
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
+import com.exponea.sdk.models.PropertiesList
 import com.exponea.sdk.util.Logger
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -101,5 +103,67 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         } catch (e: Exception) {
             promise.reject(e)
         }
+    }
+
+    @ReactMethod
+    fun identifyCustomer(
+        customerIdsMap: ReadableMap,
+        propertiesMap: ReadableMap,
+        promise: Promise
+    ) = requireInitialized(promise) {
+        val customerIds = CustomerIds()
+        customerIdsMap.toHashMap().forEach { if (it.value is String) customerIds.withId(it.key, it.value as String) }
+        val properties = PropertiesList(
+            propertiesMap.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
+        )
+        Exponea.identifyCustomer(customerIds, properties)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun flushData(promise: Promise) = requireInitialized(promise) {
+        Exponea.flushData { promise.resolve(null) }
+    }
+
+    @ReactMethod
+    fun trackEvent(
+        eventName: String,
+        params: ReadableMap,
+        timestamp: ReadableMap,
+        promise: Promise
+    ) = requireInitialized(promise) {
+        try {
+            val propertiesList = PropertiesList(
+                params.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
+            )
+            var unwrappedTimestamp: Double? = null
+            if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
+                unwrappedTimestamp = timestamp.getDouble("timestamp")
+            }
+            Exponea.trackEvent(propertiesList, unwrappedTimestamp, eventName)
+            promise.resolve(null)
+        } catch (e: Exception) {
+            promise.reject(e)
+        }
+    }
+
+    @ReactMethod
+    fun trackSessionStart(timestamp: ReadableMap, promise: Promise) = requireInitialized(promise) {
+        if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
+            Exponea.trackSessionStart(timestamp.getDouble("timestamp"))
+        } else {
+            Exponea.trackSessionStart()
+        }
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackSessionEnd(timestamp: ReadableMap, promise: Promise) = requireInitialized(promise) {
+        if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
+            Exponea.trackSessionEnd(timestamp.getDouble("timestamp"))
+        } else {
+            Exponea.trackSessionEnd()
+        }
+        promise.resolve(null)
     }
 }
