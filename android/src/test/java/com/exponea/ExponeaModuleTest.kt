@@ -3,6 +3,8 @@ package com.exponea
 import androidx.test.core.app.ApplicationProvider
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.ExponeaConfiguration
+import com.exponea.sdk.models.FlushMode
+import com.exponea.sdk.util.Logger
 import com.facebook.react.bridge.JavaOnlyMap
 import com.facebook.react.bridge.ReactApplicationContext
 import io.mockk.every
@@ -72,5 +74,41 @@ internal class ExponeaModuleTest {
         module.getCustomerCookie(
             MockResolvingPromise { assertEquals("mock-customer-cookie", it.result) }
         )
+    }
+
+    @Test
+    fun `should enable push self-check`() {
+        // TODO not available until Android SDK is updated in EXRN-32
+        // module.checkPushSetup(MockResolvingPromise { assertTrue(Exponea.checkPushSetup) })
+    }
+
+    @Test
+    fun `should get flush mode`() {
+        module.getFlushMode(MockResolvingPromise { assertEquals(Exponea.flushMode.name, it.result) })
+    }
+
+    @Test
+    fun `should set flush mode`() {
+        module.setFlushMode("PERIOD", MockResolvingPromise { assertEquals(FlushMode.PERIOD, Exponea.flushMode) })
+    }
+
+    @Test
+    fun `should get flush period`() {
+        module.getFlushPeriod(MockResolvingPromise { assertEquals(Exponea.flushPeriod.amount.toDouble(), it.result) })
+    }
+
+    @Test
+    fun `should set flush period`() {
+        module.setFlushPeriod(123.0, MockResolvingPromise { assertEquals(123, Exponea.flushPeriod.amount) })
+    }
+
+    @Test
+    fun `should get logger level`() {
+        module.getLogLevel(MockResolvingPromise { assertEquals(Exponea.loggerLevel.name, it.result) })
+    }
+
+    @Test
+    fun `should set logger level`() {
+        module.setLogLevel("OFF", MockResolvingPromise { assertEquals(Logger.Level.OFF, Exponea.loggerLevel) })
     }
 }
