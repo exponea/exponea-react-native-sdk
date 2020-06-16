@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Platform} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 
 interface AppState {
@@ -14,24 +14,37 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
   };
 
   componentDidMount(): void {
-    interface SampleSDK {
-      sampleMethod(
-        stringArgument: string,
-        numberArgument: number,
-        callback: (value: string) => void,
-      ): void;
+    if (Platform.OS === 'android') {
+      Exponea.getCustomerCookie()
+        .then((cookie) =>
+          this.setState({status: 'customer cookie received', message: cookie}),
+        )
+        .catch((error) =>
+          this.setState({
+            status: 'failed to get customer cookie',
+            message: (error as Error).message,
+          }),
+        );
+    } else {
+      interface SampleSDK {
+        sampleMethod(
+          stringArgument: string,
+          numberArgument: number,
+          callback: (value: string) => void,
+        ): void;
+      }
+      // The iOS native SDK is not yet implemented, for now we'll just call sample method to make sure the bridge is working
+      ((Exponea as unknown) as SampleSDK).sampleMethod(
+        'Testing',
+        123,
+        (message: string) => {
+          this.setState({
+            status: 'native callback received',
+            message,
+          });
+        },
+      );
     }
-    // The native SDK is not yet implemented, for now we'll just call sample method to make sure the bridge is working
-    ((Exponea as unknown) as SampleSDK).sampleMethod(
-      'Testing',
-      123,
-      (message: string) => {
-        this.setState({
-          status: 'native callback received',
-          message,
-        });
-      },
-    );
   }
 
   render(): React.ReactNode {

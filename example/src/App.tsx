@@ -3,17 +3,33 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AuthScreen from './screens/AuthScreen';
 import TabNavigation from './screens/TabNavigation';
+import {Platform, Alert} from 'react-native';
+import Exponea from '../../lib';
+import PreloadingScreen from './screens/PreloadingScreen';
 
 interface AppState {
+  preloaded: boolean;
   sdkConfigured: boolean;
 }
 
 export default class App extends React.Component<{}, AppState> {
   state = {
+    preloaded: Platform.OS !== 'android',
     sdkConfigured: false,
   };
 
+  componentDidMount(): void {
+    if (Platform.OS === 'android') {
+      Exponea.isConfigured().then((configured) => {
+        this.setState({preloaded: true, sdkConfigured: configured});
+      });
+    }
+  }
+
   render(): React.ReactNode {
+    if (!this.state.preloaded) {
+      return <PreloadingScreen />;
+    }
     return (
       <NavigationContainer>
         {this.state.sdkConfigured ? (
@@ -29,6 +45,20 @@ export default class App extends React.Component<{}, AppState> {
     console.log(
       `We should initialize Exponea SDK here with ${projectToken}, ${authorization} and ${baseUrl}`,
     );
-    this.setState({sdkConfigured: true});
+    if (Platform.OS === 'android') {
+      Exponea.configure({
+        projectToken: projectToken,
+        authorizationToken: authorization,
+        baseUrl: baseUrl,
+      })
+        .then(() => {
+          this.setState({sdkConfigured: true});
+        })
+        .catch((error) =>
+          Alert.alert('Error configuring Exponea SDK', error.message),
+        );
+    } else {
+      this.setState({sdkConfigured: true});
+    }
   }
 }
