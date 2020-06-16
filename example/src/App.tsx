@@ -5,18 +5,18 @@ import AuthScreen from './screens/AuthScreen';
 import TabNavigation from './screens/TabNavigation';
 
 interface AppState {
-  authenticated: boolean;
+  sdkConfigured: boolean;
 }
 
 export default class App extends React.Component<{}, AppState> {
   state = {
-    authenticated: false,
+    sdkConfigured: false,
   };
 
   render(): React.ReactNode {
     return (
       <NavigationContainer>
-        {this.state.authenticated ? (
+        {this.state.sdkConfigured ? (
           <TabNavigation />
         ) : (
           <AuthScreen onStart={this.onStart.bind(this)} />
@@ -25,10 +25,10 @@ export default class App extends React.Component<{}, AppState> {
     );
   }
 
-  onStart(projectToken: string, authentication: string, baseUrl: string): void {
+  onStart(projectToken: string, authorization: string, baseUrl: string): void {
     console.log(
-      `We should initialize Exponea SDK here with ${projectToken}, ${authentication} and ${baseUrl}`,
+      `We should initialize Exponea SDK here with ${projectToken}, ${authorization} and ${baseUrl}`,
     );
-    this.setState({authenticated: true});
+    this.setState({sdkConfigured: true});
   }
 }

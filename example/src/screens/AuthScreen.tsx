@@ -7,17 +7,17 @@ import logo from '../img/logo.png';
 interface AuthScreenProps {
   onStart: (
     projectToken: string,
-    authentication: string,
+    authorization: string,
     baseUrl: string,
   ) => void;
 }
 
 export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
   const [projectToken, setProjectToken] = React.useState('');
-  const [authentication, setAuthentication] = React.useState('');
-  const [baseUrl, setBaseUrl] = React.useState('');
+  const [authorization, setAuthorization] = React.useState('');
+  const [baseUrl, setBaseUrl] = React.useState('https://api.exponea.com');
   const buttonDisabled =
-    projectToken === '' || authentication === '' || baseUrl === '';
+    projectToken === '' || authorization === '' || baseUrl === '';
   return (
     <View style={styles.container}>
       <Image
@@ -38,20 +38,20 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
         placeholder="Project token"
       />
       <ExponeaInput
-        value={authentication}
-        placeholder="Authentication"
-        onChangeText={(text) => setAuthentication(text)}
+        value={authorization}
+        placeholder="Authorization token"
+        onChangeText={(text) => setAuthorization(text)}
       />
       <ExponeaInput
         value={baseUrl}
-        placeholder="Base url"
+        placeholder="Base URL"
         onChangeText={(text) => setBaseUrl(text)}
       />
       <ExponeaButton
         disabled={buttonDisabled}
         title="Start"
         onPress={() => {
-          props.onStart(projectToken, authentication, baseUrl);
+          props.onStart(projectToken, authorization, baseUrl);
         }}
       />
     </View>
