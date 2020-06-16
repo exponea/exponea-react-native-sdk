@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 interface ExponeaButtonProps {
+  compact?: boolean;
   disabled?: boolean;
   title: string;
   onPress: () => void;
@@ -16,6 +17,7 @@ export default function ExponeaButton(
       style={[
         styles.container,
         props.disabled ? styles.disabledContainer : null,
+        props.compact ? styles.compactContainer : null,
       ]}
       onPress={props.onPress}>
       <Text
@@ -35,6 +37,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  compactContainer: {
+    height: 30,
+    margin: 5,
+    padding: 10,
   },
   disabledContainer: {
     backgroundColor: '#ffd50080',

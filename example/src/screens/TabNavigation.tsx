@@ -3,7 +3,7 @@ import {
   createBottomTabNavigator,
   BottomTabNavigationOptions,
 } from '@react-navigation/bottom-tabs';
-import {StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image, Platform} from 'react-native';
 import TrackingScreen from './TrackingScreen';
 import FetchingScreen from './FetchingScreen';
 import FlushingScreen from './FlushingScreen';
@@ -12,6 +12,7 @@ import trackIcon from '../img/track.png';
 import fetchIcon from '../img/fetch.png';
 import flushIcon from '../img/flush.png';
 import logIcon from '../img/log.png';
+import CallbackScreen from './CallbackScreen';
 
 enum Screen {
   Tracking = 'Tracking',
@@ -28,7 +29,8 @@ export default function TabNavigation(): React.ReactElement {
       <Tab.Screen
         options={getTabBarOptions(Screen.Tracking)}
         name={Screen.Tracking}
-        component={TrackingScreen}
+        // The iOS native SDK is not yet implemented, for now we'll just call sample method to make sure the bridge is working
+        component={Platform.OS === 'ios' ? CallbackScreen : TrackingScreen}
       />
       <Tab.Screen
         options={getTabBarOptions(Screen.Fetching)}

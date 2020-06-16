@@ -1,59 +1,60 @@
 import React from 'react';
-import {StyleSheet, Text, View, Platform} from 'react-native';
+import {StyleSheet, Text, View, Alert} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
+import ExponeaButton from '../components/ExponeaButton';
+import IdentifyCustomerModal from '../components/IdentifyCustomerModal';
+import TrackEventModal from '../components/TrackEventModal';
 
 interface AppState {
-  status: string;
-  message: string;
+  customerCookie: string;
+  identifyingCustomer: boolean;
+  trackingEvent: boolean;
 }
 
 export default class TrackingScreen extends React.Component<{}, AppState> {
   state = {
-    status: 'starting',
-    message: '--',
+    customerCookie: '?',
+    identifyingCustomer: false,
+    trackingEvent: false,
   };
 
   componentDidMount(): void {
-    if (Platform.OS === 'android') {
-      Exponea.getCustomerCookie()
-        .then((cookie) =>
-          this.setState({status: 'customer cookie received', message: cookie}),
-        )
-        .catch((error) =>
-          this.setState({
-            status: 'failed to get customer cookie',
-            message: (error as Error).message,
-          }),
-        );
-    } else {
-      interface SampleSDK {
-        sampleMethod(
-          stringArgument: string,
-          numberArgument: number,
-          callback: (value: string) => void,
-        ): void;
-      }
-      // The iOS native SDK is not yet implemented, for now we'll just call sample method to make sure the bridge is working
-      ((Exponea as unknown) as SampleSDK).sampleMethod(
-        'Testing',
-        123,
-        (message: string) => {
-          this.setState({
-            status: 'native callback received',
-            message,
-          });
-        },
-      );
-    }
+    Exponea.getCustomerCookie()
+      .then((cookie) => this.setState({customerCookie: cookie}))
+      .catch((error) => {
+        Alert.alert('Error getting customer Cookie', error.message);
+      });
   }
 
   render(): React.ReactNode {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>☆Exponea example☆</Text>
-        <Text style={styles.instructions}>STATUS: {this.state.status}</Text>
-        <Text style={styles.welcome}>☆NATIVE CALLBACK MESSAGE☆</Text>
-        <Text style={styles.instructions}>{this.state.message}</Text>
+        <IdentifyCustomerModal
+          visible={this.state.identifyingCustomer}
+          onClose={() => {
+            this.setState({identifyingCustomer: false});
+          }}
+        />
+        <TrackEventModal
+          visible={this.state.trackingEvent}
+          onClose={() => {
+            this.setState({trackingEvent: false});
+          }}
+        />
+        <Text style={styles.label}>Customer cookie:</Text>
+        <Text>{this.state.customerCookie}</Text>
+        <ExponeaButton
+          title="Identify customer"
+          onPress={() => {
+            this.setState({identifyingCustomer: true});
+          }}
+        />
+        <ExponeaButton
+          title="Track event"
+          onPress={() => {
+            this.setState({trackingEvent: true});
+          }}
+        />
       </View>
     );
   }
@@ -64,15 +65,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
-  welcome: {
+  label: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    fontWeight: 'bold',
   },
 });
