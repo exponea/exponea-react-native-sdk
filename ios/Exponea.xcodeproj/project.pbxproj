@@ -7,8 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		05C542C82490E0010095903D /* SampleMethodSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C542C72490E0010095903D /* SampleMethodSpec.swift */; };
+		0578A41C249B53990049AE9D /* ConfigurationParserSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */; };
+		0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41F249B6CC40049AE9D /* NSDictionary+getSafely.swift */; };
+		0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41D249B6C7E0049AE9D /* ExponeaDataError.swift */; };
+		0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A423249B7D9C0049AE9D /* JsonDataParser.swift */; };
+		0578A427249B7EB40049AE9D /* JsonDataParserSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A426249B7EB40049AE9D /* JsonDataParserSpec.swift */; };
+		0578A429249B7F1C0049AE9D /* TestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A428249B7F1C0049AE9D /* TestUtil.swift */; };
 		05C542CA2490E0010095903D /* libExponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 134814201AA4EA6300B7C361 /* libExponea.a */; };
+		05DEBDED249B984900449A4B /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 05DEBDEC249B984900449A4B /* .swiftlint.yml */; };
+		05E660E3249A4C2F0033B199 /* ConfigurationParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E660E2249A4C2F0033B199 /* ConfigurationParser.swift */; };
 		05FD376F248FDE5A0078847C /* Exponea.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FD376D248FDE5A0078847C /* Exponea.m */; };
 		05FD3772248FDE7F0078847C /* Exponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD3771248FDE7F0078847C /* Exponea.swift */; };
 		5BC7243D98CB54FD4B2B8F47 /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FACC1B762FF573A4473848C /* libPods-Exponea.a */; };
@@ -38,10 +45,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParserSpec.swift; sourceTree = "<group>"; };
+		0578A41D249B6C7E0049AE9D /* ExponeaDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaDataError.swift; sourceTree = "<group>"; };
+		0578A41F249B6CC40049AE9D /* NSDictionary+getSafely.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSDictionary+getSafely.swift"; sourceTree = "<group>"; };
+		0578A423249B7D9C0049AE9D /* JsonDataParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDataParser.swift; sourceTree = "<group>"; };
+		0578A426249B7EB40049AE9D /* JsonDataParserSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDataParserSpec.swift; sourceTree = "<group>"; };
+		0578A428249B7F1C0049AE9D /* TestUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUtil.swift; sourceTree = "<group>"; };
 		05C542C52490E0010095903D /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		05C542C72490E0010095903D /* SampleMethodSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMethodSpec.swift; sourceTree = "<group>"; };
 		05C542C92490E0010095903D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05C542D12490E4D40095903D /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		05DEBDEC249B984900449A4B /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		05E660E2249A4C2F0033B199 /* ConfigurationParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParser.swift; sourceTree = "<group>"; };
 		05FD376D248FDE5A0078847C /* Exponea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Exponea.m; sourceTree = "<group>"; };
 		05FD3770248FDE7E0078847C /* Exponea-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Exponea-Bridging-Header.h"; sourceTree = "<group>"; };
 		05FD3771248FDE7F0078847C /* Exponea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exponea.swift; sourceTree = "<group>"; };
@@ -79,8 +93,11 @@
 		05C542C62490E0010095903D /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				05C542C72490E0010095903D /* SampleMethodSpec.swift */,
+				05DEBDEC249B984900449A4B /* .swiftlint.yml */,
 				05C542C92490E0010095903D /* Info.plist */,
+				0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */,
+				0578A426249B7EB40049AE9D /* JsonDataParserSpec.swift */,
+				0578A428249B7F1C0049AE9D /* TestUtil.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -116,8 +133,12 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				05C542D12490E4D40095903D /* .swiftlint.yml */,
 				05FD3771248FDE7F0078847C /* Exponea.swift */,
+				0578A423249B7D9C0049AE9D /* JsonDataParser.swift */,
+				0578A41F249B6CC40049AE9D /* NSDictionary+getSafely.swift */,
+				0578A41D249B6C7E0049AE9D /* ExponeaDataError.swift */,
+				05E660E2249A4C2F0033B199 /* ConfigurationParser.swift */,
+				05C542D12490E4D40095903D /* .swiftlint.yml */,
 				05FD376D248FDE5A0078847C /* Exponea.m */,
 				05FD3770248FDE7E0078847C /* Exponea-Bridging-Header.h */,
 				05FD3773248FDFDD0078847C /* Podfile */,
@@ -216,6 +237,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05DEBDED249B984900449A4B /* .swiftlint.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,7 +330,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05C542C82490E0010095903D /* SampleMethodSpec.swift in Sources */,
+				0578A427249B7EB40049AE9D /* JsonDataParserSpec.swift in Sources */,
+				0578A41C249B53990049AE9D /* ConfigurationParserSpec.swift in Sources */,
+				0578A429249B7F1C0049AE9D /* TestUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +342,10 @@
 			files = (
 				05FD3772248FDE7F0078847C /* Exponea.swift in Sources */,
 				05FD376F248FDE5A0078847C /* Exponea.m in Sources */,
+				05E660E3249A4C2F0033B199 /* ConfigurationParser.swift in Sources */,
+				0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */,
+				0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */,
+				0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
