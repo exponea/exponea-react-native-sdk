@@ -3,7 +3,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AuthScreen from './screens/AuthScreen';
 import TabNavigation from './screens/TabNavigation';
-import {Platform, Alert} from 'react-native';
+import {Alert} from 'react-native';
 import Exponea from '../../lib';
 import PreloadingScreen from './screens/PreloadingScreen';
 
@@ -14,16 +14,14 @@ interface AppState {
 
 export default class App extends React.Component<{}, AppState> {
   state = {
-    preloaded: Platform.OS !== 'android',
+    preloaded: false,
     sdkConfigured: false,
   };
 
   componentDidMount(): void {
-    if (Platform.OS === 'android') {
-      Exponea.isConfigured().then((configured) => {
-        this.setState({preloaded: true, sdkConfigured: configured});
-      });
-    }
+    Exponea.isConfigured().then((configured) => {
+      this.setState({preloaded: true, sdkConfigured: configured});
+    });
   }
 
   render(): React.ReactNode {
@@ -43,22 +41,18 @@ export default class App extends React.Component<{}, AppState> {
 
   onStart(projectToken: string, authorization: string, baseUrl: string): void {
     console.log(
-      `We should initialize Exponea SDK here with ${projectToken}, ${authorization} and ${baseUrl}`,
+      `Configuring Exponea SDK with ${projectToken}, ${authorization} and ${baseUrl}`,
     );
-    if (Platform.OS === 'android') {
-      Exponea.configure({
-        projectToken: projectToken,
-        authorizationToken: authorization,
-        baseUrl: baseUrl,
+    Exponea.configure({
+      projectToken: projectToken,
+      authorizationToken: authorization,
+      baseUrl: baseUrl,
+    })
+      .then(() => {
+        this.setState({sdkConfigured: true});
       })
-        .then(() => {
-          this.setState({sdkConfigured: true});
-        })
-        .catch((error) =>
-          Alert.alert('Error configuring Exponea SDK', error.message),
-        );
-    } else {
-      this.setState({sdkConfigured: true});
-    }
+      .catch((error) =>
+        Alert.alert('Error configuring Exponea SDK', error.message),
+      );
   }
 }
