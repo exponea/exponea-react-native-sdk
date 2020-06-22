@@ -68,7 +68,7 @@ interface ExponeaType {
   fetchConsents(): Promise<Array<Consent>>;
 
   /** Fetches recommendations based on RecommendationOptions */
-  fetchRecommendation(
+  fetchRecommendations(
     options: RecommendationOptions,
   ): Promise<Array<Recommendation>>;
 }

@@ -3,6 +3,8 @@ import ExponeaType from './ExponeaType';
 import ExponeaProject from './ExponeaProject';
 import EventType from './EventType';
 import {JsonObject} from './Json';
+import Consent from './Consent';
+import {RecommendationOptions, Recommendation} from './Recommendation';
 
 /*
 React native bridge doesn't like optional parameters, we have to implement it ourselves.
@@ -58,9 +60,17 @@ const Exponea: ExponeaType = {
     return NativeModules.Exponea.trackSessionEnd({timestamp});
   },
 
-  fetchConsents: NativeModules.Exponea.fetchConsents,
+  async fetchConsents(): Promise<Array<Consent>> {
+    return JSON.parse(await NativeModules.Exponea.fetchConsents());
+  },
 
-  fetchRecommendation: NativeModules.Exponea.fetchRecommendation,
+  async fetchRecommendations(
+    options: RecommendationOptions,
+  ): Promise<Array<Recommendation>> {
+    return JSON.parse(
+      await NativeModules.Exponea.fetchRecommendations(options),
+    );
+  },
 };
 
 // TODO until we have proper ios implementation we also need sample method

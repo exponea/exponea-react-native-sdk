@@ -127,7 +127,7 @@ const mockExponea: ExponeaType = {
     ]);
   },
 
-  fetchRecommendation(
+  fetchRecommendations(
     options: RecommendationOptions,
   ): Promise<Array<Recommendation>> {
     lastArgumentsJson = JSON.stringify([options]);
@@ -305,15 +305,15 @@ describe('parameter serialization and typings', () => {
     expect(lastArgumentsJson).toBe('[]');
   });
 
-  test('fetchRecommendation', () => {
-    mockExponea.fetchRecommendation({
+  test('fetchRecommendations', () => {
+    mockExponea.fetchRecommendations({
       id: 'mock-recommendation-id',
       fillWithRandom: false,
     });
     expect(lastArgumentsJson).toBe(
       '[{"id":"mock-recommendation-id","fillWithRandom":false}]',
     );
-    mockExponea.fetchRecommendation({
+    mockExponea.fetchRecommendations({
       id: 'mock-recommendation-id',
       fillWithRandom: false,
       size: 123,
