@@ -2,6 +2,7 @@ package com.exponea
 
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.CustomerIds
+import com.exponea.sdk.models.CustomerRecommendationOptions
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
@@ -11,14 +12,18 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
+import com.google.gson.Gson
 import java.util.concurrent.TimeUnit
 
 class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     class ExponeaNotInitializedException :
         Exception("Exponea SDK is not configured. Call Exponea.configure() before calling functions of the SDK")
-    class ExponeaConfigurationException : Exception {
+    class ExponeaDataException : Exception {
         constructor(message: String) : super(message)
         constructor(message: String, cause: Throwable) : super(message, cause)
+    }
+    class ExponeaFetchException : Exception {
+        constructor(message: String) : super(message)
     }
 
     private fun requireInitialized(promise: Promise, block: ((Promise) -> Unit)) {
@@ -165,5 +170,69 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
             Exponea.trackSessionEnd()
         }
         promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun fetchConsents(promise: Promise) = requireInitialized(promise) {
+        Exponea.getConsents(
+            { response ->
+                val result = arrayListOf<Map<String, Any>>()
+                response.results.forEach { consent ->
+                    val consentMap = hashMapOf<String, Any>()
+                    consentMap["id"] = consent.id
+                    consentMap["legitimateInterest"] = consent.legitimateInterest
+
+                    val sourcesMap = hashMapOf<String, Any>()
+                    sourcesMap["createdFromCRM"] = consent.sources.createdFromCRM
+                    sourcesMap["imported"] = consent.sources.imported
+                    sourcesMap["privateAPI"] = consent.sources.privateAPI
+                    sourcesMap["publicAPI"] = consent.sources.publicAPI
+                    sourcesMap["trackedFromScenario"] = consent.sources.trackedFromScenario
+
+                    consentMap["sources"] = sourcesMap
+                    consentMap["translations"] = consent.translations
+
+                    result.add(consentMap)
+                }
+                // React native android bridge doesn't support arrays yet, we have to serialize the response
+                promise.resolve(Gson().toJson(result))
+            },
+            { promise.reject(ExponeaFetchException(it.results.message)) }
+        )
+    }
+
+    @ReactMethod
+    fun fetchRecommendations(optionsReadableMap: ReadableMap, promise: Promise) = requireInitialized(promise) {
+        try {
+            val optionsMap = optionsReadableMap.toHashMapRecursively()
+            val options = CustomerRecommendationOptions(
+                optionsMap.getSafely("id", String::class),
+                optionsMap.getSafely("fillWithRandom", Boolean::class),
+                if (optionsMap.containsKey("size")) optionsMap.getSafely("size", Double::class).toInt() else 10,
+                optionsMap["items"] as? Map<String, String>,
+                if (optionsMap.containsKey("noTrack")) optionsMap.getSafely("noTrack", Boolean::class) else null,
+                optionsMap["catalogAttributesWhitelist"] as? List<String>
+            )
+            Exponea.fetchRecommendation(
+                options,
+                { response ->
+                    val result = arrayListOf<Map<String, Any>>()
+                    response.results.forEach { recommendation ->
+                        val recommendationMap = hashMapOf<String, Any>()
+                        recommendationMap["engineName"] = recommendation.engineName
+                        recommendationMap["itemId"] = recommendation.itemId
+                        recommendationMap["recommendationId"] = recommendation.recommendationId
+                        recommendationMap["recommendationVariantId"] = recommendation.recommendationVariantId ?: ""
+                        recommendationMap["data"] = recommendation.data
+                        result.add(recommendationMap)
+                    }
+                    // React native android bridge doesn't support arrays yet, we have to serialize the response
+                    promise.resolve(Gson().toJson(result))
+                },
+                { promise.reject(ExponeaFetchException(it.results.message)) }
+            )
+        } catch (e: Exception) {
+            promise.reject(e)
+        }
     }
 }

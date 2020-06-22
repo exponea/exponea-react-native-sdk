@@ -13,12 +13,12 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
     companion object {
         fun requireProjectAndAuthorization(map: Map<String, Any?>) {
             if (!map.containsKey("projectToken")) {
-                throw ExponeaModule.ExponeaConfigurationException(
+                throw ExponeaModule.ExponeaDataException(
                     "Required property 'projectToken' missing in configuration object"
                 )
             }
             if (!map.containsKey("authorizationToken")) {
-                throw ExponeaModule.ExponeaConfigurationException(
+                throw ExponeaModule.ExponeaDataException(
                     "Required property 'authorizationToken' missing in configuration object"
                 )
             }
@@ -39,7 +39,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                 try {
                     eventType = EventType.valueOf(eventTypeConfiguration.key)
                 } catch (e: Exception) {
-                    throw ExponeaModule.ExponeaConfigurationException(
+                    throw ExponeaModule.ExponeaDataException(
                         "Invalid event type ${eventTypeConfiguration.key} found in project configuration",
                         e
                     )
@@ -50,7 +50,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                         parseExponeaProject(it, defaultBaseUrl)
                     }
                 } catch (e: Exception) {
-                    throw ExponeaModule.ExponeaConfigurationException(
+                    throw ExponeaModule.ExponeaDataException(
                         "Invalid project definition for event type ${eventTypeConfiguration.key}",
                         e
                     )
@@ -73,14 +73,14 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     configuration.baseURL = map.getSafely("baseUrl", String::class)
                 "projectMapping" -> {
                     val mapping = entry.value as? Map<String, Any?>
-                        ?: throw ExponeaModule.ExponeaConfigurationException(
+                        ?: throw ExponeaModule.ExponeaDataException(
                             "Unable to parse project mapping, expected map of event types to list of Exponea projects"
                         )
                     configuration.projectRouteMap = parseProjectMapping(mapping, configuration.baseURL)
                 }
                 "defaultProperties" -> {
                     val properties = entry.value as? HashMap<String, Any>
-                        ?: throw ExponeaModule.ExponeaConfigurationException(
+                        ?: throw ExponeaModule.ExponeaDataException(
                             "Unable to parse default properties, expected map of properties"
                         )
                     configuration.defaultProperties = properties
@@ -96,7 +96,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                         val stringValue = map.getSafely("pushTokenTrackingFrequency", String::class)
                         configuration.tokenTrackFrequency = ExponeaConfiguration.TokenFrequency.valueOf(stringValue)
                     } catch (e: Exception) {
-                        throw ExponeaModule.ExponeaConfigurationException(
+                        throw ExponeaModule.ExponeaDataException(
                             "Incorrect value '${entry.value}' for key ${entry.key}.",
                             e
                         )
@@ -132,7 +132,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                         "LOW" -> configuration.pushNotificationImportance = NotificationManager.IMPORTANCE_LOW
                         "DEFAULT" -> configuration.pushNotificationImportance = NotificationManager.IMPORTANCE_DEFAULT
                         "HIGH" -> configuration.pushNotificationImportance = NotificationManager.IMPORTANCE_HIGH
-                        else -> throw ExponeaModule.ExponeaConfigurationException(
+                        else -> throw ExponeaModule.ExponeaDataException(
                             "Incorrect value '${entry.value}' for key ${entry.key}."
                         )
                     }
@@ -142,7 +142,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                         val stringValue = map.getSafely("httpLoggingLevel", String::class)
                         configuration.httpLoggingLevel = ExponeaConfiguration.HttpLoggingLevel.valueOf(stringValue)
                     } catch (e: Exception) {
-                        throw ExponeaModule.ExponeaConfigurationException(
+                        throw ExponeaModule.ExponeaDataException(
                             "Incorrect value '${entry.value}' for key ${entry.key}.",
                             e
                         )

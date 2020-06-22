@@ -95,11 +95,11 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
     implementation 'com.exponea.sdk:sdk:2.7.3'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'
     testImplementation "org.robolectric:robolectric:4.2"
-    testImplementation 'com.google.code.gson:gson:2.8.6'
     testImplementation "io.mockk:mockk:1.9.3"
 }
 

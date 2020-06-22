@@ -5,11 +5,11 @@ import com.facebook.react.bridge.ReadableMap
 import kotlin.reflect.KClass
 
 internal fun <T : Any> Map<String, Any?>.getSafely(key: String, type: KClass<T>): T {
-    val value = this[key] ?: throw ExponeaModule.ExponeaConfigurationException("Property '$key' cannot be null.")
+    val value = this[key] ?: throw ExponeaModule.ExponeaDataException("Property '$key' cannot be null.")
     if (value::class == type) {
         return value as T
     } else {
-        throw ExponeaModule.ExponeaConfigurationException(
+        throw ExponeaModule.ExponeaDataException(
             "Incorrect type for key '$key'. Expected ${type.simpleName} got ${value::class.simpleName}"
         )
     }
