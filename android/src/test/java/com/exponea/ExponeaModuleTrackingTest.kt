@@ -34,7 +34,7 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should identify customer`() {
+    fun `identify customer should reject when Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
         module.identifyCustomer(
             JavaOnlyMap.of("id", "value"),
@@ -43,6 +43,10 @@ internal class ExponeaModuleTrackingTest {
                 assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
             }
         )
+    }
+
+    @Test
+    fun `identify customer should resolve and identify customer with correct data`() {
         every { Exponea.isInitialized } returns true
         module.identifyCustomer(
             JavaOnlyMap.of("id", "value"),
@@ -59,13 +63,17 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should flush data`() {
+    fun `flush data should reject when Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
         module.flushData(
             MockRejectingPromise {
                 assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
             }
         )
+    }
+
+    @Test
+    fun `flush data should resolve and flush data`() {
         every { Exponea.isInitialized } returns true
         module.flushData(
             MockResolvingPromise {
@@ -75,7 +83,7 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track event`() {
+    fun `track event should reject when Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
         module.trackEvent(
             "event_name",
@@ -85,6 +93,10 @@ internal class ExponeaModuleTrackingTest {
                 assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
             }
         )
+    }
+
+    @Test
+    fun `track event should track data without timestamp parameter`() {
         every { Exponea.isInitialized } returns true
         module.trackEvent(
             "event_name",
@@ -100,6 +112,11 @@ internal class ExponeaModuleTrackingTest {
                 }
             }
         )
+    }
+
+    @Test
+    fun `track event should track data with empty timestamp parameter`() {
+        every { Exponea.isInitialized } returns true
         module.trackEvent(
             "event_name",
             JavaOnlyMap.of("string", "asd", "number", 123, "boolean", false),
@@ -114,6 +131,11 @@ internal class ExponeaModuleTrackingTest {
                 }
             }
         )
+    }
+
+    @Test
+    fun `track event should track data with timestamp parameter`() {
+        every { Exponea.isInitialized } returns true
         module.trackEvent(
             "event_name",
             JavaOnlyMap.of("string", "asd", "number", 123, "boolean", false),
@@ -131,7 +153,7 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track session start`() {
+    fun `track session start should reject when Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
         module.trackSessionStart(
             JavaOnlyMap.of(),
@@ -139,6 +161,10 @@ internal class ExponeaModuleTrackingTest {
                 assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
             }
         )
+    }
+
+    @Test
+    fun `track session start should resolve and track session start without timestamp parameter`() {
         every { Exponea.isInitialized } returns true
         module.trackSessionStart(
             JavaOnlyMap.of(),
@@ -146,12 +172,22 @@ internal class ExponeaModuleTrackingTest {
                 verify { Exponea.trackSessionStart(range(Date().time / 1000.0 - 1, Date().time / 1000.0 + 1)) }
             }
         )
+    }
+
+    @Test
+    fun `track session start should resolve and track session start with empty timestamp parameter`() {
+        every { Exponea.isInitialized } returns true
         module.trackSessionStart(
             JavaOnlyMap.of("timestamp", null),
             MockResolvingPromise {
                 verify { Exponea.trackSessionStart(range(Date().time / 1000.0 - 1, Date().time / 1000.0 + 1)) }
             }
         )
+    }
+
+    @Test
+    fun `track session start should resolve and track session start with timestamp parameter`() {
+        every { Exponea.isInitialized } returns true
         module.trackSessionStart(
             JavaOnlyMap.of("timestamp", 123),
             MockResolvingPromise {
@@ -161,7 +197,7 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track session end`() {
+    fun `track session end should reject when Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
         module.trackSessionEnd(
             JavaOnlyMap.of(),
@@ -169,6 +205,10 @@ internal class ExponeaModuleTrackingTest {
                 assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
             }
         )
+    }
+
+    @Test
+    fun `track session end should resolve and track session end without timestamp parameter`() {
         every { Exponea.isInitialized } returns true
         module.trackSessionEnd(
             JavaOnlyMap.of(),
@@ -176,12 +216,22 @@ internal class ExponeaModuleTrackingTest {
                 verify { Exponea.trackSessionEnd(range(Date().time / 1000.0 - 1, Date().time / 1000.0 + 1)) }
             }
         )
+    }
+
+    @Test
+    fun `track session end should resolve and track session end with empty timestamp parameter`() {
+        every { Exponea.isInitialized } returns true
         module.trackSessionEnd(
             JavaOnlyMap.of("timestamp", null),
             MockResolvingPromise {
                 verify { Exponea.trackSessionEnd(range(Date().time / 1000.0 - 1, Date().time / 1000.0 + 1)) }
             }
         )
+    }
+
+    @Test
+    fun `track session end should resolve and track session end with timestamp parameter`() {
+        every { Exponea.isInitialized } returns true
         module.trackSessionEnd(
             JavaOnlyMap.of("timestamp", 123),
             MockResolvingPromise {
