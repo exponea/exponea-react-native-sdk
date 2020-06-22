@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: 16,
     fontStyle: 'italic',
     marginTop: 10,
   },

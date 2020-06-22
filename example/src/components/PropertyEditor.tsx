@@ -94,11 +94,11 @@ const styles = StyleSheet.create({
   },
   propertyKey: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
     marginRight: 5,
   },
   propertyValue: {
-    fontSize: 20,
+    fontSize: 16,
   },
   inputContainer: {
     flex: 1,
