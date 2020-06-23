@@ -6,6 +6,7 @@ import TabNavigation from './screens/TabNavigation';
 import {Alert} from 'react-native';
 import Exponea from '../../lib';
 import PreloadingScreen from './screens/PreloadingScreen';
+import {LogLevel} from '../../lib/ExponeaType';
 
 interface AppState {
   preloaded: boolean;
@@ -43,6 +44,7 @@ export default class App extends React.Component<{}, AppState> {
     console.log(
       `Configuring Exponea SDK with ${projectToken}, ${authorization} and ${baseUrl}`,
     );
+    Exponea.setLogLevel(LogLevel.VERBOSE);
     Exponea.configure({
       projectToken: projectToken,
       authorizationToken: authorization,

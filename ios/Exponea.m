@@ -24,4 +24,7 @@ RCT_EXTERN_METHOD(trackEvent:(NSString *)eventType properties:(NSDictionary *)pr
 RCT_EXTERN_METHOD(trackSessionStart:(NSDictionary *)timestamp resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(trackSessionEnd:(NSDictionary *)timestamp resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+
+RCT_EXTERN_METHOD(fetchConsents:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(fetchRecommendations:(NSDictionary *)optionsDictionary resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 @end
