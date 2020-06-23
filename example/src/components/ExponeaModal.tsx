@@ -1,5 +1,12 @@
 import React from 'react';
-import {StyleSheet, View, Modal, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Modal,
+  Text,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 
 interface ExponeaModalProps {
   visible: boolean;
@@ -52,7 +59,7 @@ const styles = StyleSheet.create({
   closeButtonContainer: {
     position: 'absolute',
     right: 5,
-    top: 0,
+    top: Platform.OS === 'ios' ? 5 : 0,
   },
   closeButtonText: {
     fontSize: 16,

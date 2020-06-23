@@ -22,7 +22,9 @@ export default function FetchRecommendationsModal(
   const [fillWithRandom, setFillWithRandom] = React.useState(true);
   const [size, setSize] = React.useState('');
   const [items, setItems] = React.useState({});
-  const [noTrack, setNoTrack] = React.useState<boolean | undefined>(undefined);
+  const [noTrack, setNoTrack] = React.useState<boolean | 'undefined'>(
+    'undefined',
+  );
   const [whitelist, setWhitelist] = React.useState<Array<string>>([]);
   const fetchRecommendations = () => {
     const options: RecommendationOptions = {
@@ -30,7 +32,7 @@ export default function FetchRecommendationsModal(
       fillWithRandom,
       size: parseInt(size, 10) || undefined,
       items: items,
-      noTrack: noTrack,
+      noTrack: noTrack === 'undefined' ? undefined : noTrack,
       catalogAttributesWhitelist: whitelist,
     };
     setItems({});
@@ -65,7 +67,7 @@ export default function FetchRecommendationsModal(
         </View>
         <Text style={styles.subtitle}>Fill with random</Text>
         <ExponeaPicker<boolean>
-          width={120}
+          width={100}
           value={fillWithRandom}
           setValue={setFillWithRandom}
           options={{true: true, false: false}}
@@ -82,11 +84,11 @@ export default function FetchRecommendationsModal(
         <Text style={styles.subtitle}>Items (optional)</Text>
         <PropertyEditor properties={items} onChange={setItems} />
         <Text style={styles.subtitle}>Don't track (optional)</Text>
-        <ExponeaPicker<boolean | undefined>
-          width={120}
+        <ExponeaPicker<boolean | 'undefined'>
+          width={140}
           value={noTrack}
           setValue={setNoTrack}
-          options={{'': undefined, true: true, false: false}}
+          options={{undefined: 'undefined', true: true, false: false}}
         />
         <Text style={styles.subtitle}>
           Catalog attributes whitelist (optional)

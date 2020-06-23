@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
   compactContainer: {
     height: 30,
     margin: 5,
-    padding: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
   disabledContainer: {
     backgroundColor: '#ffd50080',

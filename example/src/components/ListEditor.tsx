@@ -40,6 +40,7 @@ export default function ListEditor(props: ListEditorProps): React.ReactElement {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 5,
     alignItems: 'stretch',
     justifyContent: 'center',
     borderWidth: 1,
