@@ -8,7 +8,7 @@ interface ExponeaInputProps {
   placeholder: string;
 }
 
-export default function ExponeaButton(
+export default function ExponeaInput(
   props: ExponeaInputProps,
 ): React.ReactElement {
   return (
