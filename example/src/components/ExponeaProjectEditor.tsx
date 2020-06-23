@@ -38,12 +38,21 @@ function Viewing(props: ViewingProps): React.ReactElement {
     <View>
       {props.value !== undefined ? (
         <View>
-          <Text>Project token: {props.value.projectToken}</Text>
-          <Text>Authorization token: {props.value.authorizationToken}</Text>
-          <Text>Base url: {props.value.baseUrl || '[default]'}</Text>
+          <Text>
+            <Text style={styles.title}>Project token:</Text>{' '}
+            {props.value.projectToken}
+          </Text>
+          <Text>
+            <Text style={styles.title}>Authorization token:</Text>{' '}
+            {props.value.authorizationToken}
+          </Text>
+          <Text>
+            <Text style={styles.title}>Base url:</Text>{' '}
+            {props.value.baseUrl || '[default]'}
+          </Text>
         </View>
       ) : (
-        <Text>undefined</Text>
+        <Text style={styles.noProject}>undefined</Text>
       )}
       <ExponeaButton compact title="Edit" onPress={props.onEdit} />
     </View>
@@ -104,13 +113,19 @@ function Editing(props: EditingProps): React.ReactElement {
 
 const styles = StyleSheet.create({
   container: {
-    width: 180,
+    width: 200,
     marginTop: 5,
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center',
     borderWidth: 1,
     padding: 10,
     borderColor: '#ddd',
     borderRadius: 5,
+  },
+  title: {
+    fontWeight: 'bold',
+  },
+  noProject: {
+    textAlign: 'center',
   },
 });

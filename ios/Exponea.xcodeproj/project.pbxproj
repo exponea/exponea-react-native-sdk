@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		052DAEA524A225C400A7A0A5 /* Exponea+Tracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DAEA424A225C400A7A0A5 /* Exponea+Tracking.swift */; };
 		052DAEA724A225F600A7A0A5 /* Exponea+Fetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DAEA624A225F600A7A0A5 /* Exponea+Fetching.swift */; };
+		052DAEA924A2465400A7A0A5 /* Exponea+Anonymize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */; };
 		0578A41C249B53990049AE9D /* ConfigurationParserSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */; };
 		0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41F249B6CC40049AE9D /* NSDictionary+getSafely.swift */; };
 		0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41D249B6C7E0049AE9D /* ExponeaDataError.swift */; };
@@ -50,6 +51,7 @@
 /* Begin PBXFileReference section */
 		052DAEA424A225C400A7A0A5 /* Exponea+Tracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Tracking.swift"; sourceTree = "<group>"; };
 		052DAEA624A225F600A7A0A5 /* Exponea+Fetching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Fetching.swift"; sourceTree = "<group>"; };
+		052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Anonymize.swift"; sourceTree = "<group>"; };
 		0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParserSpec.swift; sourceTree = "<group>"; };
 		0578A41D249B6C7E0049AE9D /* ExponeaDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaDataError.swift; sourceTree = "<group>"; };
 		0578A41F249B6CC40049AE9D /* NSDictionary+getSafely.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSDictionary+getSafely.swift"; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */,
 				052DAEA624A225F600A7A0A5 /* Exponea+Fetching.swift */,
 				052DAEA424A225C400A7A0A5 /* Exponea+Tracking.swift */,
 				05FD3771248FDE7F0078847C /* Exponea.swift */,
@@ -358,6 +361,7 @@
 				0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */,
 				0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */,
 				052DAEA524A225C400A7A0A5 /* Exponea+Tracking.swift in Sources */,
+				052DAEA924A2465400A7A0A5 /* Exponea+Anonymize.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
