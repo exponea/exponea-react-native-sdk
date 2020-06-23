@@ -3,6 +3,9 @@ package com.exponea
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.CustomerIds
 import com.exponea.sdk.models.CustomerRecommendationOptions
+import com.exponea.sdk.models.EventType
+import com.exponea.sdk.models.ExponeaConfiguration
+import com.exponea.sdk.models.ExponeaProject
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
@@ -26,6 +29,8 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         constructor(message: String) : super(message)
     }
 
+    private var configuration: ExponeaConfiguration = ExponeaConfiguration()
+
     private fun requireInitialized(promise: Promise, block: ((Promise) -> Unit)) {
         if (!Exponea.isInitialized) {
             promise.reject(ExponeaNotInitializedException())
@@ -41,7 +46,9 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     @ReactMethod
     fun configure(configMap: ReadableMap, promise: Promise) {
         try {
-            Exponea.init(reactContext.currentActivity ?: reactContext, ConfigurationParser(configMap).parse())
+            val configuration = ConfigurationParser(configMap).parse()
+            Exponea.init(reactContext.currentActivity ?: reactContext, configuration)
+            this.configuration = configuration
             promise.resolve(null)
         } catch (e: Exception) {
             promise.reject(e)
@@ -231,6 +238,42 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
                 },
                 { promise.reject(ExponeaFetchException(it.results.message)) }
             )
+        } catch (e: Exception) {
+            promise.reject(e)
+        }
+    }
+
+    @ReactMethod
+    fun anonymize(
+        projectReadableMap: ReadableMap,
+        mappingReadableMap: ReadableMap,
+        promise: Promise
+    ) = requireInitialized(promise) {
+        try {
+            var exponeaProject: ExponeaProject? = null
+            if (projectReadableMap.hasKey("exponeaProject") && !projectReadableMap.isNull("exponeaProject")) {
+                exponeaProject = ConfigurationParser.parseExponeaProject(
+                    projectReadableMap.getMap("exponeaProject")!!.toHashMapRecursively(),
+                    configuration.baseURL
+                )
+            }
+            var projectMapping: Map<EventType, List<ExponeaProject>>? = null
+            if (mappingReadableMap.hasKey("projectMapping") && !mappingReadableMap.isNull("projectMapping")) {
+                projectMapping = ConfigurationParser.parseProjectMapping(
+                    mappingReadableMap.getMap("projectMapping")!!.toHashMapRecursively(),
+                    configuration.baseURL
+                )
+            }
+            if (exponeaProject != null && projectMapping != null) {
+                Exponea.anonymize(exponeaProject, projectMapping)
+            } else if (exponeaProject != null) {
+                Exponea.anonymize(exponeaProject)
+            } else if (projectMapping != null) {
+                Exponea.anonymize(projectRouteMap = projectMapping)
+            } else {
+                Exponea.anonymize()
+            }
+            promise.resolve(null)
         } catch (e: Exception) {
             promise.reject(e)
         }
