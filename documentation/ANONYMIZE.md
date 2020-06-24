@@ -1,0 +1,3 @@
+# Anonymize customer
+
+`Exponea.anonymize()`
