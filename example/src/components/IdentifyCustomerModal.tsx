@@ -3,7 +3,7 @@ import {StyleSheet, Text, Alert} from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
 import ExponeaModal from './ExponeaModal';
 import PropertyEditor from './PropertyEditor';
-import Exponea from '../../../lib';
+import Exponea from 'react-native-exponea-sdk/lib';
 
 interface IdentifyCustomerModalProps {
   visible: boolean;

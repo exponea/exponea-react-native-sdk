@@ -4,7 +4,7 @@ import ExponeaButton from '../components/ExponeaButton';
 import ExponeaModal from './ExponeaModal';
 import ExponeaInput from './ExponeaInput';
 import PropertyEditor from './PropertyEditor';
-import Exponea from '../../../lib';
+import Exponea from 'react-native-exponea-sdk';
 
 interface TrackEventModalProps {
   visible: boolean;

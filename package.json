@@ -8,7 +8,7 @@
   "files": [
     "README.md",
     "android",
-    "lib/**/*",
+    "lib",
     "ios",
     "react-native-exponea-sdk.podspec"
   ],

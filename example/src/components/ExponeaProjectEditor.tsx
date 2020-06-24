@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import ExponeaProject from '../../../lib/ExponeaProject';
+import ExponeaProject from 'react-native-exponea-sdk/lib/ExponeaProject';
 import ExponeaButton from './ExponeaButton';
 import ExponeaInput from './ExponeaInput';
 

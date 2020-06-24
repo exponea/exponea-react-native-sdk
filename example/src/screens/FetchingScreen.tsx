@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
-import Exponea from '../../../lib';
+import Exponea from 'react-native-exponea-sdk';
 import FetchRecommendationsModal from '../components/FetchRecommendationsModal';
 
 export default function FetchingScreen(): React.ReactElement {

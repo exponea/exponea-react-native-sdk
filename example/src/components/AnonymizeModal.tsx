@@ -2,8 +2,8 @@ import React from 'react';
 import {StyleSheet, Text, Alert} from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
 import ExponeaModal from './ExponeaModal';
-import Exponea from '../../../lib';
-import ExponeaProject from '../../../lib/ExponeaProject';
+import Exponea from 'react-native-exponea-sdk';
+import ExponeaProject from 'react-native-exponea-sdk/lib/ExponeaProject';
 import ExponeaProjectEditor from './ExponeaProjectEditor';
 
 interface AnonymizeModalProps {

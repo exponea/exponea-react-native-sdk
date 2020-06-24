@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
-import Exponea from '../../../lib';
+import Exponea from 'react-native-exponea-sdk';
 import AnonymizeModal from '../components/AnonymizeModal';
 
 export default function FlushingScreen(): React.ReactElement {

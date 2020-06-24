@@ -4,9 +4,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import AuthScreen from './screens/AuthScreen';
 import TabNavigation from './screens/TabNavigation';
 import {Alert} from 'react-native';
-import Exponea from '../../lib';
+import Exponea from 'react-native-exponea-sdk';
 import PreloadingScreen from './screens/PreloadingScreen';
-import {LogLevel} from '../../lib/ExponeaType';
+import {LogLevel} from 'react-native-exponea-sdk/lib/ExponeaType';
 
 interface AppState {
   preloaded: boolean;
