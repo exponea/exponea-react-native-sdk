@@ -143,6 +143,14 @@ const mockExponea: ExponeaType = {
       },
     ]);
   },
+
+  setPushOpenedListener() {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+
+  removePushOpenedListener() {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+
+  requestIosPushAuthorization(): Promise<boolean> {
+    return Promise.resolve(true);
+  },
 };
 
 describe('parameter serialization and typings', () => {

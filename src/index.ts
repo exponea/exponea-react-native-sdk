@@ -1,5 +1,5 @@
-import {NativeModules} from 'react-native';
-import ExponeaType from './ExponeaType';
+import {NativeModules, NativeEventEmitter, Platform} from 'react-native';
+import ExponeaType, {OpenedPush} from './ExponeaType';
 import ExponeaProject from './ExponeaProject';
 import EventType from './EventType';
 import {JsonObject} from './Json';
@@ -71,17 +71,30 @@ const Exponea: ExponeaType = {
       await NativeModules.Exponea.fetchRecommendations(options),
     );
   },
+
+  setPushOpenedListener(listener: (openedPush: OpenedPush) => void): void {
+    pushOpenedUserListener = listener;
+    NativeModules.Exponea.onPushOpenedListenerSet();
+  },
+
+  removePushOpenedListener(): void {
+    pushOpenedUserListener = null;
+    NativeModules.Exponea.onPushOpenedListenerRemove();
+  },
+
+  async requestIosPushAuthorization(): Promise<boolean> {
+    if (Platform.OS !== 'ios') {
+      throw new Error('requestIosPushAuthorization is only available on iOS!');
+    }
+    return NativeModules.Exponea.requestPushAuthorization();
+  },
 };
 
-// TODO until we have proper ios implementation we also need sample method
-interface SampleSDK {
-  sampleMethod(
-    stringArgument: string,
-    numberArgument: number,
-    callback: (value: string) => void,
-  ): void;
-}
-((Exponea as unknown) as SampleSDK).sampleMethod =
-  NativeModules.Exponea.sampleMethod;
+let pushOpenedUserListener: ((openedPush: OpenedPush) => void) | null = null;
+
+const eventEmitter = new NativeEventEmitter(NativeModules.Exponea);
+eventEmitter.addListener('pushOpened', (pushOpened: string) => {
+  pushOpenedUserListener && pushOpenedUserListener(JSON.parse(pushOpened));
+});
 
 export default Exponea;

@@ -71,6 +71,14 @@ interface ExponeaType {
   fetchRecommendations(
     options: RecommendationOptions,
   ): Promise<Array<Recommendation>>;
+
+  /** Listener to be called when push notification is opened. The SDK will hold last OpenedPush until you set the listener  */
+  setPushOpenedListener(listener: (openedPush: OpenedPush) => void): void;
+
+  /** Removes push notification opened listener */
+  removePushOpenedListener(): void;
+
+  requestIosPushAuthorization(): Promise<boolean>;
 }
 
 export enum FlushMode {
@@ -91,6 +99,22 @@ export enum LogLevel {
   INFO = 'INFO',
   DEBUG = 'DEBUG',
   VERBOSE = 'VERBOSE',
+}
+
+export interface OpenedPush {
+  action: PushAction;
+  url?: string;
+  /** Additional data defined on Exponea web app when creating the push */
+  additionalData?: JsonObject;
+}
+
+export enum PushAction {
+  /** "Open App" action */
+  APP = 'app',
+  /** "Deep link" action. In order to open your application from deeplink, extra setup is required. */
+  DEEPLINK = 'deeplink',
+  /** "Open web browser" action. Exponea SDK will automatically open the browser in this case. */
+  WEB = 'web',
 }
 
 export default ExponeaType;
