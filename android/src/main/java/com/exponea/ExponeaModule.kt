@@ -15,6 +15,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import com.google.gson.Gson
 import java.util.concurrent.TimeUnit
 
@@ -29,7 +30,26 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         constructor(message: String) : super(message)
     }
 
+    companion object {
+        var currentInstance: ExponeaModule? = null
+        // We have to hold OpenedPush until ExponeaModule is initialized AND pushOpenedListener set in JS
+        private var pendingOpenedPush: OpenedPush? = null
+
+        fun openPush(push: OpenedPush) {
+            if (currentInstance != null) {
+                currentInstance?.openPush(push)
+            } else {
+                pendingOpenedPush = push
+            }
+        }
+    }
+
+    init {
+        currentInstance = this
+    }
+
     private var configuration: ExponeaConfiguration = ExponeaConfiguration()
+    private var pushOpenedListenerSet = false
 
     private fun requireInitialized(promise: Promise, block: ((Promise) -> Unit)) {
         if (!Exponea.isInitialized) {
@@ -276,6 +296,26 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
             promise.resolve(null)
         } catch (e: Exception) {
             promise.reject(e)
+        }
+    }
+
+    @ReactMethod
+    fun onPushOpenedListenerSet() {
+        pushOpenedListenerSet = true
+        openPush(pendingOpenedPush ?: return)
+        pendingOpenedPush = null
+    }
+
+    @ReactMethod
+    fun onPushOpenedListenerRemove() {
+        pushOpenedListenerSet = false
+    }
+
+    fun openPush(push: OpenedPush) {
+        if (pushOpenedListenerSet) {
+            reactContext.getJSModule(RCTDeviceEventEmitter::class.java).emit("pushOpened", Gson().toJson(push))
+        } else {
+            pendingOpenedPush = push
         }
     }
 }

@@ -1,4 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.exponea">
-
+    <application>
+        <receiver
+            android:name=".PushReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.exponea.sdk.action.PUSH_CLICKED" />
+                <action android:name="com.exponea.sdk.action.PUSH_DEEPLINK_CLICKED" />
+                <action android:name="com.exponea.sdk.action.PUSH_URL_CLICKED" />
+            </intent-filter>
+        </receiver>
+    </application>
 </manifest>
