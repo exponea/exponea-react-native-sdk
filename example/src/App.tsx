@@ -20,6 +20,17 @@ export default class App extends React.Component<{}, AppState> {
   };
 
   componentDidMount(): void {
+    Exponea.setPushOpenedListener((pushOpened) => {
+      // we'll wait for the app to fully resume before showing the alert
+      setTimeout(() => {
+        const data = JSON.stringify(pushOpened, null, 2);
+        Alert.alert(
+          'Push notification opened',
+          `Action: ${pushOpened.action}\nURL: ${pushOpened.url}\nAdditional data: ${data}`,
+        );
+      }, 1000);
+    });
+
     Exponea.isConfigured().then((configured) => {
       this.setState({preloaded: true, sdkConfigured: configured});
     });

@@ -1,4 +1,4 @@
-package com.example;
+package com.exponea.example;
 
 import com.facebook.react.ReactActivity;
 

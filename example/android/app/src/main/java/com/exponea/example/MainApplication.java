@@ -1,4 +1,4 @@
-package com.example;
+package com.exponea.example;
 
 import android.app.Application;
 import android.content.Context;
