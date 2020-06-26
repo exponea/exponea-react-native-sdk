@@ -60,6 +60,9 @@ export default class App extends React.Component<{}, AppState> {
       projectToken: projectToken,
       authorizationToken: authorization,
       baseUrl: baseUrl,
+      ios: {
+        appGroup: 'group.com.exponea.ExponeaSDK-Example2',
+      },
     })
       .then(() => {
         this.setState({sdkConfigured: true});

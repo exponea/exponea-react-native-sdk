@@ -2,6 +2,7 @@ PODS:
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - ExponeaSDK (2.6.3)
+  - ExponeaSDK-Notifications (2.6.3)
   - FBLazyVector (0.61.5)
   - FBReactNativeSpec (0.61.5):
     - Folly (= 2018.10.22.00)
@@ -235,6 +236,7 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - ExponeaSDK-Notifications
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
@@ -273,6 +275,7 @@ SPEC REPOS:
   trunk:
     - boost-for-react-native
     - ExponeaSDK
+    - ExponeaSDK-Notifications
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -342,6 +345,7 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   ExponeaSDK: 1da88d1cae2e66d54e23e474c99f62c87cb08374
+  ExponeaSDK-Notifications: a71632d36e470831ea8120f38abd6d584778fd53
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
@@ -373,6 +377,6 @@ SPEC CHECKSUMS:
   RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 30f49447bd05f649f5f7d7b64d2c218a47da8a04
+PODFILE CHECKSUM: 7a1d9f1dab4161bb649d882452847ed5304c00c4
 
 COCOAPODS: 1.8.4

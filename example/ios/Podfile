@@ -51,3 +51,11 @@ target 'example-tvOS' do
   end
 
 end
+
+target 'ExampleNotificationService' do
+  pod 'ExponeaSDK-Notifications'
+end
+
+target 'ExampleNotificationContent' do
+  pod 'ExponeaSDK-Notifications'
+end
