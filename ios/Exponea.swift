@@ -10,13 +10,22 @@ import Foundation
 import ExponeaSDK
 
 @objc(Exponea)
-class Exponea: NSObject {
-    @objc static func requiresMainQueueSetup() -> Bool {
+class Exponea: RCTEventEmitter {
+    @objc override static func requiresMainQueueSetup() -> Bool {
         return false
+    }
+
+    @objc(supportedEvents)
+    override func supportedEvents() -> [String] {
+        return ["pushOpened"]
     }
 
     let errorCode = "ExponeaSDK"
     let defaultFlushPeriod = 5 * 60 // 5 minutes
+
+    // We have to hold OpenedPush until pushOpenedListener set in JS
+    var pendingOpenedPush: OpenedPush?
+    var pushOpenedListenerSet = false
 
     func rejectPromise(_ reject: RCTPromiseRejectBlock, error: Error) {
         reject(errorCode, error.localizedDescription, error)
@@ -37,6 +46,7 @@ class Exponea: NSObject {
                 defaultProperties: try parser.parseDefaultProperties(),
                 flushingSetup: try parser.parseFlushingSetup()
             )
+            ExponeaSDK.Exponea.shared.pushNotificationsDelegate = self
             resolve(nil)
         } catch {
             rejectPromise(reject, error: error)

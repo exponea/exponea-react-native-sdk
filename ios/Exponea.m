@@ -1,6 +1,8 @@
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
-@interface RCT_EXTERN_MODULE(Exponea, NSObject)
+
+@interface RCT_EXTERN_MODULE(Exponea, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(configure:(NSDictionary *)configuration resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(isConfigured:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
@@ -29,4 +31,11 @@ RCT_EXTERN_METHOD(fetchConsents:(RCTPromiseResolveBlock)resolve reject:(RCTPromi
 RCT_EXTERN_METHOD(fetchRecommendations:(NSDictionary *)optionsDictionary resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(anonymize:(NSDictionary *)exponeaProject projectMapping:(NSDictionary *)projectMapping resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(supportedEvents)
+
+RCT_EXTERN_METHOD(onPushOpenedListenerSet)
+RCT_EXTERN_METHOD(onPushOpenedListenerRemove)
+RCT_EXTERN_METHOD(requestPushAuthorization:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end

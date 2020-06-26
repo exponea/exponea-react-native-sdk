@@ -20,6 +20,7 @@
 		05C69B8E249CF511008A4D9D /* ExponeaError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C69B8D249CF511008A4D9D /* ExponeaError.swift */; };
 		05DEBDED249B984900449A4B /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 05DEBDEC249B984900449A4B /* .swiftlint.yml */; };
 		05E660E3249A4C2F0033B199 /* ConfigurationParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E660E2249A4C2F0033B199 /* ConfigurationParser.swift */; };
+		05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E6DA4724A4DEBC004EE0F9 /* Exponea+PushNotifications.swift */; };
 		05FD376F248FDE5A0078847C /* Exponea.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FD376D248FDE5A0078847C /* Exponea.m */; };
 		05FD3772248FDE7F0078847C /* Exponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD3771248FDE7F0078847C /* Exponea.swift */; };
 		5BC7243D98CB54FD4B2B8F47 /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FACC1B762FF573A4473848C /* libPods-Exponea.a */; };
@@ -64,6 +65,7 @@
 		05C69B8D249CF511008A4D9D /* ExponeaError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaError.swift; sourceTree = "<group>"; };
 		05DEBDEC249B984900449A4B /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		05E660E2249A4C2F0033B199 /* ConfigurationParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParser.swift; sourceTree = "<group>"; };
+		05E6DA4724A4DEBC004EE0F9 /* Exponea+PushNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+PushNotifications.swift"; sourceTree = "<group>"; };
 		05FD376D248FDE5A0078847C /* Exponea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Exponea.m; sourceTree = "<group>"; };
 		05FD3770248FDE7E0078847C /* Exponea-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Exponea-Bridging-Header.h"; sourceTree = "<group>"; };
 		05FD3771248FDE7F0078847C /* Exponea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exponea.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				05E6DA4724A4DEBC004EE0F9 /* Exponea+PushNotifications.swift */,
 				052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */,
 				052DAEA624A225F600A7A0A5 /* Exponea+Fetching.swift */,
 				052DAEA424A225C400A7A0A5 /* Exponea+Tracking.swift */,
@@ -357,6 +360,7 @@
 				052DAEA724A225F600A7A0A5 /* Exponea+Fetching.swift in Sources */,
 				05E660E3249A4C2F0033B199 /* ConfigurationParser.swift in Sources */,
 				05C69B8E249CF511008A4D9D /* ExponeaError.swift in Sources */,
+				05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */,
 				0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */,
 				0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */,
 				0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */,
