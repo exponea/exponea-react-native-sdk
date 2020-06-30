@@ -1,5 +1,8 @@
 package com.exponea
 
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
+import android.os.Bundle
 import androidx.test.core.app.ApplicationProvider
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.ExponeaConfiguration
@@ -17,8 +20,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@Config(manifest = Config.DEFAULT_MANIFEST_NAME)
 internal class ExponeaModuleTest {
     lateinit var module: ExponeaModule
 
@@ -26,6 +32,15 @@ internal class ExponeaModuleTest {
     fun before() {
         mockkObject(Exponea)
         module = ExponeaModule(ReactApplicationContext(ApplicationProvider.getApplicationContext()))
+
+        // we need to create dummy package with meta data for android sdk telemetry
+        val packageManager = module.reactContext.packageManager
+        val shadowPackageManager = shadowOf(packageManager)
+        val packageInfo = PackageInfo()
+        packageInfo.packageName = "org.robolectric.default"
+        packageInfo.applicationInfo = ApplicationInfo()
+        packageInfo.applicationInfo.metaData = Bundle()
+        shadowPackageManager.installPackage(packageInfo)
     }
 
     @After

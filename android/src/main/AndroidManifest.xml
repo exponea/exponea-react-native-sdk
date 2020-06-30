@@ -11,5 +11,6 @@
                 <action android:name="com.exponea.sdk.action.PUSH_URL_CLICKED" />
             </intent-filter>
         </receiver>
+        <meta-data android:name="ExponeaReactNativeSDK" android:value="true" />
     </application>
 </manifest>
