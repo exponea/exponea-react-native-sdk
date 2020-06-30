@@ -23,6 +23,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "ExponeaSDK", "~> 2.6.3"
+  s.dependency "ExponeaSDK", "~> 2.6.4"
 end
 

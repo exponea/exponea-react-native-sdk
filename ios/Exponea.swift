@@ -9,6 +9,11 @@
 import Foundation
 import ExponeaSDK
 
+// This protocol is used queried using reflection by native iOS SDK to see if it's run by RN SDK
+@objc(IsExponeaReactNativeSDK)
+protocol IsExponeaReactNativeSDK {
+}
+
 @objc(Exponea)
 class Exponea: RCTEventEmitter {
     @objc override static func requiresMainQueueSetup() -> Bool {
