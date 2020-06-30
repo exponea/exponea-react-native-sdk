@@ -84,11 +84,11 @@ interface ExponeaType {
 export enum FlushMode {
   /** Events are flushed to Exponea backend immediately when they are tracked */
   IMMEDIATE = 'IMMEDIATE',
-  /** Events are flushed to Exponea backend periodically based on FlushPeriod */
+  /** Events are flushed to Exponea backend periodically based on flush period */
   PERIOD = 'PERIOD',
   /** Events are flushed to Exponea backend when application is closed */
   APP_CLOSE = 'APP_CLOSE',
-  /** Events are flushed to Exponea when flushData() is manually called by the develop */
+  /** Events are flushed to Exponea when flushData() is manually called by the developer */
   MANUAL = 'MANUAL',
 }
 
