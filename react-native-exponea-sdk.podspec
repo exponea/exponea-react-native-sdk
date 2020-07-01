@@ -11,10 +11,8 @@ Pod::Spec.new do |s|
                    DESC
   s.homepage     = "https://github.com/github_account/react-native-exponea-sdk"
   # brief license entry:
-  s.license      = "MIT"
-  # optional - use expanded license entry instead:
-  # s.license    = { :type => "MIT", :file => "LICENSE" }
-  s.authors      = { "Your Name" => "yourname@email.com" }
+  s.license      = "The Apache License, Version 2.0"
+  s.authors      = { "Exponea" => "contact@exponea.com" }
   s.platforms    = { :ios => "10.3" }
   s.source       = { :git => "https://github.com/github_account/react-native-exponea-sdk.git", :tag => "#{s.version}" }
 

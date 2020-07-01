@@ -1,12 +1,13 @@
 {
   "name": "react-native-exponea-sdk",
   "title": "React Native Exponea Sdk",
-  "version": "1.0.0",
-  "description": "TODO",
+  "version": "0.0.1",
+  "description": "React native SDK for Exponea integration",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
     "README.md",
+    "documentation",
     "android",
     "lib",
     "ios",
@@ -19,18 +20,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github_account/react-native-exponea-sdk.git",
-    "baseUrl": "https://github.com/github_account/react-native-exponea-sdk"
+    "url": "git+https://github.com/exponea/exponea-react-native-sdk.git",
+    "baseUrl": "https://github.com/exponea/exponea-react-native-sdk"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "exponea",
+    "exponea-sdk"
   ],
   "author": {
-    "name": "Your Name",
-    "email": "yourname@email.com"
+    "name": "Exponea",
+    "email": "contact@exponea.com"
   },
-  "license": "MIT",
-  "licenseFilename": "LICENSE",
+  "license": "The Apache License, Version 2.0",
+  "licenseFilename": "http://www.apache.org/licenses/LICENSE-2.0.txt",
   "readmeFilename": "README.md",
   "peerDependencies": {
     "react": "^16.8.1",
