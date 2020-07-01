@@ -13,9 +13,19 @@ or whatever JS hipsters use these days.
 > Since version 0.60.0 React native auto-links dependencies. When using older version of React Native you have to link the package yourself  
 `$ react-native link react-native-exponea-sdk`
 
-### Extra iOS setup
-Native module for iOS uses Swift. You must have *some* Swift code in your project in order for it to work. You can just open the XCode project and create a dummy swift file. When XCode asks, let it create bridging header file. After that you can build the application from command line.
-> This seems weird, but it's the official way to do this. See end of [Exporting Swift](https://reactnative.dev/docs/native-modules-ios#exporting-swift) section in the official React Native documentation.
+### iOS setup
+Minimal supported iOS version for Exponea SDK is 10.3, you need to change iOS version on the first line of your `ios/Podfile` to `platform :ios, '10.3'`, or higher.
+
+### Android setup
+You'll need to enable multidex. Edit `android/app/build.gradle` and add `multiDexEnabled true` to android defaultConfig.
+```
+android {
+    ...
+    defaultConfig {
+        ...
+        multiDexEnabled true
+    }
+```
 
 ## Documentation
   * [Basics concepts](./documentation/BASIC_CONCEPTS.md)
