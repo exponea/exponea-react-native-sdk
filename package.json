@@ -31,7 +31,7 @@
     "name": "Exponea",
     "email": "contact@exponea.com"
   },
-  "license": "The Apache License, Version 2.0",
+  "license": "Apache-2.0",
   "licenseFilename": "http://www.apache.org/licenses/LICENSE-2.0.txt",
   "readmeFilename": "README.md",
   "peerDependencies": {
