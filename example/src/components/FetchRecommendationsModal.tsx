@@ -117,6 +117,8 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     alignSelf: 'stretch',
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   scrollViewContainer: {
     alignItems: 'center',

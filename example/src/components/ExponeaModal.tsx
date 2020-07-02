@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 interface ExponeaModalProps {
   visible: boolean;
@@ -26,9 +27,10 @@ export default function ExponeaModal(
               <Text style={styles.closeButtonText}>✖</Text>
             </TouchableOpacity>
           </View>
-          {props.children}
+          <View style={styles.contentContainer}>{props.children}</View>
         </View>
       </View>
+      {Platform.OS === 'ios' ? <KeyboardSpacer /> : null}
     </Modal>
   );
 }
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modal: {
-    minWidth: 350,
+    minWidth: 300,
     minHeight: 100,
     margin: 20,
     backgroundColor: 'white',
@@ -65,5 +67,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     padding: 5,
+  },
+  contentContainer: {
+    marginTop: 10,
   },
 });
