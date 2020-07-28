@@ -27,6 +27,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [UNUserNotificationCenter currentNotificationCenter].delegate = self;
   return YES;
 }
 

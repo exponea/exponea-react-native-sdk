@@ -63,7 +63,7 @@ class ConfigurationParser {
         )
     }
 
-    func parsePushNotificationTracking() throws -> ExponeaSDK.Exponea.AutomaticPushNotificationTracking {
+    func parsePushNotificationTracking() throws -> ExponeaSDK.Exponea.PushNotificationTracking {
         var appGroup = ""
         if let iosDictionary: NSDictionary = try? dictionary.getOptionalSafely(property: "ios") {
             appGroup = try iosDictionary.getOptionalSafely(property: "appGroup") ?? appGroup
@@ -78,12 +78,12 @@ class ConfigurationParser {
             }
         }
         if let frequency = frequency {
-            return ExponeaSDK.Exponea.AutomaticPushNotificationTracking.enabled(
+            return ExponeaSDK.Exponea.PushNotificationTracking.enabled(
                 appGroup: appGroup,
                 tokenTrackFrequency: frequency
             )
         } else {
-            return ExponeaSDK.Exponea.AutomaticPushNotificationTracking.enabled(appGroup: appGroup)
+            return ExponeaSDK.Exponea.PushNotificationTracking.enabled(appGroup: appGroup)
         }
     }
 

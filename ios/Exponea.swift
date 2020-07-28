@@ -46,7 +46,7 @@ class Exponea: RCTEventEmitter {
         do {
             ExponeaSDK.Exponea.shared.configure(
                 try parser.parseProjectSettings(),
-                automaticPushNotificationTracking: try parser.parsePushNotificationTracking(),
+                pushNotificationTracking: try parser.parsePushNotificationTracking(),
                 automaticSessionTracking: try parser.parseSessionTracking(),
                 defaultProperties: try parser.parseDefaultProperties(),
                 flushingSetup: try parser.parseFlushingSetup()

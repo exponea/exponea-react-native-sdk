@@ -7,9 +7,7 @@
 
 #import <React/RCTBridgeDelegate.h>
 #import <UIKit/UIKit.h>
+#import <ExponeaAppDelegate.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
-
-@property (nonatomic, strong) UIWindow *window;
-
+@interface AppDelegate : ExponeaAppDelegate<RCTBridgeDelegate>
 @end

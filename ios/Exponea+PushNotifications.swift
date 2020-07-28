@@ -68,6 +68,21 @@ extension Exponea: PushNotificationManagerDelegate {
             resolve(granted)
         }
     }
+
+    @objc(handlePushNotificationToken:)
+    static func handlePushNotificationToken(deviceToken: Data) {
+        ExponeaSDK.Exponea.shared.handlePushNotificationToken(deviceToken: deviceToken)
+    }
+
+    @objc
+    static func handlePushNotificationOpened(userInfo: [AnyHashable: Any]) {
+        ExponeaSDK.Exponea.shared.handlePushNotificationOpened(userInfo: userInfo)
+    }
+
+    @objc
+    static func handlePushNotificationOpened(response: UNNotificationResponse) {
+        ExponeaSDK.Exponea.shared.handlePushNotificationOpened(response: response)
+    }
 }
 
 enum PushAction: String {
@@ -81,6 +96,7 @@ enum PushAction: String {
         case .openApp: return .app
         case .deeplink: return .deeplink
         case .browser: return .web
+        case .selfCheck: return .app
         }
     }
 }

@@ -69,7 +69,7 @@ class ConfigurationParserSpec: QuickSpec {
                     XCTFail("Unable to parse push notification tracking")
                     return
                 }
-                expect(pushNotifications.enabled).to(equal(true))
+                expect(pushNotifications.isEnabled).to(equal(true))
                 expect(pushNotifications.tokenTrackFrequency).to(equal(.daily))
                 expect(pushNotifications.appGroup).to(equal("mock-app-group"))
                 // once native SDK is update we'll also need this
@@ -120,7 +120,7 @@ class ConfigurationParserSpec: QuickSpec {
                     XCTFail("Unable to parse push notification tracking")
                     return
                 }
-                expect(pushNotifications.enabled).to(equal(true))
+                expect(pushNotifications.isEnabled).to(equal(true))
                 expect(pushNotifications.tokenTrackFrequency).to(equal(.onTokenChange))
                 expect(pushNotifications.appGroup).to(equal(""))
                 // once native SDK is update we'll also need this

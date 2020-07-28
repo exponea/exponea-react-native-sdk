@@ -1,8 +1,8 @@
 PODS:
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.6.4)
-  - ExponeaSDK-Notifications (2.6.4)
+  - ExponeaSDK (2.7.0)
+  - ExponeaSDK-Notifications (2.7.0)
   - FBLazyVector (0.61.5)
   - FBReactNativeSpec (0.61.5):
     - Folly (= 2018.10.22.00)
@@ -184,8 +184,8 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-exponea-sdk (0.0.1):
-    - ExponeaSDK (~> 2.6.4)
+  - react-native-exponea-sdk (0.1.0):
+    - ExponeaSDK (~> 2.7.0)
     - React
   - react-native-safe-area-context (3.0.2):
     - React
@@ -236,7 +236,7 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - ExponeaSDK-Notifications
+  - ExponeaSDK-Notifications (~> 2.7.0)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
@@ -344,8 +344,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
-  ExponeaSDK: 2bf5a59b3704840303b75ed8ea7759d5c3734bbe
-  ExponeaSDK-Notifications: 065bca40aa1a861f42c0953c6633709ac8e15427
+  ExponeaSDK: 9c25debfcc85f04e193aed2207d31b80a6530003
+  ExponeaSDK-Notifications: 59f4979070093ff439841ddca6680bb0629b013d
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
@@ -359,7 +359,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-exponea-sdk: 42742b8402b1c6c1d54de3fbb73ccf522b49e61c
+  react-native-exponea-sdk: 04d811d5dec6f588026f573b4e8a61aee118c6eb
   react-native-safe-area-context: b11a34881faac509cad5578726c98161ad4d275c
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
@@ -377,6 +377,6 @@ SPEC CHECKSUMS:
   RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 7a1d9f1dab4161bb649d882452847ed5304c00c4
+PODFILE CHECKSUM: a78764ce68da6e0ae77992f4448998bb1dcb5fe6
 
 COCOAPODS: 1.8.4
