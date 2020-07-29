@@ -82,6 +82,16 @@ const Exponea: ExponeaType = {
     NativeModules.Exponea.onPushOpenedListenerRemove();
   },
 
+  setPushReceivedListener(listener: (data: JsonObject) => void): void {
+    pushReceivedUserListener = listener;
+    NativeModules.Exponea.onPushReceivedListenerSet();
+  },
+
+  removePushReceivedListener(): void {
+    pushReceivedUserListener = null;
+    NativeModules.Exponea.onPushReceivedListenerRemove();
+  },
+
   async requestIosPushAuthorization(): Promise<boolean> {
     if (Platform.OS !== 'ios') {
       throw new Error('requestIosPushAuthorization is only available on iOS!');
@@ -91,10 +101,16 @@ const Exponea: ExponeaType = {
 };
 
 let pushOpenedUserListener: ((openedPush: OpenedPush) => void) | null = null;
+let pushReceivedUserListener: ((data: JsonObject) => void) | null = null;
 
 const eventEmitter = new NativeEventEmitter(NativeModules.Exponea);
+
 eventEmitter.addListener('pushOpened', (pushOpened: string) => {
   pushOpenedUserListener && pushOpenedUserListener(JSON.parse(pushOpened));
+});
+
+eventEmitter.addListener('pushReceived', (data: string) => {
+  pushReceivedUserListener && pushReceivedUserListener(JSON.parse(data));
 });
 
 export default Exponea;

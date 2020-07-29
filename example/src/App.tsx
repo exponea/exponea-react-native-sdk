@@ -31,6 +31,16 @@ export default class App extends React.Component<{}, AppState> {
       }, 1000);
     });
 
+    Exponea.setPushReceivedListener((data) => {
+      // we'll wait for the app to fully resume before showing the alert
+      setTimeout(() => {
+        Alert.alert(
+          'Push notification received',
+          `Data: ${JSON.stringify(data, null, 2)}`,
+        );
+      }, 1000);
+    });
+
     Exponea.isConfigured().then((configured) => {
       this.setState({preloaded: true, sdkConfigured: configured});
     });

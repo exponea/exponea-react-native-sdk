@@ -27,6 +27,15 @@ extension Exponea: PushNotificationManagerDelegate {
         }
     }
 
+    func silentPushNotificationReceived(extraData: [AnyHashable: Any]?) {
+        guard let extraData = extraData else { return }
+        if pushReceivedListenerSet {
+            sendReceivedPushData(extraData)
+        } else {
+            pendingReceivedPushData = extraData
+        }
+    }
+
     func sendOpenedPush(_ openedPush: OpenedPush) {
         let payload: [String: Any?] = [
             "action": openedPush.action.rawValue,
@@ -52,6 +61,28 @@ extension Exponea: PushNotificationManagerDelegate {
     @objc(onPushOpenedListenerRemove)
     func onPushOpenedListenerRemove() {
         pushOpenedListenerSet = false
+    }
+
+    func sendReceivedPushData(_ pushData: [AnyHashable: Any]) {
+        guard let data = try? JSONSerialization.data(withJSONObject: pushData) else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize received push data.")
+            return
+        }
+        sendEvent(withName: "pushReceived", body: String(data: data, encoding: .utf8))
+    }
+
+    @objc(onPushReceivedListenerSet)
+    func onPushReceivedListenerSet() {
+        pushReceivedListenerSet = true
+        if let pendingData = pendingReceivedPushData {
+            sendReceivedPushData(pendingData)
+            pendingReceivedPushData = nil
+        }
+    }
+
+    @objc(onPushReceivedListenerRemove)
+    func onPushReceivedListenerRemove() {
+        pushReceivedListenerSet = false
     }
 
     @objc(requestPushAuthorization:reject:)

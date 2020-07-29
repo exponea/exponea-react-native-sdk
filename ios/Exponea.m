@@ -36,6 +36,8 @@ RCT_EXTERN_METHOD(supportedEvents)
 
 RCT_EXTERN_METHOD(onPushOpenedListenerSet)
 RCT_EXTERN_METHOD(onPushOpenedListenerRemove)
+RCT_EXTERN_METHOD(onPushReceivedListenerSet)
+RCT_EXTERN_METHOD(onPushReceivedListenerRemove)
 RCT_EXTERN_METHOD(requestPushAuthorization:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 @end

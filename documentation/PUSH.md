@@ -28,3 +28,13 @@ Exponea.setPushOpenedListener((openedPush) => {
 ```
 
 > There is additional setup required for deeplinking, see native platform push notification setup guides. You can always just use `Open App` action and put your payload to `Additional data`.
+
+## Received push notifications
+You can set up a listener for received push notifications using `Exponea.setPushReceivedListener`, which is mostly useful for silent push notifications. The SDK will hold last push notification and call the listener once it's set, but it's still recommended to set the listener as soon as possible.
+> The listener is called for both regular and silent push notifications on Android and **only** for silent push notifications on iOS due to technical limitations.
+
+``` typescript
+Exponea.setPushReceivedListener((data) => {
+  console.log(data)
+})
+```

@@ -148,6 +148,10 @@ const mockExponea: ExponeaType = {
 
   removePushOpenedListener() {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
 
+  setPushReceivedListener() {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+
+  removePushReceivedListener() {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+
   requestIosPushAuthorization(): Promise<boolean> {
     return Promise.resolve(true);
   },

@@ -22,7 +22,7 @@ class Exponea: RCTEventEmitter {
 
     @objc(supportedEvents)
     override func supportedEvents() -> [String] {
-        return ["pushOpened"]
+        return ["pushOpened", "pushReceived"]
     }
 
     let errorCode = "ExponeaSDK"
@@ -31,6 +31,9 @@ class Exponea: RCTEventEmitter {
     // We have to hold OpenedPush until pushOpenedListener set in JS
     var pendingOpenedPush: OpenedPush?
     var pushOpenedListenerSet = false
+    // We have to hold received push data until pushReceivedListener set in JS
+    var pendingReceivedPushData: [AnyHashable: Any]?
+    var pushReceivedListenerSet = false
 
     func rejectPromise(_ reject: RCTPromiseRejectBlock, error: Error) {
         reject(errorCode, error.localizedDescription, error)

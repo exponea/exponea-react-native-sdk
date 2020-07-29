@@ -236,7 +236,7 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - ExponeaSDK-Notifications (~> 2.7.0)
+  - ExponeaSDK-Notifications
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
@@ -377,6 +377,6 @@ SPEC CHECKSUMS:
   RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: a78764ce68da6e0ae77992f4448998bb1dcb5fe6
+PODFILE CHECKSUM: 7a1d9f1dab4161bb649d882452847ed5304c00c4
 
 COCOAPODS: 1.8.4

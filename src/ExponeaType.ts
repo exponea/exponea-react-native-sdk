@@ -78,6 +78,16 @@ interface ExponeaType {
   /** Removes push notification opened listener */
   removePushOpenedListener(): void;
 
+  /**
+   * Listener to be called when push notification is received.
+   * Called for both regular and silent push notifications on Android, and silent notifications *only* on iOS
+   * The SDK will hold last data until you set the listener
+   */
+  setPushReceivedListener(listener: (data: JsonObject) => void): void;
+
+  /** Removes push notification received listener */
+  removePushReceivedListener(): void;
+
   requestIosPushAuthorization(): Promise<boolean>;
 }
 
