@@ -87,8 +87,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     @ReactMethod
     fun checkPushSetup(promise: Promise) {
-        // TODO not available until Android SDK is updated in EXRN-32
-        // Exponea.checkPushSetup = true
+        Exponea.checkPushSetup = true
         promise.resolve(null)
     }
 

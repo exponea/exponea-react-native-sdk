@@ -1,6 +1,8 @@
 # iOS Push notification setup
 The setup process for iOS is a bit more complicated, in some complex scenarios it's best to refer to [native iOS SDK documentation](https://github.com/exponea/exponea-ios-sdk/blob/develop/Documentation/PUSH.md)
 
+> Exponea iOS SDK contains self-check functionality to help you successfully setup push notifications. Self-check will try to track push token, request Exponea backend to send silent push to the device and check the app is ready to open push notifications. To enable self-check call `Exponea.checkPushSetup()` **before** configuring the SDK.
+
 ## Setup process
  1. [Setting application capabilities](#1-application-capabilities)
  2. [Setting Exponea application delegate](#2-exponea-app-delegate)

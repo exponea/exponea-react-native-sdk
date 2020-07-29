@@ -16,6 +16,7 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -100,8 +101,7 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should enable push self-check`() {
-        // TODO not available until Android SDK is updated in EXRN-32
-        // module.checkPushSetup(MockResolvingPromise { assertTrue(Exponea.checkPushSetup) })
+        module.checkPushSetup(MockResolvingPromise { assertTrue(Exponea.checkPushSetup) })
     }
 
     @Test

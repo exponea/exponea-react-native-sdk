@@ -78,8 +78,7 @@ class Exponea: RCTEventEmitter {
             rejectPromise(reject, error: ExponeaError.alreadyConfigured)
             return
         }
-        // not available until iOS SDK is updated in EXRN-32
-        // ExponeaSDK.Exponea.shared.checkPushSetup = true
+        ExponeaSDK.Exponea.shared.checkPushSetup = true
         resolve(nil)
     }
 
