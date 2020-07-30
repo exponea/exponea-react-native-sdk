@@ -77,13 +77,21 @@ class ConfigurationParser {
             default: throw ExponeaDataError.invalidValue(for: "pushTokenTrackingFrequency")
             }
         }
+        var requirePushAuthorization = true
+        if let iosDictionary: NSDictionary = try? dictionary.getOptionalSafely(property: "ios") {
+            requirePushAuthorization = try iosDictionary.getOptionalSafely(property: "requirePushAuthorization") ?? true
+        }
         if let frequency = frequency {
             return ExponeaSDK.Exponea.PushNotificationTracking.enabled(
                 appGroup: appGroup,
+                requirePushAuthorization: requirePushAuthorization,
                 tokenTrackFrequency: frequency
             )
         } else {
-            return ExponeaSDK.Exponea.PushNotificationTracking.enabled(appGroup: appGroup)
+            return ExponeaSDK.Exponea.PushNotificationTracking.enabled(
+                appGroup: appGroup,
+                requirePushAuthorization: requirePushAuthorization
+            )
         }
     }
 

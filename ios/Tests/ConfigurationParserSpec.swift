@@ -72,8 +72,7 @@ class ConfigurationParserSpec: QuickSpec {
                 expect(pushNotifications.isEnabled).to(equal(true))
                 expect(pushNotifications.tokenTrackFrequency).to(equal(.daily))
                 expect(pushNotifications.appGroup).to(equal("mock-app-group"))
-                // once native SDK is update we'll also need this
-                // expect(pushNotifications.requirePushAuthorization).to(equal(false))
+                expect(pushNotifications.requirePushAuthorization).to(equal(false))
                 expect(pushNotifications.delegate).to(beNil())
             }
         }
@@ -123,8 +122,7 @@ class ConfigurationParserSpec: QuickSpec {
                 expect(pushNotifications.isEnabled).to(equal(true))
                 expect(pushNotifications.tokenTrackFrequency).to(equal(.onTokenChange))
                 expect(pushNotifications.appGroup).to(equal(""))
-                // once native SDK is update we'll also need this
-                // expect(pushNotifications.requirePushAuthorization).to(equal(false))
+                expect(pushNotifications.requirePushAuthorization).to(equal(true))
                 expect(pushNotifications.delegate).to(beNil())
             }
         }
