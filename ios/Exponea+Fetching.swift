@@ -12,11 +12,11 @@ import ExponeaSDK
 extension Exponea {
     @objc(fetchConsents:reject:)
     func fetchConsents(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard ExponeaSDK.Exponea.shared.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        ExponeaSDK.Exponea.shared.fetchConsents { result in
+        Exponea.exponeaInstance.fetchConsents { result in
             switch result {
             case .success(let response):
                 let mappedConsents = response.consents.map { consent in
@@ -45,12 +45,12 @@ extension Exponea {
     }
 
     @objc(fetchRecommendations:resolve:reject:)
-    func fetchConsents(
+    func fetchRecommendations(
         optionsDictionary: NSDictionary,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard ExponeaSDK.Exponea.shared.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
@@ -65,7 +65,7 @@ extension Exponea {
                     property: "catalogAttributesWhitelist"
                 )
             )
-            ExponeaSDK.Exponea.shared.fetchRecommendation(
+            Exponea.exponeaInstance.fetchRecommendation(
                 with: options,
                 completion: {(result: Result<RecommendationResponse<EmptyRecommendationData>>) in
                     switch result {

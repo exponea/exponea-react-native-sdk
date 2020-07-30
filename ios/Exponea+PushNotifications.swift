@@ -42,11 +42,12 @@ extension Exponea: PushNotificationManagerDelegate {
             "url": openedPush.url,
             "additionalData": openedPush.additionalData
         ]
-        guard let data = try? JSONSerialization.data(withJSONObject: payload) else {
+        guard let data = try? JSONSerialization.data(withJSONObject: payload),
+              let body = String(data: data, encoding: .utf8) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize opened push.")
             return
         }
-        sendEvent(withName: "pushOpened", body: String(data: data, encoding: .utf8))
+        sendEvent(withName: "pushOpened", body: body)
     }
 
     @objc(onPushOpenedListenerSet)
@@ -64,11 +65,12 @@ extension Exponea: PushNotificationManagerDelegate {
     }
 
     func sendReceivedPushData(_ pushData: [AnyHashable: Any]) {
-        guard let data = try? JSONSerialization.data(withJSONObject: pushData) else {
+        guard let data = try? JSONSerialization.data(withJSONObject: pushData),
+              let body = String(data: data, encoding: .utf8) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize received push data.")
             return
         }
-        sendEvent(withName: "pushReceived", body: String(data: data, encoding: .utf8))
+        sendEvent(withName: "pushReceived", body: body)
     }
 
     @objc(onPushReceivedListenerSet)
@@ -102,17 +104,17 @@ extension Exponea: PushNotificationManagerDelegate {
 
     @objc(handlePushNotificationToken:)
     static func handlePushNotificationToken(deviceToken: Data) {
-        ExponeaSDK.Exponea.shared.handlePushNotificationToken(deviceToken: deviceToken)
+        Exponea.exponeaInstance.handlePushNotificationToken(deviceToken: deviceToken)
     }
 
     @objc
     static func handlePushNotificationOpened(userInfo: [AnyHashable: Any]) {
-        ExponeaSDK.Exponea.shared.handlePushNotificationOpened(userInfo: userInfo)
+        Exponea.exponeaInstance.handlePushNotificationOpened(userInfo: userInfo, actionIdentifier: nil)
     }
 
     @objc
     static func handlePushNotificationOpened(response: UNNotificationResponse) {
-        ExponeaSDK.Exponea.shared.handlePushNotificationOpened(response: response)
+        Exponea.exponeaInstance.handlePushNotificationOpened(response: response)
     }
 }
 

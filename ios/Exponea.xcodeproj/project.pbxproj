@@ -10,6 +10,12 @@
 		052DAEA524A225C400A7A0A5 /* Exponea+Tracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DAEA424A225C400A7A0A5 /* Exponea+Tracking.swift */; };
 		052DAEA724A225F600A7A0A5 /* Exponea+Fetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DAEA624A225F600A7A0A5 /* Exponea+Fetching.swift */; };
 		052DAEA924A2465400A7A0A5 /* Exponea+Anonymize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */; };
+		0537094824D3423B001684E9 /* Exponea+AnonymizeSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0537094724D3423B001684E9 /* Exponea+AnonymizeSpec.swift */; };
+		0537094A24D401E3001684E9 /* Exponea+PushNotificationsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0537094924D401E3001684E9 /* Exponea+PushNotificationsSpec.swift */; };
+		054FD4BD24D2DE5200BBE1D5 /* ExponeaSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4BC24D2DE5200BBE1D5 /* ExponeaSpec.swift */; };
+		054FD4BF24D2DEA600BBE1D5 /* MockExponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4BE24D2DEA600BBE1D5 /* MockExponea.swift */; };
+		054FD4C124D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4C024D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift */; };
+		054FD4C324D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4C224D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift */; };
 		056F174324D027500065314D /* ExponeaAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 056F174224D027500065314D /* ExponeaAppDelegate.m */; };
 		0578A41C249B53990049AE9D /* ConfigurationParserSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */; };
 		0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41F249B6CC40049AE9D /* NSDictionary+getSafely.swift */; };
@@ -54,6 +60,12 @@
 		052DAEA424A225C400A7A0A5 /* Exponea+Tracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Tracking.swift"; sourceTree = "<group>"; };
 		052DAEA624A225F600A7A0A5 /* Exponea+Fetching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Fetching.swift"; sourceTree = "<group>"; };
 		052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Anonymize.swift"; sourceTree = "<group>"; };
+		0537094724D3423B001684E9 /* Exponea+AnonymizeSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+AnonymizeSpec.swift"; sourceTree = "<group>"; };
+		0537094924D401E3001684E9 /* Exponea+PushNotificationsSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+PushNotificationsSpec.swift"; sourceTree = "<group>"; };
+		054FD4BC24D2DE5200BBE1D5 /* ExponeaSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaSpec.swift; sourceTree = "<group>"; };
+		054FD4BE24D2DEA600BBE1D5 /* MockExponea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExponea.swift; sourceTree = "<group>"; };
+		054FD4C024D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+TrackingSpec.swift"; sourceTree = "<group>"; };
+		054FD4C224D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+FetchingSpec.swift"; sourceTree = "<group>"; };
 		056F174124D026820065314D /* ExponeaAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExponeaAppDelegate.h; sourceTree = "<group>"; };
 		056F174224D027500065314D /* ExponeaAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExponeaAppDelegate.m; sourceTree = "<group>"; };
 		0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParserSpec.swift; sourceTree = "<group>"; };
@@ -111,6 +123,12 @@
 				0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */,
 				0578A426249B7EB40049AE9D /* JsonDataParserSpec.swift */,
 				0578A428249B7F1C0049AE9D /* TestUtil.swift */,
+				054FD4BC24D2DE5200BBE1D5 /* ExponeaSpec.swift */,
+				054FD4BE24D2DEA600BBE1D5 /* MockExponea.swift */,
+				054FD4C024D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift */,
+				054FD4C224D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift */,
+				0537094724D3423B001684E9 /* Exponea+AnonymizeSpec.swift */,
+				0537094924D401E3001684E9 /* Exponea+PushNotificationsSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -350,9 +368,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				054FD4BF24D2DEA600BBE1D5 /* MockExponea.swift in Sources */,
 				0578A427249B7EB40049AE9D /* JsonDataParserSpec.swift in Sources */,
 				0578A41C249B53990049AE9D /* ConfigurationParserSpec.swift in Sources */,
+				0537094A24D401E3001684E9 /* Exponea+PushNotificationsSpec.swift in Sources */,
+				054FD4C324D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift in Sources */,
 				0578A429249B7F1C0049AE9D /* TestUtil.swift in Sources */,
+				054FD4C124D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift in Sources */,
+				0537094824D3423B001684E9 /* Exponea+AnonymizeSpec.swift in Sources */,
+				054FD4BD24D2DE5200BBE1D5 /* ExponeaSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,7 +424,7 @@
 				DEVELOPMENT_TEAM = T22S7RD8Z8;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -428,7 +452,7 @@
 				DEVELOPMENT_TEAM = T22S7RD8Z8;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Tests;

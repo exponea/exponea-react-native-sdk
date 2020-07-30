@@ -33,4 +33,19 @@ struct TestUtil {
         }
         return dictionary
     }
+
+    static func getSortedKeysJson(_ jsonString: String) -> String {
+        guard
+            let jsonData = jsonString.data(using: .utf8),
+            let jsonObject = try? JSONSerialization.jsonObject(with: jsonData),
+            let sortedJsonData = try? JSONSerialization.data(
+                withJSONObject: jsonObject,
+                options: [.sortedKeys]
+            ),
+            let jsonString = String(data: sortedJsonData, encoding: .utf8) else {
+            XCTFail("Unable to parse consents response")
+            return ""
+        }
+        return jsonString
+    }
 }

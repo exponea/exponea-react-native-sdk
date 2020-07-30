@@ -16,6 +16,8 @@ protocol IsExponeaReactNativeSDK {
 
 @objc(Exponea)
 class Exponea: RCTEventEmitter {
+    override init() {}
+
     @objc override static func requiresMainQueueSetup() -> Bool {
         return false
     }
@@ -24,6 +26,20 @@ class Exponea: RCTEventEmitter {
     override func supportedEvents() -> [String] {
         return ["pushOpened", "pushReceived"]
     }
+
+    override func sendEvent(withName name: String!, body: Any) {
+        if let sendEventOverride = sendEventOverride {
+            sendEventOverride(name, body)
+        } else {
+            super.sendEvent(withName: name, body: body)
+        }
+    }
+
+    // to be changed in unit tests
+    static var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared
+
+    // to be changed in unit tests
+    var sendEventOverride: ((String, Any) -> Void)?
 
     let errorCode = "ExponeaSDK"
     let defaultFlushPeriod = 5 * 60 // 5 minutes
@@ -42,19 +58,19 @@ class Exponea: RCTEventEmitter {
     @objc(configure:resolve:reject:)
     func configure(configuration: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let parser = ConfigurationParser(configuration)
-        guard !ExponeaSDK.Exponea.shared.isConfigured else {
+        guard !Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.alreadyConfigured)
             return
         }
         do {
-            ExponeaSDK.Exponea.shared.configure(
+            Exponea.exponeaInstance.configure(
                 try parser.parseProjectSettings(),
                 pushNotificationTracking: try parser.parsePushNotificationTracking(),
                 automaticSessionTracking: try parser.parseSessionTracking(),
                 defaultProperties: try parser.parseDefaultProperties(),
                 flushingSetup: try parser.parseFlushingSetup()
             )
-            ExponeaSDK.Exponea.shared.pushNotificationsDelegate = self
+            Exponea.exponeaInstance.pushNotificationsDelegate = self
             resolve(nil)
         } catch {
             rejectPromise(reject, error: error)
@@ -63,31 +79,31 @@ class Exponea: RCTEventEmitter {
 
     @objc(isConfigured:reject:)
     func isConfigured(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(ExponeaSDK.Exponea.shared.isConfigured)
+        resolve(Exponea.exponeaInstance.isConfigured)
     }
 
     @objc(getCustomerCookie:reject:)
     func getCustomerCookie(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard ExponeaSDK.Exponea.shared.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        resolve(ExponeaSDK.Exponea.shared.customerCookie)
+        resolve(Exponea.exponeaInstance.customerCookie)
     }
 
     @objc(checkPushSetup:reject:)
     func checkPushSetup(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard !ExponeaSDK.Exponea.shared.isConfigured else {
+        guard !Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.alreadyConfigured)
             return
         }
-        ExponeaSDK.Exponea.shared.checkPushSetup = true
+        Exponea.exponeaInstance.checkPushSetup = true
         resolve(nil)
     }
 
     @objc(getFlushMode:reject:)
     func getFlushMode(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        switch ExponeaSDK.Exponea.shared.flushingMode {
+        switch Exponea.exponeaInstance.flushingMode {
         case .automatic: resolve("APP_CLOSE")
         case .immediate: resolve("IMMEDIATE")
         case .periodic: resolve("PERIOD")
@@ -99,16 +115,16 @@ class Exponea: RCTEventEmitter {
     func setFlushMode(flushMode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         switch flushMode {
         case "APP_CLOSE":
-            ExponeaSDK.Exponea.shared.flushingMode = .automatic
+            Exponea.exponeaInstance.flushingMode = .automatic
             resolve(nil)
         case "IMMEDIATE":
-            ExponeaSDK.Exponea.shared.flushingMode = .immediate
+            Exponea.exponeaInstance.flushingMode = .immediate
             resolve(nil)
         case "PERIOD":
-            ExponeaSDK.Exponea.shared.flushingMode = .periodic(defaultFlushPeriod)
+            Exponea.exponeaInstance.flushingMode = .periodic(defaultFlushPeriod)
             resolve(nil)
         case "MANUAL":
-            ExponeaSDK.Exponea.shared.flushingMode = .manual
+            Exponea.exponeaInstance.flushingMode = .manual
             resolve(nil)
         default:
             let error = ExponeaDataError.invalidValue(for: "flush mode")
@@ -118,7 +134,7 @@ class Exponea: RCTEventEmitter {
 
     @objc(getFlushPeriod:reject:)
     func getFlushPeriod(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        switch ExponeaSDK.Exponea.shared.flushingMode {
+        switch Exponea.exponeaInstance.flushingMode {
         case .periodic(let period):
             resolve(period)
         default:
@@ -128,9 +144,9 @@ class Exponea: RCTEventEmitter {
 
     @objc(setFlushPeriod:resolve:reject:)
     func setFlushPeriod(flushPeriod: NSNumber, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        switch ExponeaSDK.Exponea.shared.flushingMode {
+        switch Exponea.exponeaInstance.flushingMode {
         case .periodic:
-            ExponeaSDK.Exponea.shared.flushingMode = .periodic(flushPeriod.intValue)
+            Exponea.exponeaInstance.flushingMode = .periodic(flushPeriod.intValue)
             resolve(nil)
         default:
             rejectPromise(reject, error: ExponeaError.flushModeNotPeriodic)

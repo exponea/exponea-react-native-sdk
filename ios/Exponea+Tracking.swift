@@ -17,12 +17,12 @@ extension Exponea {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) {
-        guard ExponeaSDK.Exponea.shared.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
         do {
-            ExponeaSDK.Exponea.shared.identifyCustomer(
+            Exponea.exponeaInstance.identifyCustomer(
                 customerIds: try JsonDataParser.parse(dictionary: customerIds),
                 properties: try JsonDataParser.parse(dictionary: properties),
                 timestamp: nil
@@ -35,11 +35,11 @@ extension Exponea {
 
     @objc(flushData:reject:)
     func flushData(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard ExponeaSDK.Exponea.shared.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        ExponeaSDK.Exponea.shared.flushData()
+        Exponea.exponeaInstance.flushData()
         resolve(nil)
     }
 
@@ -51,12 +51,12 @@ extension Exponea {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) {
-        guard ExponeaSDK.Exponea.shared.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
         do {
-            ExponeaSDK.Exponea.shared.trackEvent(
+            Exponea.exponeaInstance.trackEvent(
                 properties: try JsonDataParser.parse(dictionary: properties),
                 timestamp: try timestamp.getOptionalSafely(property: "timestamp"),
                 eventType: eventType
@@ -69,7 +69,7 @@ extension Exponea {
 
     @objc(trackSessionStart:resolve:reject:)
     func trackSessionStart(timestamp: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard ExponeaSDK.Exponea.shared.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
@@ -77,13 +77,13 @@ extension Exponea {
             rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "Setting session start timestamp"))
             return
         }
-        ExponeaSDK.Exponea.shared.trackSessionStart()
+        Exponea.exponeaInstance.trackSessionStart()
         resolve(nil)
     }
 
     @objc(trackSessionEnd:resolve:reject:)
     func trackSessionEnd(timestamp: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard ExponeaSDK.Exponea.shared.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
@@ -91,7 +91,7 @@ extension Exponea {
             rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "Setting session end timestamp"))
             return
         }
-        ExponeaSDK.Exponea.shared.trackSessionEnd()
+        Exponea.exponeaInstance.trackSessionEnd()
         resolve(nil)
     }
 }
