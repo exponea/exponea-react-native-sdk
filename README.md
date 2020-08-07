@@ -4,20 +4,17 @@ React Native Exponea SDK allows your application to interact with the [Exponea](
 React native is implemented in Typescript as a wrapper around [native Android SDK](https://github.com/exponea/exponea-android-sdk) and [native iOS SDK](https://github.com/exponea/exponea-ios-sdk).
 
 ## Getting started
+Install the package using npm or yarn:
+* `$ yarn add react-native-exponea-sdk`
+* `$ npm react-native-exponea-sdk --save`
 
-`$ yarn add react-native-exponea-sdk`  
-or  
-`$ npm react-native-exponea-sdk --save`  
-or whatever JS hipsters use these days.
-
-> Since version 0.60.0 React native auto-links dependencies. When using older version of React Native you have to link the package yourself  
-`$ react-native link react-native-exponea-sdk`
+> For projects using Expo, you'll need to switch to *Bare Workflow* using `expo eject`.
 
 ### iOS setup
 Minimal supported iOS version for Exponea SDK is 10.3, you need to change iOS version on the first line of your `ios/Podfile` to `platform :ios, '10.3'`, or higher.
 
 ### Android setup
-You'll need to enable multidex. Edit `android/app/build.gradle` and add `multiDexEnabled true` to android defaultConfig.
+You'll most likely need to enable multidex. Edit `android/app/build.gradle` and add `multiDexEnabled true` to android defaultConfig.
 ```
 android {
     ...
