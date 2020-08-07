@@ -35,7 +35,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
         fun parseProjectMapping(map: Map<String, Any?>, defaultBaseUrl: String): Map<EventType, List<ExponeaProject>> {
             val mapping: HashMap<EventType, List<ExponeaProject>> = hashMapOf()
             map.forEach { eventTypeConfiguration ->
-                var eventType: EventType
+                val eventType: EventType
                 try {
                     eventType = EventType.valueOf(eventTypeConfiguration.key)
                 } catch (e: Exception) {
@@ -45,6 +45,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     )
                 }
                 try {
+                    @Suppress("UNCHECKED_CAST")
                     val projectList = eventTypeConfiguration.value as List<Map<String, Any?>>
                     mapping[eventType] = projectList.map {
                         parseExponeaProject(it, defaultBaseUrl)
@@ -72,6 +73,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                 "baseUrl" ->
                     configuration.baseURL = map.getSafely("baseUrl", String::class)
                 "projectMapping" -> {
+                    @Suppress("UNCHECKED_CAST")
                     val mapping = entry.value as? Map<String, Any?>
                         ?: throw ExponeaModule.ExponeaDataException(
                             "Unable to parse project mapping, expected map of event types to list of Exponea projects"
@@ -79,6 +81,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     configuration.projectRouteMap = parseProjectMapping(mapping, configuration.baseURL)
                 }
                 "defaultProperties" -> {
+                    @Suppress("UNCHECKED_CAST")
                     val properties = entry.value as? HashMap<String, Any>
                         ?: throw ExponeaModule.ExponeaDataException(
                             "Unable to parse default properties, expected map of properties"
@@ -103,7 +106,11 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     }
                 }
                 "android" -> {
-                    parseAndroidConfig(entry.value as Map<String, Any?>)
+                    @Suppress("UNCHECKED_CAST")
+                    val androidConfig = entry.value as? Map<String, Any?> ?: throw ExponeaModule.ExponeaDataException(
+                        "Unable to parse android config, expected map of properties"
+                    )
+                    parseAndroidConfig(androidConfig)
                 }
             }
         }

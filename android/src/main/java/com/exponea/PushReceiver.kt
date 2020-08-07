@@ -23,13 +23,14 @@ class PushReceiver : BroadcastReceiver() {
             else -> throw RuntimeException("Unknown push notification action ${intent.action}")
         }
         val url = (intent.getSerializableExtra(ExponeaPushReceiver.EXTRA_ACTION_INFO) as? NotificationAction)?.url
+        @Suppress("UNCHECKED_CAST")
         val pushData = intent.getSerializableExtra(ExponeaPushReceiver.EXTRA_CUSTOM_DATA) as Map<String, String>
         val additionalData = Gson().fromJson(pushData["attributes"], Map::class.java)
         ExponeaModule.openPush(OpenedPush(action, url, additionalData))
 
         if (intent.action == ExponeaPushReceiver.ACTION_CLICKED) {
-            val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-            context.startActivity(intent)
+            val actionIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+            context.startActivity(actionIntent)
         }
     }
 }

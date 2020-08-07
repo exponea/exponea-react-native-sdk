@@ -26,9 +26,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         constructor(message: String) : super(message)
         constructor(message: String, cause: Throwable) : super(message, cause)
     }
-    class ExponeaFetchException : Exception {
-        constructor(message: String) : super(message)
-    }
+    class ExponeaFetchException(message: String) : Exception(message)
 
     companion object {
         var currentInstance: ExponeaModule? = null
@@ -146,13 +144,20 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         propertiesMap: ReadableMap,
         promise: Promise
     ) = requireInitialized(promise) {
-        val customerIds = CustomerIds()
-        customerIdsMap.toHashMap().forEach { if (it.value is String) customerIds.withId(it.key, it.value as String) }
-        val properties = PropertiesList(
-            propertiesMap.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
-        )
-        Exponea.identifyCustomer(customerIds, properties)
-        promise.resolve(null)
+        try {
+            val customerIds = CustomerIds()
+            customerIdsMap.toHashMap().forEach {
+                if (it.value is String) customerIds.withId(it.key, it.value as String)
+            }
+            @Suppress("UNCHECKED_CAST")
+            val properties = PropertiesList(
+                propertiesMap.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
+            )
+            Exponea.identifyCustomer(customerIds, properties)
+            promise.resolve(null)
+        } catch (e: Exception) {
+            promise.reject(e)
+        }
     }
 
     @ReactMethod
@@ -168,6 +173,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         promise: Promise
     ) = requireInitialized(promise) {
         try {
+            @Suppress("UNCHECKED_CAST")
             val propertiesList = PropertiesList(
                 params.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
             )
@@ -235,6 +241,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     fun fetchRecommendations(optionsReadableMap: ReadableMap, promise: Promise) = requireInitialized(promise) {
         try {
             val optionsMap = optionsReadableMap.toHashMapRecursively()
+            @Suppress("UNCHECKED_CAST")
             val options = CustomerRecommendationOptions(
                 optionsMap.getSafely("id", String::class),
                 optionsMap.getSafely("fillWithRandom", Boolean::class),

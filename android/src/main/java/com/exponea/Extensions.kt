@@ -7,6 +7,7 @@ import kotlin.reflect.KClass
 internal fun <T : Any> Map<String, Any?>.getSafely(key: String, type: KClass<T>): T {
     val value = this[key] ?: throw ExponeaModule.ExponeaDataException("Property '$key' cannot be null.")
     if (value::class == type) {
+        @Suppress("UNCHECKED_CAST")
         return value as T
     } else {
         throw ExponeaModule.ExponeaDataException(
