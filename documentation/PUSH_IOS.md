@@ -83,9 +83,12 @@ Create new Notification Service Extension and give it `App Groups` capability se
 ![](./images/extension2.png)
 In the extension, you have to call Exponea methods for processing notification and handling timeouts.
 ``` swift
+import UserNotifications
+import ExponeaSDK_Notifications // we'll add this pod later
+
 class NotificationService: UNNotificationServiceExtension {
     let exponeaService = ExponeaNotificationService(
-        appGroup: "your-app-group"
+        appGroup: "your-app-group" // don't forget to change this!
     )
 
     override func didReceive(
@@ -107,6 +110,11 @@ Create new Notification Content Extension. By default the extension will contain
 
 Your view controller class should just forward the notification to our service that will correctly display it.
 ``` swift
+import UIKit
+import UserNotifications
+import UserNotificationsUI
+import ExponeaSDK_Notifications // we'll add this pod later
+
 class NotificationViewController: UIViewController, UNNotificationContentExtension {
     let exponeaService = ExponeaNotificationContentService()
 
@@ -119,6 +127,8 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
 ### Dependency configuration
 Open `ios/Podfile` and add `ExponeaSDK-Notifications` for both of your extension targets.
 ```
+# Don't forget to change names to your targets!
+
 target 'ExampleNotificationService' do
   pod 'ExponeaSDK-Notifications'
 end
