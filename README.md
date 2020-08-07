@@ -31,4 +31,5 @@ android {
   * [Fetching](./documentation/FETCHING.md)
   * [Push notifications](./documentation/PUSH.md)
   * [Anonymize customer](./documentation/ANONYMIZE.md)
+  * [In-app messages](./documentation/IN_APP_MESSAGES.md)
   * [Example/Package development documentation](./documentation/DEVELOPMENT.md) - Learn how to build example application or the package itself
