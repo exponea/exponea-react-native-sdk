@@ -184,7 +184,7 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-exponea-sdk (0.1.0):
+  - react-native-exponea-sdk (0.2.0):
     - ExponeaSDK (~> 2.8.0)
     - React
   - react-native-safe-area-context (3.0.2):
@@ -359,7 +359,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-exponea-sdk: 7ba8ad78b10b323f7596b37a6cc685b4e6c79dc7
+  react-native-exponea-sdk: 59bcc7c263c9e679871048a11fee0fe38da350e4
   react-native-safe-area-context: b11a34881faac509cad5578726c98161ad4d275c
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
