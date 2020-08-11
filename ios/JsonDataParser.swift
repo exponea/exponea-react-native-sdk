@@ -21,17 +21,13 @@ struct JsonDataParser {
         return data
     }
 
-    static func parseDictionary(dictionary: NSDictionary) throws -> [String: JSONValue] {
-        return try parse(dictionary: dictionary).mapValues { $0.jsonValue }
-    }
-
-    static func parseArray(array: NSArray) throws -> [JSONValue] {
-        return try array.map { try parseValue(value: $0).jsonValue}
+    static func parseArray(array: NSArray) throws -> [JSONConvertible] {
+        return try array.map { try parseValue(value: $0) }
     }
 
     static func parseValue(value: Any) throws -> JSONConvertible {
         if let dictionary = value as? NSDictionary {
-            return try parseDictionary(dictionary: dictionary)
+            return try parse(dictionary: dictionary)
         } else if let array = value as? NSArray {
             return try parseArray(array: array)
         } else if let number = value as? NSNumber {

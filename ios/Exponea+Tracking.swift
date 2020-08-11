@@ -23,7 +23,13 @@ extension Exponea {
         }
         do {
             Exponea.exponeaInstance.identifyCustomer(
-                customerIds: try JsonDataParser.parse(dictionary: customerIds),
+                customerIds: try JsonDataParser.parse(dictionary: customerIds).mapValues {
+                    if case .string(let stringValue) = $0.jsonValue {
+                        return stringValue
+                    } else {
+                        throw ExponeaDataError.invalidType(for: "customer id (only string values are supported)")
+                    }
+                },
                 properties: try JsonDataParser.parse(dictionary: properties),
                 timestamp: nil
             )

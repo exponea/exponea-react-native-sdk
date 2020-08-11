@@ -130,6 +130,25 @@ class ExponeaTrackingSpec: QuickSpec {
                     )
                 }
             }
+
+            it("should reject when customer id is not a string") {
+                mockExponea.isConfiguredValue = true
+                waitUntil { done in
+                    exponea.identifyCustomer(
+                        customerIds: ["id": 1234],
+                        properties: ["key": "value", "otherKey": false],
+                        resolve: { _ in },
+                        reject: { errorCode, description, error in
+                            expect(errorCode).to(equal("ExponeaSDK"))
+                            expect(description)
+                                .to(equal("Invalid type for customer id (only string values are supported)."))
+                            expect(error?.localizedDescription)
+                                .to(equal("Invalid type for customer id (only string values are supported)."))
+                            done()
+                        }
+                    )
+                }
+            }
         }
 
         context("data flushing") {

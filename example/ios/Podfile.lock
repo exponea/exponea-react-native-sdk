@@ -1,8 +1,8 @@
 PODS:
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.7.0)
-  - ExponeaSDK-Notifications (2.7.0)
+  - ExponeaSDK (2.8.0)
+  - ExponeaSDK-Notifications (2.8.0)
   - FBLazyVector (0.61.5)
   - FBReactNativeSpec (0.61.5):
     - Folly (= 2018.10.22.00)
@@ -185,7 +185,7 @@ PODS:
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
   - react-native-exponea-sdk (0.1.0):
-    - ExponeaSDK (~> 2.7.0)
+    - ExponeaSDK (~> 2.8.0)
     - React
   - react-native-safe-area-context (3.0.2):
     - React
@@ -344,8 +344,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
-  ExponeaSDK: 9c25debfcc85f04e193aed2207d31b80a6530003
-  ExponeaSDK-Notifications: 59f4979070093ff439841ddca6680bb0629b013d
+  ExponeaSDK: 4ccc338f2739a4fe424c233a52dcb150941f78e0
+  ExponeaSDK-Notifications: c67df664d6b81da963029fd41a674f73fd2553db
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
@@ -359,7 +359,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-exponea-sdk: 04d811d5dec6f588026f573b4e8a61aee118c6eb
+  react-native-exponea-sdk: 7ba8ad78b10b323f7596b37a6cc685b4e6c79dc7
   react-native-safe-area-context: b11a34881faac509cad5578726c98161ad4d275c
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360

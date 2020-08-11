@@ -149,7 +149,7 @@ class MockExponea: ExponeaType {
     }
 
     func identifyCustomer(
-        customerIds: [String: JSONConvertible]?,
+        customerIds: [String: String]?,
         properties: [String: JSONConvertible],
         timestamp: Double?
     ) {
