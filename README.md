@@ -33,3 +33,7 @@ android {
   * [Anonymize customer](./documentation/ANONYMIZE.md)
   * [In-app messages](./documentation/IN_APP_MESSAGES.md)
   * [Example/Package development documentation](./documentation/DEVELOPMENT.md) - Learn how to build example application or the package itself
+
+## Release Notes
+
+[Release notes](./Documentation/RELEASE_NOTES.md) for the SDK.
