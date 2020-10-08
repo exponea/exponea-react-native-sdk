@@ -33,6 +33,12 @@ const Exponea: ExponeaType = {
 
   setLogLevel: NativeModules.Exponea.setLogLevel,
 
+  async getDefaultProperties(): Promise<JsonObject> {
+    return JSON.parse(await NativeModules.Exponea.getDefaultProperties());
+  },
+
+  setDefaultProperties: NativeModules.Exponea.setDefaultProperties,
+
   anonymize(
     exponeaProject?: ExponeaProject,
     projectMapping?: {[key in EventType]?: Array<ExponeaProject>},

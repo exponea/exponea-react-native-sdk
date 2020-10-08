@@ -133,4 +133,29 @@ internal class ExponeaModuleTest {
     fun `should set logger level`() {
         module.setLogLevel("OFF", MockResolvingPromise { assertEquals(Logger.Level.OFF, Exponea.loggerLevel) })
     }
+
+    @Test
+    fun `should get default properties`() {
+        every { Exponea.defaultProperties } returns hashMapOf()
+        module.getDefaultProperties(MockResolvingPromise { assertEquals("{}", it.result) })
+        every { Exponea.defaultProperties } returns hashMapOf("key" to "value", "number" to 123)
+        module.getDefaultProperties(MockResolvingPromise {
+            assertEquals("{\"number\":123,\"key\":\"value\"}", it.result)
+        })
+    }
+
+    @Test
+    fun `should set default properties`() {
+        Exponea.init(ApplicationProvider.getApplicationContext(), ExponeaConfiguration())
+        module.setDefaultProperties(
+            JavaOnlyMap.of(),
+            MockResolvingPromise { assertEquals(hashMapOf<String, Any>(), Exponea.defaultProperties) }
+        )
+        module.setDefaultProperties(
+            JavaOnlyMap.of("key", "value", "number", 123),
+            MockResolvingPromise {
+                assertEquals(hashMapOf("key" to "value", "number" to 123.0), Exponea.defaultProperties)
+            }
+        )
+    }
 }

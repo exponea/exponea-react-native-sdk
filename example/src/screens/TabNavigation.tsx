@@ -7,7 +7,7 @@ import {StyleSheet, Image} from 'react-native';
 import TrackingScreen from './TrackingScreen';
 import FetchingScreen from './FetchingScreen';
 import FlushingScreen from './FlushingScreen';
-import LoggingScreen from './LoggingScreen';
+import ConfigScreen from './ConfigScreen';
 import trackIcon from '../img/track.png';
 import fetchIcon from '../img/fetch.png';
 import flushIcon from '../img/flush.png';
@@ -17,7 +17,7 @@ enum Screen {
   Tracking = 'Tracking',
   Fetching = 'Fetching',
   Flushing = 'Flushing',
-  Logging = 'Logging',
+  Config = 'Config',
 }
 
 const Tab = createBottomTabNavigator();
@@ -41,9 +41,9 @@ export default function TabNavigation(): React.ReactElement {
         component={FlushingScreen}
       />
       <Tab.Screen
-        options={getTabBarOptions(Screen.Logging)}
-        name={Screen.Logging}
-        component={LoggingScreen}
+        options={getTabBarOptions(Screen.Config)}
+        name={Screen.Config}
+        component={ConfigScreen}
       />
     </Tab.Navigator>
   );
@@ -57,7 +57,7 @@ function getIcon(name: Screen) {
       return fetchIcon;
     case Screen.Flushing:
       return flushIcon;
-    case Screen.Logging:
+    case Screen.Config:
       return logIcon;
   }
 }

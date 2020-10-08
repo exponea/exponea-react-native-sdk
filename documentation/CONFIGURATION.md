@@ -53,7 +53,9 @@ You can see the Typescript definition for Configuration object at [src/Configura
     ],
   }
   ```
-* **defaultProperties** You can define default properties that will be added to every event you track to Exponea. Useful for constants like application settings.
+* **defaultProperties** You can define default properties that will be added to every event you track to Exponea. 
+  Useful for constants like application settings.
+  You can change these properties at runtime calling `Exponea.setDefaultProperties()`
   
 * **flushMaxRetries** Events are tracked into Exponea SDK internal database and flushed once the device has internet connection. This process may still fail, this property allows you to set number of retries in case that happens.
 

@@ -65,6 +65,16 @@ const mockExponea: ExponeaType = {
     return Promise.resolve();
   },
 
+  getDefaultProperties(): Promise<JsonObject> {
+    lastArgumentsJson = JSON.stringify([]);
+    return Promise.resolve({});
+  },
+
+  setDefaultProperties(properties: JsonObject): Promise<void> {
+    lastArgumentsJson = JSON.stringify([properties]);
+    return Promise.resolve();
+  },
+
   anonymize(
     exponeaProject?: ExponeaProject,
     projectMapping?: {[key in EventType]?: Array<ExponeaProject>},
@@ -211,6 +221,16 @@ describe('parameter serialization and typings', () => {
   test('setLogLevel', () => {
     mockExponea.setLogLevel(LogLevel.VERBOSE);
     expect(lastArgumentsJson).toBe('["VERBOSE"]');
+  });
+
+  test('getDefaultProperties', () => {
+    mockExponea.getDefaultProperties();
+    expect(lastArgumentsJson).toBe('[]');
+  });
+
+  test('setDefaultProperties', () => {
+    mockExponea.setDefaultProperties({key: 'value', number: '123'});
+    expect(lastArgumentsJson).toBe('[{"key":"value","number":"123"}]');
   });
 
   test('anonymize', () => {

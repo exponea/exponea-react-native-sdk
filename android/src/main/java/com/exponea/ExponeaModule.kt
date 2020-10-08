@@ -139,6 +139,21 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     }
 
     @ReactMethod
+    fun getDefaultProperties(promise: Promise) {
+        promise.resolve(Gson().toJson(Exponea.defaultProperties))
+    }
+
+    @ReactMethod
+    fun setDefaultProperties(defaultProperies: ReadableMap, promise: Promise) {
+        try {
+            Exponea.defaultProperties = defaultProperies.toHashMap()
+            promise.resolve(null)
+        } catch (e: Exception) {
+            promise.reject(e)
+        }
+    }
+
+    @ReactMethod
     fun identifyCustomer(
         customerIdsMap: ReadableMap,
         propertiesMap: ReadableMap,

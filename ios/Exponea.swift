@@ -190,4 +190,37 @@ class Exponea: RCTEventEmitter {
             rejectPromise(reject, error: ExponeaDataError.invalidValue(for: "Log level"))
         }
     }
+
+    @objc(getDefaultProperties:reject:)
+    func getDefaultProperties(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let properties = ExponeaSDK.Exponea.shared.defaultProperties else {
+            resolve("{}")
+            return
+        }
+        do {
+            resolve(
+                String(
+                    data: try JSONSerialization.data(withJSONObject: properties),
+                    encoding: .utf8
+                )
+            )
+        } catch {
+            rejectPromise(reject, error: error)
+        }
+    }
+
+    @objc(setDefaultProperties:resolve:reject:)
+    func setDefaultProperties(
+        properties: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            let parsedProperties = try JsonDataParser.parse(dictionary: properties)
+            ExponeaSDK.Exponea.shared.defaultProperties = parsedProperties
+            resolve(nil)
+        } catch {
+            rejectPromise(reject, error: error)
+        }
+    }
 }

@@ -34,6 +34,14 @@ interface ExponeaType {
   /** Sets LogLevel for native SDK. */
   setLogLevel(loggerLevel: LogLevel): Promise<void>;
 
+  /** Get default properties tracked with every event */
+  getDefaultProperties(): Promise<JsonObject>;
+
+  /** Set default properties tracked with every event.
+   * Only use for reconfiguration, preferred way of setting default properties is configuration object.
+   */
+  setDefaultProperties(properties: JsonObject): Promise<void>;
+
   /** Anonymizes current customer and creates a new one. Push token is cleared on Exponea backend.
    * Optionally changes default Exponea project and event-project mapping.
    */
