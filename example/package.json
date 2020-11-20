@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "build": "tsc"
+    "build": "tsc",
+    "postinstall": "react-native-fix-image"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
@@ -21,6 +22,7 @@
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-exponea-sdk": "link:../",
+    "react-native-fix-image": "^2.1.0",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-picker-select": "^7.0.0",
