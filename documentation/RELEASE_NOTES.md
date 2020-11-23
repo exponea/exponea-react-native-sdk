@@ -1,4 +1,11 @@
 ## Release Notes
+## Release Notes for 0.4.0
+#### November 23, 2020
+* Features
+  * Native iOS SDK updated to 2.9.3
+  * Native Android SDK updated to 2.9.0
+  * Added runtime configuration of default properties
+
 ## Release Notes for 0.3.0
 #### October 07, 2020
 * Features
