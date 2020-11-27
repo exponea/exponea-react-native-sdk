@@ -96,6 +96,18 @@ class MockExponea: ExponeaType {
         }
     }
 
+    var defaultPropertiesValue: [String: JSONConvertible]?
+    var defaultProperties: [String: JSONConvertible]? {
+        get {
+            calls.append(Call(name: "defaultProperties:get", params: []))
+            return defaultPropertiesValue
+        }
+        set {
+            calls.append(Call(name: "defaultProperties:set", params: [newValue]))
+            defaultPropertiesValue = newValue
+        }
+    }
+
     func configure(
         _ projectSettings: Exponea.ProjectSettings,
         pushNotificationTracking: Exponea.PushNotificationTracking,

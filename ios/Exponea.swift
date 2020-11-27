@@ -193,7 +193,7 @@ class Exponea: RCTEventEmitter {
 
     @objc(getDefaultProperties:reject:)
     func getDefaultProperties(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard let properties = ExponeaSDK.Exponea.shared.defaultProperties else {
+        guard let properties = Exponea.exponeaInstance.defaultProperties else {
             resolve("{}")
             return
         }
@@ -215,9 +215,13 @@ class Exponea: RCTEventEmitter {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
         do {
             let parsedProperties = try JsonDataParser.parse(dictionary: properties)
-            ExponeaSDK.Exponea.shared.defaultProperties = parsedProperties
+            Exponea.exponeaInstance.defaultProperties = parsedProperties
             resolve(nil)
         } catch {
             rejectPromise(reject, error: error)
