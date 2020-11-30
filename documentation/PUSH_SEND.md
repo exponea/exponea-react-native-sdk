@@ -11,16 +11,14 @@ Exponea web app provides great notifications builder, where you can customize al
 
   ![](images/send2.png)
 
-3. This will open a **Campaign Builder** where you can specify when/how your push notification is triggered
-You will need to choose a trigger and action type. To locate mobile push notification action
-use **Actions->Others** and choose **Mobile Push Notifications** in pop-up menu
+3. This will open a **Campaign Builder** where you can specify when/how your push notification is triggered. You can drag and drop components from the menu and connect triggers to actions. You can find more information on Campaign Builder in [Exponea documentation](https://docs.exponea.com/docs/scenarios-1).
 
   ![](images/send3.png)
 
   ![](images/send4.png)
 
 
-4. This will open notification builder. There you can specify **Title (1)** and **Message (2)** for your notification. There is a **Preview (4)** on the right side that will show what the notification is going to look like. Use **platform settings (5)** to preview/set platform for test push notification to either Android or iOS. There is also an option to specify an **Image (6)** you want to display and **Sound (9)** that will be played when notification is received.
+4. Double-clicking the push notification node will open notification builder. There you can specify **Title (1)** and **Message (2)** for your notification. There is a **Preview (4)** on the right side that will show what the notification is going to look like. Use **platform settings (5)** to preview/set platform for test push notification to either Android or iOS. There is also an option to specify an **Image (6)** you want to display and **Sound (9)** that will be played when notification is received.
 
 > When specifying the sound, provide sound name without extension.
 

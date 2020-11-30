@@ -19,6 +19,8 @@ You need to set up capabilities for your application. Open your application loca
 
  > In order to add `Push Notifications` capability, your Apple developer account needs to have paid membership. Without it, capability selector doesn't contain this capability at all.
 
+![](images/capabilities.png)
+
 ## 2. Exponea App delegate
 To react to push notification related events, the application's AppDelegate must implement a few methods. We've created a AppDelegate superclass to help you with that.
 * Open `AppDelegate.h` and replace the contents with
@@ -59,7 +61,7 @@ To be able to send push notifications from Exponea backend, you need to connect 
 [Exponea web app push notification configuration](./APNS.md) guide contains screenshots showing where the data is located.
 
 ## 5. Authorizing for receiving push notifications
-You'll need a special permission for notifications visible to the user. To request it, call `Exponea.requestIosPushAuthorization()`.
+You'll need a special permission for notifications visible to the user. To request it, call `Exponea.requestIosPushAuthorization()` from **javascript**.
 ``` typescript 
 Exponea.requestIosPushAuthorization()
 .then(accepted => {
@@ -146,3 +148,5 @@ Once done, run `pod install` in `ios` folder to install the dependencies. You sh
   
 ## Great job!
 You should now be able to send and receive push notifications from Exponea.
+
+> To test your push notification setup, send push notifications to your device from Exponea backend following [Sending Push notifications guide](./PUSH_SEND.md)

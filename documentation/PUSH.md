@@ -5,6 +5,8 @@ There is some setup required for each of the native platforms.
 * [iOS Push notification setup](./PUSH_IOS.md)
 * [Android Push notification setup](./PUSH_ANDROID.md)
 
+> To test your push notification setup, send push notifications to your device from Exponea backend following [Sending Push notifications guide](./PUSH_SEND.md)
+
 ## Responding to push notifications
 Once you perform platform setup, your application should be able to receive push notifications. To respond to push notification interaction, you can setup a listener using `Exponea.setPushOpenedListener()`. The SDK will hold last push notification and call the listener once it's set, but it's still recommended to set the listener as soon as possible to keep good flow of your application.
 ```typescript
