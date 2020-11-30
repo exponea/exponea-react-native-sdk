@@ -60,97 +60,87 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         }
     }
 
+    private fun catchAndReject(promise: Promise, block: () -> Unit) {
+        try {
+            block()
+        } catch (e: Exception) {
+            promise.reject(e)
+        }
+    }
+
     override fun getName(): String {
         return "Exponea"
     }
 
     @ReactMethod
-    fun configure(configMap: ReadableMap, promise: Promise) {
-        try {
-            val configuration = ConfigurationParser(configMap).parse()
-            Exponea.init(reactContext.currentActivity ?: reactContext, configuration)
-            this.configuration = configuration
-            Exponea.notificationDataCallback = { pushNotificationReceived(it) }
-            promise.resolve(null)
-        } catch (e: Exception) {
-            promise.reject(e)
-        }
+    fun configure(configMap: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val configuration = ConfigurationParser(configMap).parse()
+        Exponea.init(reactContext.currentActivity ?: reactContext, configuration)
+        this.configuration = configuration
+        Exponea.notificationDataCallback = { pushNotificationReceived(it) }
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun isConfigured(promise: Promise) {
+    fun isConfigured(promise: Promise) = catchAndReject(promise) {
         promise.resolve(Exponea.isInitialized)
     }
 
     @ReactMethod
     fun getCustomerCookie(promise: Promise) = requireInitialized(promise) {
-        promise.resolve(Exponea.customerCookie)
+        catchAndReject(promise) {
+            promise.resolve(Exponea.customerCookie)
+        }
     }
 
     @ReactMethod
-    fun checkPushSetup(promise: Promise) {
+    fun checkPushSetup(promise: Promise) = catchAndReject(promise) {
         Exponea.checkPushSetup = true
         promise.resolve(null)
     }
 
     @ReactMethod
-    fun getFlushMode(promise: Promise) {
+    fun getFlushMode(promise: Promise) = catchAndReject(promise) {
         promise.resolve(Exponea.flushMode.name)
     }
 
     @ReactMethod
-    fun setFlushMode(flushMode: String, promise: Promise) {
-        try {
-            Exponea.flushMode = FlushMode.valueOf(flushMode)
-            promise.resolve(null)
-        } catch (e: Exception) {
-            promise.reject(e)
-        }
+    fun setFlushMode(flushMode: String, promise: Promise) = catchAndReject(promise) {
+        Exponea.flushMode = FlushMode.valueOf(flushMode)
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun getFlushPeriod(promise: Promise) {
+    fun getFlushPeriod(promise: Promise) = catchAndReject(promise) {
         promise.resolve(Exponea.flushPeriod.amount.toDouble())
     }
 
     @ReactMethod
-    fun setFlushPeriod(period: Double, promise: Promise) {
-        try {
-            Exponea.flushPeriod = FlushPeriod(period.toLong(), TimeUnit.SECONDS)
-            promise.resolve(null)
-        } catch (e: Exception) {
-            promise.reject(e)
-        }
+    fun setFlushPeriod(period: Double, promise: Promise) = catchAndReject(promise) {
+        Exponea.flushPeriod = FlushPeriod(period.toLong(), TimeUnit.SECONDS)
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun getLogLevel(promise: Promise) {
+    fun getLogLevel(promise: Promise) = catchAndReject(promise) {
         promise.resolve(Exponea.loggerLevel.name)
     }
 
     @ReactMethod
-    fun setLogLevel(level: String, promise: Promise) {
-        try {
-            Exponea.loggerLevel = Logger.Level.valueOf(level)
-            promise.resolve(null)
-        } catch (e: Exception) {
-            promise.reject(e)
-        }
+    fun setLogLevel(level: String, promise: Promise) = catchAndReject(promise) {
+        Exponea.loggerLevel = Logger.Level.valueOf(level)
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun getDefaultProperties(promise: Promise) {
+    fun getDefaultProperties(promise: Promise) = catchAndReject(promise) {
         promise.resolve(Gson().toJson(Exponea.defaultProperties))
     }
 
     @ReactMethod
-    fun setDefaultProperties(defaultProperies: ReadableMap, promise: Promise) {
-        try {
-            Exponea.defaultProperties = defaultProperies.toHashMap()
-            promise.resolve(null)
-        } catch (e: Exception) {
-            promise.reject(e)
-        }
+    fun setDefaultProperties(defaultProperies: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        Exponea.defaultProperties = defaultProperies.toHashMap()
+        promise.resolve(null)
     }
 
     @ReactMethod
@@ -159,7 +149,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         propertiesMap: ReadableMap,
         promise: Promise
     ) = requireInitialized(promise) {
-        try {
+        catchAndReject(promise) {
             val customerIds = CustomerIds()
             customerIdsMap.toHashMap().forEach {
                 if (it.value is String) customerIds.withId(it.key, it.value as String)
@@ -170,14 +160,14 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
             )
             Exponea.identifyCustomer(customerIds, properties)
             promise.resolve(null)
-        } catch (e: Exception) {
-            promise.reject(e)
         }
     }
 
     @ReactMethod
     fun flushData(promise: Promise) = requireInitialized(promise) {
-        Exponea.flushData { promise.resolve(null) }
+        catchAndReject(promise) {
+            Exponea.flushData { promise.resolve(null) }
+        }
     }
 
     @ReactMethod
@@ -187,7 +177,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         timestamp: ReadableMap,
         promise: Promise
     ) = requireInitialized(promise) {
-        try {
+        catchAndReject(promise) {
             @Suppress("UNCHECKED_CAST")
             val propertiesList = PropertiesList(
                 params.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
@@ -198,63 +188,67 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
             }
             Exponea.trackEvent(propertiesList, unwrappedTimestamp, eventName)
             promise.resolve(null)
-        } catch (e: Exception) {
-            promise.reject(e)
         }
     }
 
     @ReactMethod
     fun trackSessionStart(timestamp: ReadableMap, promise: Promise) = requireInitialized(promise) {
-        if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
-            Exponea.trackSessionStart(timestamp.getDouble("timestamp"))
-        } else {
-            Exponea.trackSessionStart()
+        catchAndReject(promise) {
+            if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
+                Exponea.trackSessionStart(timestamp.getDouble("timestamp"))
+            } else {
+                Exponea.trackSessionStart()
+            }
+            promise.resolve(null)
         }
-        promise.resolve(null)
     }
 
     @ReactMethod
     fun trackSessionEnd(timestamp: ReadableMap, promise: Promise) = requireInitialized(promise) {
-        if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
-            Exponea.trackSessionEnd(timestamp.getDouble("timestamp"))
-        } else {
-            Exponea.trackSessionEnd()
+        catchAndReject(promise) {
+            if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
+                Exponea.trackSessionEnd(timestamp.getDouble("timestamp"))
+            } else {
+                Exponea.trackSessionEnd()
+            }
+            promise.resolve(null)
         }
-        promise.resolve(null)
     }
 
     @ReactMethod
     fun fetchConsents(promise: Promise) = requireInitialized(promise) {
-        Exponea.getConsents(
-            { response ->
-                val result = arrayListOf<Map<String, Any>>()
-                response.results.forEach { consent ->
-                    val consentMap = hashMapOf<String, Any>()
-                    consentMap["id"] = consent.id
-                    consentMap["legitimateInterest"] = consent.legitimateInterest
+        catchAndReject(promise) {
+            Exponea.getConsents(
+                { response ->
+                    val result = arrayListOf<Map<String, Any>>()
+                    response.results.forEach { consent ->
+                        val consentMap = hashMapOf<String, Any>()
+                        consentMap["id"] = consent.id
+                        consentMap["legitimateInterest"] = consent.legitimateInterest
 
-                    val sourcesMap = hashMapOf<String, Any>()
-                    sourcesMap["createdFromCRM"] = consent.sources.createdFromCRM
-                    sourcesMap["imported"] = consent.sources.imported
-                    sourcesMap["privateAPI"] = consent.sources.privateAPI
-                    sourcesMap["publicAPI"] = consent.sources.publicAPI
-                    sourcesMap["trackedFromScenario"] = consent.sources.trackedFromScenario
+                        val sourcesMap = hashMapOf<String, Any>()
+                        sourcesMap["createdFromCRM"] = consent.sources.createdFromCRM
+                        sourcesMap["imported"] = consent.sources.imported
+                        sourcesMap["privateAPI"] = consent.sources.privateAPI
+                        sourcesMap["publicAPI"] = consent.sources.publicAPI
+                        sourcesMap["trackedFromScenario"] = consent.sources.trackedFromScenario
 
-                    consentMap["sources"] = sourcesMap
-                    consentMap["translations"] = consent.translations
+                        consentMap["sources"] = sourcesMap
+                        consentMap["translations"] = consent.translations
 
-                    result.add(consentMap)
-                }
-                // React native android bridge doesn't support arrays yet, we have to serialize the response
-                promise.resolve(Gson().toJson(result))
-            },
-            { promise.reject(ExponeaFetchException(it.results.message)) }
-        )
+                        result.add(consentMap)
+                    }
+                    // React native android bridge doesn't support arrays yet, we have to serialize the response
+                    promise.resolve(Gson().toJson(result))
+                },
+                { promise.reject(ExponeaFetchException(it.results.message)) }
+            )
+        }
     }
 
     @ReactMethod
     fun fetchRecommendations(optionsReadableMap: ReadableMap, promise: Promise) = requireInitialized(promise) {
-        try {
+        catchAndReject(promise) {
             val optionsMap = optionsReadableMap.toHashMapRecursively()
             @Suppress("UNCHECKED_CAST")
             val options = CustomerRecommendationOptions(
@@ -283,8 +277,6 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
                 },
                 { promise.reject(ExponeaFetchException(it.results.message)) }
             )
-        } catch (e: Exception) {
-            promise.reject(e)
         }
     }
 
@@ -294,7 +286,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         mappingReadableMap: ReadableMap,
         promise: Promise
     ) = requireInitialized(promise) {
-        try {
+        catchAndReject(promise) {
             var exponeaProject: ExponeaProject? = null
             if (projectReadableMap.hasKey("exponeaProject") && !projectReadableMap.isNull("exponeaProject")) {
                 exponeaProject = ConfigurationParser.parseExponeaProject(
@@ -319,21 +311,21 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
                 Exponea.anonymize()
             }
             promise.resolve(null)
-        } catch (e: Exception) {
-            promise.reject(e)
         }
     }
 
     @ReactMethod
-    fun onPushOpenedListenerSet() {
+    fun onPushOpenedListenerSet(promise: Promise) = catchAndReject(promise) {
         pushOpenedListenerSet = true
-        openPush(pendingOpenedPush ?: return)
+        openPush(pendingOpenedPush ?: return@catchAndReject)
         pendingOpenedPush = null
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun onPushOpenedListenerRemove() {
+    fun onPushOpenedListenerRemove(promise: Promise) = catchAndReject(promise) {
         pushOpenedListenerSet = false
+        promise.resolve(null)
     }
 
     fun openPush(push: OpenedPush) {
@@ -353,14 +345,16 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     }
 
     @ReactMethod
-    fun onPushReceivedListenerSet() {
+    fun onPushReceivedListenerSet(promise: Promise) = catchAndReject(promise) {
         pushReceivedListenerSet = true
-        pushNotificationReceived(pendingReceivedPushData ?: return)
+        pushNotificationReceived(pendingReceivedPushData ?: return@catchAndReject)
         pendingReceivedPushData = null
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun onPushReceivedListenerRemove() {
+    fun onPushReceivedListenerRemove(promise: Promise) = catchAndReject(promise) {
         pushReceivedListenerSet = false
+        promise.resolve(null)
     }
 }

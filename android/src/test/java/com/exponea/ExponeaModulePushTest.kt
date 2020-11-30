@@ -36,20 +36,20 @@ internal class ExponeaModulePushTest {
     fun `should save received push notification until listener is set`() {
         module.pushNotificationReceived(hashMapOf("data" to "value"))
         verify(exactly = 0) { eventEmmiter.emit(any(), any()) }
-        module.onPushReceivedListenerSet()
+        module.onPushReceivedListenerSet(MockResolvingPromise {})
         verify { eventEmmiter.emit("pushReceived", """{"data":"value"}""") }
         confirmVerified()
     }
 
     @Test
     fun `should save received push notification when listener is unset`() {
-        module.onPushReceivedListenerSet()
+        module.onPushReceivedListenerSet(MockResolvingPromise {})
         module.pushNotificationReceived(hashMapOf("data" to "value"))
         verify(exactly = 1) { eventEmmiter.emit("pushReceived", """{"data":"value"}""") }
-        module.onPushReceivedListenerRemove()
+        module.onPushReceivedListenerRemove(MockResolvingPromise {})
         module.pushNotificationReceived(hashMapOf("data" to "value"))
         verify(exactly = 1) { eventEmmiter.emit("pushReceived", """{"data":"value"}""") }
-        module.onPushReceivedListenerSet()
+        module.onPushReceivedListenerSet(MockResolvingPromise {})
         verify(exactly = 2) { eventEmmiter.emit("pushReceived", """{"data":"value"}""") }
         confirmVerified()
     }
@@ -58,7 +58,7 @@ internal class ExponeaModulePushTest {
     fun `should save opened push notification until listener is set`() {
         ExponeaModule.openPush(OpenedPush(PushAction.deeplink, "someUrl", hashMapOf("data" to "value")))
         verify(exactly = 0) { eventEmmiter.emit(any(), any()) }
-        module.onPushOpenedListenerSet()
+        module.onPushOpenedListenerSet(MockResolvingPromise {})
         verify {
             eventEmmiter.emit(
                 "pushOpened",
@@ -70,7 +70,7 @@ internal class ExponeaModulePushTest {
 
     @Test
     fun `should save opened push notification when listener is unset`() {
-        module.onPushOpenedListenerSet()
+        module.onPushOpenedListenerSet(MockResolvingPromise {})
         ExponeaModule.openPush(OpenedPush(PushAction.deeplink, "someUrl", hashMapOf("data" to "value")))
         verify(exactly = 1) {
             eventEmmiter.emit(
@@ -78,7 +78,7 @@ internal class ExponeaModulePushTest {
                 """{"action":"deeplink","url":"someUrl","additionalData":{"data":"value"}}"""
             )
         }
-        module.onPushOpenedListenerRemove()
+        module.onPushOpenedListenerRemove(MockResolvingPromise {})
         ExponeaModule.openPush(OpenedPush(PushAction.deeplink, "someUrl", hashMapOf("data" to "value")))
         verify(exactly = 1) {
             eventEmmiter.emit(
@@ -86,7 +86,7 @@ internal class ExponeaModulePushTest {
                 """{"action":"deeplink","url":"someUrl","additionalData":{"data":"value"}}"""
             )
         }
-        module.onPushOpenedListenerSet()
+        module.onPushOpenedListenerSet(MockResolvingPromise {})
         verify(exactly = 2) {
             eventEmmiter.emit(
                 "pushOpened",
