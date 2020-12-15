@@ -55,5 +55,6 @@ const styles = StyleSheet.create({
   },
   eventTypeContainer: {
     width: 200,
+    marginLeft: -5,
   },
 });

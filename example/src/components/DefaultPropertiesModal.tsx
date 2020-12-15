@@ -77,9 +77,10 @@ const styles = StyleSheet.create({
     width: 200,
   },
   defaultProperties: {
-    backgroundColor: '#efefef',
-    borderColor: '#000000',
+    backgroundColor: '#f9f9f9',
+    borderColor: '#999999',
+    borderRadius: 5,
     borderWidth: 1,
-    padding: 10,
+    padding: 5,
   },
 });

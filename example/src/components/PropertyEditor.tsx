@@ -81,6 +81,7 @@ function Property(props: {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     marginTop: 5,
     alignItems: 'stretch',
     justifyContent: 'center',

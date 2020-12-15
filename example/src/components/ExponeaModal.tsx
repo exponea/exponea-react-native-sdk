@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   closeButtonContainer: {
+    zIndex: 1,
     position: 'absolute',
     right: 5,
     top: Platform.OS === 'ios' ? 5 : 0,

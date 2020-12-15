@@ -113,7 +113,6 @@ function Editing(props: EditingProps): React.ReactElement {
 
 const styles = StyleSheet.create({
   container: {
-    width: 200,
     marginTop: 5,
     alignItems: 'stretch',
     justifyContent: 'center',
