@@ -22,5 +22,6 @@ Pod::Spec.new do |s|
 
   s.dependency "React"
   s.dependency "ExponeaSDK", "~> 2.9.3"
+  s.dependency "AnyCodable-FlightSchool", "~> 0.4.0"
 end
 

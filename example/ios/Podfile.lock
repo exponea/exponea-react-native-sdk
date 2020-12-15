@@ -1,4 +1,5 @@
 PODS:
+  - AnyCodable-FlightSchool (0.4.0)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - ExponeaSDK (2.9.3)
@@ -185,6 +186,7 @@ PODS:
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
   - react-native-exponea-sdk (0.4.0):
+    - AnyCodable-FlightSchool (~> 0.4.0)
     - ExponeaSDK (~> 2.9.3)
     - React
   - react-native-safe-area-context (3.0.2):
@@ -273,6 +275,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AnyCodable-FlightSchool
     - boost-for-react-native
     - ExponeaSDK
     - ExponeaSDK-Notifications
@@ -342,6 +345,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   ExponeaSDK: 2eafd4afe56a87324793b2c71316095f7b63dfa2
@@ -359,7 +363,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-exponea-sdk: 032c0609ab6f3fcfbca2ac07d22b42feea32cb79
+  react-native-exponea-sdk: c074816c66d692c4cb7c69e12a578965c02ac750
   react-native-safe-area-context: b11a34881faac509cad5578726c98161ad4d275c
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360

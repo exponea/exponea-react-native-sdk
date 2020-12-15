@@ -34,6 +34,7 @@ target 'Exponea' do
   pod 'Folly', :podspec => "#{rnPrefix}/third-party-podspecs/Folly.podspec"
 
   pod "ExponeaSDK", "~> 2.9.3"
+  pod 'AnyCodable-FlightSchool', '~> 0.4.0'
 end
 
 target 'Tests' do

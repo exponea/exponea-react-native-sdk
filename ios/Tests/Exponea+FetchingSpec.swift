@@ -78,7 +78,7 @@ class ExponeaFetchingSpec: QuickSpec {
     """
 
     let recommendationJSPayload = """
-    [{"engineName":"random","itemId":"1","recommendationId":"5dd6af3d147f518cb457c63c","recommendationVariantId":null},{"engineName":"random","itemId":"3","recommendationId":"5dd6af3d147f518cb457c63c","recommendationVariantId":"mock id"}]
+    [{"description":"an awesome book","engine_name":"random","image":"no image available","item_id":"1","name":"book","price":19.989999999999998,"product_id":"1","recommendation_id":"5dd6af3d147f518cb457c63c","recommendation_variant_id":null},{"description":"super awesome off-brand phone","engine_name":"random","image":"just google one","item_id":"3","name":"mobile phone","price":499.99000000000001,"product_id":"3","recommendation_id":"5dd6af3d147f518cb457c63c","recommendation_variant_id":"mock id"}]
     """
     //swiftlint:enable line_length
 
@@ -174,19 +174,19 @@ class ExponeaFetchingSpec: QuickSpec {
                     expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
                     expect(mockExponea.calls[1].name).to(equal("fetchRecommendation"))
                     let callback = mockExponea.calls[1].params[1]
-                        as? (Result<RecommendationResponse<EmptyRecommendationData>>) -> Void
+                        as? (Result<RecommendationResponse<AllRecommendationData>>) -> Void
 
                     let jsonDecoder = JSONDecoder()
                     jsonDecoder.dateDecodingStrategy = .secondsSince1970
                     guard let data = self.recommendationsResponse.data(using: .utf8),
                           let recommendations = try? jsonDecoder.decode(
-                              RecommendationResponse<EmptyRecommendationData>.self,
+                              RecommendationResponse<AllRecommendationData>.self,
                               from: data
                           ) else {
                         XCTFail("Unable to parse recommendations")
                         return
                     }
-                    callback?(Result<RecommendationResponse<EmptyRecommendationData>>.success(recommendations))
+                    callback?(Result<RecommendationResponse<AllRecommendationData>>.success(recommendations))
                 }
             }
 
@@ -220,7 +220,7 @@ class ExponeaFetchingSpec: QuickSpec {
                         }
                     )
                     let callback = mockExponea.calls[1].params[1]
-                        as? (Result<RecommendationResponse<EmptyRecommendationData>>) -> Void
+                        as? (Result<RecommendationResponse<AllRecommendationData>>) -> Void
                     callback?(Result.failure(ExponeaError.fetchError(description: "something")))
                 }
             }
