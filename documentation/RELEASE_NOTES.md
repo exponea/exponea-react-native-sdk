@@ -1,5 +1,9 @@
 ## Release Notes
-## Release Notes for 0.4.0
+## Release Notes for 0.4.1
+#### January 04, 2021
+* Version 0.4.0 is a bad release that contains development Cocoapods. This version is just a re-release of 0.4.0
+
+## Release Notes for 0.4.0 (DEPRECATED)
 #### November 23, 2020
 * Features
   * Native iOS SDK updated to 2.9.3
