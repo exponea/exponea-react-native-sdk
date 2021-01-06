@@ -32,17 +32,17 @@ To react to push notification related events, the application's AppDelegate must
   @interface AppDelegate : ExponeaAppDelegate<RCTBridgeDelegate>
   @end
   ```
-* Open `AppDelegate.m` and set the `UNUserNotificationCenter` delegate to `self` in `didFinishLaunchingWithOptions`
+* Open `AppDelegate.m` and add a super call to `didFinishLaunchingWithOptions`
   ``` objc
     - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
     {
       ...
-    [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+      [super application:application didFinishLaunchingWithOptions:launchOptions];
     return YES;
   }
   ```
 
-> If you cannot/don't want to use ExponeaAppDelegate superclass, import `ExponeaAppDelegate.h` in `AppDelegate.m` and copy over the methods/add calls to Exponea to existing ones. You'll also have to set the `UNUserNotificationCenter` delegate. Add a call as described above and add `UNUserNotificationCenterDelegate` to protocols in `AppDelegate.h`.
+> If you cannot/don't want to use ExponeaAppDelegate superclass, import `ExponeaAppDelegate.h` in `AppDelegate.m` and copy over the methods/add calls to Exponea to existing ones. You'll also have to set the `UNUserNotificationCenter` delegate and code for processing notifications to `didFinishLaunchingWithOptions`.
 
 ## 3. App group configuration
 To enable push notifications, you'll need to set your app group created in the previous step. App group is a property of the `Configuration` javascript object.

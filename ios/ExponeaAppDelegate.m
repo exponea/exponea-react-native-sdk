@@ -12,6 +12,15 @@
 
 @implementation ExponeaAppDelegate
 
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    if (launchOptions && [launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey]) {
+        [Exponea handlePushNotificationOpenedWithUserInfo:[launchOptions valueForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
+    }
+    [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+    return YES;
+}
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     [Exponea handlePushNotificationToken: deviceToken];
