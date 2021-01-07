@@ -3,7 +3,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AuthScreen from './screens/AuthScreen';
 import TabNavigation from './screens/TabNavigation';
-import {Alert} from 'react-native';
+import {Alert, Linking} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 import PreloadingScreen from './screens/PreloadingScreen';
 import {LogLevel} from 'react-native-exponea-sdk/lib/ExponeaType';
@@ -20,6 +20,17 @@ export default class App extends React.Component<{}, AppState> {
   };
 
   componentDidMount(): void {
+    const openLink = (url: string | null) => {
+      if (url != null) {
+        setTimeout(() => {
+          console.log(`Link received url: ${url}`);
+          Alert.alert('Link received', `Url: ${url}`);
+        }, 1000);
+      }
+    };
+    Linking.addEventListener('url', (e) => openLink(e.url));
+    Linking.getInitialURL().then(openLink);
+
     Exponea.setPushOpenedListener((pushOpened) => {
       // we'll wait for the app to fully resume before showing the alert
       setTimeout(() => {

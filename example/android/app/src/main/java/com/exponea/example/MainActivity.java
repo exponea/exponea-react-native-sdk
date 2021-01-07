@@ -1,5 +1,12 @@
 package com.exponea.example;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+
+import androidx.annotation.Nullable;
+
+import com.exponea.ExponeaModule;
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
@@ -11,5 +18,18 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "example";
+  }
+
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    ExponeaModule.Companion.handleCampaignIntent(getIntent(), getApplicationContext());
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override
+  public void onNewIntent(Intent intent) {
+    ExponeaModule.Companion.handleCampaignIntent(intent, getApplicationContext());
+    super.onNewIntent(intent);
   }
 }
