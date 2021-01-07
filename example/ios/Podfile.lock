@@ -2,8 +2,8 @@ PODS:
   - AnyCodable-FlightSchool (0.4.0)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.9.3)
-  - ExponeaSDK-Notifications (2.9.2)
+  - ExponeaSDK (2.10.0)
+  - ExponeaSDK-Notifications (2.10.0)
   - FBLazyVector (0.61.5)
   - FBReactNativeSpec (0.61.5):
     - Folly (= 2018.10.22.00)
@@ -185,9 +185,9 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-exponea-sdk (0.4.0):
+  - react-native-exponea-sdk (0.4.1):
     - AnyCodable-FlightSchool (~> 0.4.0)
-    - ExponeaSDK (~> 2.9.3)
+    - ExponeaSDK (~> 2.10.0)
     - React
   - react-native-safe-area-context (3.0.2):
     - React
@@ -348,8 +348,8 @@ SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
-  ExponeaSDK: 2eafd4afe56a87324793b2c71316095f7b63dfa2
-  ExponeaSDK-Notifications: d294ec08d25543ef489688f9c1fda6b2799292e7
+  ExponeaSDK: b36971c52d97c7a07bef5de55b0a228bd88d5ed7
+  ExponeaSDK-Notifications: 2b366fc848544ac6d7e0d0a5ab40268d205011a3
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
@@ -363,7 +363,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-exponea-sdk: c074816c66d692c4cb7c69e12a578965c02ac750
+  react-native-exponea-sdk: 80d3052d4d6c7c279680092f08c346b9116b2941
   react-native-safe-area-context: b11a34881faac509cad5578726c98161ad4d275c
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
@@ -383,4 +383,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 7a1d9f1dab4161bb649d882452847ed5304c00c4
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0

@@ -33,7 +33,7 @@ target 'Exponea' do
   pod 'glog', :podspec => "#{rnPrefix}/third-party-podspecs/glog.podspec"
   pod 'Folly', :podspec => "#{rnPrefix}/third-party-podspecs/Folly.podspec"
 
-  pod "ExponeaSDK", "~> 2.9.3"
+  pod "ExponeaSDK", "~> 2.10.0"
   pod 'AnyCodable-FlightSchool', '~> 0.4.0'
 end
 
