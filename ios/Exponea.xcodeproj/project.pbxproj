@@ -12,6 +12,7 @@
 		052DAEA924A2465400A7A0A5 /* Exponea+Anonymize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */; };
 		0537094824D3423B001684E9 /* Exponea+AnonymizeSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0537094724D3423B001684E9 /* Exponea+AnonymizeSpec.swift */; };
 		0537094A24D401E3001684E9 /* Exponea+PushNotificationsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0537094924D401E3001684E9 /* Exponea+PushNotificationsSpec.swift */; };
+		0544CE6425A7119200DCF863 /* Exponea+Linking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0544CE6325A7117300DCF863 /* Exponea+Linking.swift */; };
 		054FD4BD24D2DE5200BBE1D5 /* ExponeaSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4BC24D2DE5200BBE1D5 /* ExponeaSpec.swift */; };
 		054FD4BF24D2DEA600BBE1D5 /* MockExponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4BE24D2DEA600BBE1D5 /* MockExponea.swift */; };
 		054FD4C124D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4C024D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift */; };
@@ -62,6 +63,7 @@
 		052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Anonymize.swift"; sourceTree = "<group>"; };
 		0537094724D3423B001684E9 /* Exponea+AnonymizeSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+AnonymizeSpec.swift"; sourceTree = "<group>"; };
 		0537094924D401E3001684E9 /* Exponea+PushNotificationsSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+PushNotificationsSpec.swift"; sourceTree = "<group>"; };
+		0544CE6325A7117300DCF863 /* Exponea+Linking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Linking.swift"; sourceTree = "<group>"; };
 		054FD4BC24D2DE5200BBE1D5 /* ExponeaSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaSpec.swift; sourceTree = "<group>"; };
 		054FD4BE24D2DEA600BBE1D5 /* MockExponea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExponea.swift; sourceTree = "<group>"; };
 		054FD4C024D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+TrackingSpec.swift"; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */,
 				052DAEA624A225F600A7A0A5 /* Exponea+Fetching.swift */,
 				052DAEA424A225C400A7A0A5 /* Exponea+Tracking.swift */,
+				0544CE6325A7117300DCF863 /* Exponea+Linking.swift */,
 				05FD3771248FDE7F0078847C /* Exponea.swift */,
 				0578A423249B7D9C0049AE9D /* JsonDataParser.swift */,
 				0578A41F249B6CC40049AE9D /* NSDictionary+getSafely.swift */,
@@ -391,6 +394,7 @@
 				05C69B8E249CF511008A4D9D /* ExponeaError.swift in Sources */,
 				05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */,
 				0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */,
+				0544CE6425A7119200DCF863 /* Exponea+Linking.swift in Sources */,
 				0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */,
 				0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */,
 				052DAEA524A225C400A7A0A5 /* Exponea+Tracking.swift in Sources */,

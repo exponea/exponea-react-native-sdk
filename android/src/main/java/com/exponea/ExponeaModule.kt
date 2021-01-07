@@ -1,5 +1,7 @@
 package com.exponea
 
+import android.content.Context
+import android.content.Intent
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.CustomerIds
 import com.exponea.sdk.models.CustomerRecommendationOptions
@@ -39,6 +41,10 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
             } else {
                 pendingOpenedPush = push
             }
+        }
+
+        fun handleCampaignIntent(intent: Intent?, context: Context) {
+            Exponea.handleCampaignIntent(intent, context)
         }
     }
 

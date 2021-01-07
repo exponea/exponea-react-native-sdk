@@ -15,6 +15,7 @@
  + (void)handlePushNotificationToken:(NSData * _Nonnull)deviceToken;
  + (void)handlePushNotificationOpenedWithUserInfo:(NSDictionary * _Nonnull)userInfo;
  + (void)handlePushNotificationOpenedWithResponse:(UNNotificationResponse * _Nonnull)response;
+ + (void)continueUserActivity: (nonnull NSUserActivity *)userActivity;
 @end
 
 

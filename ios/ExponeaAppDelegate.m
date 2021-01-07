@@ -33,4 +33,11 @@
     completionHandler();
 }
 
+- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
+ restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
+{
+    [Exponea continueUserActivity: userActivity];
+    return false;
+}
+
 @end
