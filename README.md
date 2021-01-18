@@ -32,7 +32,7 @@ android {
   * [Basics concepts](./documentation/BASIC_CONCEPTS.md)
   * [Configuration](./documentation/CONFIGURATION.md)
   * [Tracking](./documentation/TRACKING.md)
-  * [Tracking Campaigns(Android App Links/Universal links)](./documentation/Linking.md)
+  * [Tracking Campaigns(Android App Links/Universal links)](./documentation/LINKING.md)
   * [Fetching](./documentation/FETCHING.md)
   * [Push notifications](./documentation/PUSH.md)
   * [Anonymize customer](./documentation/ANONYMIZE.md)
