@@ -72,7 +72,7 @@ class ExponeaFetchingSpec: QuickSpec {
         }
     """
 
-    //swiftlint:disable line_length
+    // swiftlint:disable line_length
     let consentsJSPayload = """
     [{"id":"TestCategory","legitimateInterest":false,"sources":{"createdFromCRM":true,"imported":true,"privateAPI":true,"publicAPI":false,"trackedFromScenario":true},"translations":{"en":{"description":"test","name":"My Test Consents"}}}]
     """
@@ -80,7 +80,7 @@ class ExponeaFetchingSpec: QuickSpec {
     let recommendationJSPayload = """
     [{"description":"an awesome book","engine_name":"random","image":"no image available","item_id":"1","name":"book","price":19.989999999999998,"product_id":"1","recommendation_id":"5dd6af3d147f518cb457c63c","recommendation_variant_id":null},{"description":"super awesome off-brand phone","engine_name":"random","image":"just google one","item_id":"3","name":"mobile phone","price":499.99000000000001,"product_id":"3","recommendation_id":"5dd6af3d147f518cb457c63c","recommendation_variant_id":"mock id"}]
     """
-    //swiftlint:enable line_length
+    // swiftlint:enable line_length
 
     override func spec() {
         var mockExponea: MockExponea!
