@@ -3,8 +3,8 @@ PODS:
   - boost-for-react-native (1.63.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.10.0)
-  - ExponeaSDK-Notifications (2.10.0)
+  - ExponeaSDK (2.11.0)
+  - ExponeaSDK-Notifications (2.11.0)
   - FBLazyVector (0.64.0)
   - FBReactNativeSpec (0.64.0):
     - RCT-Folly (= 2020.01.13.00)
@@ -268,7 +268,7 @@ PODS:
   - React-jsinspector (0.64.0)
   - react-native-exponea-sdk (0.5.0):
     - AnyCodable-FlightSchool (~> 0.4.0)
-    - ExponeaSDK (~> 2.10.0)
+    - ExponeaSDK (~> 2.11.0)
     - React
   - react-native-safe-area-context (3.0.2):
     - React
@@ -499,10 +499,10 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
-  ExponeaSDK: b36971c52d97c7a07bef5de55b0a228bd88d5ed7
-  ExponeaSDK-Notifications: 2b366fc848544ac6d7e0d0a5ab40268d205011a3
+  ExponeaSDK: ddb7bc9e47b3ca983c376ca18d8a245238eca390
+  ExponeaSDK-Notifications: 4dc1f3171eb8a8a065e16c528a984590c59d5a87
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
-  FBReactNativeSpec: bf9227a052fd06042141490a68516ecc4eeae3d4
+  FBReactNativeSpec: 21228e8106b0fe0a9998f5ca08da7083bd7654b9
   Flipper: 1bd2db48dcc31e4b167b9a33ec1df01c2ded4893
   Flipper-DoubleConversion: 38631e41ef4f9b12861c67d17cb5518d06badc41
   Flipper-Folly: 755929a4f851b2fb2c347d533a23f191b008554c
@@ -524,7 +524,7 @@ SPEC CHECKSUMS:
   React-jsi: 74341196d9547cbcbcfa4b3bbbf03af56431d5a1
   React-jsiexecutor: 06a9c77b56902ae7ffcdd7a4905f664adc5d237b
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
-  react-native-exponea-sdk: 10fa16af34fa65223279783cd46711e1d0a4fe8f
+  react-native-exponea-sdk: 77a66199272b52eca8839180dc951f3dd249ece5
   react-native-safe-area-context: b11a34881faac509cad5578726c98161ad4d275c
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
