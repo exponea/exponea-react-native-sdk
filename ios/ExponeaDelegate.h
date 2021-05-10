@@ -1,5 +1,5 @@
 //
-//  ExponeaAppDelegate.h
+//  ExponeaDelegate.h
 //  Exponea
 //
 //  Created by Panaxeo on 28/07/2020.
@@ -19,7 +19,7 @@
 @end
 
 
-@interface ExponeaAppDelegate: UIResponder <UIApplicationDelegate, UNUserNotificationCenterDelegate>
+@interface ExponeaDelegate: UIResponder <UIApplicationDelegate, UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 

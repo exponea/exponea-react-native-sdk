@@ -22,7 +22,7 @@ If you have [push notifications](./PUSH_IOS.md) set up and your `AppDelegate` al
 ### Without ExponeaAppDelegate
 If you don't use the ExponeaAppDelegate, you can call the processing method directly.
 ```objc
-#import <ExponeaAppDelegate.h>
+#import <ExponeaDelegate.h>
 
 ...
 ...

@@ -7,7 +7,7 @@
 
 #import <React/RCTBridgeDelegate.h>
 #import <UIKit/UIKit.h>
-#import <ExponeaAppDelegate.h>
+#import <ExponeaDelegate.h>
 
-@interface AppDelegate : ExponeaAppDelegate<RCTBridgeDelegate>
+@interface AppDelegate : ExponeaDelegate<RCTBridgeDelegate>
 @end

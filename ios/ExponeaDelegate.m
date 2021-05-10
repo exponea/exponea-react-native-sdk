@@ -1,5 +1,5 @@
 //
-//  ExponeaAppDelegate.m
+//  ExponeaDelegate.m
 //  Exponea
 //
 //  Created by Panaxeo on 28/07/2020.
@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <UserNotifications/UserNotifications.h>
-#import "ExponeaAppDelegate.h"
+#import "ExponeaDelegate.h"
 
-@implementation ExponeaAppDelegate
+@implementation ExponeaDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

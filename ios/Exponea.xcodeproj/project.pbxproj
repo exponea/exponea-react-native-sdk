@@ -17,7 +17,6 @@
 		054FD4BF24D2DEA600BBE1D5 /* MockExponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4BE24D2DEA600BBE1D5 /* MockExponea.swift */; };
 		054FD4C124D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4C024D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift */; };
 		054FD4C324D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054FD4C224D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift */; };
-		056F174324D027500065314D /* ExponeaAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 056F174224D027500065314D /* ExponeaAppDelegate.m */; };
 		0578A41C249B53990049AE9D /* ConfigurationParserSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */; };
 		0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41F249B6CC40049AE9D /* NSDictionary+getSafely.swift */; };
 		0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578A41D249B6C7E0049AE9D /* ExponeaDataError.swift */; };
@@ -32,6 +31,7 @@
 		05FD376F248FDE5A0078847C /* Exponea.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FD376D248FDE5A0078847C /* Exponea.m */; };
 		05FD3772248FDE7F0078847C /* Exponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD3771248FDE7F0078847C /* Exponea.swift */; };
 		5BC7243D98CB54FD4B2B8F47 /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FACC1B762FF573A4473848C /* libPods-Exponea.a */; };
+		CC53B76026491FA50010B070 /* ExponeaDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC53B75F26491FA50010B070 /* ExponeaDelegate.m */; };
 		E2327026E2D2343195E7BF29 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D76D1BDBBE570E6F821E5FD6 /* libPods-Tests.a */; };
 /* End PBXBuildFile section */
 
@@ -68,8 +68,6 @@
 		054FD4BE24D2DEA600BBE1D5 /* MockExponea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExponea.swift; sourceTree = "<group>"; };
 		054FD4C024D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+TrackingSpec.swift"; sourceTree = "<group>"; };
 		054FD4C224D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+FetchingSpec.swift"; sourceTree = "<group>"; };
-		056F174124D026820065314D /* ExponeaAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExponeaAppDelegate.h; sourceTree = "<group>"; };
-		056F174224D027500065314D /* ExponeaAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExponeaAppDelegate.m; sourceTree = "<group>"; };
 		0578A41B249B53990049AE9D /* ConfigurationParserSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationParserSpec.swift; sourceTree = "<group>"; };
 		0578A41D249B6C7E0049AE9D /* ExponeaDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponeaDataError.swift; sourceTree = "<group>"; };
 		0578A41F249B6CC40049AE9D /* NSDictionary+getSafely.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSDictionary+getSafely.swift"; sourceTree = "<group>"; };
@@ -92,6 +90,8 @@
 		38B2D1311E2ED05A320D8F69 /* Pods-Exponea.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.release.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.release.xcconfig"; sourceTree = "<group>"; };
 		3FACC1B762FF573A4473848C /* libPods-Exponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Exponea.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8172B908346413B0080D5C9B /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		CC53B75E26491F990010B070 /* ExponeaDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExponeaDelegate.h; sourceTree = "<group>"; };
+		CC53B75F26491FA50010B070 /* ExponeaDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExponeaDelegate.m; sourceTree = "<group>"; };
 		D36C7DBFCD0AFF73E7628E55 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		D76D1BDBBE570E6F821E5FD6 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -166,8 +166,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				056F174124D026820065314D /* ExponeaAppDelegate.h */,
-				056F174224D027500065314D /* ExponeaAppDelegate.m */,
+				CC53B75F26491FA50010B070 /* ExponeaDelegate.m */,
+				CC53B75E26491F990010B070 /* ExponeaDelegate.h */,
 				05E6DA4724A4DEBC004EE0F9 /* Exponea+PushNotifications.swift */,
 				052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */,
 				052DAEA624A225F600A7A0A5 /* Exponea+Fetching.swift */,
@@ -394,12 +394,12 @@
 				05C69B8E249CF511008A4D9D /* ExponeaError.swift in Sources */,
 				05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */,
 				0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */,
+				CC53B76026491FA50010B070 /* ExponeaDelegate.m in Sources */,
 				0544CE6425A7119200DCF863 /* Exponea+Linking.swift in Sources */,
 				0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */,
 				0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */,
 				052DAEA524A225C400A7A0A5 /* Exponea+Tracking.swift in Sources */,
 				052DAEA924A2465400A7A0A5 /* Exponea+Anonymize.swift in Sources */,
-				056F174324D027500065314D /* ExponeaAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
