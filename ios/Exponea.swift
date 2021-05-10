@@ -16,7 +16,9 @@ protocol IsExponeaReactNativeSDK {
 
 @objc(Exponea)
 class Exponea: RCTEventEmitter {
-    override init() {}
+    override init() {
+        super.init()
+    }
 
     @objc override static func requiresMainQueueSetup() -> Bool {
         return false
