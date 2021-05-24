@@ -5,8 +5,8 @@ The official [React native documentation](https://reactnative.dev/docs/linking) 
 ## iOS
 React native linking requires you to add `application:continueUserActivity:restorationHandler` function to your `AppDelegate.m` file.
 
-### With ExponeaAppDelegate
-If you have [push notifications](./PUSH_IOS.md) set up and your `AppDelegate` already extends `ExponeaAppDelegate`, just call super method and the SDK will do the rest.
+### With ExponeaRNAppDelegate
+If you have [push notifications](./PUSH_IOS.md) set up and your `AppDelegate` already extends `ExponeaRNAppDelegate`, just call super method and the SDK will do the rest.
 ```objc
 - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
  restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
@@ -19,10 +19,10 @@ If you have [push notifications](./PUSH_IOS.md) set up and your `AppDelegate` al
 }
 ```
 
-### Without ExponeaAppDelegate
-If you don't use the ExponeaAppDelegate, you can call the processing method directly.
+### Without ExponeaRNAppDelegate
+If you don't use the ExponeaRNAppDelegate, you can call the processing method directly.
 ```objc
-#import <ExponeaDelegate.h>
+#import <ExponeaRNAppDelegate.h>
 
 ...
 ...
