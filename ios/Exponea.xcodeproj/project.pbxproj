@@ -31,7 +31,7 @@
 		05FD376F248FDE5A0078847C /* Exponea.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FD376D248FDE5A0078847C /* Exponea.m */; };
 		05FD3772248FDE7F0078847C /* Exponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD3771248FDE7F0078847C /* Exponea.swift */; };
 		5BC7243D98CB54FD4B2B8F47 /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FACC1B762FF573A4473848C /* libPods-Exponea.a */; };
-		CC53B76026491FA50010B070 /* ExponeaDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC53B75F26491FA50010B070 /* ExponeaDelegate.m */; };
+		CC619AC4265CCD7B00296FA3 /* ExponeaRNAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC619AC3265CCD7A00296FA3 /* ExponeaRNAppDelegate.m */; };
 		E2327026E2D2343195E7BF29 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D76D1BDBBE570E6F821E5FD6 /* libPods-Tests.a */; };
 /* End PBXBuildFile section */
 
@@ -90,8 +90,8 @@
 		38B2D1311E2ED05A320D8F69 /* Pods-Exponea.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.release.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.release.xcconfig"; sourceTree = "<group>"; };
 		3FACC1B762FF573A4473848C /* libPods-Exponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Exponea.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8172B908346413B0080D5C9B /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
-		CC53B75E26491F990010B070 /* ExponeaDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExponeaDelegate.h; sourceTree = "<group>"; };
-		CC53B75F26491FA50010B070 /* ExponeaDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExponeaDelegate.m; sourceTree = "<group>"; };
+		CC619AC2265CCD6D00296FA3 /* ExponeaRNAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExponeaRNAppDelegate.h; sourceTree = "<group>"; };
+		CC619AC3265CCD7A00296FA3 /* ExponeaRNAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExponeaRNAppDelegate.m; sourceTree = "<group>"; };
 		D36C7DBFCD0AFF73E7628E55 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		D76D1BDBBE570E6F821E5FD6 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -166,8 +166,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				CC53B75F26491FA50010B070 /* ExponeaDelegate.m */,
-				CC53B75E26491F990010B070 /* ExponeaDelegate.h */,
+				CC619AC3265CCD7A00296FA3 /* ExponeaRNAppDelegate.m */,
+				CC619AC2265CCD6D00296FA3 /* ExponeaRNAppDelegate.h */,
 				05E6DA4724A4DEBC004EE0F9 /* Exponea+PushNotifications.swift */,
 				052DAEA824A2465400A7A0A5 /* Exponea+Anonymize.swift */,
 				052DAEA624A225F600A7A0A5 /* Exponea+Fetching.swift */,
@@ -310,10 +310,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh",
 				"${PODS_ROOT}/ExponeaSDK/ExponeaSDK/ExponeaSDK/Classes/Database/DatabaseModel.xcdatamodeld",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DatabaseModel.momd",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -388,13 +390,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				05FD3772248FDE7F0078847C /* Exponea.swift in Sources */,
+				CC619AC4265CCD7B00296FA3 /* ExponeaRNAppDelegate.m in Sources */,
 				05FD376F248FDE5A0078847C /* Exponea.m in Sources */,
 				052DAEA724A225F600A7A0A5 /* Exponea+Fetching.swift in Sources */,
 				05E660E3249A4C2F0033B199 /* ConfigurationParser.swift in Sources */,
 				05C69B8E249CF511008A4D9D /* ExponeaError.swift in Sources */,
 				05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */,
 				0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */,
-				CC53B76026491FA50010B070 /* ExponeaDelegate.m in Sources */,
 				0544CE6425A7119200DCF863 /* Exponea+Linking.swift in Sources */,
 				0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */,
 				0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */,
