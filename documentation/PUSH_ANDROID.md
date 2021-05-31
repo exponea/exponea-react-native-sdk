@@ -50,3 +50,15 @@ You'll have to define an intent filter that can respond to url you define when c
   </intent-filter>
 </activity>
 ```
+
+## Troubleshooting
+In case of push notifications not working for you, these are frequent issues with the most likely solutions.
+
+### Push notifications do not open the app after clicking on the notification on Xiaomi Redmi devices
+
+Xiaomi MIUI is handling battery optimization in its own way and can sometimes affect the behavior of push notifications. 
+If battery optimization is on for devices with MIUI, it can make push notifications stop showing or not working after the click. Unfortunately, there is nothing we can do on our end to prevent this, but you can try this to solve the issues:
+
+-   Turn off any battery optimizations in Settings->Battery & Performance you can
+-   Set the "No restrictions" option in battery saver options for your app
+-   And (probably) most important, turn off Memory and MIUI Optimization under Developer Options
