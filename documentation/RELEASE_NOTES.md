@@ -1,4 +1,15 @@
 ## Release Notes
+## Release Notes for 0.5.1
+#### May 31, 2021
+* Features
+  * Documentation improvements
+  * Native iOS SDK updated to 2.11.0
+  * Native Android SDK updated to 2.9.4
+  * React native upgraded to 0.64
+* Bug Fixes
+  * Fixed: ExponeaAppDelegate renamed to ExponeaRNAppDelegate to avoid swift compiler error "'ExponeaAppDelegate' has different definitions in different modules"
+
+
 ## Release Notes for 0.5.0
 #### January 08, 2021
 * Features
