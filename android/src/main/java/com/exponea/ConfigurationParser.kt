@@ -1,11 +1,13 @@
 package com.exponea
 
 import android.app.NotificationManager
+import android.content.Context
+import android.graphics.Color
+import androidx.core.content.res.ResourcesCompat
 import com.exponea.sdk.models.EventType
 import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.ExponeaProject
 import com.facebook.react.bridge.ReadableMap
-import java.lang.Exception
 
 internal class ConfigurationParser(private val readableMap: ReadableMap) {
     private val configuration = ExponeaConfiguration()
@@ -61,7 +63,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
         }
     }
 
-    fun parse(): ExponeaConfiguration {
+    fun parse(context: Context?): ExponeaConfiguration {
         val map = readableMap.toHashMapRecursively()
         requireProjectAndAuthorization(map)
         map.forEach { entry ->
@@ -110,23 +112,51 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     val androidConfig = entry.value as? Map<String, Any?> ?: throw ExponeaModule.ExponeaDataException(
                         "Unable to parse android config, expected map of properties"
                     )
-                    parseAndroidConfig(androidConfig)
+                    parseAndroidConfig(androidConfig, context)
                 }
             }
         }
         return configuration
     }
 
-    private fun parseAndroidConfig(map: Map<String, Any?>) {
+    private fun parseAndroidConfig(map: Map<String, Any?>, context: Context?) {
         map.forEach { entry ->
             when (entry.key) {
                 "automaticPushNotifications" ->
                     configuration.automaticPushNotification =
                         map.getSafely("automaticPushNotifications", Boolean::class)
+                "pushIconResourceName" -> {
+                    val resourceName = map.getSafely("pushIconResourceName", String::class)
+                    var id: Int? = context?.resources?.getIdentifier(resourceName, "drawable", context.packageName)
+                    if (id == null || id == 0) {
+                        //try to find resource in mipmap if not present in drawable folder
+                        id = context?.resources?.getIdentifier(resourceName, "mipmap", context.packageName)
+
+                    }
+                    if (id != null && id > 0) {
+                        configuration.pushIcon = id
+                    }
+                }
                 "pushIcon" ->
                     configuration.pushIcon = map.getSafely("pushIcon", Double::class).toInt()
                 "pushAccentColor" ->
                     configuration.pushAccentColor = map.getSafely("pushAccentColor", Double::class).toInt()
+                "pushAccentColorRGBA" -> {
+                    val channels = parseRGBA(map.getSafely("pushAccentColorRGBA", String::class))
+                    if (channels.size == 4) {
+                        configuration.pushAccentColor = Color.argb(channels[3], channels[0], channels[0], channels[2])
+                    } else throw ExponeaModule.ExponeaDataException(
+                        "Incorrect value '${entry.value}' for key ${entry.key}."
+                    )
+                }
+                "pushAccentColorName" -> {
+                  val colorName = map.getSafely("pushAccentColorName", String::class)
+                  val resources = context?.resources
+                  val id: Int? = resources?.getIdentifier(colorName, "color", context.packageName)
+                  if (id != null && id > 0) {
+                      configuration.pushAccentColor = ResourcesCompat.getColor(resources, id, null)
+                  }
+                }
                 "pushChannelName" ->
                     configuration.pushChannelName = map.getSafely("pushChannelName", String::class)
                 "pushChannelDescription" ->
@@ -157,5 +187,14 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                 }
             }
         }
+    }
+
+    private fun parseRGBA(rgba: String): List<Int> {
+        return rgba.split(",")
+            .map {
+                val channel = it.trim()
+                channel.toInt()
+            }
+
     }
 }

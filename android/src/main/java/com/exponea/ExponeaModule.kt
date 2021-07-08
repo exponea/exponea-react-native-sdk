@@ -80,7 +80,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     @ReactMethod
     fun configure(configMap: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        val configuration = ConfigurationParser(configMap).parse()
+        val configuration = ConfigurationParser(configMap).parse(reactContext)
         Exponea.init(reactContext.currentActivity ?: reactContext, configuration)
         this.configuration = configuration
         Exponea.notificationDataCallback = { pushNotificationReceived(it) }

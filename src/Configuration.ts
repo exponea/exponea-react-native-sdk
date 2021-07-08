@@ -33,8 +33,14 @@ export interface AndroidConfiguration {
   automaticPushNotifications?: boolean;
   /** Android resource id of the icon to be used for push notifications */
   pushIcon?: number;
+  /** Android resource name of the icon to be used for push notifications */
+  pushIconResourceName?: string;
   /** Accent color of push notification icon and buttons */
   pushAccentColor?: number;
+  /** Accent color of push notification icon and buttons, specified by RGBA channels separated by comma */
+  pushAccentColorRGBA?: string;
+  /** Accent color of push notification icon and buttons, specified by resource name*/
+  pushAccentColorName?: string;
   /** Channel name for push notifications. Only for API level 26+ */
   pushChannelName?: string;
   /** Channel description for push notifications. Only for API level 26+ */
