@@ -86,8 +86,8 @@ export default class App extends React.Component<{}, AppState> {
       },
       android: {
         pushIconResourceName: 'push_icon',
-        pushAccentColorRGBA: '161, 226, 200, 220'
-      }
+        pushAccentColorRGBA: '161, 226, 200, 220',
+      },
     })
       .then(() => {
         this.setState({sdkConfigured: true});

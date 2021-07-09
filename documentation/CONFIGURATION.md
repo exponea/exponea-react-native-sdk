@@ -1,3 +1,4 @@
+
 # Configuration
 Before using most of the SDK functionality, you'll need to configure Exponea to connect it to backend application.
 
@@ -74,7 +75,14 @@ You can see the Typescript definition for Configuration object at [src/Configura
 
 * **pushIcon** Android resource id of the icon to be used for push notifications.
 
-* **pushAccentColor** Accent color of push notification icon and buttons
+* **pushIconResourceName** Android resource name of the icon to be used for push notifications. For example, if file `push_icon.png` is placed in your drawable of mipmap resources folder, use the filename without extension as a value.
+
+* **pushAccentColor** Accent color of push notification icon and buttons, specified as Color ARGB integer
+
+* **pushAccentColorRGBA** Accent color of push notification icon and buttons, specified by RGBA channels separated by comma. For example, to use the colour blue, the string `"0, 0, 255, 255"` should be entered.
+
+* **pushAccentColorName** Accent color of push notification icon and buttons, specified by resource name. Any color defined in R class can be used. For example, if you defined your color as a resource
+`<color name="push_accent_color">#0000ff</color>`, use `push_accent_color` as a value for this parameter.
 
 * **pushChannelName?** Channel name for push notifications. Only for API level 26+
 

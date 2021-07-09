@@ -1,16 +1,26 @@
 package com.exponea
 
 import android.app.NotificationManager
+import android.graphics.Color
+import androidx.test.core.app.ApplicationProvider
 import com.exponea.sdk.models.EventType
 import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.ExponeaProject
 import com.facebook.react.bridge.JavaOnlyMap
 import com.facebook.react.bridge.ReadableMap
+import io.mockk.every
+import io.mockk.mockkStatic
 import java.io.File
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.fail
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@RunWith(RobolectricTestRunner::class)
+@Config(manifest = Config.NONE)
 internal class ConfigurationParserTest {
     @Test
     fun `should parse minimal configuration`() {
@@ -81,5 +91,65 @@ internal class ConfigurationParserTest {
         } catch (e: Exception) {
             assertEquals("Incorrect type for key 'projectToken'. Expected String got Double", e.message)
         }
+    }
+
+    @Test
+    fun `should figure out color from RGBA channels correctly`() {
+        val data = JavaOnlyMap.of(
+            "projectToken", "mock-project-token",
+            "authorizationToken", "mock-authorization-token",
+            "baseUrl", "http://mock-base-url.xxx",
+            "android", JavaOnlyMap.of("pushAccentColorRGBA", "100, 100, 90, 150"))
+
+        mockkStatic("android.graphics.Color")
+        every { Color.argb(150, 100, 100, 90) } returns 123
+
+        assertEquals(
+            ExponeaConfiguration(
+                projectToken = "mock-project-token",
+                authorization = "Token mock-authorization-token",
+                baseURL = "http://mock-base-url.xxx",
+                pushAccentColor = 123
+            ),
+            ConfigurationParser(data as ReadableMap).parse()
+        )
+    }
+
+    @Test
+    fun `should provide error on wrong color format`() {
+        val data = JavaOnlyMap.of(
+            "projectToken", "mock-project-token",
+            "authorizationToken", "mock-authorization-token",
+            "baseUrl", "http://mock-base-url.xxx",
+            "android", JavaOnlyMap.of("pushAccentColorRGBA", "100, text, 90, 150, &"))
+        try {
+            mockkStatic("android.graphics.Color")
+            ConfigurationParser(data as ReadableMap).parse()
+            fail("Should throw exception")
+        } catch (e: Exception) {
+            assertEquals("Incorrect value '100, text, 90, 150, &' for key pushAccentColorRGBA.", e.message)
+        }
+    }
+
+    @Test
+    fun `should not fail when color not found in resources`() {
+        val data = JavaOnlyMap.of(
+            "projectToken", "mock-project-token",
+            "authorizationToken", "mock-authorization-token",
+            "baseUrl", "http://mock-base-url.xxx",
+            "android", JavaOnlyMap.of("pushAccentColorName", "my_color"))
+        val config = ConfigurationParser(data as ReadableMap).parse(ApplicationProvider.getApplicationContext())
+        assertNull(config.pushAccentColor)
+    }
+
+    @Test
+    fun `should not fail when icon not found in resources`() {
+        val data = JavaOnlyMap.of(
+            "projectToken", "mock-project-token",
+            "authorizationToken", "mock-authorization-token",
+            "baseUrl", "http://mock-base-url.xxx",
+            "android", JavaOnlyMap.of("pushIconResourceName", "my_icon"))
+        val config = ConfigurationParser(data as ReadableMap).parse(ApplicationProvider.getApplicationContext())
+        assertNull(config.pushIcon)
     }
 }
