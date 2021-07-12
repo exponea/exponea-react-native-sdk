@@ -1,4 +1,12 @@
 ## Release Notes
+## Release Notes for 0.5.2
+#### July 12, 2021
+* Features
+  * Native iOS SDK updated to 2.11.1
+  * Native Android SDK updated to 2.9.5
+  * Android push icon and accent color can now be specified in a more user-friendly way (by resource name instead of resource ID integer). New configuration parameters are available - `pushIconResourceName` and `pushAccentColorName`. In addition, accent color can be set with RGBA channels using the new configuration parameter `pushAccentColorRGBA`.
+
+
 ## Release Notes for 0.5.1
 #### May 31, 2021
 * Features
