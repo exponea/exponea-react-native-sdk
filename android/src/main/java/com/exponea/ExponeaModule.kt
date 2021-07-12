@@ -56,7 +56,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     private var pushOpenedListenerSet = false
     private var pushReceivedListenerSet = false
     // We have to hold received push data until pushReceivedListener set in JS
-    private var pendingReceivedPushData: Map<String, String>? = null
+    private var pendingReceivedPushData: Map<String, Any>? = null
 
     private fun requireInitialized(promise: Promise, block: ((Promise) -> Unit)) {
         if (!Exponea.isInitialized) {
@@ -342,7 +342,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         }
     }
 
-    fun pushNotificationReceived(data: Map<String, String>) {
+    fun pushNotificationReceived(data: Map<String, Any>) {
         if (pushReceivedListenerSet) {
             reactContext.getJSModule(RCTDeviceEventEmitter::class.java).emit("pushReceived", Gson().toJson(data))
         } else {

@@ -1,10 +1,10 @@
 PODS:
-  - AnyCodable-FlightSchool (0.4.0)
+  - AnyCodable-FlightSchool (0.4.1)
   - boost-for-react-native (1.63.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.11.0)
-  - ExponeaSDK-Notifications (2.11.0)
+  - ExponeaSDK (2.11.1)
+  - ExponeaSDK-Notifications (2.11.1)
   - FBLazyVector (0.64.0)
   - FBReactNativeSpec (0.64.0):
     - RCT-Folly (= 2020.01.13.00)
@@ -268,7 +268,7 @@ PODS:
   - React-jsinspector (0.64.0)
   - react-native-exponea-sdk (0.5.1):
     - AnyCodable-FlightSchool (~> 0.4.0)
-    - ExponeaSDK (~> 2.11.0)
+    - ExponeaSDK (~> 2.11.1)
     - React
   - react-native-safe-area-context (3.0.2):
     - React
@@ -495,12 +495,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
+  AnyCodable-FlightSchool: d27283db6e9feaddb0fa73a25835e5cdf41b3213
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
-  ExponeaSDK: ddb7bc9e47b3ca983c376ca18d8a245238eca390
-  ExponeaSDK-Notifications: 4dc1f3171eb8a8a065e16c528a984590c59d5a87
+  ExponeaSDK: 0d94e874bd71c63e730443292a4263a47d6d0b83
+  ExponeaSDK-Notifications: 6a616340c122ce1fa5dddc76495d375c434948af
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
   FBReactNativeSpec: 21228e8106b0fe0a9998f5ca08da7083bd7654b9
   Flipper: 1bd2db48dcc31e4b167b9a33ec1df01c2ded4893
@@ -524,7 +524,7 @@ SPEC CHECKSUMS:
   React-jsi: 74341196d9547cbcbcfa4b3bbbf03af56431d5a1
   React-jsiexecutor: 06a9c77b56902ae7ffcdd7a4905f664adc5d237b
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
-  react-native-exponea-sdk: 5479d432e0a249e5a97bed6c7cfbf21fa5f538de
+  react-native-exponea-sdk: 2163f3c6824c1992a5be7e9b2992626345d2092b
   react-native-safe-area-context: b11a34881faac509cad5578726c98161ad4d275c
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11

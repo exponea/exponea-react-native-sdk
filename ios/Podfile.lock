@@ -1,8 +1,8 @@
 PODS:
-  - AnyCodable-FlightSchool (0.4.0)
+  - AnyCodable-FlightSchool (0.4.1)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.11.0)
+  - ExponeaSDK (2.11.1)
   - FBLazyVector (0.64.1)
   - FBReactNativeSpec (0.64.1):
     - RCT-Folly (= 2020.01.13.00)
@@ -13,7 +13,7 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.64.1)
   - glog (0.3.5)
   - Nimble (8.0.7)
-  - Quick (3.0.0)
+  - Quick (4.0.0)
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
     - DoubleConversion
@@ -276,7 +276,7 @@ PODS:
 DEPENDENCIES:
   - AnyCodable-FlightSchool (~> 0.4.0)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - ExponeaSDK (~> 2.11.0)
+  - ExponeaSDK (~> 2.11.1)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
@@ -376,15 +376,15 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
+  AnyCodable-FlightSchool: d27283db6e9feaddb0fa73a25835e5cdf41b3213
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
-  ExponeaSDK: ddb7bc9e47b3ca983c376ca18d8a245238eca390
+  ExponeaSDK: 0d94e874bd71c63e730443292a4263a47d6d0b83
   FBLazyVector: 7b423f9e248eae65987838148c36eec1dbfe0b53
   FBReactNativeSpec: 69048dd11c8b84fec01f13cdb8e27d451c46a80e
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   Nimble: a73af6ecd4c9106f434f3d55fc54570be3739e0b
-  Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
+  Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: ec2ebc96b7bfba3ca5c32740f5a0c6a014a274d2
   RCTTypeSafety: 22567f31e67c3e088c7ac23ea46ab6d4779c0ea5
@@ -410,6 +410,6 @@ SPEC CHECKSUMS:
   ReactCommon: bedc99ed4dae329c4fcf128d0c31b9115e5365ca
   Yoga: a7de31c64fe738607e7a3803e3f591a4b1df7393
 
-PODFILE CHECKSUM: 368d6b190a253c6c41c42abfcc799d23b58191a2
+PODFILE CHECKSUM: 04d9e3021f6a5583a576062604f104311de89d6d
 
 COCOAPODS: 1.10.1
