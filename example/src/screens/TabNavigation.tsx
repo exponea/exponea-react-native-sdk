@@ -24,7 +24,7 @@ const Tab = createBottomTabNavigator();
 
 export default function TabNavigation(): React.ReactElement {
   return (
-    <Tab.Navigator tabBarOptions={{activeTintColor: 'black'}}>
+    <Tab.Navigator screenOptions={{tabBarActiveTintColor: 'black'}}>
       <Tab.Screen
         options={getTabBarOptions(Screen.Tracking)}
         name={Screen.Tracking}

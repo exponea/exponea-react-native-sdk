@@ -32,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected String getJSMainModuleName() {
           return "index";
         }
+
       };
 
   @Override
@@ -60,13 +61,7 @@ public class MainApplication extends Application implements ReactApplication {
         */
         Class<?> aClass = Class.forName("com.facebook.flipper.ReactNativeFlipper");
         aClass.getMethod("initializeFlipper", Context.class).invoke(null, context);
-      } catch (ClassNotFoundException e) {
-        e.printStackTrace();
-      } catch (NoSuchMethodException e) {
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
-        e.printStackTrace();
-      } catch (InvocationTargetException e) {
+      } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
         e.printStackTrace();
       }
     }

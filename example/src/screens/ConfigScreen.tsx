@@ -4,10 +4,8 @@ import DefaultPropertiesModal from '../components/DefaultPropertiesModal';
 import ExponeaButton from '../components/ExponeaButton';
 
 export default function ConfigScreen(): React.ReactElement {
-  const [
-    settingDefaultProperties,
-    setSettingDefaultProperties,
-  ] = React.useState(false);
+  const [settingDefaultProperties, setSettingDefaultProperties] =
+    React.useState(false);
   return (
     <View style={styles.container}>
       <DefaultPropertiesModal

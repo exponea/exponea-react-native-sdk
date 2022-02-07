@@ -10,10 +10,10 @@
 //   original location:
 //   - https://github.com/facebook/react-native/blob/0.58-stable/local-cli/templates/HelloWorld/android/app/build.gradle
 
-def DEFAULT_COMPILE_SDK_VERSION = 28
+def DEFAULT_COMPILE_SDK_VERSION = 31
 def DEFAULT_BUILD_TOOLS_VERSION = '28.0.3'
-def DEFAULT_MIN_SDK_VERSION = 16
-def DEFAULT_TARGET_SDK_VERSION = 28
+def DEFAULT_MIN_SDK_VERSION = 17
+def DEFAULT_TARGET_SDK_VERSION = 31
 
 def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
@@ -23,7 +23,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 buildscript {
-    ext.kotlinVersion = '1.3.70'
+    ext.kotlinVersion = '1.5.30'
 
     // The Android Gradle plugin is only required when opening the android folder stand-alone.
     // This avoids unnecessary downloads and potential conflicts when the library is included as a
@@ -32,11 +32,10 @@ buildscript {
     if (project == rootProject) {
         repositories {
             google()
-            jcenter()
             maven { url "https://plugins.gradle.org/m2/" }
         }
         dependencies {
-            classpath 'com.android.tools.build:gradle:3.4.1'
+            classpath 'com.android.tools.build:gradle:3.6.2'
             classpath "org.jlleitschuh.gradle:ktlint-gradle:9.2.1"
         }
     }
@@ -86,16 +85,17 @@ repositories {
         url "$rootDir/../node_modules/jsc-android/dist"
     }
     google()
-    jcenter()
     maven { url 'https://jitpack.io' }
+    mavenCentral()
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    implementation 'com.exponea.sdk:sdk:2.9.5'
+    implementation 'com.exponea.sdk:sdk:3.0.2'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'androidx.core:core:1.6.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'

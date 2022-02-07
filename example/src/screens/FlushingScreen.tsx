@@ -11,7 +11,11 @@ export default function FlushingScreen(): React.ReactElement {
       await Exponea.flushData();
       Alert.alert('Data flushed', 'Check logs for more details.');
     } catch (error) {
-      Alert.alert('Error flushing data', error.message);
+      let errorMessage = '';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      Alert.alert('Error flushing data', errorMessage);
     }
   };
   return (

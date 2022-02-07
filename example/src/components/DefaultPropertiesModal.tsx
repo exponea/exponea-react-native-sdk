@@ -14,13 +14,10 @@ interface DefaultPropertiesModalProps {
 export default function DefaultPropertiesModal(
   props: DefaultPropertiesModalProps,
 ): React.ReactElement {
-  const [currentPropertiesLoaded, setCurrentPropertiesLoaded] = React.useState(
-    false,
-  );
-  const [
-    currentProperties,
-    setCurrentProperties,
-  ] = React.useState<JsonObject | null>(null);
+  const [currentPropertiesLoaded, setCurrentPropertiesLoaded] =
+    React.useState(false);
+  const [currentProperties, setCurrentProperties] =
+    React.useState<JsonObject | null>(null);
   const [newProperties, setNewProperties] = React.useState({});
 
   React.useEffect(() => {

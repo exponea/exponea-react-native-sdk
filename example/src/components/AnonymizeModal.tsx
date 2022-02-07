@@ -28,7 +28,11 @@ export default function AnonymizeModal(
         `Old customer cookie: ${oldCookie}\n\nNew customer cookie: ${newCookie}`,
       );
     } catch (error) {
-      Alert.alert('Error anonymizing customer', error.message);
+      let errorMessage = '';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      Alert.alert('Error anonymizing customer', errorMessage);
     }
   };
 

@@ -1,5 +1,6 @@
 package com.exponea
 
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import com.exponea.sdk.Exponea
@@ -17,7 +18,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
+import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.gson.Gson
 import java.util.concurrent.TimeUnit
 
@@ -45,6 +46,21 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
         fun handleCampaignIntent(intent: Intent?, context: Context) {
             Exponea.handleCampaignIntent(intent, context)
+        }
+
+        fun handleRemoteMessage(
+            applicationContext: Context,
+            messageData: Map<String, String>?,
+            manager: NotificationManager
+        ) {
+            Exponea.handleRemoteMessage(applicationContext, messageData, manager)
+        }
+
+        fun handleNewToken(context: Context, token: String) {
+            Exponea.handleNewToken(context, token)
+        }
+        fun handleNewHmsToken(context: Context, token: String) {
+            Exponea.handleNewHmsToken(context, token)
         }
     }
 
@@ -144,8 +160,8 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     }
 
     @ReactMethod
-    fun setDefaultProperties(defaultProperies: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        Exponea.defaultProperties = defaultProperies.toHashMap()
+    fun setDefaultProperties(defaultProperties: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        Exponea.defaultProperties = defaultProperties.toHashMap()
         promise.resolve(null)
     }
 
@@ -336,7 +352,8 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     fun openPush(push: OpenedPush) {
         if (pushOpenedListenerSet) {
-            reactContext.getJSModule(RCTDeviceEventEmitter::class.java).emit("pushOpened", Gson().toJson(push))
+            reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                .emit("pushOpened", Gson().toJson(push))
         } else {
             pendingOpenedPush = push
         }
@@ -344,7 +361,8 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     fun pushNotificationReceived(data: Map<String, Any>) {
         if (pushReceivedListenerSet) {
-            reactContext.getJSModule(RCTDeviceEventEmitter::class.java).emit("pushReceived", Gson().toJson(data))
+            reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                .emit("pushReceived", Gson().toJson(data))
         } else {
             pendingReceivedPushData = data
         }
@@ -362,5 +380,18 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     fun onPushReceivedListenerRemove(promise: Promise) = catchAndReject(promise) {
         pushReceivedListenerSet = false
         promise.resolve(null)
+    }
+
+    // RN 0.65.0 and above require these listener methods on the Native Module when call the NativeEventEmitter.
+    // Otherwise it shows warning. Source: https://github.com/software-mansion/react-native-reanimated/issues/2297
+
+    @ReactMethod
+    fun addListener(eventName: String?) {
+        // Keep: Required for RN built in Event Emitter Calls.
+    }
+
+    @ReactMethod
+    fun removeListeners(count: Int?) {
+        // Keep: Required for RN built in Event Emitter Calls.
     }
 }

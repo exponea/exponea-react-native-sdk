@@ -77,11 +77,17 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-    enableHermes: false,  // clean and rebuild if changing
+    enableHermes: false  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-apply plugin: 'com.google.gms.google-services'
+
+if (getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains("gms")) {
+    apply plugin: 'com.google.gms.google-services'
+}
+if (getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains("hms")) {
+    apply plugin: 'com.huawei.agconnect'
+}
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -118,7 +124,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
-def enableHermes = project.ext.react.get("enableHermes", false);
+def enableHermes = project.ext.react.get("enableHermes", false)
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -146,10 +152,11 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            // Set the parameters based on the actual signing information.
+            storeFile file('Exponea.jks')
+            storePassword 'Exponea'
+            keyPassword 'Exponea'
+            keyAlias 'key0'
         }
     }
     buildTypes {
@@ -178,15 +185,26 @@ android {
 
         }
     }
+    flavorDimensions "messagingService"
+    productFlavors {
+        gms {
+            dimension = "messagingService"
+        }
+        hms {
+            dimension = "messagingService"
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.android.support:multidex:1.0.3'
+    gmsImplementation 'com.google.firebase:firebase-messaging:23.0.0'
+    hmsImplementation 'com.huawei.agconnect:agconnect-core:1.5.2.300'
+    hmsImplementation 'com.huawei.hms:push:5.3.0.304'
 
     if (enableHermes) {
-        def hermesPath = "../../node_modules/hermes-engine/android/";
+        def hermesPath = "../../node_modules/hermes-engine/android/"
         debugImplementation files(hermesPath + "hermes-debug.aar")
         releaseImplementation files(hermesPath + "hermes-release.aar")
     } else {
