@@ -1,29 +1,151 @@
+
+
 # Android Push notification setup
-We rely on our native SDK to do push tracking. For more complex scenarios(multiple push providers) please can check [native Android SDK Push notification documentation](https://github.com/exponea/exponea-android-sdk/blob/develop/Documentation/PUSH.md).
+We rely on our native SDK to do push tracking. For more complex scenarios(multiple push providers), please can check [native Android SDK Push notification documentation](https://github.com/exponea/exponea-android-sdk/blob/develop/Documentation/PUSH.md).
 
-> Exponea Android SDK contains self-check functionality to help you successfully setup push notifications. Self-check will try to track push token, request Exponea backend to send silent push to the device and check the app is ready to open push notifications. To enable self-check call `Exponea.checkPushSetup()` **before** configuring the SDK.
+> Exponea Android SDK contains self-check functionality to help you successfully set up push notifications. Self-check will try to track push token, request Exponea backend to send a silent push to the device, and check the app is ready to open push notifications. To enable self-check call `Exponea.checkPushSetup()` **before** configuring the SDK.
 
-## Integrating Firebase to your project
-To send/receive push notifications you have to setup Firebase project. [Official Firebase documentation](https://firebase.google.com/docs/android/setup#console) describes this process. You'll need to create a project in Firebase console, add generated `google-services.json` to your app and update gradle scripts.
+## Push Integrations
+Exponea Android SDK supports these integrations:
 
-> When following the Firebase documentation, the root of your Android project is `/android`
+- [Standard (Firebase) integration](#firebase-integration)
+- [Huawei integration](#huawei-integration)
+
+## Firebase integration 
+
+### Integrating Firebase into your project
+To send/receive push notifications, you have to set up the Firebase project. [Official Firebase documentation](https://firebase.google.com/docs/android/setup#console) describes this process. You'll need to create a project in the Firebase console, add generated `google-services.json` to your app and update Gradle scripts.
+
+> When following the Firebase documentation, the root of your Android project is `/android`.
 
 #### Checklist:
- - `google-services.json` file downloaded from Firebase console is in the **android/app** folder of your Android project e.g. *android/app/google-services.json*
+ - `google-services.json` file downloaded from the Firebase console is in the **android/app** folder of your Android project e.g., *android/app/google-services.json*
  - your **android/app** folder gradle build file(*android/app/build.gradle*) contains `apply plugin: 'com.google.gms.google-services'`
  - your **android** folder gradle build file(*android/build.gradle*) has `classpath 'com.google.gms:google-services:X.X.X'` listed in build script dependencies.
- 
-## Setting the Firebase server key in the Exponea web app
-You'll need to set the Firebase server key so Exponea can use it to send push notification to your application. Our native Android has a [guide describing how to do so](https://github.com/exponea/exponea-android-sdk/blob/develop/Guides/FIREBASE.md).
 
-## That's it
-After these steps you should be able to receive push notifications from Exponea. To learn how to send one, check a [Sending Push notifications guide](./PUSH_SEND.md).
+### Passing token and messages to Exponea SDK
+ To handle incomming push messages, you will have to create your FirebaseMessagingService implementation, and registered it in your `AndroidManifest.xml`. Then, call `handleRemoteMessage` in `onMessageReceived` method and `handleNewToken` in `onNewToken` method, like in example code below:
+
+```java
+import android.app.NotificationManager;  
+import android.content.Context;  
+import androidx.annotation.NonNull;  
+import com.exponea.ExponeaModule;  
+import com.google.firebase.messaging.FirebaseMessagingService;  
+import com.google.firebase.messaging.RemoteMessage;  
+  
+public class MessageService extends FirebaseMessagingService {  
+  
+    @Override  
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {  
+          super.onMessageReceived(remoteMessage);  
+      ExponeaModule.Companion.handleRemoteMessage(  
+                  getApplicationContext(),  
+          remoteMessage.getData(),  
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)
+        );  
+    }  
+  
+    @Override  
+    public void onNewToken(@NonNull String token) {  
+          super.onNewToken(token);  
+        ExponeaModule.Companion.handleNewToken(  
+                  getApplicationContext(),  
+            token
+      );  
+    }  
+}
+```
+
+Registering in AndroidManifest.xml
+```xml
+...
+<application>  
+   <service android:name=".MessageService" android:exported="false" >  
+     <intent-filter> 
+       <action android:name="com.google.firebase.MESSAGING_EVENT" />  
+     </intent-filter> 
+   </service>
+</application>
+ ...
+```
+ 
+### Setting the Firebase server key in the Exponea web app
+You'll need to set the Firebase server key so Exponea can use it to send push notifications to your application. Our native Android has a [guide describing how to do so](https://github.com/exponea/exponea-android-sdk/blob/develop/Guides/FIREBASE.md).
+
+### That's it
+After these steps, you should be able to receive push notifications from Exponea. To learn how to send one, check a [Sending Push notifications guide](./PUSH_SEND.md).
+
+## Huawei integration
+Newer phones manufactured by [Huawei](https://huaweimobileservices.com/)  come with Huawei Mobile Services (HMS). It's a service used to deliver push _instead of_ Google's Firebase Cloud Messaging (FCM).
+
+### Integrating HMS into your project
+To send/receive push notifications, you have to:
+1. register and set up a [Huawei Developer account](https://developer.huawei.com/consumer/en/console)
+2. create a project and App in AppGallery Connect
+3. generate and configure a Signing Certificate
+4. enable push kit in AppGallery Connect APIs
+5. update Gradle scripts and add generated `agconnect-services.json` to your app
+6. configure the Signing Information in your app
+
+Steps 2-6 are described in detail in the official [Huawei documentation](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0)
+
+### Passing token and messages to Exponea SDK
+ To handle incomming push messages, you will have to create your HmsMessageService implementation, and registered it in your `AndroidManifest.xml`. Then, call `handleRemoteMessage` in `onMessageReceived` method and `handleNewToken` in `handleNewHmsToken` method, like in example code below:
+
+```java
+import android.app.NotificationManager;  
+import android.content.Context;  
+import androidx.annotation.NonNull;  
+import com.exponea.ExponeaModule;  
+import com.huawei.hms.push.HmsMessageService;  
+import com.huawei.hms.push.RemoteMessage;  
+  
+public class MessageService extends FirebaseMessagingService {  
+  
+    @Override  
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {  
+          super.onMessageReceived(remoteMessage);  
+      ExponeaModule.Companion.handleRemoteMessage(  
+                  getApplicationContext(),  
+          remoteMessage.getDataOfMap(),  
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)
+        );  
+    }  
+  
+    @Override  
+    public void onNewToken(@NonNull String token) {  
+          super.onNewToken(token);  
+        ExponeaModule.Companion.handleNewHmsToken(  
+                  getApplicationContext(),  
+            token
+      );  
+    }  
+}
+```
+Registering in AndroidManifest.xml
+```xml
+...
+<application>  
+   <service android:name=".MessageService" android:exported="false">  
+     <intent-filter> 
+       <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>  
+     </intent-filter> 
+   </service> 
+   <meta-data  android:name="push_kit_auto_init_enabled"  android:value="true"/>  
+</application>
+ ...
+```
+
+### That's it
+After these steps, you should be able to receive push notifications from Exponea. To learn how to send one, check a [Sending Push notifications guide](./PUSH_SEND.md).
+
 
 ## Deeplinking
-You can use `Exponea.setPushOpenedListener()` to define a listener that will respond to push notifications. In case you'd like to use deeplinking, you'll need to update your `AndroidManifest` in `android/src/main` a bit.
+You can use `Exponea.setPushOpenedListener()` to define a listener that will respond to push notifications. If you'd like to use deep-linking, you'll need to update your `AndroidManifest` in `android/src/main` a bit.
 
-### Set activity to to single task launch mode
-By default Android will launch a new activity for your application when deeplink is opened, you want to override this by setting `android:launchMode="singleTask"` for your main activity.
+### Set activity to single task launch mode
+By default, Android will launch a new activity for your application when a deep link is opened. You want to override this by setting `android:launchMode="singleTask"` for your main activity.
 ``` xml
 <activity
   android:name=".MainActivity"
@@ -33,7 +155,7 @@ By default Android will launch a new activity for your application when deeplink
 ```
 
 ### Define an intent filter
-You'll have to define an intent filter that can respond to url you define when creating push notification. You can either use a custom scheme, or an URL. You can find more information in official [Android documentation](https://developer.android.com/training/app-links/deep-linking#adding-filters).
+You'll have to define an intent filter that can respond to URL you define when creating a push notification. You can either use a custom scheme or an URL. You can find more information in the official [Android documentation](https://developer.android.com/training/app-links/deep-linking#adding-filters).
 ```xml
 <activity ...>
    ...
