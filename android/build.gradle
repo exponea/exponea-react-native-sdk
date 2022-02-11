@@ -10,20 +10,10 @@
 //   original location:
 //   - https://github.com/facebook/react-native/blob/0.58-stable/local-cli/templates/HelloWorld/android/app/build.gradle
 
-def DEFAULT_COMPILE_SDK_VERSION = 31
-def DEFAULT_BUILD_TOOLS_VERSION = '28.0.3'
-def DEFAULT_MIN_SDK_VERSION = 17
-def DEFAULT_TARGET_SDK_VERSION = 31
-
-def safeExtGet(prop, fallback) {
-    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
-}
-
-apply plugin: 'com.android.library'
-apply plugin: 'maven'
-
 buildscript {
-    ext.kotlinVersion = '1.5.30'
+    ext {
+        kotlin_version = "1.5.30"
+    }
 
     // The Android Gradle plugin is only required when opening the android folder stand-alone.
     // This avoids unnecessary downloads and potential conflicts when the library is included as a
@@ -35,7 +25,7 @@ buildscript {
             maven { url "https://plugins.gradle.org/m2/" }
         }
         dependencies {
-            classpath 'com.android.tools.build:gradle:3.6.2'
+            classpath 'com.android.tools.build:gradle:7.0.4'
             classpath "org.jlleitschuh.gradle:ktlint-gradle:9.2.1"
         }
     }
@@ -43,13 +33,22 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'kotlin-android'
+
+def DEFAULT_COMPILE_SDK_VERSION = 31
+def DEFAULT_BUILD_TOOLS_VERSION = '30.0.2'
+def DEFAULT_MIN_SDK_VERSION = 17
+def DEFAULT_TARGET_SDK_VERSION = 31
+
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
 
 if (project == rootProject) {
     apply plugin: "org.jlleitschuh.gradle.ktlint"
@@ -90,12 +89,11 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
     implementation 'com.exponea.sdk:sdk:3.0.2'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'androidx.core:core:1.6.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'
@@ -103,75 +101,84 @@ dependencies {
     testImplementation "io.mockk:mockk:1.9.3"
 }
 
-def configureReactNativePom(def pom) {
-    def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
+                groupId = 'com.exponea'
+                artifactId = packageJson.name
+                version = packageJson.version
+                artifact(bundleReleaseAar)
+                pom {
+                    name = packageJson.title
+                    description = packageJson.description
+                    url = packageJson.repository.baseUrl
 
-    pom.project {
-        name packageJson.title
-        artifactId packageJson.name
-        version = packageJson.version
-        group = "com.exponea"
-        description packageJson.description
-        url packageJson.repository.baseUrl
+                    licenses {
+                        license {
+                            name = packageJson.license
+                            url = packageJson.repository.baseUrl + '/blob/master/' + packageJson.licenseFilename
+                            distribution = 'repo'
+                        }
+                    }
 
-        licenses {
-            license {
-                name packageJson.license
-                url packageJson.repository.baseUrl + '/blob/master/' + packageJson.licenseFilename
-                distribution 'repo'
+                    developers {
+                        developer {
+                            id = packageJson.author.username
+                            name = packageJson.author.name
+                        }
+                    }
+                }
+                pom.withXml {
+                    final dependenciesNode = asNode().appendNode('dependencies')
+
+                    ext.addDependency = { Dependency dep, String scope ->
+                        if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
+                            return // invalid dependencies should be ignored
+
+                        final dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('artifactId', dep.name)
+
+                        if (dep.version == 'unspecified') {
+                            dependencyNode.appendNode('groupId', project.ext.pomGroupID)
+                            dependencyNode.appendNode('version', project.ext.pomVersion)
+                        } else {
+                            dependencyNode.appendNode('groupId', dep.group)
+                            dependencyNode.appendNode('version', dep.version)
+                        }
+
+                        dependencyNode.appendNode('scope', scope)
+                        // Some dependencies may have types, such as aar, that should be mentioned in the POM file
+                        def artifactsList = dep.properties['artifacts']
+                        if (artifactsList != null && artifactsList.size() > 0) {
+                            final artifact = artifactsList[0]
+                            dependencyNode.appendNode('type', artifact.getType())
+                        }
+
+                        if (!dep.transitive) {
+                            // In case of non transitive dependency, all its dependencies should be force excluded from them POM file
+                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                            exclusionNode.appendNode('groupId', '*')
+                            exclusionNode.appendNode('artifactId', '*')
+                        } else if (!dep.properties.excludeRules.empty) {
+                            // For transitive with exclusions, all exclude rules should be added to the POM file
+                            final exclusions = dependencyNode.appendNode('exclusions')
+                            dep.properties.excludeRules.each { ExcludeRule rule ->
+                                final exclusionNode = exclusions.appendNode('exclusion')
+                                exclusionNode.appendNode('groupId', rule.group ?: '*')
+                                exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                            }
+                        }
+                    }
+                    configurations.implementation.getDependencies().each { dep -> addDependency(dep, "compile") }
+                }
             }
         }
-
-        developers {
-            developer {
-                id packageJson.author.username
-                name packageJson.author.name
+        repositories {
+            maven {
+                url = "file://${projectDir}/../android/maven"
             }
-        }
-    }
-}
-
-afterEvaluate { project ->
-    // some Gradle build hooks ref:
-    // https://www.oreilly.com/library/view/gradle-beyond-the/9781449373801/ch03.html
-    task androidJavadoc(type: Javadoc) {
-        source = android.sourceSets.main.java.srcDirs
-        classpath += files(android.bootClasspath)
-        classpath += files(project.getConfigurations().getByName('compile').asList())
-        include '**/*.java'
-    }
-
-    task androidJavadocJar(type: Jar, dependsOn: androidJavadoc) {
-        classifier = 'javadoc'
-        from androidJavadoc.destinationDir
-    }
-
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.srcDirs
-        include '**/*.java'
-    }
-
-    android.libraryVariants.all { variant ->
-        def name = variant.name.capitalize()
-        def javaCompileTask = variant.javaCompileProvider.get()
-
-        task "jar${name}"(type: Jar, dependsOn: javaCompileTask) {
-            from javaCompileTask.destinationDir
-        }
-    }
-
-    artifacts {
-        archives androidSourcesJar
-        archives androidJavadocJar
-    }
-
-    task installArchives(type: Upload) {
-        configuration = configurations.archives
-        repositories.mavenDeployer {
-            // Deploy to react-native-event-bridge/maven, ready to publish to npm
-            repository url: "file://${projectDir}/../android/maven"
-            configureReactNativePom pom
         }
     }
 }
