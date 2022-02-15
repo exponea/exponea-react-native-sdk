@@ -1,4 +1,15 @@
 ## Release Notes
+## Release Notes for 1.0.0
+#### February 15, 2022
+* Features
+  * React native upgraded to 0.67
+  * Native Android SDK updated to 3.0.2 - [Android SDK Release notes](https://github.com/exponea/exponea-android-sdk/blob/develop/Documentation/RELEASE_NOTES.md)
+  * Native iOS SDK updated to 2.11.2 - [iOS SDK Release notest](https://github.com/exponea/exponea-ios-sdk/blob/develop/Documentation/RELEASE_NOTES.md#release-notes-for-2112)
+  * Gradle 7 support
+* Bug Fixes
+  * Fixed: Android 12 issues
+
+
 ## Release Notes for 0.5.2
 #### July 12, 2021
 * Features
