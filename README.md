@@ -43,4 +43,4 @@ If facing any issues, look for **Troubleshooting** section in the respective doc
 
 ## Release Notes
 
-[Release notes](./Documentation/RELEASE_NOTES.md) for the SDK.
+[Release notes](./documentation/RELEASE_NOTES.md) for the SDK.
