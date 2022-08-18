@@ -11,8 +11,8 @@ target 'Exponea' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-  pod "ExponeaSDK", "~> 2.11.2"
-  pod 'AnyCodable-FlightSchool', '~> 0.4.0'
+  pod "ExponeaSDK", "2.12.0"
+  pod 'AnyCodable-FlightSchool', '0.4.0'
 end
 
 target 'Tests' do
