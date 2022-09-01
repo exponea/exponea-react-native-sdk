@@ -11,9 +11,9 @@ Pod::Spec.new do |s|
                    DESC
   s.homepage     = "https://github.com/github_account/react-native-exponea-sdk"
   # brief license entry:
-  s.license      = "The Apache License, Version 2.0"
+  s.license      = "MIT License"
   s.authors      = { "Exponea" => "contact@exponea.com" }
-  s.platforms    = { :ios => "10.3" }
+  s.platforms    = { :ios => "11.0" }
   s.source       = { :git => "https://github.com/github_account/react-native-exponea-sdk.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,c,m,swift}"
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "ExponeaSDK", "2.12.0"
+  s.dependency "ExponeaSDK", "2.12.1"
   s.dependency "AnyCodable-FlightSchool", "0.4.0"
 end
 

@@ -79,6 +79,19 @@ class MockExponea: ExponeaType {
         }
     }
 
+    var inAppMessagesDelegateValue: InAppMessageActionDelegate = InAppDelegate()
+        var inAppMessagesDelegate: InAppMessageActionDelegate {
+            get {
+                calls.append(Call(name: "inAppMessagesDelegate:get", params: []))
+                return inAppMessagesDelegateValue
+            }
+            set {
+                calls.append(Call(name: "inAppMessagesDelegate:set", params: [newValue]))
+                inAppMessagesDelegateValue = newValue
+            }
+        }
+
+
     var safeModeEnabled: Bool {
         get { fatalError("Not implemented") }
         set { fatalError("Not implemented \(newValue)") }

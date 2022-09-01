@@ -21,7 +21,7 @@ target 'example' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable the next line.
-  
+
 
   # Fix various Flipper issues during build time.
   use_flipper!({ "Flipper-DoubleConversion" => "1.1.7" })
@@ -42,7 +42,7 @@ target 'example' do
     # We need to make one crude patch to RCT-Folly - set `__IPHONE_10_0` to our iOS target + 1
     # https://github.com/facebook/flipper/issues/834 - 84 comments and still going...
    `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_12_0/' Pods/RCT-Folly/folly/portability/Time.h`
-  end	
+  end
 end
 
 

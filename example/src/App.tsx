@@ -77,6 +77,7 @@ export default class App extends React.Component<{}, AppState> {
       `Configuring Exponea SDK with ${projectToken}, ${authorization} and ${baseUrl}`,
     );
     Exponea.setLogLevel(LogLevel.VERBOSE);
+    Exponea.checkPushSetup();
     Exponea.configure({
       projectToken: projectToken,
       authorizationToken: authorization,

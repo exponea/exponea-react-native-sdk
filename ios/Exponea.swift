@@ -13,6 +13,13 @@ import ExponeaSDK
 @objc(IsExponeaReactNativeSDK)
 protocol IsExponeaReactNativeSDK {
 }
+@objc(ExponeaRNVersion)
+public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
+    required public override init() { }
+    public func getVersion() -> String {
+        "1.0.0"
+    }
+}
 
 @objc(Exponea)
 class Exponea: RCTEventEmitter {

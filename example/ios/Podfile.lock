@@ -1,10 +1,11 @@
 PODS:
-  - AnyCodable-FlightSchool (0.4.1)
+  - AnyCodable-FlightSchool (0.4.0)
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.11.2)
-  - ExponeaSDK-Notifications (2.11.2)
+  - ExponeaSDK (2.12.1):
+    - SwiftSoup (= 2.4.3)
+  - ExponeaSDK-Notifications (2.12.1)
   - FBLazyVector (0.67.0)
   - FBReactNativeSpec (0.67.0):
     - RCT-Folly (= 2021.06.28.00-v2)
@@ -275,9 +276,9 @@ PODS:
   - React-jsinspector (0.67.0)
   - React-logger (0.67.0):
     - glog
-  - react-native-exponea-sdk (0.5.2):
-    - AnyCodable-FlightSchool (~> 0.4.0)
-    - ExponeaSDK (~> 2.11.2)
+  - react-native-exponea-sdk (1.0.0):
+    - AnyCodable-FlightSchool (= 0.4.0)
+    - ExponeaSDK (= 2.12.1)
     - React
   - react-native-safe-area-context (3.3.2):
     - React-Core
@@ -381,6 +382,7 @@ PODS:
   - RNScreens (3.11.0):
     - React-Core
     - React-RCTImage
+  - SwiftSoup (2.4.3)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -466,6 +468,7 @@ SPEC REPOS:
     - fmt
     - libevent
     - OpenSSL-Universal
+    - SwiftSoup
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -543,12 +546,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AnyCodable-FlightSchool: d27283db6e9feaddb0fa73a25835e5cdf41b3213
+  AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
-  ExponeaSDK: e0c7406084546406667200c88966db429cdbae16
-  ExponeaSDK-Notifications: cf8c3820cc71330d7b16f4b61dfd710bda95fa33
+  ExponeaSDK: a5cfdb245311656eb9d77251e665a32058dd2bf1
+  ExponeaSDK-Notifications: 51afe956fe5697dfa7625cbb0cbc5128fda581da
   FBLazyVector: dce905f90eacf2e62ffbc2a4bbda8ea630aabd8a
   FBReactNativeSpec: 7444057cd46e87525b82f3e41f05e1db0d0029f2
   Flipper: 30e8eeeed6abdc98edaf32af0cda2f198be4b733
@@ -576,7 +579,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 3001f865cfd2c66c1298f427be47b8797ae5843b
   React-jsinspector: c9d1ddf4b1efbcf90323e3581ccff200cf4de346
   React-logger: 5d42caeaf0c31a9b29efb33e10e7f7031f958bfd
-  react-native-exponea-sdk: 1caba2f1a100043534d46693de8b2f6629a4b1fa
+  react-native-exponea-sdk: b0c54fd47429af9f7a5ca3f96e8859cb29f8c3e3
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   React-perflogger: 9454d63e7027e0830fa3e527628558160684f5dd
   React-RCTActionSheet: 240d798e2f5bd1ba2e85503a00fd390f560e6827
@@ -594,9 +597,10 @@ SPEC CHECKSUMS:
   RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
   RNReanimated: 17e828d603c7ed3c25d332c0cdbb037838dc53a9
   RNScreens: fd535547baa4ef8aeaee1a8b1e3ffd17b8df44a4
+  SwiftSoup: 3384f2e618cfc1b3cbc7852c16692fe8de13fb8f
   Yoga: 3f5bfc54ce164fcd5b5d7f9f4232182d6298dd56
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 963714aefa7b2eda578977f7087d464a91248b57
+PODFILE CHECKSUM: af83b04fd953261cc017254f2f8a6a114028ea18
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3
