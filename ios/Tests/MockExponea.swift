@@ -91,7 +91,6 @@ class MockExponea: ExponeaType {
             }
         }
 
-
     var safeModeEnabled: Bool {
         get { fatalError("Not implemented") }
         set { fatalError("Not implemented \(newValue)") }
