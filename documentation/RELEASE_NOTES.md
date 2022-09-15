@@ -1,3 +1,5 @@
+## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
+
 ## Release Notes
 ## Release Notes for 1.1.0
 #### September 01, 2022
@@ -8,10 +10,6 @@
   * Fixed: Version upgrade guide is linked from README and Release Notes documentations
   * Fixed: License established to MIT
   * Fixed: Duplicated push open action track is not called on app cold start
-
-
-
-## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes for 1.0.0
 #### February 15, 2022
