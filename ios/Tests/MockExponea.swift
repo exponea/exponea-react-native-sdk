@@ -10,6 +10,7 @@ import Foundation
 import ExponeaSDK
 
 class MockExponea: ExponeaType {
+
     init() {}
 
     struct Call {
@@ -79,17 +80,18 @@ class MockExponea: ExponeaType {
         }
     }
 
-    var inAppMessagesDelegateValue: InAppMessageActionDelegate = InAppDelegate()
-        var inAppMessagesDelegate: InAppMessageActionDelegate {
-            get {
-                calls.append(Call(name: "inAppMessagesDelegate:get", params: []))
-                return inAppMessagesDelegateValue
-            }
-            set {
-                calls.append(Call(name: "inAppMessagesDelegate:set", params: [newValue]))
-                inAppMessagesDelegateValue = newValue
-            }
+    var inAppMessagesDelegateValue: InAppMessageActionDelegate = TestDefaultInAppDelegate()
+
+    var inAppMessagesDelegate: InAppMessageActionDelegate {
+        get {
+            calls.append(Call(name: "inAppMessagesDelegate:get", params: []))
+            return inAppMessagesDelegateValue
         }
+        set {
+            calls.append(Call(name: "inAppMessagesDelegate:set", params: [newValue]))
+            inAppMessagesDelegateValue = newValue
+        }
+    }
 
     var safeModeEnabled: Bool {
         get { fatalError("Not implemented") }
@@ -238,4 +240,18 @@ class MockExponea: ExponeaType {
     func anonymize(exponeaProject: ExponeaProject, projectMapping: [EventType: [ExponeaProject]]?) {
         calls.append(Call(name: "anonymize", params: [exponeaProject, projectMapping]))
     }
+    func trackInAppMessageClick(message: InAppMessage, buttonText: String?, buttonLink: String?) {
+        calls.append(Call(name: "trackInAppMessageClick", params: [message, buttonText, buttonLink]))
+    }
+
+    func trackInAppMessageClose(message: InAppMessage) {
+        calls.append(Call(name: "trackInAppMessageClose", params: [message]))
+    }
+}
+
+class TestDefaultInAppDelegate: InAppMessageActionDelegate {
+    public let overrideDefaultBehavior = false
+    public let trackActions = true
+
+    public func inAppMessageAction(with message: InAppMessage, button: InAppMessageButton?, interaction: Bool) {}
 }
