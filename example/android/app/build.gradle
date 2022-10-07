@@ -138,8 +138,8 @@ android {
         applicationId "com.exponea.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "1.1.0"
+        versionCode 6
+        versionName "1.1.1"
         multiDexEnabled true
     }
     splits {

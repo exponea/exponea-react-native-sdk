@@ -1,6 +1,12 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.1.1
+#### October 07, 2022
+* Bug Fixes
+  * Fixed: Native iOS SDK updated for Webview configuration setup compatible with swift5.7
+  * Fixed: Unit tests and lint fixes due to the latest changes
+
 ## Release Notes for 1.1.0
 #### September 01, 2022
 * Features
