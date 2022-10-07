@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "ExponeaSDK", "2.12.1"
+  s.dependency "ExponeaSDK", "2.12.3"
   s.dependency "AnyCodable-FlightSchool", "0.4.0"
 end
 
