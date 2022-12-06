@@ -33,8 +33,8 @@
     "name": "Exponea",
     "email": "contact@exponea.com"
   },
-  "license": "Apache-2.0",
-  "licenseFilename": "http://www.apache.org/licenses/LICENSE-2.0.txt",
+  "license": "MIT",
+  "licenseFilename": "https://opensource.org/licenses/MIT",
   "readmeFilename": "README.md",
   "peerDependencies": {
     "react": "^18.1.0",
