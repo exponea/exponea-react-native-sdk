@@ -1,7 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
+platform :ios, '12.4'
 
 target 'Exponea' do
 
@@ -9,14 +9,14 @@ target 'Exponea' do
 
   config = use_native_modules!
 
-  use_react_native!(:path => config["reactNativePath"])
+  use_react_native!(:path => config[:reactNativePath])
 
   pod "ExponeaSDK", "2.12.3"
   pod 'AnyCodable-FlightSchool', '0.4.0'
 end
 
 target 'Tests' do
-  pod 'Quick'
+  pod 'Quick', '5.0.1'
   pod 'Nimble', '8.0.7'
 end
 
@@ -24,11 +24,22 @@ end
 post_install do |pi|
     pi.pods_project.targets.each do |t|
       t.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.4'
       end
     end
 
     # We need to make one crude patch to RCT-Folly - set `__IPHONE_10_0` to our iOS target + 1
     # https://github.com/facebook/flipper/issues/834 - 84 comments and still going...
-   `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_12_0/' Pods/RCT-Folly/folly/portability/Time.h`
+   `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/RCT-Folly/folly/portability/Time.h`
+   `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/Flipper-Folly/Time.h`
+
+   # fixes error: Signing for "React-Core-AccessibilityResources" requires a development team.
+   # from https://github.com/CocoaPods/CocoaPods/issues/11402#issuecomment-1201464693
+   pi.pods_project.targets.each do |target|
+     if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
+       target.build_configurations.each do |config|
+         config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+       end
+     end
+   end
 end

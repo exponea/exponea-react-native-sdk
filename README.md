@@ -15,7 +15,7 @@ Install the package using npm or yarn:
 * `$ cd ios`
 * `$ pod install`
 
-Minimal supported iOS version for Exponea SDK is 10.3, you may need to change iOS version on the first line of your `ios/Podfile` to `platform :ios, '10.3'`, or higher.
+Minimal supported iOS version for Exponea SDK is 12.4, you may need to change iOS version on the first line of your `ios/Podfile` to `platform :ios, '12.4'`, or higher.
 
 ### Android setup
 You'll most likely need to enable multidex. Edit `android/app/build.gradle` and add `multiDexEnabled true` to android defaultConfig.

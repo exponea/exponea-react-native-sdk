@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+import KeyboardSpacer from '../util/KeyboardSpacer';
 
 interface ExponeaModalProps {
   visible: boolean;

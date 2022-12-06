@@ -30,9 +30,9 @@
 		05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E6DA4724A4DEBC004EE0F9 /* Exponea+PushNotifications.swift */; };
 		05FD376F248FDE5A0078847C /* Exponea.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FD376D248FDE5A0078847C /* Exponea.m */; };
 		05FD3772248FDE7F0078847C /* Exponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD3771248FDE7F0078847C /* Exponea.swift */; };
-		7650AB4366BAD682C01C2571 /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9621437D770CFF34AA8E3AA7 /* libPods-Exponea.a */; };
+		3BC5506871ED60E6FC4F901F /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F0A0B78690ED258F2E7983 /* libPods-Exponea.a */; };
+		A7CAEB8FA78675A92690F4FB /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C31586083819A52550CCB08 /* libPods-Tests.a */; };
 		CC619AC4265CCD7B00296FA3 /* ExponeaRNAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC619AC3265CCD7A00296FA3 /* ExponeaRNAppDelegate.m */; };
-		FFB1440D18502CBC9320801A /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A5B777D62CDEF189390484 /* libPods-Tests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,15 +85,15 @@
 		05FD3770248FDE7E0078847C /* Exponea-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Exponea-Bridging-Header.h"; sourceTree = "<group>"; };
 		05FD3771248FDE7F0078847C /* Exponea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exponea.swift; sourceTree = "<group>"; };
 		05FD3773248FDFDD0078847C /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		118EEEDF8451E3F6E041D710 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libExponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExponea.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		863AF8A8A8367A20DA72112D /* Pods-Exponea.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.debug.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.debug.xcconfig"; sourceTree = "<group>"; };
-		871ACDB696CEF17222C3A7EF /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		9621437D770CFF34AA8E3AA7 /* libPods-Exponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Exponea.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9A5B777D62CDEF189390484 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C31586083819A52550CCB08 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A85DAF9DE91BD7BCD1CFDD4 /* Pods-Exponea.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.debug.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.debug.xcconfig"; sourceTree = "<group>"; };
+		A8C63597C2B8DE4B42D60B64 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		CC619AC2265CCD6D00296FA3 /* ExponeaRNAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExponeaRNAppDelegate.h; sourceTree = "<group>"; };
 		CC619AC3265CCD7A00296FA3 /* ExponeaRNAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExponeaRNAppDelegate.m; sourceTree = "<group>"; };
-		CC6EA75C9AE6DEA678FDDDEA /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
-		D2F39F9789CCD78D03C2BE9A /* Pods-Exponea.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.release.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.release.xcconfig"; sourceTree = "<group>"; };
+		EAEB637F270FEE84994C87F6 /* Pods-Exponea.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.release.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.release.xcconfig"; sourceTree = "<group>"; };
+		F5F0A0B78690ED258F2E7983 /* libPods-Exponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Exponea.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +102,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05C542CA2490E0010095903D /* libExponea.a in Frameworks */,
-				FFB1440D18502CBC9320801A /* libPods-Tests.a in Frameworks */,
+				A7CAEB8FA78675A92690F4FB /* libPods-Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,7 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7650AB4366BAD682C01C2571 /* libPods-Exponea.a in Frameworks */,
+				3BC5506871ED60E6FC4F901F /* libPods-Exponea.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,22 +143,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		21B43BCC2CE11CD06834AE0F /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				9621437D770CFF34AA8E3AA7 /* libPods-Exponea.a */,
-				A9A5B777D62CDEF189390484 /* libPods-Tests.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		516CC95B79D3E8AC0B2CD93A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				863AF8A8A8367A20DA72112D /* Pods-Exponea.debug.xcconfig */,
-				D2F39F9789CCD78D03C2BE9A /* Pods-Exponea.release.xcconfig */,
-				871ACDB696CEF17222C3A7EF /* Pods-Tests.debug.xcconfig */,
-				CC6EA75C9AE6DEA678FDDDEA /* Pods-Tests.release.xcconfig */,
+				9A85DAF9DE91BD7BCD1CFDD4 /* Pods-Exponea.debug.xcconfig */,
+				EAEB637F270FEE84994C87F6 /* Pods-Exponea.release.xcconfig */,
+				A8C63597C2B8DE4B42D60B64 /* Pods-Tests.debug.xcconfig */,
+				118EEEDF8451E3F6E041D710 /* Pods-Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -187,8 +178,17 @@
 				134814211AA4EA7D00B7C361 /* Products */,
 				516CC95B79D3E8AC0B2CD93A /* Pods */,
 				05C542C52490E0010095903D /* Tests.xctest */,
-				21B43BCC2CE11CD06834AE0F /* Frameworks */,
+				60CE2A856CA0BA77B4FE5442 /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		60CE2A856CA0BA77B4FE5442 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F5F0A0B78690ED258F2E7983 /* libPods-Exponea.a */,
+				2C31586083819A52550CCB08 /* libPods-Tests.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,12 +198,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 05C542CF2490E0010095903D /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
-				06C4C626082D07796C782FA7 /* [CP] Check Pods Manifest.lock */,
+				C60DBAA9453B4B2923F39B8A /* [CP] Check Pods Manifest.lock */,
 				05C542C12490E0010095903D /* Sources */,
 				05C542C22490E0010095903D /* Frameworks */,
 				05C542C32490E0010095903D /* Resources */,
 				05C542D02490E21F0095903D /* ShellScript */,
-				73AAFE465314FCA2AFF16AD2 /* [CP] Copy Pods Resources */,
+				549BB1C24017A4BA8F83E095 /* [CP] Embed Pods Frameworks */,
+				2F1ECCB519CDA22C2907AA87 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -219,7 +220,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "Exponea" */;
 			buildPhases = (
-				539C83DA68F714E27A494B1B /* [CP] Check Pods Manifest.lock */,
+				DAF89C313CCD1F43EED4AD30 /* [CP] Check Pods Manifest.lock */,
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
@@ -245,7 +246,7 @@
 				TargetAttributes = {
 					05C542C42490E0010095903D = {
 						CreatedOnToolsVersion = 11.4.1;
-						DevelopmentTeam = T22S7RD8Z8;
+						DevelopmentTeam = UVDCL7YSZS;
 						ProvisioningStyle = Automatic;
 					};
 					58B511DA1A9E6C8500147676 = {
@@ -302,7 +303,45 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		06C4C626082D07796C782FA7 /* [CP] Check Pods Manifest.lock */ = {
+		2F1ECCB519CDA22C2907AA87 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh",
+				"${PODS_ROOT}/ExponeaSDK/ExponeaSDK/ExponeaSDK/Classes/Database/DatabaseModel.xcdatamodeld",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DatabaseModel.momd",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		549BB1C24017A4BA8F83E095 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C60DBAA9453B4B2923F39B8A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -324,7 +363,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		539C83DA68F714E27A494B1B /* [CP] Check Pods Manifest.lock */ = {
+		DAF89C313CCD1F43EED4AD30 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -344,26 +383,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		73AAFE465314FCA2AFF16AD2 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh",
-				"${PODS_ROOT}/ExponeaSDK/ExponeaSDK/ExponeaSDK/Classes/Database/DatabaseModel.xcdatamodeld",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DatabaseModel.momd",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -418,24 +437,27 @@
 /* Begin XCBuildConfiguration section */
 		05C542CD2490E0010095903D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 871ACDB696CEF17222C3A7EF /* Pods-Tests.debug.xcconfig */;
+			baseConfigurationReference = A8C63597C2B8DE4B42D60B64 /* Pods-Tests.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = T22S7RD8Z8;
+				DEVELOPMENT_TEAM = UVDCL7YSZS;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -445,24 +467,27 @@
 		};
 		05C542CE2490E0010095903D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CC6EA75C9AE6DEA678FDDDEA /* Pods-Tests.release.xcconfig */;
+			baseConfigurationReference = 118EEEDF8451E3F6E041D710 /* Pods-Tests.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = T22S7RD8Z8;
+				DEVELOPMENT_TEAM = UVDCL7YSZS;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -474,7 +499,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -515,7 +540,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
@@ -533,7 +558,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -567,7 +592,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
@@ -582,7 +607,7 @@
 		};
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 863AF8A8A8367A20DA72112D /* Pods-Exponea.debug.xcconfig */;
+			baseConfigurationReference = 9A85DAF9DE91BD7BCD1CFDD4 /* Pods-Exponea.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				HEADER_SEARCH_PATHS = (
@@ -591,7 +616,7 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -605,7 +630,7 @@
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D2F39F9789CCD78D03C2BE9A /* Pods-Exponea.release.xcconfig */;
+			baseConfigurationReference = EAEB637F270FEE84994C87F6 /* Pods-Exponea.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				HEADER_SEARCH_PATHS = (
@@ -614,7 +639,7 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";

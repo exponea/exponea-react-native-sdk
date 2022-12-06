@@ -22,7 +22,7 @@ export default function ExponeaPicker<T>(
         }}
         value={props.value}
         onValueChange={onValueChange}
-        Icon={() => <Text style={styles.chevron}>▼</Text>}
+        Icon={<Text style={styles.chevron}>▼</Text>}
         items={Object.keys(props.options).map((label) => ({
           label,
           value: props.options[label],

@@ -15,7 +15,9 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
-    "build": "tsc"
+    "build": "tsc",
+    "check-dependencies": "rnx-align-deps",
+    "fix-dependencies": "rnx-align-deps --write"
   },
   "repository": {
     "type": "git",
@@ -35,20 +37,49 @@
   "licenseFilename": "http://www.apache.org/licenses/LICENSE-2.0.txt",
   "readmeFilename": "README.md",
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-native": "<=0.67.0"
+    "react": "^18.1.0",
+    "react-native": "<=0.70.6"
   },
   "devDependencies": {
     "@react-native-community/eslint-config": "^3.0.1",
+    "@rnx-kit/align-deps": "^2.0.1",
     "@types/jest": "^27.4.0",
     "@types/react-native": "^0.66.12",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "eslint": "^7.2.0",
     "jest": "^27.4.7",
-    "react": "^17.0.2",
-    "react-native": "^0.67.0",
+    "react": "^18.1.0",
+    "react-native": "<=0.70.6",
     "ts-jest": "^27.1.3",
     "typescript": "^4.5.4"
+  },
+  "rnx-kit": {
+    "kitType": "library",
+    "alignDeps": {
+      "requirements": {
+        "development": [
+          "react-native@0.70"
+        ],
+        "production": [
+          "react-native@0.70"
+        ]
+      },
+      "capabilities": [
+        "core",
+        "core-android",
+        "core-ios",
+        "jest",
+        "react"
+      ]
+    }
+  },
+  "codegenConfig": {
+    "name": "example",
+    "type": "all",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.exponea"
+    }
   }
 }

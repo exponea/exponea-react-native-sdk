@@ -1,15 +1,19 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
+platform :ios, '12.4'
+install! 'cocoapods', :deterministic_uuids => false
 
 target 'example' do
   config = use_native_modules!
+  flags = get_default_flags()
 
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
-    :hermes_enabled => false
+    :hermes_enabled => false,
+    :fabric_enabled => flags[:fabric_enabled],
+    :flipper_configuration => FlipperConfiguration.enabled
   )
 
   target 'exampleTests' do
@@ -24,24 +28,34 @@ target 'example' do
 
 
   # Fix various Flipper issues during build time.
-  use_flipper!({ "Flipper-DoubleConversion" => "1.1.7" })
+  # use_flipper!({ "Flipper-DoubleConversion" => "1.1.7" })
   # use_flipper!()
 
   post_install do |pi|
-    react_native_post_install(pi)
+    react_native_post_install(
+        pi,
+        :mac_catalyst_enabled => false
+    )
 
     # Flipper requires a crude patch to bump up iOS deployment target, or "error: thread-local storage is not supported for the current target"
     # I'm not aware of any other way to fix this one other than bumping iOS deployment target to match react-native (iOS 11 now)
 
-    pi.pods_project.targets.each do |t|
-        t.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
-      end
-    end
-
     # We need to make one crude patch to RCT-Folly - set `__IPHONE_10_0` to our iOS target + 1
     # https://github.com/facebook/flipper/issues/834 - 84 comments and still going...
-   `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_12_0/' Pods/RCT-Folly/folly/portability/Time.h`
+    `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/RCT-Folly/folly/portability/Time.h`
+    `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/Flipper-Folly/Time.h`
+    deployment_target = Gem::Version.new('12.4')
+    pi.pods_project.targets.each do |target|
+        # Explicitly set pods deployment target for each build config to app deployment target
+          target.build_configurations.each do |config|
+            current_pod_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+            pod_ios_deployment_target = Gem::Version.new(current_pod_target)
+            if pod_ios_deployment_target <= deployment_target
+              config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+            end
+          end
+    end
+
   end
 end
 
