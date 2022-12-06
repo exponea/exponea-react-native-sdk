@@ -1,6 +1,16 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.1.2
+#### December 06, 2022
+* Features
+  * React native upgraded to max supported version 0.70.6
+  * Android minimal API increased to 21
+  * iOS minimal SDK increased to 12.4
+* Bug Fixes
+  * Fixed: License established to MIT in npmjs
+
+
 ## Release Notes for 1.1.1
 #### October 07, 2022
 * Bug Fixes
