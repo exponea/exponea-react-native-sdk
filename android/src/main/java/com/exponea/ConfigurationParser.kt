@@ -111,6 +111,12 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                         )
                     }
                 }
+                "allowDefaultCustomerProperties" -> {
+                    configuration.allowDefaultCustomerProperties = map.getSafely(
+                            "allowDefaultCustomerProperties",
+                            Boolean::class
+                    )
+                }
                 "android" -> {
                     @Suppress("UNCHECKED_CAST")
                     val androidConfig = entry.value as? Map<String, Any?> ?: throw ExponeaModule.ExponeaDataException(

@@ -77,7 +77,8 @@ class Exponea: RCTEventEmitter {
                 pushNotificationTracking: try parser.parsePushNotificationTracking(),
                 automaticSessionTracking: try parser.parseSessionTracking(),
                 defaultProperties: try parser.parseDefaultProperties(),
-                flushingSetup: try parser.parseFlushingSetup()
+                flushingSetup: try parser.parseFlushingSetup(),
+                allowDefaultCustomerProperties: try parser.parseAllowDefaultCustomerProperties()
             )
             Exponea.exponeaInstance.pushNotificationsDelegate = self
             resolve(nil)

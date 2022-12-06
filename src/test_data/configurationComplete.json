@@ -26,6 +26,7 @@
   "sessionTimeout": 20,
   "automaticSessionTracking": true,
   "pushTokenTrackingFrequency": "DAILY",
+  "allowDefaultCustomerProperties": false,
   "android": {
     "automaticPushNotifications": true,
     "pushIcon": 12345,

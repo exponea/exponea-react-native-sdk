@@ -66,6 +66,8 @@ You can see the Typescript definition for Configuration object at [src/Configura
 
 * **pushTokenTrackingFrequency** You can define your policy for tracking push notification token. Default value `ON_TOKEN_CHANGE` is recommended.
 
+* **allowDefaultCustomerProperties** Flag to apply `defaultProperties` list to `identifyCustomer` tracking event. Default value `true` is used if is not defined.
+
 * **android** Specific configuration for Android
 
 * **ios** Specific configuration for iOS

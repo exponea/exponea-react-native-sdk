@@ -67,7 +67,8 @@ internal class ConfigurationParserTest {
                 pushChannelDescription = "mock-push-channel-description",
                 pushChannelId = "mock-push-channel-id",
                 pushNotificationImportance = NotificationManager.IMPORTANCE_HIGH,
-                httpLoggingLevel = ExponeaConfiguration.HttpLoggingLevel.BODY
+                httpLoggingLevel = ExponeaConfiguration.HttpLoggingLevel.BODY,
+                allowDefaultCustomerProperties = false
             ),
             ConfigurationParser(data as ReadableMap).parse()
         )
