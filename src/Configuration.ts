@@ -23,6 +23,8 @@ interface Configuration {
   automaticSessionTracking?: boolean;
   /** Defines how often should the SDK track push notification token to Exponea */
   pushTokenTrackingFrequency?: PushTokenTrackingFrequency;
+  /** Flag to apply `defaultProperties` list to `identifyCustomer` tracking event. */
+  allowDefaultCustomerProperties?: boolean;
   /** Platform specific settings for Android */
   android?: AndroidConfiguration;
   /** Platform specific settings for iOS */

@@ -45,6 +45,7 @@ test('should construct full configuration', () => {
     sessionTimeout: 20,
     automaticSessionTracking: true,
     pushTokenTrackingFrequency: PushTokenTrackingFrequency.DAILY,
+    allowDefaultCustomerProperties: false,
     android: {
       automaticPushNotifications: true,
       pushIcon: 12345,
