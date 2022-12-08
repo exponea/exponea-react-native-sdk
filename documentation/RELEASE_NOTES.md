@@ -1,6 +1,15 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.2.0
+#### December 08, 2022
+* Features
+  * Native SDK updated - Android to 3.2.1 and iOS to 2.13.1
+  * Added Configuration flag to be able to disable tracking of default properties along with customer properties
+  * Guiding documentation added for Push notification update after certain circumstances
+  * Added documentation notes about tracking consent according to DSGVO/GDPR
+
+
 ## Release Notes for 1.1.2
 #### December 06, 2022
 * Features
