@@ -127,12 +127,19 @@ class MockExponea: ExponeaType {
         pushNotificationTracking: Exponea.PushNotificationTracking,
         automaticSessionTracking: Exponea.AutomaticSessionTracking,
         defaultProperties: [String: JSONConvertible]?,
-        flushingSetup: Exponea.FlushingSetup
+        flushingSetup: Exponea.FlushingSetup,
+        allowDefaultCustomerProperties: Bool?
     ) {
         calls.append(
             Call(
                 name: "configure",
-                params: [pushNotificationTracking, automaticSessionTracking, defaultProperties, flushingSetup]
+                params: [
+                    pushNotificationTracking,
+                    automaticSessionTracking,
+                    defaultProperties,
+                    flushingSetup,
+                    allowDefaultCustomerProperties
+                ]
             )
         )
     }
@@ -142,7 +149,8 @@ class MockExponea: ExponeaType {
         authorization: Authorization,
         baseUrl: String?,
         appGroup: String?,
-        defaultProperties: [String: JSONConvertible]?
+        defaultProperties: [String: JSONConvertible]?,
+        allowDefaultCustomerProperties: Bool?
     ) {
         fatalError("Not implemented")
     }
@@ -153,7 +161,8 @@ class MockExponea: ExponeaType {
         authorization: Authorization,
         baseUrl: String?,
         appGroup: String?,
-        defaultProperties: [String: JSONConvertible]?
+        defaultProperties: [String: JSONConvertible]?,
+        allowDefaultCustomerProperties: Bool?
     ) {
         fatalError("Not implemented")
     }

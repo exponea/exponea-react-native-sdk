@@ -44,7 +44,7 @@ internal class ConfigurationParserTest {
                 baseURL = "http://mock-base-url.xxx",
                 projectRouteMap = hashMapOf(
                     EventType.BANNER to arrayListOf(ExponeaProject(
-                        "http://mock-base-url.xxx",
+                        "https://api.exponea.com",
                         "other-project-token",
                         "Token other-auth-token"
                     ))
