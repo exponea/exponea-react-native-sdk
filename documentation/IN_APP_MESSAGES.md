@@ -3,6 +3,8 @@ Exponea SDK allows you to display native in-app messages based on definitions se
 
 No developer work is required for in-app messages, they work automatically after the SDK is configured.
 
+> The behaviour of InApp messages tracking (action click and message close) may be affected by the tracking consent feature, which in enabled mode considers the requirement of explicit consent for tracking. Read more in [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/configuration-of-tracking-consent).
+
 ### Troubleshooting
 As with everything that's supposed works automatically, the biggest problem is what to do when it doesn't.
 

@@ -5,6 +5,8 @@ We rely on our native SDK to do push tracking. For more complex scenarios(multip
 
 > Exponea Android SDK contains self-check functionality to help you successfully set up push notifications. Self-check will try to track push token, request Exponea backend to send a silent push to the device, and check the app is ready to open push notifications. To enable self-check call `Exponea.checkPushSetup()` **before** configuring the SDK.
 
+> The behaviour of Push delivery and click tracking may be affected by the tracking consent feature, which in enabled mode considers the requirement of explicit consent for tracking. Read more in [tracking consent documentation](https://github.com/exponea/exponea-android-sdk/blob/develop/Documentation/TRACKING_CONSENT.md). 
+
 ## Push Integrations
 Exponea Android SDK supports these integrations:
 
