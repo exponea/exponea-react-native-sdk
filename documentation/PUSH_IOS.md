@@ -142,6 +142,32 @@ end
 
 Once done, run `pod install` in `ios` folder to install the dependencies. You should be able to run the application now.
 
+### Retrieve Push notification token manually
+
+In some cases, your application may need to retrieve current Push token while running. This step is needed especially in case of `Exponea.shared.anonymize()` method usage. Invoking of `anonymize` method will remove a Push notification token from storage, so it needs to be updated right after `anonymize` or before/after `identifyCustomer`, it depends on your Push notifications usage.
+
+``` swift
+class YourClass {
+    @objc(signOutAndSignIn:resolve:reject:)
+    func signOutAndSignIn(
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        Exponea.exponeaInstance.anonymize()
+        // anonymize removed Push token, so another identifyCustomer will not be assigned to push notifications
+        Exponea.exponeaInstance.identifyCustomer(...)
+        Messaging.messaging().token { token, error in
+          if let token = token {
+            Exponea.exponeaInstance.trackPushToken(token)
+            resolve(nil)
+          } else {
+            reject(error)
+          }
+        }
+    }
+}
+```
+
 #### Checklist:
  - push notification with image and buttons sent from Exponea web app should be properly displayed on your device. Push delivery tracking should work.
  - if you don't see buttons in the expanded push notification, it means the content extension is **not** running. Double check `UNNotificationExtensionCategory` in the Info.plist - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for extensions and main app.
