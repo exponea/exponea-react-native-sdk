@@ -1,6 +1,13 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.3.0
+#### February 27, 2023
+* Features
+  * Added App Inbox feature with PUSH and HTML - Inbox message type support
+  * Added support for Customer token authorization
+
+
 ## Release Notes for 1.2.0
 #### December 08, 2022
 * Features
