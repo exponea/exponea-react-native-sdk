@@ -2,6 +2,7 @@ package com.exponea.example;
 
 import android.app.Application;
 import android.content.Context;
+import com.exponea.ExponeaPackage;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -12,7 +13,9 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-  private final ReactNativeHost mReactNativeHost =
+    public static MainApplication APP_INSTANCE;
+
+    private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
         @Override
         public boolean getUseDeveloperSupport() {
@@ -23,9 +26,9 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
-          return packages;
+            // Packages that cannot be autolinked yet can be added manually here, for example:
+            packages.add(new ExampleAppPackage());
+            return packages;
         }
 
         @Override
@@ -43,6 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    APP_INSTANCE = this;
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
   }
@@ -66,4 +70,5 @@ public class MainApplication extends Application implements ReactApplication {
       }
     }
   }
+
 }

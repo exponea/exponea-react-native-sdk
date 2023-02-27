@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, Alert} from 'react-native';
+import {StyleSheet, Text, Alert, NativeModules} from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
 import ExponeaModal from './ExponeaModal';
 import PropertyEditor from './PropertyEditor';
@@ -17,6 +17,9 @@ export default function IdentifyCustomerModal(
   const [properties, setProperties] = React.useState({});
 
   const identifyCustomer = () => {
+    NativeModules.CustomerTokenStorage.configure({
+      customerIds: ids,
+    });
     Exponea.identifyCustomer(ids, properties)
       .then(() => {
         props.onClose();

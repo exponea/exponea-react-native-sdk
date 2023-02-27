@@ -5,6 +5,9 @@ import Consent from './Consent';
 import {JsonObject} from './Json';
 import ExponeaProject from './ExponeaProject';
 import EventType from './EventType';
+import AppInboxStyle from './AppInboxStyle';
+import {AppInboxMessage} from './AppInboxMessage';
+import {AppInboxAction} from './AppInboxAction';
 
 /*
 Purpose of this file is to test typescript typings and serialization of parameters and return types
@@ -164,6 +167,47 @@ const mockExponea: ExponeaType = {
 
   requestIosPushAuthorization(): Promise<boolean> {
     return Promise.resolve(true);
+  },
+
+  setAppInboxProvider(withStyle: AppInboxStyle): Promise<void> {
+    lastArgumentsJson = JSON.stringify([withStyle]);
+    return Promise.resolve();
+  },
+
+  trackAppInboxOpened(message: AppInboxMessage): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackAppInboxOpenedWithoutTrackingConsent(
+    message: AppInboxMessage,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackAppInboxClick(
+    action: AppInboxAction,
+    message: AppInboxMessage,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackAppInboxClickWithoutTrackingConsent(
+    action: AppInboxAction,
+    message: AppInboxMessage,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
+
+  markAppInboxAsRead(message: AppInboxMessage): Promise<boolean> {
+    return Promise.resolve(true);
+  },
+
+  fetchAppInbox(): Promise<Array<AppInboxMessage>> {
+    return Promise.resolve([]);
+  },
+
+  fetchAppInboxItem(messageId: string): Promise<AppInboxMessage> {
+    return Promise.resolve({id: '1', type: 'push'});
   },
 };
 
@@ -367,6 +411,22 @@ describe('parameter serialization and typings', () => {
           ]
         }
       ]
+    `.replace(/\s/g, ''),
+    );
+  });
+  test('appInboxStyle', () => {
+    mockExponea.setAppInboxProvider({
+      appInboxButton: {
+        textOverride: 'test',
+      },
+    });
+    expect(lastArgumentsJson).toBe(
+      `
+    [{
+      "appInboxButton": {
+        "textOverride": "test"
+      }
+    }]
     `.replace(/\s/g, ''),
     );
   });

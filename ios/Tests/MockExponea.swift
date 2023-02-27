@@ -8,8 +8,11 @@
 
 import Foundation
 import ExponeaSDK
+import Exponea
 
 class MockExponea: ExponeaType {
+
+    var appInboxProvider: ExponeaSDK.AppInboxProvider = DefaultAppInboxProvider()
 
     init() {}
 
@@ -128,7 +131,8 @@ class MockExponea: ExponeaType {
         automaticSessionTracking: Exponea.AutomaticSessionTracking,
         defaultProperties: [String: JSONConvertible]?,
         flushingSetup: Exponea.FlushingSetup,
-        allowDefaultCustomerProperties: Bool?
+        allowDefaultCustomerProperties: Bool?,
+        advancedAuthEnabled: Bool?
     ) {
         calls.append(
             Call(
@@ -138,7 +142,8 @@ class MockExponea: ExponeaType {
                     automaticSessionTracking,
                     defaultProperties,
                     flushingSetup,
-                    allowDefaultCustomerProperties
+                    allowDefaultCustomerProperties,
+                    advancedAuthEnabled
                 ]
             )
         )
@@ -150,7 +155,8 @@ class MockExponea: ExponeaType {
         baseUrl: String?,
         appGroup: String?,
         defaultProperties: [String: JSONConvertible]?,
-        allowDefaultCustomerProperties: Bool?
+        allowDefaultCustomerProperties: Bool?,
+        advancedAuthEnabled: Bool?
     ) {
         fatalError("Not implemented")
     }
@@ -162,7 +168,8 @@ class MockExponea: ExponeaType {
         baseUrl: String?,
         appGroup: String?,
         defaultProperties: [String: JSONConvertible]?,
-        allowDefaultCustomerProperties: Bool?
+        allowDefaultCustomerProperties: Bool?,
+        advancedAuthEnabled: Bool?
     ) {
         fatalError("Not implemented")
     }
@@ -255,6 +262,72 @@ class MockExponea: ExponeaType {
 
     func trackInAppMessageClose(message: InAppMessage) {
         calls.append(Call(name: "trackInAppMessageClose", params: [message]))
+    }
+
+    func trackPushOpenedWithoutTrackingConsent(with userInfo: [AnyHashable: Any]) {
+        fatalError("Not implemented")
+    }
+
+    func handlePushNotificationOpenedWithoutTrackingConsent(userInfo: [AnyHashable: Any], actionIdentifier: String?) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppMessageClickWithoutTrackingConsent(
+        message: ExponeaSDK.InAppMessage,
+        buttonText: String?,
+        buttonLink: String?
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppMessageCloseClickWithoutTrackingConsent(message: ExponeaSDK.InAppMessage) {
+        fatalError("Not implemented")
+    }
+
+    func trackAppInboxOpened(message: ExponeaSDK.MessageItem) {
+        fatalError("Not implemented")
+    }
+
+    func trackAppInboxOpenedWithoutTrackingConsent(message: ExponeaSDK.MessageItem) {
+        fatalError("Not implemented")
+    }
+
+    func trackAppInboxClick(action: ExponeaSDK.MessageItemAction, message: ExponeaSDK.MessageItem) {
+        fatalError("Not implemented")
+    }
+
+    func trackAppInboxClickWithoutTrackingConsent(
+        action: ExponeaSDK.MessageItemAction,
+        message: ExponeaSDK.MessageItem
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func markAppInboxAsRead(_ message: ExponeaSDK.MessageItem, completition: ((Bool) -> Void)?) {
+        fatalError("Not implemented")
+    }
+
+    func getAppInboxButton() -> UIButton {
+        fatalError("Not implemented")
+    }
+
+    func getAppInboxListViewController() -> UIViewController {
+        fatalError("Not implemented")
+    }
+
+    func getAppInboxDetailViewController(_ messageId: String) -> UIViewController {
+        fatalError("Not implemented")
+    }
+
+    func fetchAppInbox(completion: @escaping (ExponeaSDK.Result<[ExponeaSDK.MessageItem]>) -> Void) {
+        fatalError("Not implemented")
+    }
+
+    func fetchAppInboxItem(
+        _ messageId: String,
+        completion: @escaping (ExponeaSDK.Result<ExponeaSDK.MessageItem>) -> Void
+    ) {
+        fatalError("Not implemented")
     }
 }
 

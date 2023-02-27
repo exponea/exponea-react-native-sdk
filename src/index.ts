@@ -5,6 +5,8 @@ import EventType from './EventType';
 import {JsonObject} from './Json';
 import Consent from './Consent';
 import {RecommendationOptions, Recommendation} from './Recommendation';
+import {AppInboxMessage} from './AppInboxMessage';
+import {AppInboxAction} from './AppInboxAction';
 
 /*
 React native bridge doesn't like optional parameters, we have to implement it ourselves.
@@ -103,6 +105,44 @@ const Exponea: ExponeaType = {
       throw new Error('requestIosPushAuthorization is only available on iOS!');
     }
     return NativeModules.Exponea.requestPushAuthorization();
+  },
+
+  setAppInboxProvider: NativeModules.Exponea.setAppInboxProvider,
+
+  async trackAppInboxOpened(message: AppInboxMessage): Promise<void> {
+    return NativeModules.Exponea.trackAppInboxOpened(message);
+  },
+
+  async trackAppInboxOpenedWithoutTrackingConsent(
+    message: AppInboxMessage,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackAppInboxOpened(message);
+  },
+
+  async trackAppInboxClick(
+    action: AppInboxAction,
+    message: AppInboxMessage,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackAppInboxClick(action, message);
+  },
+
+  async trackAppInboxClickWithoutTrackingConsent(
+    action: AppInboxAction,
+    message: AppInboxMessage,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackAppInboxClick(action, message);
+  },
+
+  async markAppInboxAsRead(message: AppInboxMessage): Promise<boolean> {
+    return NativeModules.Exponea.markAppInboxAsRead(message);
+  },
+
+  async fetchAppInbox(): Promise<Array<AppInboxMessage>> {
+    return JSON.parse(await NativeModules.Exponea.fetchAppInbox());
+  },
+
+  async fetchAppInboxItem(messageId: string): Promise<AppInboxMessage> {
+    return JSON.parse(await NativeModules.Exponea.fetchAppInboxItem(messageId));
   },
 };
 

@@ -30,8 +30,24 @@
 		05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E6DA4724A4DEBC004EE0F9 /* Exponea+PushNotifications.swift */; };
 		05FD376F248FDE5A0078847C /* Exponea.m in Sources */ = {isa = PBXBuildFile; fileRef = 05FD376D248FDE5A0078847C /* Exponea.m */; };
 		05FD3772248FDE7F0078847C /* Exponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD3771248FDE7F0078847C /* Exponea.swift */; };
-		3BC5506871ED60E6FC4F901F /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F0A0B78690ED258F2E7983 /* libPods-Exponea.a */; };
-		A7CAEB8FA78675A92690F4FB /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C31586083819A52550CCB08 /* libPods-Tests.a */; };
+		1A1686B3D648AB9F9CCAFDD9 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69FD96B26429EAD2DDF2E8BE /* libPods-Tests.a */; };
+		50A439BE1C21B62F27753C91 /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 976E6ED146A8BE7F4CB81AAA /* libPods-Exponea.a */; };
+		559C55C729A415BA004D216F /* ReactNativeAppInboxProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55C629A415BA004D216F /* ReactNativeAppInboxProvider.swift */; };
+		559C55C929A41665004D216F /* AppInboxStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55C829A41665004D216F /* AppInboxStyle.swift */; };
+		559C55CB29A416DB004D216F /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55CA29A416DB004D216F /* ButtonStyle.swift */; };
+		559C55CD29A418E8004D216F /* DetailViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55CC29A418E8004D216F /* DetailViewStyle.swift */; };
+		559C55CF29A4191A004D216F /* TextViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55CE29A4191A004D216F /* TextViewStyle.swift */; };
+		559C55D129A4194A004D216F /* ImageViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D029A4194A004D216F /* ImageViewStyle.swift */; };
+		559C55D329A41976004D216F /* ListScreenStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D229A41976004D216F /* ListScreenStyle.swift */; };
+		559C55D529A419AB004D216F /* ProgressBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D429A419AB004D216F /* ProgressBarStyle.swift */; };
+		559C55D729A419CC004D216F /* AppInboxListViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D629A419CC004D216F /* AppInboxListViewStyle.swift */; };
+		559C55D929A419F5004D216F /* AppInboxListItemStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D829A419F5004D216F /* AppInboxListItemStyle.swift */; };
+		559C55DB29A4E4F1004D216F /* StyleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55DA29A4E4F1004D216F /* StyleExtensions.swift */; };
+		559C55DD29A50C4C004D216F /* AppInboxStyleSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55DC29A50C4C004D216F /* AppInboxStyleSpec.swift */; };
+		559C55E929A64654004D216F /* AppInboxStyleParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55E829A64654004D216F /* AppInboxStyleParser.swift */; };
+		55B0FEC729A78B9A00F8FB7C /* Exponea+AppInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */; };
+		55F4BB3729A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */; };
+		55F4BB3929A8C3FB00CEDC7C /* RNAppInboxButtonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4BB3829A8C3FB00CEDC7C /* RNAppInboxButtonManager.m */; };
 		CC619AC4265CCD7B00296FA3 /* ExponeaRNAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC619AC3265CCD7A00296FA3 /* ExponeaRNAppDelegate.m */; };
 /* End PBXBuildFile section */
 
@@ -85,15 +101,31 @@
 		05FD3770248FDE7E0078847C /* Exponea-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Exponea-Bridging-Header.h"; sourceTree = "<group>"; };
 		05FD3771248FDE7F0078847C /* Exponea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exponea.swift; sourceTree = "<group>"; };
 		05FD3773248FDFDD0078847C /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		118EEEDF8451E3F6E041D710 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		07EB3281CEB025E5B3DDC15B /* Pods-Exponea.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.debug.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.debug.xcconfig"; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libExponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExponea.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C31586083819A52550CCB08 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9A85DAF9DE91BD7BCD1CFDD4 /* Pods-Exponea.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.debug.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.debug.xcconfig"; sourceTree = "<group>"; };
-		A8C63597C2B8DE4B42D60B64 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		559C55C629A415BA004D216F /* ReactNativeAppInboxProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactNativeAppInboxProvider.swift; sourceTree = "<group>"; };
+		559C55C829A41665004D216F /* AppInboxStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxStyle.swift; sourceTree = "<group>"; };
+		559C55CA29A416DB004D216F /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
+		559C55CC29A418E8004D216F /* DetailViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewStyle.swift; sourceTree = "<group>"; };
+		559C55CE29A4191A004D216F /* TextViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewStyle.swift; sourceTree = "<group>"; };
+		559C55D029A4194A004D216F /* ImageViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewStyle.swift; sourceTree = "<group>"; };
+		559C55D229A41976004D216F /* ListScreenStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListScreenStyle.swift; sourceTree = "<group>"; };
+		559C55D429A419AB004D216F /* ProgressBarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarStyle.swift; sourceTree = "<group>"; };
+		559C55D629A419CC004D216F /* AppInboxListViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxListViewStyle.swift; sourceTree = "<group>"; };
+		559C55D829A419F5004D216F /* AppInboxListItemStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxListItemStyle.swift; sourceTree = "<group>"; };
+		559C55DA29A4E4F1004D216F /* StyleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleExtensions.swift; sourceTree = "<group>"; };
+		559C55DC29A50C4C004D216F /* AppInboxStyleSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxStyleSpec.swift; sourceTree = "<group>"; };
+		559C55E829A64654004D216F /* AppInboxStyleParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxStyleParser.swift; sourceTree = "<group>"; };
+		55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+AppInbox.swift"; sourceTree = "<group>"; };
+		55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNAppInboxButtonManager.swift; sourceTree = "<group>"; };
+		55F4BB3829A8C3FB00CEDC7C /* RNAppInboxButtonManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNAppInboxButtonManager.m; sourceTree = "<group>"; };
+		69FD96B26429EAD2DDF2E8BE /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		83E3E4873D80425B4F36A9B7 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		976E6ED146A8BE7F4CB81AAA /* libPods-Exponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Exponea.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B10657CA49EC86787411292 /* Pods-Exponea.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.release.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.release.xcconfig"; sourceTree = "<group>"; };
 		CC619AC2265CCD6D00296FA3 /* ExponeaRNAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExponeaRNAppDelegate.h; sourceTree = "<group>"; };
 		CC619AC3265CCD7A00296FA3 /* ExponeaRNAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExponeaRNAppDelegate.m; sourceTree = "<group>"; };
-		EAEB637F270FEE84994C87F6 /* Pods-Exponea.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.release.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.release.xcconfig"; sourceTree = "<group>"; };
-		F5F0A0B78690ED258F2E7983 /* libPods-Exponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Exponea.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBD5A46B22965403F7BBDB37 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05C542CA2490E0010095903D /* libExponea.a in Frameworks */,
-				A7CAEB8FA78675A92690F4FB /* libPods-Tests.a in Frameworks */,
+				1A1686B3D648AB9F9CCAFDD9 /* libPods-Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,7 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3BC5506871ED60E6FC4F901F /* libPods-Exponea.a in Frameworks */,
+				50A439BE1C21B62F27753C91 /* libPods-Exponea.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +163,7 @@
 				054FD4C224D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift */,
 				0537094724D3423B001684E9 /* Exponea+AnonymizeSpec.swift */,
 				0537094924D401E3001684E9 /* Exponea+PushNotificationsSpec.swift */,
+				559C55DC29A50C4C004D216F /* AppInboxStyleSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -146,10 +179,10 @@
 		516CC95B79D3E8AC0B2CD93A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9A85DAF9DE91BD7BCD1CFDD4 /* Pods-Exponea.debug.xcconfig */,
-				EAEB637F270FEE84994C87F6 /* Pods-Exponea.release.xcconfig */,
-				A8C63597C2B8DE4B42D60B64 /* Pods-Tests.debug.xcconfig */,
-				118EEEDF8451E3F6E041D710 /* Pods-Tests.release.xcconfig */,
+				07EB3281CEB025E5B3DDC15B /* Pods-Exponea.debug.xcconfig */,
+				9B10657CA49EC86787411292 /* Pods-Exponea.release.xcconfig */,
+				83E3E4873D80425B4F36A9B7 /* Pods-Tests.debug.xcconfig */,
+				EBD5A46B22965403F7BBDB37 /* Pods-Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -157,6 +190,21 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				55F4BB3829A8C3FB00CEDC7C /* RNAppInboxButtonManager.m */,
+				55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */,
+				55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */,
+				559C55C629A415BA004D216F /* ReactNativeAppInboxProvider.swift */,
+				559C55C829A41665004D216F /* AppInboxStyle.swift */,
+				559C55CA29A416DB004D216F /* ButtonStyle.swift */,
+				559C55CC29A418E8004D216F /* DetailViewStyle.swift */,
+				559C55CE29A4191A004D216F /* TextViewStyle.swift */,
+				559C55D029A4194A004D216F /* ImageViewStyle.swift */,
+				559C55D229A41976004D216F /* ListScreenStyle.swift */,
+				559C55D429A419AB004D216F /* ProgressBarStyle.swift */,
+				559C55D629A419CC004D216F /* AppInboxListViewStyle.swift */,
+				559C55D829A419F5004D216F /* AppInboxListItemStyle.swift */,
+				559C55DA29A4E4F1004D216F /* StyleExtensions.swift */,
+				559C55E829A64654004D216F /* AppInboxStyleParser.swift */,
 				CC619AC3265CCD7A00296FA3 /* ExponeaRNAppDelegate.m */,
 				CC619AC2265CCD6D00296FA3 /* ExponeaRNAppDelegate.h */,
 				05E6DA4724A4DEBC004EE0F9 /* Exponea+PushNotifications.swift */,
@@ -178,15 +226,15 @@
 				134814211AA4EA7D00B7C361 /* Products */,
 				516CC95B79D3E8AC0B2CD93A /* Pods */,
 				05C542C52490E0010095903D /* Tests.xctest */,
-				60CE2A856CA0BA77B4FE5442 /* Frameworks */,
+				6CC8B6268E93209926B949CB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		60CE2A856CA0BA77B4FE5442 /* Frameworks */ = {
+		6CC8B6268E93209926B949CB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F5F0A0B78690ED258F2E7983 /* libPods-Exponea.a */,
-				2C31586083819A52550CCB08 /* libPods-Tests.a */,
+				976E6ED146A8BE7F4CB81AAA /* libPods-Exponea.a */,
+				69FD96B26429EAD2DDF2E8BE /* libPods-Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -198,13 +246,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 05C542CF2490E0010095903D /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
-				C60DBAA9453B4B2923F39B8A /* [CP] Check Pods Manifest.lock */,
+				316DA792ECA147CB15636721 /* [CP] Check Pods Manifest.lock */,
 				05C542C12490E0010095903D /* Sources */,
 				05C542C22490E0010095903D /* Frameworks */,
 				05C542C32490E0010095903D /* Resources */,
 				05C542D02490E21F0095903D /* ShellScript */,
-				549BB1C24017A4BA8F83E095 /* [CP] Embed Pods Frameworks */,
-				2F1ECCB519CDA22C2907AA87 /* [CP] Copy Pods Resources */,
+				D54F209750B3F1625FD8DA13 /* [CP] Embed Pods Frameworks */,
+				E545B6F81471575B57B6C9AB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -220,7 +268,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "Exponea" */;
 			buildPhases = (
-				DAF89C313CCD1F43EED4AD30 /* [CP] Check Pods Manifest.lock */,
+				8AF496C03A45D2BFF022565C /* [CP] Check Pods Manifest.lock */,
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
@@ -303,45 +351,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		2F1ECCB519CDA22C2907AA87 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh",
-				"${PODS_ROOT}/ExponeaSDK/ExponeaSDK/ExponeaSDK/Classes/Database/DatabaseModel.xcdatamodeld",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DatabaseModel.momd",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		549BB1C24017A4BA8F83E095 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C60DBAA9453B4B2923F39B8A /* [CP] Check Pods Manifest.lock */ = {
+		316DA792ECA147CB15636721 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -363,7 +373,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DAF89C313CCD1F43EED4AD30 /* [CP] Check Pods Manifest.lock */ = {
+		8AF496C03A45D2BFF022565C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -385,6 +395,44 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D54F209750B3F1625FD8DA13 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E545B6F81471575B57B6C9AB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh",
+				"${PODS_ROOT}/ExponeaSDK/ExponeaSDK/ExponeaSDK/Classes/Database/DatabaseModel.xcdatamodeld",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DatabaseModel.momd",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -399,6 +447,7 @@
 				054FD4C324D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift in Sources */,
 				0578A429249B7F1C0049AE9D /* TestUtil.swift in Sources */,
 				054FD4C124D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift in Sources */,
+				559C55DD29A50C4C004D216F /* AppInboxStyleSpec.swift in Sources */,
 				0537094824D3423B001684E9 /* Exponea+AnonymizeSpec.swift in Sources */,
 				054FD4BD24D2DE5200BBE1D5 /* ExponeaSpec.swift in Sources */,
 			);
@@ -411,16 +460,31 @@
 				05FD3772248FDE7F0078847C /* Exponea.swift in Sources */,
 				CC619AC4265CCD7B00296FA3 /* ExponeaRNAppDelegate.m in Sources */,
 				05FD376F248FDE5A0078847C /* Exponea.m in Sources */,
+				559C55D529A419AB004D216F /* ProgressBarStyle.swift in Sources */,
 				052DAEA724A225F600A7A0A5 /* Exponea+Fetching.swift in Sources */,
 				05E660E3249A4C2F0033B199 /* ConfigurationParser.swift in Sources */,
+				559C55D329A41976004D216F /* ListScreenStyle.swift in Sources */,
+				559C55D729A419CC004D216F /* AppInboxListViewStyle.swift in Sources */,
 				05C69B8E249CF511008A4D9D /* ExponeaError.swift in Sources */,
 				05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */,
+				55F4BB3929A8C3FB00CEDC7C /* RNAppInboxButtonManager.m in Sources */,
+				559C55CF29A4191A004D216F /* TextViewStyle.swift in Sources */,
 				0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */,
 				0544CE6425A7119200DCF863 /* Exponea+Linking.swift in Sources */,
+				559C55CB29A416DB004D216F /* ButtonStyle.swift in Sources */,
 				0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */,
 				0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */,
+				559C55CD29A418E8004D216F /* DetailViewStyle.swift in Sources */,
+				55B0FEC729A78B9A00F8FB7C /* Exponea+AppInbox.swift in Sources */,
+				559C55DB29A4E4F1004D216F /* StyleExtensions.swift in Sources */,
+				559C55D929A419F5004D216F /* AppInboxListItemStyle.swift in Sources */,
+				559C55D129A4194A004D216F /* ImageViewStyle.swift in Sources */,
 				052DAEA524A225C400A7A0A5 /* Exponea+Tracking.swift in Sources */,
+				559C55C729A415BA004D216F /* ReactNativeAppInboxProvider.swift in Sources */,
+				55F4BB3729A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift in Sources */,
 				052DAEA924A2465400A7A0A5 /* Exponea+Anonymize.swift in Sources */,
+				559C55C929A41665004D216F /* AppInboxStyle.swift in Sources */,
+				559C55E929A64654004D216F /* AppInboxStyleParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,7 +501,7 @@
 /* Begin XCBuildConfiguration section */
 		05C542CD2490E0010095903D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A8C63597C2B8DE4B42D60B64 /* Pods-Tests.debug.xcconfig */;
+			baseConfigurationReference = 83E3E4873D80425B4F36A9B7 /* Pods-Tests.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
@@ -461,13 +525,13 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		05C542CE2490E0010095903D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 118EEEDF8451E3F6E041D710 /* Pods-Tests.release.xcconfig */;
+			baseConfigurationReference = EBD5A46B22965403F7BBDB37 /* Pods-Tests.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
@@ -490,7 +554,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -550,6 +614,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Exponea-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -601,13 +666,14 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Exponea-Bridging-Header.h";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A85DAF9DE91BD7BCD1CFDD4 /* Pods-Exponea.debug.xcconfig */;
+			baseConfigurationReference = 07EB3281CEB025E5B3DDC15B /* Pods-Exponea.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				HEADER_SEARCH_PATHS = (
@@ -630,7 +696,7 @@
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EAEB637F270FEE84994C87F6 /* Pods-Exponea.release.xcconfig */;
+			baseConfigurationReference = 9B10657CA49EC86787411292 /* Pods-Exponea.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				HEADER_SEARCH_PATHS = (

@@ -3,7 +3,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AuthScreen from './screens/AuthScreen';
 import TabNavigation from './screens/TabNavigation';
-import {Alert, Linking} from 'react-native';
+import {Alert, Linking, NativeModules} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 import PreloadingScreen from './screens/PreloadingScreen';
 import {LogLevel} from 'react-native-exponea-sdk/lib/ExponeaType';
@@ -12,6 +12,9 @@ interface AppState {
   preloaded: boolean;
   sdkConfigured: boolean;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface CustomerTokenStorage {}
 
 export default class App extends React.Component<{}, AppState> {
   state = {
@@ -72,17 +75,62 @@ export default class App extends React.Component<{}, AppState> {
     );
   }
 
-  onStart(projectToken: string, authorization: string, baseUrl: string): void {
+  onStart(
+    projectToken: string,
+    authorization: string,
+    advancedAuthKey: string,
+    baseUrl: string,
+  ): void {
     console.log(
-      `Configuring Exponea SDK with ${projectToken}, ${authorization} and ${baseUrl}`,
+      `Configuring Exponea SDK with ${projectToken}, ${authorization}, ${advancedAuthKey} and ${baseUrl}`,
     );
     Exponea.setLogLevel(LogLevel.VERBOSE);
     Exponea.checkPushSetup();
+    // Prepare Example Advanced Auth
+    NativeModules.CustomerTokenStorage.configure({
+      host: baseUrl,
+      projectToken: projectToken,
+      publicKey: advancedAuthKey,
+    });
+    Exponea.setAppInboxProvider({
+      appInboxButton: {
+        textSize: '16sp',
+        textWeight: 'bold',
+      },
+      detailView: {
+        title: {
+          textColor: '#262626',
+          textSize: '20sp',
+        },
+        content: {
+          textColor: '#262626',
+          textSize: '16sp',
+        },
+        button: {
+          textSize: '20sp',
+          textColor: '#262626',
+          backgroundColor: '#ffd500',
+          borderRadius: '5dp',
+        },
+      },
+      listView: {
+        list: {
+          backgroundColor: 'white',
+          item: {
+            content: {
+              textSize: '16sp',
+              textColor: '#262626',
+            },
+          },
+        },
+      },
+    });
     Exponea.configure({
       projectToken: projectToken,
       authorizationToken: authorization,
       baseUrl: baseUrl,
       allowDefaultCustomerProperties: false,
+      advancedAuthEnabled: (advancedAuthKey || '').trim().length != 0,
       ios: {
         appGroup: 'group.com.exponea.ExponeaSDK-Example2',
       },

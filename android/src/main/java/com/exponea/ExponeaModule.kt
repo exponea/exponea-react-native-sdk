@@ -13,6 +13,7 @@ import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
 import com.exponea.sdk.util.Logger
+import com.exponea.style.AppInboxStyleParser
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -62,6 +63,20 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         fun handleNewHmsToken(context: Context, token: String) {
             Exponea.handleNewHmsToken(context, token)
         }
+        private fun catchAndReject(promise: Promise, block: () -> Unit) {
+            try {
+                block()
+            } catch (e: Exception) {
+                promise.reject(e)
+            }
+        }
+        private fun requireInitialized(promise: Promise, block: ((Promise) -> Unit)) {
+            if (!Exponea.isInitialized) {
+                promise.reject(ExponeaNotInitializedException())
+            } else {
+                block.invoke(promise)
+            }
+        }
     }
 
     init {
@@ -73,22 +88,6 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     private var pushReceivedListenerSet = false
     // We have to hold received push data until pushReceivedListener set in JS
     private var pendingReceivedPushData: Map<String, Any>? = null
-
-    private fun requireInitialized(promise: Promise, block: ((Promise) -> Unit)) {
-        if (!Exponea.isInitialized) {
-            promise.reject(ExponeaNotInitializedException())
-        } else {
-            block.invoke(promise)
-        }
-    }
-
-    private fun catchAndReject(promise: Promise, block: () -> Unit) {
-        try {
-            block()
-        } catch (e: Exception) {
-            promise.reject(e)
-        }
-    }
 
     override fun getName(): String {
         return "Exponea"
@@ -393,5 +392,165 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     @ReactMethod
     fun removeListeners(count: Int?) {
         // Keep: Required for RN built in Event Emitter Calls.
+    }
+
+    @ReactMethod
+    fun fetchAppInbox(promise: Promise) = requireInitialized(promise) {
+        catchAndReject(promise) {
+            Exponea.fetchAppInbox { response ->
+                if (response == null) {
+                    promise.reject(ExponeaFetchException("AppInbox load failed. See logs"))
+                    @Suppress("LABEL_NAME_CLASH")
+                    return@fetchAppInbox
+                }
+                val result = response.map { it.toMap() }
+                // React native android bridge doesn't support arrays yet, we have to serialize the response
+                promise.resolve(Gson().toJson(result))
+            }
+        }
+    }
+
+    @ReactMethod
+    fun fetchAppInboxItem(messageId: String, promise: Promise) = requireInitialized(promise) {
+        catchAndReject(promise) {
+            Exponea.fetchAppInboxItem(messageId = messageId) { messageItem ->
+                if (messageItem == null) {
+                    promise.reject(ExponeaFetchException("AppInbox message not found. See logs"))
+                    @Suppress("LABEL_NAME_CLASH")
+                    return@fetchAppInboxItem
+                }
+                // React native android bridge doesn't support arrays yet, we have to serialize the response
+                promise.resolve(Gson().toJson(messageItem.toMap()))
+            }
+        }
+    }
+
+    @ReactMethod
+    fun markAppInboxAsRead(messageData: ReadableMap, promise: Promise) = requireInitialized(promise) {
+        catchAndReject(promise) {
+            val message = messageData.toHashMapRecursively().toMessageItem()
+            if (message == null) {
+                promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                return@catchAndReject
+            }
+            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+                if (nativeMessage == null) {
+                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                    return@fetchAppInboxItem
+                }
+                Exponea.markAppInboxAsRead(nativeMessage) { markedAsRead ->
+                    promise.resolve(markedAsRead)
+                }
+            }
+        }
+    }
+
+    @ReactMethod
+    fun trackAppInboxClick(
+        actionData: ReadableMap,
+        messageData: ReadableMap,
+        promise: Promise
+    ) = requireInitialized(promise) {
+        catchAndReject(promise) {
+            val action = actionData.toHashMapRecursively().toMessageItemAction()
+            if (action == null) {
+                promise.reject(ExponeaDataException("AppInbox action data are invalid. See logs"))
+                return@catchAndReject
+            }
+            val message = messageData.toHashMapRecursively().toMessageItem()
+            if (message == null) {
+                promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                return@catchAndReject
+            }
+            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+                if (nativeMessage == null) {
+                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                    return@fetchAppInboxItem
+                }
+                Exponea.trackAppInboxClick(action, nativeMessage)
+                promise.resolve(null)
+            }
+        }
+    }
+
+    @ReactMethod
+    fun trackAppInboxOpened(messageData: ReadableMap, promise: Promise) = requireInitialized(promise) {
+        catchAndReject(promise) {
+            val message = messageData.toHashMapRecursively().toMessageItem()
+            if (message == null) {
+                promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                return@catchAndReject
+            }
+            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+                if (nativeMessage == null) {
+                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                    return@fetchAppInboxItem
+                }
+                Exponea.trackAppInboxOpened(nativeMessage)
+                promise.resolve(null)
+            }
+        }
+    }
+
+    @ReactMethod
+    fun trackAppInboxClickWithoutTrackingConsent(
+        actionData: ReadableMap,
+        messageData: ReadableMap,
+        promise: Promise
+    ) = requireInitialized(promise) {
+        catchAndReject(promise) {
+            val action = actionData.toHashMapRecursively().toMessageItemAction()
+            if (action == null) {
+                promise.reject(ExponeaDataException("AppInbox action data are invalid. See logs"))
+                return@catchAndReject
+            }
+            val message = messageData.toHashMapRecursively().toMessageItem()
+            if (message == null) {
+                promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                return@catchAndReject
+            }
+            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+                if (nativeMessage == null) {
+                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                    return@fetchAppInboxItem
+                }
+                Exponea.trackAppInboxClickWithoutTrackingConsent(action, nativeMessage)
+                promise.resolve(null)
+            }
+        }
+    }
+
+    @ReactMethod
+    fun trackAppInboxOpenedWithoutTrackingConsent(
+        messageData: ReadableMap,
+        promise: Promise
+    ) = requireInitialized(promise) {
+        catchAndReject(promise) {
+            val message = messageData.toHashMapRecursively().toMessageItem()
+            if (message == null) {
+                promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                return@catchAndReject
+            }
+            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+                if (nativeMessage == null) {
+                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+                    return@fetchAppInboxItem
+                }
+                Exponea.trackAppInboxOpenedWithoutTrackingConsent(nativeMessage)
+                promise.resolve(null)
+            }
+        }
+    }
+
+    @ReactMethod
+    fun setAppInboxProvider(configMap: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val style = AppInboxStyleParser(configMap).parse()
+        Exponea.appInboxProvider = ReactNativeAppInboxProvider(style)
+        promise.resolve(null)
     }
 }

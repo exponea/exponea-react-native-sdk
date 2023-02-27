@@ -117,6 +117,11 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                             Boolean::class
                     )
                 }
+                "advancedAuthEnabled" -> {
+                    configuration.advancedAuthEnabled = map.getSafely(
+                        "advancedAuthEnabled", Boolean::class
+                    )
+                }
                 "android" -> {
                     @Suppress("UNCHECKED_CAST")
                     val androidConfig = entry.value as? Map<String, Any?> ?: throw ExponeaModule.ExponeaDataException(

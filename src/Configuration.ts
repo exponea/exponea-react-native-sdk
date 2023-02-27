@@ -25,6 +25,8 @@ interface Configuration {
   pushTokenTrackingFrequency?: PushTokenTrackingFrequency;
   /** Flag to apply `defaultProperties` list to `identifyCustomer` tracking event. */
   allowDefaultCustomerProperties?: boolean;
+  /** If true, Customer Token authentication is used */
+  advancedAuthEnabled?: boolean;
   /** Platform specific settings for Android */
   android?: AndroidConfiguration;
   /** Platform specific settings for iOS */

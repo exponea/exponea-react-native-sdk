@@ -43,7 +43,7 @@ apply plugin: 'kotlin-android'
 
 def DEFAULT_COMPILE_SDK_VERSION = 31
 def DEFAULT_BUILD_TOOLS_VERSION = '30.0.2'
-def DEFAULT_MIN_SDK_VERSION = 21
+def DEFAULT_MIN_SDK_VERSION = 23
 def DEFAULT_TARGET_SDK_VERSION = 31
 
 def safeExtGet(prop, fallback) {
@@ -92,8 +92,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    implementation 'com.exponea.sdk:sdk:3.2.1'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.exponea.sdk:sdk:3.4.0'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'

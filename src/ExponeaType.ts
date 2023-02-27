@@ -4,6 +4,9 @@ import ExponeaProject from './ExponeaProject';
 import {JsonObject} from './Json';
 import Consent from './Consent';
 import {RecommendationOptions, Recommendation} from './Recommendation';
+import AppInboxStyle from './AppInboxStyle';
+import {AppInboxMessage} from './AppInboxMessage';
+import {AppInboxAction} from './AppInboxAction';
 
 interface ExponeaType {
   /** Configures Exponea SDK. Should only be called once. You need to configure ExponeaSDK before calling most methods */
@@ -97,6 +100,55 @@ interface ExponeaType {
   removePushReceivedListener(): void;
 
   requestIosPushAuthorization(): Promise<boolean>;
+
+  setAppInboxProvider(withStyle: AppInboxStyle): Promise<void>;
+
+  /**
+   * Track AppInbox message detail opened event
+   * Event is tracked if parameter 'message' has TRUE value of 'hasTrackingConsent' property
+   */
+  trackAppInboxOpened(message: AppInboxMessage): Promise<void>;
+
+  /**
+   * Track AppInbox message detail opened event
+   */
+  trackAppInboxOpenedWithoutTrackingConsent(
+    message: AppInboxMessage,
+  ): Promise<void>;
+
+  /**
+   * Track AppInbox message click event
+   * Event is tracked if one or both conditions met:
+   *     - parameter 'message' has TRUE value of 'hasTrackingConsent' property
+   *     - parameter 'buttonLink' has TRUE value of query parameter 'xnpe_force_track'
+   */
+  trackAppInboxClick(
+    action: AppInboxAction,
+    message: AppInboxMessage,
+  ): Promise<void>;
+
+  /**
+   * Track AppInbox message click event
+   */
+  trackAppInboxClickWithoutTrackingConsent(
+    action: AppInboxAction,
+    message: AppInboxMessage,
+  ): Promise<void>;
+
+  /**
+   * Marks AppInbox message as read
+   */
+  markAppInboxAsRead(message: AppInboxMessage): Promise<boolean>;
+
+  /**
+   * Fetches AppInbox for the current customer
+   */
+  fetchAppInbox(): Promise<Array<AppInboxMessage>>;
+
+  /**
+   * Fetches AppInbox message by ID for the current customer
+   */
+  fetchAppInboxItem(messageId: string): Promise<AppInboxMessage>;
 }
 
 export enum FlushMode {

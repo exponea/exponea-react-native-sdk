@@ -68,6 +68,8 @@ You can see the Typescript definition for Configuration object at [src/Configura
 
 * **allowDefaultCustomerProperties** Flag to apply `defaultProperties` list to `identifyCustomer` tracking event. Default value `true` is used if is not defined.
 
+* **advancedAuthEnabled** If true, Customer Token authentication is used for communication with BE for API listed in [Authorization](./AUTHORIZATION.md) document.
+
 * **android** Specific configuration for Android
 
 * **ios** Specific configuration for iOS

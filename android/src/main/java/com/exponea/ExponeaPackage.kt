@@ -1,10 +1,9 @@
 package com.exponea
 
-import android.view.View
+import com.exponea.widget.AppInboxButtonManager
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.uimanager.ReactShadowNode
 import com.facebook.react.uimanager.ViewManager
 
 class ExponeaPackage : ReactPackage {
@@ -16,7 +15,9 @@ class ExponeaPackage : ReactPackage {
 
     override fun createViewManagers(
         reactContext: ReactApplicationContext
-    ): MutableList<ViewManager<View, ReactShadowNode<*>>> {
-        return arrayListOf()
+    ): MutableList<ViewManager<*, *>> {
+        return arrayListOf(
+            AppInboxButtonManager()
+        )
     }
 }

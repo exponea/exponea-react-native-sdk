@@ -1,9 +1,17 @@
 import React from 'react';
-import {StyleSheet, Text, View, Alert, Platform} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 import ExponeaButton from '../components/ExponeaButton';
 import IdentifyCustomerModal from '../components/IdentifyCustomerModal';
 import TrackEventModal from '../components/TrackEventModal';
+import AppInboxButton from 'react-native-exponea-sdk/lib/AppInboxButton';
 
 interface AppState {
   customerCookie: string;
@@ -67,6 +75,50 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
             }}
           />
         ) : null}
+        <AppInboxButton
+          style={{
+            width: '100%',
+            height: 50,
+          }}
+          {...styles.buttonProps}
+        />
+        <ExponeaButton
+          title="Inbox fetch test"
+          onPress={() => {
+            Exponea.fetchAppInbox()
+              .then((list) => {
+                console.log(`AppInbox loaded of size ${list.length}`);
+                if (list.length > 0) {
+                  console.log(
+                    `AppInbox first message: ${JSON.stringify(list[0])}`,
+                  );
+                }
+              })
+              .catch((error) => console.log(`AppInbox error: ${error}`));
+          }}
+        />
+        <ExponeaButton
+          title="Inbox fetch first message"
+          onPress={() => {
+            Exponea.fetchAppInbox()
+              .then((list) => {
+                if (list.length == 0) {
+                  console.log('AppInbox is empty, identifyCustomer!');
+                  return;
+                }
+                Exponea.fetchAppInboxItem(list[0].id)
+                  .then((message) =>
+                    console.log(
+                      `AppInbox first message: ${JSON.stringify(message)}`,
+                    ),
+                  )
+                  .catch((error) =>
+                    console.log(`AppInbox message error: ${error}`),
+                  );
+              })
+              .catch((error) => console.log(`AppInbox error: ${error}`));
+          }}
+        />
       </View>
     );
   }
@@ -82,5 +134,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  buttonProps: {
+    backgroundColor: '#ffd500',
+    textOverride: 'Example Inbox',
+    borderRadius: 5,
+    textColor: 'black',
+    showIcon: true,
+    enabled: true,
   },
 });

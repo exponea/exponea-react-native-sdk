@@ -1,5 +1,9 @@
 #import <React/RCTBridgeModule.h>
+#if __has_include("RCTEventEmitter.h")
+#import "RCTEventEmitter.h"
+#else
 #import <React/RCTEventEmitter.h>
+#endif
 
 
 @interface RCT_EXTERN_MODULE(Exponea, RCTEventEmitter)
@@ -42,5 +46,14 @@ RCT_EXTERN_METHOD(onPushOpenedListenerRemove)
 RCT_EXTERN_METHOD(onPushReceivedListenerSet)
 RCT_EXTERN_METHOD(onPushReceivedListenerRemove)
 RCT_EXTERN_METHOD(requestPushAuthorization:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(fetchAppInbox:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(fetchAppInboxItem:(NSString *)messageId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(markAppInboxAsRead:(NSDictionary *)message resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(trackAppInboxClick:(NSDictionary *)action message:(NSDictionary *)message resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(trackAppInboxOpened:(NSDictionary *)message resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(trackAppInboxClickWithoutTrackingConsent:(NSDictionary *)action message:(NSDictionary *)message resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(trackAppInboxOpenedWithoutTrackingConsent:(NSDictionary *)message resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setAppInboxProvider:(NSDictionary *)configuration resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 @end

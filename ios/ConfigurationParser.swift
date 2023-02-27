@@ -120,4 +120,8 @@ class ConfigurationParser {
     func parseAllowDefaultCustomerProperties() throws -> Bool {
         return try dictionary.getOptionalSafely(property: "allowDefaultCustomerProperties") ?? true
     }
+
+    func parseAdvancedAuthEnabled() throws -> Bool? {
+        return try dictionary.getOptionalSafely(property: "advancedAuthEnabled")
+    }
 }

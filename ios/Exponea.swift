@@ -8,6 +8,7 @@
 
 import Foundation
 import ExponeaSDK
+import React
 
 // This protocol is used queried using reflection by native iOS SDK to see if it's run by RN SDK
 @objc(IsExponeaReactNativeSDK)
@@ -78,7 +79,8 @@ class Exponea: RCTEventEmitter {
                 automaticSessionTracking: try parser.parseSessionTracking(),
                 defaultProperties: try parser.parseDefaultProperties(),
                 flushingSetup: try parser.parseFlushingSetup(),
-                allowDefaultCustomerProperties: try parser.parseAllowDefaultCustomerProperties()
+                allowDefaultCustomerProperties: try parser.parseAllowDefaultCustomerProperties(),
+                advancedAuthEnabled: try parser.parseAdvancedAuthEnabled()
             )
             Exponea.exponeaInstance.pushNotificationsDelegate = self
             resolve(nil)
