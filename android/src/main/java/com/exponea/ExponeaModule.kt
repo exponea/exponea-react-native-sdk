@@ -12,6 +12,7 @@ import com.exponea.sdk.models.ExponeaProject
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
+import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
 import com.exponea.sdk.util.Logger
 import com.exponea.style.AppInboxStyleParser
 import com.facebook.react.bridge.Promise
@@ -86,8 +87,11 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     private var configuration: ExponeaConfiguration = ExponeaConfiguration()
     private var pushOpenedListenerSet = false
     private var pushReceivedListenerSet = false
+    private var inAppActionListenerSet = false
     // We have to hold received push data until pushReceivedListener set in JS
     private var pendingReceivedPushData: Map<String, Any>? = null
+    // We have to hold received action data until pushReceivedListener set in JS
+    private var pendingInAppAction: InAppMessageAction? = null
 
     override fun getName(): String {
         return "Exponea"
@@ -551,6 +555,167 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     fun setAppInboxProvider(configMap: ReadableMap, promise: Promise) = catchAndReject(promise) {
         val style = AppInboxStyleParser(configMap).parse()
         Exponea.appInboxProvider = ReactNativeAppInboxProvider(style)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun setAutomaticSessionTracking(enabled: Boolean, promise: Promise) = catchAndReject(promise) {
+        Exponea.isAutomaticSessionTracking = enabled
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun setSessionTimeout(timeout: Double, promise: Promise) = catchAndReject(promise) {
+        Exponea.sessionTimeout = timeout
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun setAutoPushNotification(enabled: Boolean, promise: Promise) = catchAndReject(promise) {
+        Exponea.isAutoPushNotification = enabled
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun setCampaignTTL(seconds: Double, promise: Promise) = catchAndReject(promise) {
+        Exponea.campaignTTL = seconds
+        promise.resolve(null)
+    }
+
+    internal fun onInAppAction(data: InAppMessageAction) {
+        if (inAppActionListenerSet) {
+            reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                .emit("inAppAction", Gson().toJson(data))
+        } else {
+            pendingInAppAction = data
+        }
+    }
+
+    @ReactMethod
+    fun onInAppActionListenerSet(promise: Promise) = catchAndReject(promise) {
+        inAppActionListenerSet = true
+        onInAppAction(pendingInAppAction ?: return@catchAndReject)
+        pendingInAppAction = null
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun setInAppMessageActionListener(configMap: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        Exponea.inAppMessageActionCallback = ReactNativeInAppActionListener(configMap.toHashMapRecursively())
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackPushToken(token: String, promise: Promise) = catchAndReject(promise) {
+        Exponea.trackPushToken(token)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackHmsPushToken(token: String, promise: Promise) = catchAndReject(promise) {
+        Exponea.trackHmsPushToken(token)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackDeliveredPush(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val notification = params.toHashMapRecursively().toNotificationData()
+        val receivedSeconds = params
+            .toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        Exponea.trackDeliveredPush(notification, receivedSeconds)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackDeliveredPushWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val notification = params.toHashMapRecursively().toNotificationData()
+        val receivedSeconds = params
+            .toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        Exponea.trackDeliveredPushWithoutTrackingConsent(notification, receivedSeconds)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackClickedPush(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val notification = params.toHashMapRecursively().toNotificationData()
+        val notificationAction = params.toHashMapRecursively().toNotificationAction()
+        val receivedSeconds = params
+            .toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        Exponea.trackClickedPush(notification, notificationAction, receivedSeconds)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackClickedPushWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val notification = params.toHashMapRecursively().toNotificationData()
+        val notificationAction = params.toHashMapRecursively().toNotificationAction()
+        val receivedSeconds = params
+            .toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        Exponea.trackClickedPushWithoutTrackingConsent(notification, notificationAction, receivedSeconds)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackPaymentEvent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val receivedSeconds = params
+            .toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        val paymentItem = params
+            .toHashMapRecursively().toPurchasedItem()
+        Exponea.trackPaymentEvent(receivedSeconds, paymentItem)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun isExponeaPushNotification(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        @Suppress("UNCHECKED_CAST")
+        val notificationData = params
+            .toHashMapRecursively()
+            .mapValues { it.value as? String }
+            .filterValues { it != null } as Map<String, String>
+        promise.resolve(Exponea.isExponeaPushNotification(notificationData))
+    }
+
+    @ReactMethod
+    fun trackInAppMessageClick(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively().toInAppMessageAction()
+        if (data == null) {
+            promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppMessageClick(data.message, data.button?.text, data.button?.url)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppMessageClickWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively().toInAppMessageAction()
+        if (data == null) {
+            promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppMessageClickWithoutTrackingConsent(data.message, data.button?.text, data.button?.url)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppMessageClose(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively().toInAppMessage()
+        if (data == null) {
+            promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppMessageClose(data)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppMessageCloseWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively().toInAppMessage()
+        if (data == null) {
+            promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppMessageCloseWithoutTrackingConsent(data)
         promise.resolve(null)
     }
 }

@@ -6,8 +6,6 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import androidx.core.graphics.drawable.DrawableCompat
 import com.exponea.sdk.models.MessageItem
-import com.exponea.sdk.models.MessageItemAction
-import com.exponea.sdk.models.MessageItemAction.Type
 import com.exponea.sdk.util.Logger
 import com.facebook.react.bridge.Dynamic
 import com.facebook.react.bridge.ReadableArray
@@ -16,8 +14,13 @@ import com.facebook.react.bridge.ReadableType
 import com.facebook.react.bridge.ReadableType.Array
 import com.facebook.react.bridge.ReadableType.Null
 import com.facebook.react.bridge.ReadableType.Number
+import java.util.Date
 import kotlin.reflect.KClass
 import kotlin.text.RegexOption.IGNORE_CASE
+
+internal inline fun <reified T : Any> Map<String, Any?>.getRequired(key: String): T {
+    return getSafely(key, T::class)
+}
 
 internal fun <T : Any> Map<String, Any?>.getSafely(key: String, type: KClass<T>): T {
     val value = this[key] ?: throw ExponeaModule.ExponeaDataException("Property '$key' cannot be null.")
@@ -63,40 +66,46 @@ internal fun MessageItem.toMap(): Map<String, Any?> {
     )
 }
 
-internal fun Map<String, Any?>.toMessageItem(): MessageItem? {
-    val id = this.getNullSafely("id", String::class)
-    val rawType = this.getNullSafely("type", String::class)
-    if (id.isNullOrEmpty() || rawType.isNullOrEmpty()) {
-        return null
-    }
-    val read = this.getNullSafely("is_read", Boolean::class)
-    val receivedTime = this.getNullSafely("create_time", Double::class)
-    val rawContent = this.getNullSafely<HashMap<String, Any>>("content")
-    return MessageItem(
-        id = id,
-        rawType = rawType,
-        read = read,
-        receivedTime = receivedTime,
-        rawContent = rawContent
-    )
+internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyMap(key: String, defaultValue: Map<String, T>? = null): Map<String, T>? {
+    return getNullSafelyMap(key, T::class, defaultValue)
 }
 
-internal fun MessageItemAction.toMap(): Map<String, Any?> {
-    return mapOf(
-        "type" to type.value,
-        "title" to title,
-        "url" to url
+internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyMap(key: String, type: KClass<T>, defaultValue: Map<String, T>? = null): Map<String, T>? {
+    val value = this[key] ?: return defaultValue
+    @Suppress("UNCHECKED_CAST")
+    val mapOfAny = value as? Map<String, Any?> ?: throw ExponeaModule.ExponeaDataException(
+        "Non-map type for key '$key'. Got ${value::class.simpleName}"
     )
+    return mapOfAny.filterValueIsInstance(type.java)
 }
 
-internal fun Map<String, Any?>.toMessageItemAction(): MessageItemAction? {
-    val source = this
-    val sourceType = Type.find(source.getNullSafely("type")) ?: return null
-    return MessageItemAction().apply {
-        type = sourceType
-        title = source.getNullSafely("title")
-        url = source.getNullSafely("url")
+/**
+ * Returns a map containing all key-value pairs with values are instances of specified class.
+ *
+ * The returned map preserves the entry iteration order of the original map.
+ */
+internal fun <K, V, R> Map<out K, V>.filterValueIsInstance(klass: Class<R>): Map<K, R> {
+    val result = LinkedHashMap<K, R>()
+    for (entry in this) {
+        if (klass.isInstance(entry.value)) {
+            @Suppress("UNCHECKED_CAST")
+            ((entry.value as R).also { result[entry.key] = it })
+        }
     }
+    return result
+}
+
+internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyArray(key: String, defaultValue: List<T>? = null): List<T>? {
+    return getNullSafelyArray(key, T::class, defaultValue)
+}
+
+internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyArray(key: String, type: KClass<T>, defaultValue: List<T>? = null): List<T>? {
+    val value = this[key] ?: return defaultValue
+    val arrayOfAny = value as? List<Any?> ?: throw ExponeaModule.ExponeaDataException(
+        "Non-array type for key '$key'. Got ${value::class.simpleName}"
+    )
+    return arrayOfAny
+        .filterIsInstance(type.java)
 }
 
 internal inline fun <reified T : Any> Map<String, Any?>.getNullSafely(key: String, defaultValue: T? = null): T? {
@@ -454,3 +463,5 @@ internal fun Int.asColorString(): String {
     val alpha = Color.alpha(this)
     return String.format("#%02x%02x%02x%02x", red, green, blue, alpha)
 }
+
+fun currentTimeSeconds() = Date().time / 1000.0

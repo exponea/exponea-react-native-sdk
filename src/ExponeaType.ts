@@ -149,6 +149,38 @@ interface ExponeaType {
    * Fetches AppInbox message by ID for the current customer
    */
   fetchAppInboxItem(messageId: string): Promise<AppInboxMessage>;
+
+  setAutomaticSessionTracking(enabled: boolean): Promise<void>;
+
+  setSessionTimeout(timeout: number): Promise<void>;
+
+  setAutoPushNotification(enabled: boolean): Promise<void>;
+
+  setCampaignTTL(seconds: number): Promise<void>;
+
+  trackPushToken(token: string): Promise<void>;
+
+  trackHmsPushToken(token: string): Promise<void>;
+
+  trackDeliveredPush(params: Record<string, string>): Promise<void>;
+
+  trackDeliveredPushWithoutTrackingConsent(params: Record<string, string>): Promise<void>;
+
+  trackClickedPush(params: Record<string, string>): Promise<void>;
+
+  trackClickedPushWithoutTrackingConsent(params: Record<string, string>): Promise<void>;
+
+  trackPaymentEvent(params: Record<string, string>): Promise<void>;
+
+  isExponeaPushNotification(params: Record<string, string>): Promise<boolean>;
+
+  trackInAppMessageClick(params: Record<string, string>): Promise<void>;
+
+  trackInAppMessageClickWithoutTrackingConsent(params: Record<string, string>): Promise<void>;
+
+  trackInAppMessageClose(params: Record<string, string>): Promise<void>;
+
+  trackInAppMessageCloseWithoutTrackingConsent(params: Record<string, string>): Promise<void>;
 }
 
 export enum FlushMode {

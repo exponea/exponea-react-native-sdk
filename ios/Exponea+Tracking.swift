@@ -100,4 +100,236 @@ extension Exponea {
         Exponea.exponeaInstance.trackSessionEnd()
         resolve(nil)
     }
+    
+    @objc(trackPushToken:resolve:reject:)
+    func trackPushToken(
+        token: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        Exponea.exponeaInstance.trackPushToken(token)
+    }
+    
+    @objc(trackHmsPushToken:resolve:reject:)
+    func trackHmsPushToken(
+        token: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "iOS"))
+    }
+    
+    @objc(trackDeliveredPush:resolve:reject:)
+    func trackDeliveredPush(
+        params: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        do {
+            let source = try JsonDataParser.parse(dictionary: params)
+            let jsonSource = JSONValue.convert(source)
+            let data: [String: JSONConvertible] = jsonSource.mapValues { val in
+                val.jsonConvertible
+            }
+            Exponea.exponeaInstance.trackPushReceived(userInfo: data)
+        } catch {
+            rejectPromise(reject, error: error)
+        }
+    }
+    
+    @objc(trackDeliveredPushWithoutTrackingConsent:resolve:reject:)
+    func trackDeliveredPushWithoutTrackingConsent(
+        params: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        do {
+            let source = try JsonDataParser.parse(dictionary: params)
+            let jsonSource = JSONValue.convert(source)
+            let data: [String: JSONConvertible] = jsonSource.mapValues { val in
+                val.jsonConvertible
+            }
+            Exponea.exponeaInstance.trackPushReceivedWithoutTrackingConsent(userInfo: data)
+        } catch {
+            rejectPromise(reject, error: error)
+        }
+    }
+    
+    @objc(trackClickedPush:resolve:reject:)
+    func trackClickedPush(
+        params: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        do {
+            let source = try JsonDataParser.parse(dictionary: params)
+            let jsonSource = JSONValue.convert(source)
+            let data: [String: JSONConvertible] = jsonSource.mapValues { val in
+                val.jsonConvertible
+            }
+            Exponea.exponeaInstance.trackPushOpened(with: data)
+        } catch {
+            rejectPromise(reject, error: error)
+        }
+    }
+    
+    @objc(trackClickedPushWithoutTrackingConsent:resolve:reject:)
+    func trackClickedPushWithoutTrackingConsent(
+        params: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        do {
+            let source = try JsonDataParser.parse(dictionary: params)
+            let jsonSource = JSONValue.convert(source)
+            let data: [String: JSONConvertible] = jsonSource.mapValues { val in
+                val.jsonConvertible
+            }
+            Exponea.exponeaInstance.trackPushOpenedWithoutTrackingConsent(with: data)
+        } catch {
+            rejectPromise(reject, error: error)
+        }
+    }
+    
+    @objc(trackPaymentEvent:resolve:reject:)
+    func trackPaymentEvent(
+        params: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        do {
+            let source = try JsonDataParser.parse(dictionary: params)
+            let jsonSource = JSONValue.convert(source)
+            let data: [String: JSONConvertible] = jsonSource.mapValues { val in
+                val.jsonConvertible
+            }
+            Exponea.exponeaInstance.trackPayment(properties: data, timestamp: nil)
+        } catch {
+            rejectPromise(reject, error: error)
+        }
+    }
+    
+    @objc(trackInAppMessageClick:resolve:reject:)
+    func trackInAppMessageClick(
+        data: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        guard let messageData: NSDictionary = try? data.getOptionalSafely(property: "message"),
+              let json = try? JSONSerialization.data(withJSONObject: messageData),
+              let inAppMessage = try? JSONDecoder().decode(InAppMessage.self, from: json),
+              let button: NSDictionary = try? data.getOptionalSafely(property: "button"),
+              let link: String = try? button.getOptionalSafely(property: "url")
+        else {
+            rejectPromise(reject, error: ExponeaError.generalError(
+                "Unable to parse InApp message from given data"
+            ))
+            return
+        }
+        Exponea.exponeaInstance.trackInAppMessageClick(
+            message: inAppMessage,
+            buttonText: try? button.getOptionalSafely(property: "text"),
+            buttonLink: link
+        )
+    }
+    
+    @objc(trackInAppMessageClickWithoutTrackingConsent:resolve:reject:)
+    func trackInAppMessageClickWithoutTrackingConsent(
+        data: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        guard let messageData: NSDictionary = try? data.getOptionalSafely(property: "message"),
+              let json = try? JSONSerialization.data(withJSONObject: messageData),
+              let inAppMessage = try? JSONDecoder().decode(InAppMessage.self, from: json),
+              let button: NSDictionary = try? data.getOptionalSafely(property: "button"),
+              let link: String = try? button.getOptionalSafely(property: "url")
+        else {
+            rejectPromise(reject, error: ExponeaError.generalError(
+                "Unable to parse InApp message from given data"
+            ))
+            return
+        }
+        Exponea.exponeaInstance.trackInAppMessageClickWithoutTrackingConsent(
+            message: inAppMessage,
+            buttonText: try? button.getOptionalSafely(property: "text"),
+            buttonLink: link
+        )
+    }
+    
+    @objc(trackInAppMessageClose:isUserInteraction:resolve:reject:)
+    func trackInAppMessageClose(
+        message: NSDictionary,
+        isUserInteraction: Bool = true,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard let json = try? JSONSerialization.data(withJSONObject: message),
+              let inAppMessage = try? JSONDecoder().decode(InAppMessage.self, from: json) else {
+            rejectPromise(reject, error: ExponeaError.generalError(
+                "Unable to parse InApp message from given data"
+            ))
+            return
+        }
+        Exponea.exponeaInstance.trackInAppMessageClose(
+            message: inAppMessage,
+            isUserInteraction: isUserInteraction
+        )
+    }
+    
+    @objc(trackInAppMessageCloseWithoutTrackingConsent:isUserInteraction:resolve:reject:)
+    func trackInAppMessageCloseWithoutTrackingConsent(
+        message: NSDictionary,
+        isUserInteraction: Bool = true,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        guard let json = try? JSONSerialization.data(withJSONObject: message),
+              let inAppMessage = try? JSONDecoder().decode(InAppMessage.self, from: json) else {
+            rejectPromise(reject, error: ExponeaError.generalError(
+                "Unable to parse InApp message from given data"
+            ))
+            return
+        }
+        Exponea.exponeaInstance.trackInAppMessageCloseClickWithoutTrackingConsent(
+            message: inAppMessage,
+            isUserInteraction: isUserInteraction
+        )
+    }
 }

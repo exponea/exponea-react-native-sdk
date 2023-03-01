@@ -61,9 +61,9 @@ end
 
 
 target 'ExampleNotificationService' do
-  pod 'ExponeaSDK-Notifications'
+  pod 'ExponeaSDK-Notifications', :path => '~/exponea/ios-sdk/'
 end
 
 target 'ExampleNotificationContent' do
-  pod 'ExponeaSDK-Notifications'
+  pod 'ExponeaSDK-Notifications', :path => '~/exponea/ios-sdk/'
 end

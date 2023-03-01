@@ -239,4 +239,79 @@ class Exponea: RCTEventEmitter {
             rejectPromise(reject, error: error)
         }
     }
+
+    @objc(setSessionTimeout:resolve:reject:)
+    func setSessionTimeout(
+        timeout: Double,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        let exponea: ExponeaInternal = Exponea.exponeaInstance as! ExponeaInternal
+        exponea.setAutomaticSessionTracking(automaticSessionTracking: .enabled(timeout: timeout))
+        resolve(nil)
+    }
+    
+    @objc(setAutomaticSessionTracking:resolve:reject:)
+    func setAutomaticSessionTracking(
+        enabled: Bool,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        let exponea = Exponea.exponeaInstance as! ExponeaInternal
+        if enabled {
+            exponea.setAutomaticSessionTracking(automaticSessionTracking: .enabled(
+                timeout: exponea.configuration?.sessionTimeout ?? Constants.Session.defaultTimeout
+            ))
+        } else {
+            exponea.setAutomaticSessionTracking(automaticSessionTracking: .disabled)
+        }
+    }
+    
+    @objc(setAutoPushNotification:resolve:reject:)
+    func setAutoPushNotification(
+        enabled: Bool,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        rejectPromise(
+            reject,
+            error: ExponeaError.generalError(
+                "Automatic Push notif handling can be configured"
+                + " only while SDK initialization")
+        )
+    }
+    
+    @objc(setCampaignTTL:resolve:reject:)
+    func setCampaignTTL(
+        seconds: Double,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "iOS"))
+    }
+    
+    @objc(isExponeaPushNotification:resolve:reject:)
+    func isExponeaPushNotification(
+        params: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
+        guard let data = params as? Dictionary<AnyHashable, Any> else {
+            rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "Invalid data"))
+            return
+        }
+        resolve(ExponeaSDK.Exponea.isExponeaNotification(userInfo: data))
+    }
 }

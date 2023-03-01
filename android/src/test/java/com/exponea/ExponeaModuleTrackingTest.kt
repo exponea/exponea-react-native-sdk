@@ -169,7 +169,7 @@ internal class ExponeaModuleTrackingTest {
         module.trackSessionStart(
             JavaOnlyMap.of(),
             MockResolvingPromise {
-                verify { Exponea.trackSessionStart(range(Date().time / 1000.0 - 1, Date().time / 1000.0 + 1)) }
+                verify { Exponea.trackSessionStart(range(currentTimeSeconds() - 1, currentTimeSeconds() + 1)) }
             }
         )
     }
@@ -180,7 +180,7 @@ internal class ExponeaModuleTrackingTest {
         module.trackSessionStart(
             JavaOnlyMap.of("timestamp", null),
             MockResolvingPromise {
-                verify { Exponea.trackSessionStart(range(Date().time / 1000.0 - 1, Date().time / 1000.0 + 1)) }
+                verify { Exponea.trackSessionStart(range(currentTimeSeconds() - 1, currentTimeSeconds() + 1)) }
             }
         )
     }
@@ -213,7 +213,7 @@ internal class ExponeaModuleTrackingTest {
         module.trackSessionEnd(
             JavaOnlyMap.of(),
             MockResolvingPromise {
-                verify { Exponea.trackSessionEnd(range(Date().time / 1000.0 - 1, Date().time / 1000.0 + 1)) }
+                verify { Exponea.trackSessionEnd(range(currentTimeSeconds() - 1, currentTimeSeconds() + 1)) }
             }
         )
     }
@@ -224,7 +224,7 @@ internal class ExponeaModuleTrackingTest {
         module.trackSessionEnd(
             JavaOnlyMap.of("timestamp", null),
             MockResolvingPromise {
-                verify { Exponea.trackSessionEnd(range(Date().time / 1000.0 - 1, Date().time / 1000.0 + 1)) }
+                verify { Exponea.trackSessionEnd(range(currentTimeSeconds() - 1, currentTimeSeconds() + 1)) }
             }
         )
     }

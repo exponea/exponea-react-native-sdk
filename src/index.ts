@@ -144,6 +144,70 @@ const Exponea: ExponeaType = {
   async fetchAppInboxItem(messageId: string): Promise<AppInboxMessage> {
     return JSON.parse(await NativeModules.Exponea.fetchAppInboxItem(messageId));
   },
+
+  setAutomaticSessionTracking(enabled: boolean): Promise<void> {
+    return NativeModules.Exponea.setAutomaticSessionTracking(enabled)
+  },
+
+  setSessionTimeout(timeout: number): Promise<void> {
+    return NativeModules.Exponea.setSessionTimeout(timeout)
+  },
+
+  setAutoPushNotification(enabled: boolean): Promise<void> {
+    return NativeModules.Exponea.setAutoPushNotification(enabled)
+  },
+
+  setCampaignTTL(seconds: number): Promise<void> {
+    return NativeModules.Exponea.setCampaignTTL(seconds);
+  },
+
+  trackPushToken(token: string): Promise<void> {
+    return NativeModules.Exponea.trackPushToken(token)
+  },
+
+  trackHmsPushToken(token: string): Promise<void> {
+    return NativeModules.Exponea.trackHmsPushToken(token)
+  },
+
+  trackDeliveredPush(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackDeliveredPush(params)
+  },
+
+  trackDeliveredPushWithoutTrackingConsent(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackDeliveredPushWithoutTrackingConsent(params)
+  },
+
+  trackClickedPush(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackClickedPush(params)
+  },
+
+  trackClickedPushWithoutTrackingConsent(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackClickedPushWithoutTrackingConsent(params)
+  },
+
+  trackPaymentEvent(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackPaymentEvent(params)
+  },
+
+  isExponeaPushNotification(params: Record<string, string>): Promise<boolean> {
+    return NativeModules.Exponea.isExponeaPushNotification(params)
+  },
+
+  trackInAppMessageClick(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackInAppMessageClick(params)
+  },
+
+  trackInAppMessageClickWithoutTrackingConsent(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackInAppMessageClickWithoutTrackingConsent(params)
+  },
+
+  trackInAppMessageClose(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackInAppMessageClose(params)
+  },
+
+  trackInAppMessageCloseWithoutTrackingConsent(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackInAppMessageCloseWithoutTrackingConsent(params)
+  },
 };
 
 let pushOpenedUserListener: ((openedPush: OpenedPush) => void) | null = null;

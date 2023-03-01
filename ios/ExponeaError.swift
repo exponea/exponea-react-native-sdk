@@ -14,6 +14,7 @@ enum ExponeaError: LocalizedError {
     case flushModeNotPeriodic
     case notAvailableForPlatform(name: String)
     case fetchError(description: String)
+    case generalError(_ message: String)
 
     public var errorDescription: String? {
         switch self {
@@ -27,6 +28,8 @@ enum ExponeaError: LocalizedError {
             return "\(name) is not available for iOS platform."
         case .fetchError(let description):
             return "Data fetching failed: \(description)"
+        case .generalError(let message):
+            return "Error: \(message)"
         }
     }
 }
