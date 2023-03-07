@@ -1,6 +1,12 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.3.1
+#### March 07, 2023
+* Bug Fixes
+  * Fixed: Updates iOS SDK with AppInbox detail layout fixes
+
+
 ## Release Notes for 1.3.0
 #### February 27, 2023
 * Features
