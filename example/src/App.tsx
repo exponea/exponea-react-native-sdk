@@ -107,10 +107,10 @@ export default class App extends React.Component<{}, AppState> {
           textSize: '16sp',
         },
         button: {
-          textSize: '20sp',
+          textSize: '16sp',
           textColor: '#262626',
           backgroundColor: '#ffd500',
-          borderRadius: '5dp',
+          borderRadius: '10dp',
         },
       },
       listView: {

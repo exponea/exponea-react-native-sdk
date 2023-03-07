@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup.OnHierarchyChangeListener
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
@@ -34,6 +35,11 @@ class ReactNativeAppInboxProvider(private val appInboxStyle: AppInboxStyle) : De
                     override fun onChildViewAdded(parent: View?, child: View?) {
                         if (parent != view.actionsContainerView || child == null || child !is Button) {
                             return
+                        }
+                        if (child.layoutParams is LinearLayout.LayoutParams) {
+                            val layoutParams = child.layoutParams as LinearLayout.LayoutParams
+                            layoutParams.topMargin = 8
+                            child.layoutParams = layoutParams
                         }
                         button.applyTo(child)
                     }
