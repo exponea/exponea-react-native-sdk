@@ -37,6 +37,7 @@ android {
   * [Push notifications](./documentation/PUSH.md)
   * [Anonymize customer](./documentation/ANONYMIZE.md)
   * [In-app messages](./documentation/IN_APP_MESSAGES.md)
+  * [App Inbox](./documentation/APP_INBOX.md)
   * [Example/Package development documentation](./documentation/DEVELOPMENT.md) - Learn how to build example application or the package itself
   * [SDK version update guide](./documentation/VERSION_UPDATE.md)
 
@@ -45,3 +46,8 @@ If facing any issues, look for **Troubleshooting** section in the respective doc
 ## Release Notes
 
 [Release notes](./documentation/RELEASE_NOTES.md) for the SDK.
+
+## Support
+
+Are you a Bloomreach customer and dealing with some issues on mobile SDK? You can reach the official Engagement Support [via these recommended ways](https://documentation.bloomreach.com/engagement/docs/engagement-support#contacting-the-support).
+Note that Github repository issues and PRs will also be considered but with the lowest priority and without guaranteed output.
