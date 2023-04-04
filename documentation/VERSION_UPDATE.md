@@ -59,3 +59,5 @@ public class MessageService extends FirebaseMessagingService {
 </application>
  ...
 ```
+
+> **NOTE:** Calling of `ExponeaModule.Companion.handleNewToken`, `ExponeaModule.Companion.handleNewHmsToken` and `ExponeaModule.Companion.handleRemoteMessage` is allowed before SDK initialization in case that previous initialization process was done. In such a case, methods will track events with configuration of last initialization. Please consider to do SDK initialization in `Application::onCreate` or before these methods in case of update of your application to apply a fresh new configuration.

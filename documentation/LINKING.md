@@ -75,3 +75,5 @@ public class MainActivity extends ReactActivity {
   }
 }
 ```
+
+> **NOTE:** Calling of `ExponeaModule.Companion.handleCampaignIntent` is allowed before SDK initialization in case that previous initialization process was done. In such a case, `ExponeaModule.Companion.handleCampaignIntent` will track events with configuration of last initialization. Please consider to do SDK initialization in `ReactActivity::onCreate` before SDK init in case of update of your application to apply a fresh new configuration.

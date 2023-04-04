@@ -108,6 +108,8 @@ class NotificationService: UNNotificationServiceExtension {
 }
 ```
 
+> **NOTE:** Calling of `ExponeaNotificationService.process` is allowed before SDK initialization in case that previous initialization process was done. In such a case, methods will track events with configuration of last initialization. Please consider to do SDK initialization in `UIApplicationDelegate.application(application, didFinishLaunchingWithOptions)` or before this method in case of update of your application to apply a fresh new configuration.
+
 ### Notification Content Extension
 Create new Notification Content Extension. By default the extension will contain storyboard file that you can delete, we'll change the default view controller implementation. Service extension that we created in the previous step will change the notification `categoryIdentifier` to `EXPONEA_ACTIONABLE`. We have to configure the content extension to display push notifications with that category. Open `Info.plist` in created content extension group and add `UNNotificationExtensionCategory`. Next, remove `NSExtensionMainStoryboard` and instead use `NSExtensionPrincipalClass` set to your view controller.
 ![](./images/extension3.png)

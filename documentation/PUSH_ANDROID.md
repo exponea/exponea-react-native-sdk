@@ -71,6 +71,8 @@ Registering in AndroidManifest.xml
 </application>
  ...
 ```
+
+> **NOTE:** Calling of `ExponeaModule.Companion.handleNewToken` and `ExponeaModule.Companion.handleRemoteMessage` is allowed before SDK initialization in case that previous initialization process was done. In such a case, methods will track events with configuration of last initialization. Please consider to do SDK initialization in `Application::onCreate` or before these methods in case of update of your application to apply a fresh new configuration.
  
 ### Setting the Firebase server key in the Exponea web app
 You'll need to set the Firebase server key so Exponea can use it to send push notifications to your application. Our native Android has a [guide describing how to do so](https://github.com/exponea/exponea-android-sdk/blob/develop/Guides/FIREBASE.md).
@@ -138,6 +140,8 @@ Registering in AndroidManifest.xml
 </application>
  ...
 ```
+
+> **NOTE:** Calling of `ExponeaModule.Companion.handleNewHmsToken` and `ExponeaModule.Companion.handleRemoteMessage` is allowed before SDK initialization in case that previous initialization process was done. In such a case, methods will track events with configuration of last initialization. Please consider to do SDK initialization in `Application::onCreate` or before these methods in case of update of your application to apply a fresh new configuration.
 
 ### That's it
 After these steps, you should be able to receive push notifications from Exponea. To learn how to send one, check a [Sending Push notifications guide](./PUSH_SEND.md).

@@ -2,6 +2,15 @@
 # Configuration
 Before using most of the SDK functionality, you'll need to configure Exponea to connect it to backend application.
 
+> **NOTE:** Using of some API is allowed before SDK initialization in case that previous initialization process was done.
+> These API methods are TUNAK:
+> - ExponeaModule.Companion.handleCampaignIntent
+> - ExponeaModule.Companion.handleRemoteMessage
+> - ExponeaModule.Companion.handleNewToken
+> - ExponeaModule.Companion.handleNewHmsToken
+>
+> In such a case, method will track events with configuration of last SDK initialization.
+
 > You can find your credentials in [Exponea web application](./EXPONEA_CONFIGURATION.md)
 
 Minimal required configuration is simple:
