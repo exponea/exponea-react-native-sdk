@@ -1,6 +1,13 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.4.0
+#### April 04, 2023
+* Features
+  * Native SDK updated - Android to 3.5.0 (Now we are able to show PUSH notification without requirement of runtime SDK init (from killed state), all events will be tracked)
+  * Support section added to main Readme
+
+
 ## Release Notes for 1.3.1
 #### March 07, 2023
 * Bug Fixes
