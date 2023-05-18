@@ -1,5 +1,5 @@
 import {NativeModules, NativeEventEmitter, Platform} from 'react-native';
-import ExponeaType, {OpenedPush} from './ExponeaType';
+import ExponeaType, {OpenedPush, InAppMessageAction} from './ExponeaType';
 import ExponeaProject from './ExponeaProject';
 import EventType from './EventType';
 import {JsonObject} from './Json';
@@ -100,6 +100,23 @@ const Exponea: ExponeaType = {
     NativeModules.Exponea.onPushReceivedListenerRemove();
   },
 
+  setInAppMessageCallback(
+    overrideDefaultBehavior: boolean,
+    trackActions: boolean,
+    callback: (action: InAppMessageAction) => void,
+  ): void {
+    inAppMessageCallback = callback;
+    NativeModules.Exponea.onInAppMessageCallbackSet(
+      overrideDefaultBehavior,
+      trackActions,
+    );
+  },
+
+  removeInAppMessageCallback(): void {
+    inAppMessageCallback = null;
+    NativeModules.Exponea.onInAppMessageCallbackRemove();
+  },
+
   async requestIosPushAuthorization(): Promise<boolean> {
     if (Platform.OS !== 'ios') {
       throw new Error('requestIosPushAuthorization is only available on iOS!');
@@ -146,15 +163,15 @@ const Exponea: ExponeaType = {
   },
 
   setAutomaticSessionTracking(enabled: boolean): Promise<void> {
-    return NativeModules.Exponea.setAutomaticSessionTracking(enabled)
+    return NativeModules.Exponea.setAutomaticSessionTracking(enabled);
   },
 
   setSessionTimeout(timeout: number): Promise<void> {
-    return NativeModules.Exponea.setSessionTimeout(timeout)
+    return NativeModules.Exponea.setSessionTimeout(timeout);
   },
 
   setAutoPushNotification(enabled: boolean): Promise<void> {
-    return NativeModules.Exponea.setAutoPushNotification(enabled)
+    return NativeModules.Exponea.setAutoPushNotification(enabled);
   },
 
   setCampaignTTL(seconds: number): Promise<void> {
@@ -162,56 +179,71 @@ const Exponea: ExponeaType = {
   },
 
   trackPushToken(token: string): Promise<void> {
-    return NativeModules.Exponea.trackPushToken(token)
+    return NativeModules.Exponea.trackPushToken(token);
   },
 
   trackHmsPushToken(token: string): Promise<void> {
-    return NativeModules.Exponea.trackHmsPushToken(token)
+    return NativeModules.Exponea.trackHmsPushToken(token);
   },
 
   trackDeliveredPush(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackDeliveredPush(params)
+    return NativeModules.Exponea.trackDeliveredPush(params);
   },
 
-  trackDeliveredPushWithoutTrackingConsent(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackDeliveredPushWithoutTrackingConsent(params)
+  trackDeliveredPushWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackDeliveredPushWithoutTrackingConsent(
+      params,
+    );
   },
 
   trackClickedPush(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackClickedPush(params)
+    return NativeModules.Exponea.trackClickedPush(params);
   },
 
-  trackClickedPushWithoutTrackingConsent(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackClickedPushWithoutTrackingConsent(params)
+  trackClickedPushWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackClickedPushWithoutTrackingConsent(params);
   },
 
   trackPaymentEvent(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackPaymentEvent(params)
+    return NativeModules.Exponea.trackPaymentEvent(params);
   },
 
   isExponeaPushNotification(params: Record<string, string>): Promise<boolean> {
-    return NativeModules.Exponea.isExponeaPushNotification(params)
+    return NativeModules.Exponea.isExponeaPushNotification(params);
   },
 
   trackInAppMessageClick(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackInAppMessageClick(params)
+    return NativeModules.Exponea.trackInAppMessageClick(params);
   },
 
-  trackInAppMessageClickWithoutTrackingConsent(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackInAppMessageClickWithoutTrackingConsent(params)
+  trackInAppMessageClickWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackInAppMessageClickWithoutTrackingConsent(
+      params,
+    );
   },
 
   trackInAppMessageClose(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackInAppMessageClose(params)
+    return NativeModules.Exponea.trackInAppMessageClose(params);
   },
 
-  trackInAppMessageCloseWithoutTrackingConsent(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackInAppMessageCloseWithoutTrackingConsent(params)
+  trackInAppMessageCloseWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackInAppMessageCloseWithoutTrackingConsent(
+      params,
+    );
   },
 };
 
 let pushOpenedUserListener: ((openedPush: OpenedPush) => void) | null = null;
 let pushReceivedUserListener: ((data: JsonObject) => void) | null = null;
+let inAppMessageCallback: ((action: InAppMessageAction) => void) | null = null;
 
 const eventEmitter = new NativeEventEmitter(NativeModules.Exponea);
 
@@ -221,6 +253,10 @@ eventEmitter.addListener('pushOpened', (pushOpened: string) => {
 
 eventEmitter.addListener('pushReceived', (data: string) => {
   pushReceivedUserListener && pushReceivedUserListener(JSON.parse(data));
+});
+
+eventEmitter.addListener('inAppAction', (data: string) => {
+  inAppMessageCallback && inAppMessageCallback(JSON.parse(data));
 });
 
 export default Exponea;

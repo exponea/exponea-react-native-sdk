@@ -55,6 +55,10 @@ export default class App extends React.Component<{}, AppState> {
       }, 1000);
     });
 
+    Exponea.setInAppMessageCallback(false, true, (action) => {
+      console.log('InApp action received - App.tsx');
+    });
+
     Exponea.isConfigured().then((configured) => {
       this.setState({preloaded: true, sdkConfigured: configured});
     });

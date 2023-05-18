@@ -12,9 +12,8 @@ import com.exponea.sdk.models.ExponeaProject
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
-import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
 import com.exponea.sdk.util.Logger
-import com.exponea.style.AppInboxStyleParser
+import com.exponea.style.ReactAppInboxStyleParser
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -37,6 +36,8 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         var currentInstance: ExponeaModule? = null
         // We have to hold OpenedPush until ExponeaModule is initialized AND pushOpenedListener set in JS
         private var pendingOpenedPush: OpenedPush? = null
+        // We have to hold received action data until inAppActionCallbackSet set in JS
+        private var pendingInAppAction: InAppMessageAction? = null
 
         fun openPush(push: OpenedPush) {
             if (currentInstance != null) {
@@ -82,16 +83,18 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     init {
         currentInstance = this
+        installInAppCallback()
+    }
+
+    private fun installInAppCallback() {
+        resetInAppCallbackToDefault()
     }
 
     private var configuration: ExponeaConfiguration = ExponeaConfiguration()
     private var pushOpenedListenerSet = false
     private var pushReceivedListenerSet = false
-    private var inAppActionListenerSet = false
     // We have to hold received push data until pushReceivedListener set in JS
     private var pendingReceivedPushData: Map<String, Any>? = null
-    // We have to hold received action data until pushReceivedListener set in JS
-    private var pendingInAppAction: InAppMessageAction? = null
 
     override fun getName(): String {
         return "Exponea"
@@ -385,6 +388,38 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         promise.resolve(null)
     }
 
+    @ReactMethod
+    fun onInAppMessageCallbackSet(
+        overrideDefaultBehavior: Boolean,
+        trackActions: Boolean,
+        promise: Promise
+    ) = catchAndReject(promise) {
+        Exponea.inAppMessageActionCallback = ReactNativeInAppActionListener(
+            overrideDefaultBehavior, trackActions
+        ) { inAppMessageAction ->
+            sendInAppAction(inAppMessageAction)
+        }
+        pendingInAppAction?.let {
+            sendInAppAction(it)
+            pendingInAppAction = null
+        }
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun onInAppMessageCallbackRemove(promise: Promise) = catchAndReject(promise) {
+        resetInAppCallbackToDefault()
+        promise.resolve(null)
+    }
+
+    private fun resetInAppCallbackToDefault() {
+        Exponea.inAppMessageActionCallback = ReactNativeInAppActionListener(
+            overrideDefaultBehavior = false, trackActions = true
+        ) { inAppMessageAction ->
+            pendingInAppAction = inAppMessageAction
+        }
+    }
+
     // RN 0.65.0 and above require these listener methods on the Native Module when call the NativeEventEmitter.
     // Otherwise it shows warning. Source: https://github.com/software-mansion/react-native-reanimated/issues/2297
 
@@ -553,7 +588,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     @ReactMethod
     fun setAppInboxProvider(configMap: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        val style = AppInboxStyleParser(configMap).parse()
+        val style = ReactAppInboxStyleParser(configMap).parse()
         Exponea.appInboxProvider = ReactNativeAppInboxProvider(style)
         promise.resolve(null)
     }
@@ -582,27 +617,10 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         promise.resolve(null)
     }
 
-    internal fun onInAppAction(data: InAppMessageAction) {
-        if (inAppActionListenerSet) {
-            reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                .emit("inAppAction", Gson().toJson(data))
-        } else {
-            pendingInAppAction = data
-        }
-    }
-
-    @ReactMethod
-    fun onInAppActionListenerSet(promise: Promise) = catchAndReject(promise) {
-        inAppActionListenerSet = true
-        onInAppAction(pendingInAppAction ?: return@catchAndReject)
-        pendingInAppAction = null
-        promise.resolve(null)
-    }
-
-    @ReactMethod
-    fun setInAppMessageActionListener(configMap: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        Exponea.inAppMessageActionCallback = ReactNativeInAppActionListener(configMap.toHashMapRecursively())
-        promise.resolve(null)
+    internal fun sendInAppAction(data: InAppMessageAction) {
+        reactContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit("inAppAction", Gson().toJson(data))
     }
 
     @ReactMethod

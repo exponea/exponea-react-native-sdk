@@ -1,4 +1,8 @@
-import ExponeaType, {FlushMode, LogLevel} from './ExponeaType';
+import ExponeaType, {
+  FlushMode,
+  InAppMessageAction,
+  LogLevel,
+} from './ExponeaType';
 import Configuration from './Configuration';
 import {RecommendationOptions, Recommendation} from './Recommendation';
 import Consent from './Consent';
@@ -174,31 +178,31 @@ const mockExponea: ExponeaType = {
     return Promise.resolve();
   },
 
-  trackAppInboxOpened(message: AppInboxMessage): Promise<void> {
+  trackAppInboxOpened(_message: AppInboxMessage): Promise<void> {
     return Promise.resolve();
   },
 
   trackAppInboxOpenedWithoutTrackingConsent(
-    message: AppInboxMessage,
+    _message: AppInboxMessage,
   ): Promise<void> {
     return Promise.resolve();
   },
 
   trackAppInboxClick(
-    action: AppInboxAction,
-    message: AppInboxMessage,
+    _action: AppInboxAction,
+    _message: AppInboxMessage,
   ): Promise<void> {
     return Promise.resolve();
   },
 
   trackAppInboxClickWithoutTrackingConsent(
-    action: AppInboxAction,
-    message: AppInboxMessage,
+    _action: AppInboxAction,
+    _message: AppInboxMessage,
   ): Promise<void> {
     return Promise.resolve();
   },
 
-  markAppInboxAsRead(message: AppInboxMessage): Promise<boolean> {
+  markAppInboxAsRead(_message: AppInboxMessage): Promise<boolean> {
     return Promise.resolve(true);
   },
 
@@ -206,8 +210,88 @@ const mockExponea: ExponeaType = {
     return Promise.resolve([]);
   },
 
-  fetchAppInboxItem(messageId: string): Promise<AppInboxMessage> {
+  fetchAppInboxItem(_messageId: string): Promise<AppInboxMessage> {
     return Promise.resolve({id: '1', type: 'push'});
+  },
+
+  setInAppMessageCallback(
+    overrideDefaultBehavior: boolean,
+    trackActions: boolean,
+    callback: (action: InAppMessageAction) => void,
+  ) {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+
+  removeInAppMessageCallback() {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+
+  setAutomaticSessionTracking(enabled: boolean): Promise<void> {
+    return Promise.resolve();
+  },
+
+  setSessionTimeout(timeout: number): Promise<void> {
+    return Promise.resolve();
+  },
+
+  setAutoPushNotification(enabled: boolean): Promise<void> {
+    return Promise.resolve();
+  },
+
+  setCampaignTTL(seconds: number): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackPushToken(token: string): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackHmsPushToken(token: string): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackDeliveredPush(params: Record<string, string>): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackDeliveredPushWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackClickedPush(params: Record<string, string>): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackClickedPushWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackPaymentEvent(params: Record<string, string>): Promise<void> {
+    return Promise.resolve();
+  },
+
+  isExponeaPushNotification(params: Record<string, string>): Promise<boolean> {
+    return Promise.resolve(true);
+  },
+
+  trackInAppMessageClick(params: Record<string, string>): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppMessageClickWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppMessageClose(params: Record<string, string>): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppMessageCloseWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return Promise.resolve();
   },
 };
 

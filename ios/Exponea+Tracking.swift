@@ -100,7 +100,7 @@ extension Exponea {
         Exponea.exponeaInstance.trackSessionEnd()
         resolve(nil)
     }
-    
+
     @objc(trackPushToken:resolve:reject:)
     func trackPushToken(
         token: String,
@@ -113,7 +113,7 @@ extension Exponea {
         }
         Exponea.exponeaInstance.trackPushToken(token)
     }
-    
+
     @objc(trackHmsPushToken:resolve:reject:)
     func trackHmsPushToken(
         token: String,
@@ -122,7 +122,7 @@ extension Exponea {
     ) {
         rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "iOS"))
     }
-    
+
     @objc(trackDeliveredPush:resolve:reject:)
     func trackDeliveredPush(
         params: NSDictionary,
@@ -144,7 +144,7 @@ extension Exponea {
             rejectPromise(reject, error: error)
         }
     }
-    
+
     @objc(trackDeliveredPushWithoutTrackingConsent:resolve:reject:)
     func trackDeliveredPushWithoutTrackingConsent(
         params: NSDictionary,
@@ -166,7 +166,7 @@ extension Exponea {
             rejectPromise(reject, error: error)
         }
     }
-    
+
     @objc(trackClickedPush:resolve:reject:)
     func trackClickedPush(
         params: NSDictionary,
@@ -188,7 +188,7 @@ extension Exponea {
             rejectPromise(reject, error: error)
         }
     }
-    
+
     @objc(trackClickedPushWithoutTrackingConsent:resolve:reject:)
     func trackClickedPushWithoutTrackingConsent(
         params: NSDictionary,
@@ -210,7 +210,7 @@ extension Exponea {
             rejectPromise(reject, error: error)
         }
     }
-    
+
     @objc(trackPaymentEvent:resolve:reject:)
     func trackPaymentEvent(
         params: NSDictionary,
@@ -232,7 +232,7 @@ extension Exponea {
             rejectPromise(reject, error: error)
         }
     }
-    
+
     @objc(trackInAppMessageClick:resolve:reject:)
     func trackInAppMessageClick(
         data: NSDictionary,
@@ -260,7 +260,7 @@ extension Exponea {
             buttonLink: link
         )
     }
-    
+
     @objc(trackInAppMessageClickWithoutTrackingConsent:resolve:reject:)
     func trackInAppMessageClickWithoutTrackingConsent(
         data: NSDictionary,
@@ -288,7 +288,7 @@ extension Exponea {
             buttonLink: link
         )
     }
-    
+
     @objc(trackInAppMessageClose:isUserInteraction:resolve:reject:)
     func trackInAppMessageClose(
         message: NSDictionary,
@@ -308,7 +308,7 @@ extension Exponea {
             isUserInteraction: isUserInteraction
         )
     }
-    
+
     @objc(trackInAppMessageCloseWithoutTrackingConsent:isUserInteraction:resolve:reject:)
     func trackInAppMessageCloseWithoutTrackingConsent(
         message: NSDictionary,

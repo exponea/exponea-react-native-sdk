@@ -18,12 +18,17 @@ export default function TrackEventModal(
   const [properties, setProperties] = React.useState({});
 
   const trackEvent = () => {
+    console.log('Tracking event requested');
     Exponea.trackEvent(eventType, properties)
       .then(() => {
+        console.log('Closing tracking event dialog');
         props.onClose();
         setProperties({});
       })
-      .catch((error) => Alert.alert('Error tracking event', error.message));
+      .catch((error) => {
+        console.log(`Error occured while tracking event ${error.message}`);
+        Alert.alert('Error tracking event', error.message);
+      });
   };
   return (
     <ExponeaModal visible={props.visible} onClose={props.onClose}>

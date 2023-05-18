@@ -45,6 +45,8 @@ RCT_EXTERN_METHOD(onPushOpenedListenerSet)
 RCT_EXTERN_METHOD(onPushOpenedListenerRemove)
 RCT_EXTERN_METHOD(onPushReceivedListenerSet)
 RCT_EXTERN_METHOD(onPushReceivedListenerRemove)
+RCT_EXTERN_METHOD(onInAppMessageCallbackSet:(BOOL)overrideDefaultBehavior trackActions:(BOOL)trackActions)
+RCT_EXTERN_METHOD(onInAppMessageCallbackRemove)
 RCT_EXTERN_METHOD(requestPushAuthorization:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(fetchAppInbox:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)

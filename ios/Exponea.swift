@@ -22,6 +22,7 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     }
 }
 
+// swiftlint:disable type_body_length
 @objc(Exponea)
 class Exponea: RCTEventEmitter {
     override init() {
@@ -34,7 +35,7 @@ class Exponea: RCTEventEmitter {
 
     @objc(supportedEvents)
     override func supportedEvents() -> [String] {
-        return ["pushOpened", "pushReceived"]
+        return ["pushOpened", "pushReceived", "inAppAction"]
     }
 
     override func sendEvent(withName name: String!, body: Any) {
@@ -60,6 +61,12 @@ class Exponea: RCTEventEmitter {
     // We have to hold received push data until pushReceivedListener set in JS
     var pendingReceivedPushData: [AnyHashable: Any]?
     var pushReceivedListenerSet = false
+    // We have to hold received action data until inAppActionCallbackSet set in JS
+    var pendingInAppAction: InAppMessageAction?
+    var inAppActionCallbackSet = false
+
+    var inAppOverrideDefaultBehavior: Bool = false
+    var inAppTrackActions: Bool = true
 
     func rejectPromise(_ reject: RCTPromiseRejectBlock, error: Error) {
         reject(errorCode, error.localizedDescription, error)
@@ -83,6 +90,7 @@ class Exponea: RCTEventEmitter {
                 advancedAuthEnabled: try parser.parseAdvancedAuthEnabled()
             )
             Exponea.exponeaInstance.pushNotificationsDelegate = self
+            Exponea.exponeaInstance.inAppMessagesDelegate = self
             resolve(nil)
         } catch {
             rejectPromise(reject, error: error)
@@ -246,26 +254,28 @@ class Exponea: RCTEventEmitter {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured,
+              let exponea = Exponea.exponeaInstance as? ExponeaInternal
+        else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        let exponea: ExponeaInternal = Exponea.exponeaInstance as! ExponeaInternal
         exponea.setAutomaticSessionTracking(automaticSessionTracking: .enabled(timeout: timeout))
         resolve(nil)
     }
-    
+
     @objc(setAutomaticSessionTracking:resolve:reject:)
     func setAutomaticSessionTracking(
         enabled: Bool,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
+        guard Exponea.exponeaInstance.isConfigured,
+              let exponea = Exponea.exponeaInstance as? ExponeaInternal
+        else {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        let exponea = Exponea.exponeaInstance as! ExponeaInternal
         if enabled {
             exponea.setAutomaticSessionTracking(automaticSessionTracking: .enabled(
                 timeout: exponea.configuration?.sessionTimeout ?? Constants.Session.defaultTimeout
@@ -274,7 +284,7 @@ class Exponea: RCTEventEmitter {
             exponea.setAutomaticSessionTracking(automaticSessionTracking: .disabled)
         }
     }
-    
+
     @objc(setAutoPushNotification:resolve:reject:)
     func setAutoPushNotification(
         enabled: Bool,
@@ -288,7 +298,7 @@ class Exponea: RCTEventEmitter {
                 + " only while SDK initialization")
         )
     }
-    
+
     @objc(setCampaignTTL:resolve:reject:)
     func setCampaignTTL(
         seconds: Double,
@@ -297,7 +307,7 @@ class Exponea: RCTEventEmitter {
     ) {
         rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "iOS"))
     }
-    
+
     @objc(isExponeaPushNotification:resolve:reject:)
     func isExponeaPushNotification(
         params: NSDictionary,
@@ -308,10 +318,11 @@ class Exponea: RCTEventEmitter {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        guard let data = params as? Dictionary<AnyHashable, Any> else {
+        guard let data = params as? [AnyHashable: Any] else {
             rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "Invalid data"))
             return
         }
         resolve(ExponeaSDK.Exponea.isExponeaNotification(userInfo: data))
     }
 }
+// swiftlint:enable type_body_length

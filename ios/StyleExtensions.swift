@@ -292,6 +292,7 @@ extension UIColor {
             return nil
         }
     }
+    // swiftlint:enable function_body_length
     static func parse(_ source: String?) -> UIColor? {
         guard let source = source else {
             return nil

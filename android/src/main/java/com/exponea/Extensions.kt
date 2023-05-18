@@ -66,11 +66,18 @@ internal fun MessageItem.toMap(): Map<String, Any?> {
     )
 }
 
-internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyMap(key: String, defaultValue: Map<String, T>? = null): Map<String, T>? {
+internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyMap(
+    key: String,
+    defaultValue: Map<String, T>? = null
+): Map<String, T>? {
     return getNullSafelyMap(key, T::class, defaultValue)
 }
 
-internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyMap(key: String, type: KClass<T>, defaultValue: Map<String, T>? = null): Map<String, T>? {
+internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyMap(
+    key: String,
+    type: KClass<T>,
+    defaultValue: Map<String, T>? = null
+): Map<String, T>? {
     val value = this[key] ?: return defaultValue
     @Suppress("UNCHECKED_CAST")
     val mapOfAny = value as? Map<String, Any?> ?: throw ExponeaModule.ExponeaDataException(
@@ -95,11 +102,18 @@ internal fun <K, V, R> Map<out K, V>.filterValueIsInstance(klass: Class<R>): Map
     return result
 }
 
-internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyArray(key: String, defaultValue: List<T>? = null): List<T>? {
+internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyArray(
+    key: String,
+    defaultValue: List<T>? = null
+): List<T>? {
     return getNullSafelyArray(key, T::class, defaultValue)
 }
 
-internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyArray(key: String, type: KClass<T>, defaultValue: List<T>? = null): List<T>? {
+internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyArray(
+    key: String,
+    type: KClass<T>,
+    defaultValue: List<T>? = null
+): List<T>? {
     val value = this[key] ?: return defaultValue
     val arrayOfAny = value as? List<Any?> ?: throw ExponeaModule.ExponeaDataException(
         "Non-array type for key '$key'. Got ${value::class.simpleName}"

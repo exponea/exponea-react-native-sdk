@@ -3,7 +3,7 @@ import EventType from './EventType';
 import ExponeaProject from './ExponeaProject';
 import {JsonObject} from './Json';
 import Consent from './Consent';
-import {RecommendationOptions, Recommendation} from './Recommendation';
+import {Recommendation, RecommendationOptions} from './Recommendation';
 import AppInboxStyle from './AppInboxStyle';
 import {AppInboxMessage} from './AppInboxMessage';
 import {AppInboxAction} from './AppInboxAction';
@@ -99,6 +99,14 @@ interface ExponeaType {
   /** Removes push notification received listener */
   removePushReceivedListener(): void;
 
+  setInAppMessageCallback(
+    overrideDefaultBehavior: boolean,
+    trackActions: boolean,
+    callback: (action: InAppMessageAction) => void,
+  ): void;
+
+  removeInAppMessageCallback(): void;
+
   requestIosPushAuthorization(): Promise<boolean>;
 
   setAppInboxProvider(withStyle: AppInboxStyle): Promise<void>;
@@ -164,11 +172,15 @@ interface ExponeaType {
 
   trackDeliveredPush(params: Record<string, string>): Promise<void>;
 
-  trackDeliveredPushWithoutTrackingConsent(params: Record<string, string>): Promise<void>;
+  trackDeliveredPushWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void>;
 
   trackClickedPush(params: Record<string, string>): Promise<void>;
 
-  trackClickedPushWithoutTrackingConsent(params: Record<string, string>): Promise<void>;
+  trackClickedPushWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void>;
 
   trackPaymentEvent(params: Record<string, string>): Promise<void>;
 
@@ -176,11 +188,15 @@ interface ExponeaType {
 
   trackInAppMessageClick(params: Record<string, string>): Promise<void>;
 
-  trackInAppMessageClickWithoutTrackingConsent(params: Record<string, string>): Promise<void>;
+  trackInAppMessageClickWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void>;
 
   trackInAppMessageClose(params: Record<string, string>): Promise<void>;
 
-  trackInAppMessageCloseWithoutTrackingConsent(params: Record<string, string>): Promise<void>;
+  trackInAppMessageCloseWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void>;
 }
 
 export enum FlushMode {
@@ -217,6 +233,36 @@ export enum PushAction {
   DEEPLINK = 'deeplink',
   /** "Open web browser" action. Exponea SDK will automatically open the browser in this case. */
   WEB = 'web',
+}
+
+export interface InAppMessageAction {
+  message: InAppMessage;
+  button?: InAppMessageButton;
+  interaction: boolean;
+}
+
+export interface InAppMessage {
+  id: string;
+  name: string;
+  message_type?: string;
+  frequency: string;
+  payload?: JsonObject;
+  variant_id: number;
+  variant_name: string;
+  trigger?: JsonObject;
+  date_filter?: JsonObject;
+  load_priority?: number;
+  load_delay?: number;
+  close_timeout?: number;
+  payload_html?: string;
+  is_html?: boolean;
+  has_tracking_consent?: boolean;
+  consent_category_tracking?: string;
+}
+
+export interface InAppMessageButton {
+  text?: string;
+  url?: string;
 }
 
 export default ExponeaType;

@@ -317,7 +317,7 @@ DEPENDENCIES:
   - AnyCodable-FlightSchool (= 0.4.0)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - ExponeaSDK (from `~/exponea/ios-sdk/`)
+  - ExponeaSDK (= 2.16.1)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
@@ -358,6 +358,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AnyCodable-FlightSchool
+    - ExponeaSDK
     - fmt
     - libevent
     - Nimble
@@ -369,8 +370,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
-  ExponeaSDK:
-    :path: "~/exponea/ios-sdk/"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -479,6 +478,6 @@ SPEC CHECKSUMS:
   SwiftSoup: 3384f2e618cfc1b3cbc7852c16692fe8de13fb8f
   Yoga: 92d086bb705a41cc588599b51db726ba7b1d341c
 
-PODFILE CHECKSUM: 1361c4a718f0590e7630ac75557cdba8bf1c8f96
+PODFILE CHECKSUM: a29c2340ed23c08f66229b04a20f01d61bda2c98
 
 COCOAPODS: 1.11.3

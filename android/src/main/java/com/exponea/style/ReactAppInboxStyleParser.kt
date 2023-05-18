@@ -4,7 +4,7 @@ import com.exponea.getNullSafely
 import com.exponea.toHashMapRecursively
 import com.facebook.react.bridge.ReadableMap
 
-class AppInboxStyleParser(private val configMap: ReadableMap) {
+class ReactAppInboxStyleParser(private val configMap: ReadableMap) {
     fun parse(): AppInboxStyle {
         val source = configMap.toHashMapRecursively()
         return AppInboxStyle(
