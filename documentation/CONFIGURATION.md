@@ -19,6 +19,7 @@ import Exponea from 'react-native-exponea-sdk'
 
 Exponea.configure({
   projectToken: "your-project-token",
+  projectToken: "your-project-token",
   authorizationToken: "your-authorization-token",
   // default baseUrl value is https://api.exponea.com
   baseUrl: "https://your-exponea-instance.com" 
