@@ -1,7 +1,7 @@
 package com.exponea.style
 
-import com.exponea.ReactNativeAppInboxProvider.ReactNativeMessageItemViewHolder
 import com.exponea.asColor
+import com.exponea.sdk.util.MessageItemViewHolder
 import com.facebook.react.bridge.DynamicFromObject
 
 data class AppInboxListItemStyle(
@@ -12,7 +12,7 @@ data class AppInboxListItemStyle(
     var content: TextViewStyle? = null,
     var image: ImageViewStyle? = null
 ) {
-    fun applyTo(target: ReactNativeMessageItemViewHolder) {
+    fun applyTo(target: MessageItemViewHolder) {
         DynamicFromObject(backgroundColor).asColor()?.let {
             target.itemContainer?.setBackgroundColor(it)
         }

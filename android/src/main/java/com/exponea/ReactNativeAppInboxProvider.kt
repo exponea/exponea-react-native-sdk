@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import com.exponea.sdk.models.MessageItem
 import com.exponea.sdk.services.DefaultAppInboxProvider
+import com.exponea.sdk.util.MessageItemViewHolder
 import com.exponea.sdk.view.AppInboxDetailView
 import com.exponea.sdk.view.AppInboxListView
 import com.exponea.style.AppInboxStyle
@@ -61,7 +62,7 @@ class ReactNativeAppInboxProvider(private val appInboxStyle: AppInboxStyle) : De
             // (performance) register listener only if item style is set
             view.listView.addOnChildAttachStateChangeListener(object : OnChildAttachStateChangeListener {
                 override fun onChildViewAttachedToWindow(view: View) {
-                    itemStyle.applyTo(ReactNativeMessageItemViewHolder(view))
+                    itemStyle.applyTo(MessageItemViewHolder(view))
                 }
 
                 override fun onChildViewDetachedFromWindow(view: View) {
@@ -70,18 +71,5 @@ class ReactNativeAppInboxProvider(private val appInboxStyle: AppInboxStyle) : De
             })
         }
         return view
-    }
-
-    /**
-     * As MessageItemViewHolder from SDK is internal, we need to create mirror.
-     */
-    class ReactNativeMessageItemViewHolder(target: View) {
-        val TODO_REMOVE_ME: RelativeLayout? = target.findViewById(R.id.action_bar_subtitle)
-        val itemContainer: RelativeLayout? = target.findViewById(R.id.message_item_container)
-        val readFlag: ImageView? = target.findViewById(R.id.message_item_read_flag)
-        val receivedTime: TextView? = target.findViewById(R.id.message_item_received_time)
-        val title: TextView? = target.findViewById(R.id.message_item_title)
-        val content: TextView? = target.findViewById(R.id.message_item_content)
-        val image: ImageView? = target.findViewById(R.id.message_item_image)
     }
 }
