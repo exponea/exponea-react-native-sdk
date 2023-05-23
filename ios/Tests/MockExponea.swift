@@ -329,6 +329,34 @@ class MockExponea: ExponeaType {
     ) {
         fatalError("Not implemented")
     }
+
+    func handlePushNotificationToken(token: String) {
+        fatalError("Not implemented")
+    }
+
+    func trackPushReceived(content: UNNotificationContent) {
+        fatalError("Not implemented")
+    }
+
+    func trackPushReceived(userInfo: [AnyHashable: Any]) {
+        fatalError("Not implemented")
+    }
+
+    func trackPushReceivedWithoutTrackingConsent(content: UNNotificationContent) {
+        fatalError("Not implemented")
+    }
+
+    func trackPushReceivedWithoutTrackingConsent(userInfo: [AnyHashable: Any]) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppMessageCloseClickWithoutTrackingConsent(message: ExponeaSDK.InAppMessage, isUserInteraction: Bool?) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppMessageClose(message: ExponeaSDK.InAppMessage, isUserInteraction: Bool?) {
+        fatalError("Not implemented")
+    }
 }
 
 class TestDefaultInAppDelegate: InAppMessageActionDelegate {
