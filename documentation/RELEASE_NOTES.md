@@ -1,6 +1,15 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.5.0
+#### May 23, 2023
+* Features
+  * Native SDK updated - Android to 3.6.1 and iOS to 2.16.2
+  * ReactNative support increased to 0.71.8
+  * API has been extended to match native SDKs as much as possible (additional tracking of Inapp messages, App Inbox, Push token and notifications)
+  * Added InApp messages callback handler to define your customised message action handling
+
+
 ## Release Notes for 1.4.0
 #### April 04, 2023
 * Features
