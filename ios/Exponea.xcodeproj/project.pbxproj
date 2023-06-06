@@ -33,19 +33,6 @@
 		1A1686B3D648AB9F9CCAFDD9 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69FD96B26429EAD2DDF2E8BE /* libPods-Tests.a */; };
 		50A439BE1C21B62F27753C91 /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 976E6ED146A8BE7F4CB81AAA /* libPods-Exponea.a */; };
 		5597718C2A14E63E009EAB3D /* Exponea+InAppMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597718B2A14E63E009EAB3D /* Exponea+InAppMessage.swift */; };
-		559C55C729A415BA004D216F /* ReactNativeAppInboxProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55C629A415BA004D216F /* ReactNativeAppInboxProvider.swift */; };
-		559C55C929A41665004D216F /* AppInboxStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55C829A41665004D216F /* AppInboxStyle.swift */; };
-		559C55CB29A416DB004D216F /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55CA29A416DB004D216F /* ButtonStyle.swift */; };
-		559C55CD29A418E8004D216F /* DetailViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55CC29A418E8004D216F /* DetailViewStyle.swift */; };
-		559C55CF29A4191A004D216F /* TextViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55CE29A4191A004D216F /* TextViewStyle.swift */; };
-		559C55D129A4194A004D216F /* ImageViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D029A4194A004D216F /* ImageViewStyle.swift */; };
-		559C55D329A41976004D216F /* ListScreenStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D229A41976004D216F /* ListScreenStyle.swift */; };
-		559C55D529A419AB004D216F /* ProgressBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D429A419AB004D216F /* ProgressBarStyle.swift */; };
-		559C55D729A419CC004D216F /* AppInboxListViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D629A419CC004D216F /* AppInboxListViewStyle.swift */; };
-		559C55D929A419F5004D216F /* AppInboxListItemStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55D829A419F5004D216F /* AppInboxListItemStyle.swift */; };
-		559C55DB29A4E4F1004D216F /* StyleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55DA29A4E4F1004D216F /* StyleExtensions.swift */; };
-		559C55DD29A50C4C004D216F /* AppInboxStyleSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55DC29A50C4C004D216F /* AppInboxStyleSpec.swift */; };
-		559C55E929A64654004D216F /* AppInboxStyleParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559C55E829A64654004D216F /* AppInboxStyleParser.swift */; };
 		55B0FEC729A78B9A00F8FB7C /* Exponea+AppInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */; };
 		55F4BB3729A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */; };
 		55F4BB3929A8C3FB00CEDC7C /* RNAppInboxButtonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4BB3829A8C3FB00CEDC7C /* RNAppInboxButtonManager.m */; };
@@ -105,19 +92,6 @@
 		07EB3281CEB025E5B3DDC15B /* Pods-Exponea.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.debug.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.debug.xcconfig"; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libExponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExponea.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5597718B2A14E63E009EAB3D /* Exponea+InAppMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+InAppMessage.swift"; sourceTree = "<group>"; };
-		559C55C629A415BA004D216F /* ReactNativeAppInboxProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactNativeAppInboxProvider.swift; sourceTree = "<group>"; };
-		559C55C829A41665004D216F /* AppInboxStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxStyle.swift; sourceTree = "<group>"; };
-		559C55CA29A416DB004D216F /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
-		559C55CC29A418E8004D216F /* DetailViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewStyle.swift; sourceTree = "<group>"; };
-		559C55CE29A4191A004D216F /* TextViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewStyle.swift; sourceTree = "<group>"; };
-		559C55D029A4194A004D216F /* ImageViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewStyle.swift; sourceTree = "<group>"; };
-		559C55D229A41976004D216F /* ListScreenStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListScreenStyle.swift; sourceTree = "<group>"; };
-		559C55D429A419AB004D216F /* ProgressBarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarStyle.swift; sourceTree = "<group>"; };
-		559C55D629A419CC004D216F /* AppInboxListViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxListViewStyle.swift; sourceTree = "<group>"; };
-		559C55D829A419F5004D216F /* AppInboxListItemStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxListItemStyle.swift; sourceTree = "<group>"; };
-		559C55DA29A4E4F1004D216F /* StyleExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleExtensions.swift; sourceTree = "<group>"; };
-		559C55DC29A50C4C004D216F /* AppInboxStyleSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxStyleSpec.swift; sourceTree = "<group>"; };
-		559C55E829A64654004D216F /* AppInboxStyleParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInboxStyleParser.swift; sourceTree = "<group>"; };
 		55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+AppInbox.swift"; sourceTree = "<group>"; };
 		55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNAppInboxButtonManager.swift; sourceTree = "<group>"; };
 		55F4BB3829A8C3FB00CEDC7C /* RNAppInboxButtonManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNAppInboxButtonManager.m; sourceTree = "<group>"; };
@@ -165,7 +139,6 @@
 				054FD4C224D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift */,
 				0537094724D3423B001684E9 /* Exponea+AnonymizeSpec.swift */,
 				0537094924D401E3001684E9 /* Exponea+PushNotificationsSpec.swift */,
-				559C55DC29A50C4C004D216F /* AppInboxStyleSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -196,18 +169,6 @@
 				55F4BB3829A8C3FB00CEDC7C /* RNAppInboxButtonManager.m */,
 				55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */,
 				55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */,
-				559C55C629A415BA004D216F /* ReactNativeAppInboxProvider.swift */,
-				559C55C829A41665004D216F /* AppInboxStyle.swift */,
-				559C55CA29A416DB004D216F /* ButtonStyle.swift */,
-				559C55CC29A418E8004D216F /* DetailViewStyle.swift */,
-				559C55CE29A4191A004D216F /* TextViewStyle.swift */,
-				559C55D029A4194A004D216F /* ImageViewStyle.swift */,
-				559C55D229A41976004D216F /* ListScreenStyle.swift */,
-				559C55D429A419AB004D216F /* ProgressBarStyle.swift */,
-				559C55D629A419CC004D216F /* AppInboxListViewStyle.swift */,
-				559C55D829A419F5004D216F /* AppInboxListItemStyle.swift */,
-				559C55DA29A4E4F1004D216F /* StyleExtensions.swift */,
-				559C55E829A64654004D216F /* AppInboxStyleParser.swift */,
 				CC619AC3265CCD7A00296FA3 /* ExponeaRNAppDelegate.m */,
 				CC619AC2265CCD6D00296FA3 /* ExponeaRNAppDelegate.h */,
 				05E6DA4724A4DEBC004EE0F9 /* Exponea+PushNotifications.swift */,
@@ -450,7 +411,6 @@
 				054FD4C324D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift in Sources */,
 				0578A429249B7F1C0049AE9D /* TestUtil.swift in Sources */,
 				054FD4C124D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift in Sources */,
-				559C55DD29A50C4C004D216F /* AppInboxStyleSpec.swift in Sources */,
 				0537094824D3423B001684E9 /* Exponea+AnonymizeSpec.swift in Sources */,
 				054FD4BD24D2DE5200BBE1D5 /* ExponeaSpec.swift in Sources */,
 			);
@@ -463,32 +423,20 @@
 				05FD3772248FDE7F0078847C /* Exponea.swift in Sources */,
 				CC619AC4265CCD7B00296FA3 /* ExponeaRNAppDelegate.m in Sources */,
 				05FD376F248FDE5A0078847C /* Exponea.m in Sources */,
-				559C55D529A419AB004D216F /* ProgressBarStyle.swift in Sources */,
 				052DAEA724A225F600A7A0A5 /* Exponea+Fetching.swift in Sources */,
 				05E660E3249A4C2F0033B199 /* ConfigurationParser.swift in Sources */,
-				559C55D329A41976004D216F /* ListScreenStyle.swift in Sources */,
-				559C55D729A419CC004D216F /* AppInboxListViewStyle.swift in Sources */,
 				05C69B8E249CF511008A4D9D /* ExponeaError.swift in Sources */,
 				05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */,
 				55F4BB3929A8C3FB00CEDC7C /* RNAppInboxButtonManager.m in Sources */,
-				559C55CF29A4191A004D216F /* TextViewStyle.swift in Sources */,
 				0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */,
 				0544CE6425A7119200DCF863 /* Exponea+Linking.swift in Sources */,
-				559C55CB29A416DB004D216F /* ButtonStyle.swift in Sources */,
 				5597718C2A14E63E009EAB3D /* Exponea+InAppMessage.swift in Sources */,
 				0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */,
 				0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */,
-				559C55CD29A418E8004D216F /* DetailViewStyle.swift in Sources */,
 				55B0FEC729A78B9A00F8FB7C /* Exponea+AppInbox.swift in Sources */,
-				559C55DB29A4E4F1004D216F /* StyleExtensions.swift in Sources */,
-				559C55D929A419F5004D216F /* AppInboxListItemStyle.swift in Sources */,
-				559C55D129A4194A004D216F /* ImageViewStyle.swift in Sources */,
 				052DAEA524A225C400A7A0A5 /* Exponea+Tracking.swift in Sources */,
-				559C55C729A415BA004D216F /* ReactNativeAppInboxProvider.swift in Sources */,
 				55F4BB3729A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift in Sources */,
 				052DAEA924A2465400A7A0A5 /* Exponea+Anonymize.swift in Sources */,
-				559C55C929A41665004D216F /* AppInboxStyle.swift in Sources */,
-				559C55E929A64654004D216F /* AppInboxStyleParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

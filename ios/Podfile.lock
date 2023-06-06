@@ -2,7 +2,7 @@ PODS:
   - AnyCodable-FlightSchool (0.4.0)
   - boost (1.76.0)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.16.2):
+  - ExponeaSDK (2.16.3):
     - SwiftSoup (= 2.4.3)
   - FBLazyVector (0.71.8)
   - FBReactNativeSpec (0.71.8):
@@ -362,7 +362,7 @@ DEPENDENCIES:
   - AnyCodable-FlightSchool (= 0.4.0)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - ExponeaSDK (= 2.16.2)
+  - ExponeaSDK (= 2.16.3)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
@@ -484,7 +484,7 @@ SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  ExponeaSDK: 485fcf173241a779d6567f44139cfbc2a4ddd775
+  ExponeaSDK: 53b30453dd9fb347e0641e436f12d30788727e25
   FBLazyVector: f637f31eacba90d4fdeff3fa41608b8f361c173b
   FBReactNativeSpec: 0d9a4f4de7ab614c49e98c00aedfd3bfbda33d59
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -523,6 +523,6 @@ SPEC CHECKSUMS:
   SwiftSoup: 3384f2e618cfc1b3cbc7852c16692fe8de13fb8f
   Yoga: 065f0b74dba4832d6e328238de46eb72c5de9556
 
-PODFILE CHECKSUM: 158fbbb70f5a17f417d59657f6bd0690998e9322
+PODFILE CHECKSUM: 2ba906be920e6d55e6ea2ef06bf8d27d5733e337
 
 COCOAPODS: 1.11.3

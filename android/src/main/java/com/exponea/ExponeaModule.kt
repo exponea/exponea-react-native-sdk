@@ -12,8 +12,9 @@ import com.exponea.sdk.models.ExponeaProject
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
+import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
 import com.exponea.sdk.util.Logger
-import com.exponea.style.ReactAppInboxStyleParser
+import com.exponea.style.AppInboxStyleParser
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -588,8 +589,8 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     @ReactMethod
     fun setAppInboxProvider(configMap: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        val style = ReactAppInboxStyleParser(configMap).parse()
-        Exponea.appInboxProvider = ReactNativeAppInboxProvider(style)
+        val style = AppInboxStyleParser(configMap.toHashMap()).parse()
+        Exponea.appInboxProvider = StyledAppInboxProvider(style)
         promise.resolve(null)
     }
 

@@ -274,7 +274,7 @@ extension Exponea {
     ) {
         do {
             let appInboxStyle = try AppInboxStyleParser(configuration).parse()
-            Exponea.exponeaInstance.appInboxProvider = ReactNativeAppInboxProvider(appInboxStyle)
+            Exponea.exponeaInstance.appInboxProvider = StyledAppInboxProvider(appInboxStyle)
             resolve(nil)
         } catch {
             rejectPromise(reject, error: error)
