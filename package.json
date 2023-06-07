@@ -76,13 +76,5 @@
         "react"
       ]
     }
-  },
-  "codegenConfig": {
-    "name": "example",
-    "type": "all",
-    "jsSrcsDir": "src",
-    "android": {
-      "javaPackageName": "com.exponea"
-    }
   }
 }
