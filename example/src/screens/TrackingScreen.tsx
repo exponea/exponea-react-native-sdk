@@ -27,40 +27,6 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
   };
 
   componentDidMount(): void {
-    Exponea.setAppInboxProvider({
-      appInboxButton: {
-        textSize: '16sp',
-        textWeight: 'bold',
-        backgroundColor: 'red',
-      },
-      detailView: {
-        title: {
-          textColor: '#262626',
-          textSize: '20sp',
-        },
-        content: {
-          textColor: '#262626',
-          textSize: '16sp',
-        },
-        button: {
-          textSize: '16sp',
-          textColor: '#262626',
-          backgroundColor: '#ffd500',
-          borderRadius: '10dp',
-        },
-      },
-      listView: {
-        list: {
-          backgroundColor: 'white',
-          item: {
-            content: {
-              textSize: '16sp',
-              textColor: '#262626',
-            },
-          },
-        },
-      },
-    });
     Exponea.getCustomerCookie()
       .then((cookie) => this.setState({customerCookie: cookie}))
       .catch((error) => {
