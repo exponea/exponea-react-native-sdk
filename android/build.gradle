@@ -9,6 +9,24 @@
 // * https://github.com/facebook/react-native/blob/0.60-stable/template/android/app/build.gradle
 //   original location:
 //   - https://github.com/facebook/react-native/blob/0.58-stable/local-cli/templates/HelloWorld/android/app/build.gradle
+def detectReactNativeVersion() {
+    def rnVersionString = detectReactNativeVersionString().replaceAll('^0+\\.', '')
+    return new java.math.BigDecimal(rnVersionString)
+}
+def detectReactNativeVersionString() {
+    return "node --print JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'),'utf-8')).version"
+            .execute(null, rootDir).text
+            .trim()
+}
+def REACT_NATIVE_VERSION = detectReactNativeVersion()
+
+allprojects {
+    configurations.all {
+        resolutionStrategy {
+            force "com.facebook.react:react-native:" + detectReactNativeVersionString()
+        }
+    }
+}
 
 buildscript {
     ext {
@@ -29,7 +47,6 @@ buildscript {
         dependencies {
             classpath 'com.android.tools.build:gradle:7.3.1'
             classpath "org.jlleitschuh.gradle:ktlint-gradle:9.2.1"
-            classpath("com.facebook.react:react-native-gradle-plugin")
         }
     }
     repositories {
@@ -38,14 +55,12 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath("com.facebook.react:react-native-gradle-plugin")
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 apply plugin: 'kotlin-android'
-apply plugin: "com.facebook.react"
 
 def DEFAULT_COMPILE_SDK_VERSION = 33
 def DEFAULT_BUILD_TOOLS_VERSION = '33.0.2'
@@ -88,12 +103,20 @@ repositories {
     google()
     maven { url 'https://jitpack.io' }
     mavenCentral()
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url("$rootDir/../node_modules/react-native/android")
+    }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    //noinspection GradleDynamicVersion
-    implementation "com.facebook.react:react-android:0.71.8"
+    if (REACT_NATIVE_VERSION >= 71) {
+        implementation "com.facebook.react:react-android:"
+    } else {
+        // noinspection GradleDynamicVersion
+        implementation 'com.facebook.react:react-native:+'
+    }
     implementation 'com.exponea.sdk:sdk:3.6.1'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'org.danilopianini:gson-extras:0.2.2'
