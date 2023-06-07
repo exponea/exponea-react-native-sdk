@@ -18,6 +18,16 @@ Exponea Android SDK supports these integrations:
 ### Integrating Firebase into your project
 To send/receive push notifications, you have to set up the Firebase project. [Official Firebase documentation](https://firebase.google.com/docs/android/setup#console) describes this process. You'll need to create a project in the Firebase console, add generated `google-services.json` to your app and update Gradle scripts.
 
+Dependency of Firebase messaging has to be added into `android/app/build.gradle`
+
+```groovy
+dependencies {
+    ...
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    ...
+}
+```
+
 > When following the Firebase documentation, the root of your Android project is `/android`.
 
 #### Checklist:

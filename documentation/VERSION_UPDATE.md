@@ -12,11 +12,23 @@ This guide will help you upgrade your Exponea SDK to the new version.
 
  We decided not to include the implementation of FirebaseMessagingService in our SDK since we want to keep it as small as possible and avoid including the libraries that are not essential for its functionality. SDK no longer has a dependency on the firebase library. Changes you will need to do are as follows:
 
-1. You will need to implement FirebaseMessagingService on your android application side.
-2. Call `ExponeaModule.Companion.handleRemoteMessage` when a message is received
-3. Call `ExponeaModule.Companion.handleNewToken` when a token is obtained
-4. Register this service in your `AndroidManifest.xml`
+1. Add dependency of Firebase messaging into your dependencies
+2. You will need to implement FirebaseMessagingService on your android application side.
+3. Call `ExponeaModule.Companion.handleRemoteMessage` when a message is received
+4. Call `ExponeaModule.Companion.handleNewToken` when a token is obtained
+5. Register this service in your `AndroidManifest.xml`
 
+Dependency of Firebase messaging has to be added into `android/app/build.gradle`
+
+```groovy
+dependencies {
+    ...
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    ...
+}
+```
+
+Example of registered `MessageService` that has to extend `FirebaseMessagingService`:
 ```java
 import android.app.NotificationManager;  
 import android.content.Context;  
@@ -48,6 +60,7 @@ public class MessageService extends FirebaseMessagingService {
 }
 ```
 
+Register your `MessageService` into your `AndroidManifest.xml` as:
 ```xml
 ...
 <application>  
