@@ -1,6 +1,17 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.5.1
+#### June 08, 2023
+* Features
+  * App Inbox styling used directly from native SDKs
+* Bug Fixes
+  * Fixed: Swift path fixed for XCode14.2+ in iOS part
+  * Fixed: RN 71.8 has been used for any Android build; Now a REACT_NATIVE_VERSION guides a build process
+  * Fixed: Android app build was crashing because of unnecessary codegenConfig
+  * Fixed: Adding of Firebase dependency was missing from migration documentations 
+
+
 ## Release Notes for 1.5.0
 #### May 23, 2023
 * Features
