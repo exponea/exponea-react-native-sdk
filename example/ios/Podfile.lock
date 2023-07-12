@@ -3,8 +3,8 @@ PODS:
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.16.3):
-    - SwiftSoup (= 2.4.3)
+  - ExponeaSDK (2.16.4):
+    - SwiftSoup (= 2.6.1)
   - ExponeaSDK-Notifications (2.16.3)
   - FBLazyVector (0.71.8)
   - FBReactNativeSpec (0.71.8):
@@ -301,9 +301,9 @@ PODS:
   - React-jsinspector (0.71.8)
   - React-logger (0.71.8):
     - glog
-  - react-native-exponea-sdk (1.5.0):
+  - react-native-exponea-sdk (1.5.1):
     - AnyCodable-FlightSchool (= 0.4.0)
-    - ExponeaSDK (= 2.16.3)
+    - ExponeaSDK (= 2.16.4)
     - React-Core
   - react-native-safe-area-context (3.4.1):
     - React-Core
@@ -425,7 +425,7 @@ PODS:
     - React-Core
     - React-RCTImage
   - SocketRocket (0.6.0)
-  - SwiftSoup (2.4.3)
+  - SwiftSoup (2.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -606,7 +606,7 @@ SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  ExponeaSDK: 53b30453dd9fb347e0641e436f12d30788727e25
+  ExponeaSDK: 68f0ae7c0cb8cc6a1452b9ca53d0feaba581c93c
   ExponeaSDK-Notifications: 298fe6dccc163de718d176782ae9df25f9dc7104
   FBLazyVector: f637f31eacba90d4fdeff3fa41608b8f361c173b
   FBReactNativeSpec: 0d9a4f4de7ab614c49e98c00aedfd3bfbda33d59
@@ -637,7 +637,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 9101857bcffac8dae43d76a7bc0a39bda593c756
   React-jsinspector: c712f9e3bb9ba4122d6b82b4f906448b8a281580
   React-logger: 342f358b8decfbf8f272367f4eacf4b6154061be
-  react-native-exponea-sdk: 5a7c1e46479e3e6e7e33ce31cb221652b83dd2fa
+  react-native-exponea-sdk: 54600ca1ad123b5a3fff9ff87b2335ff6cf08933
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   React-perflogger: d21f182895de9d1b077f8a3cd00011095c8c9100
   React-RCTActionSheet: 0151f83ef92d2a7139bba7dfdbc8066632a6d47b
@@ -658,7 +658,7 @@ SPEC CHECKSUMS:
   RNReanimated: f186e85d9f28c9383d05ca39e11dd194f59093ec
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
-  SwiftSoup: 3384f2e618cfc1b3cbc7852c16692fe8de13fb8f
+  SwiftSoup: 5dd2c1b06afc964f30d99894af6ede22ede627aa
   Yoga: 065f0b74dba4832d6e328238de46eb72c5de9556
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
