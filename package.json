@@ -37,7 +37,7 @@
   "licenseFilename": "https://opensource.org/licenses/MIT",
   "readmeFilename": "README.md",
   "peerDependencies": {
-    "react": "^17.0.2",
+    "react": "^17.0.2 || ^18.0.0",
     "react-native": "<=0.71.8"
   },
   "devDependencies": {
