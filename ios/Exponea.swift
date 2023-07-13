@@ -18,7 +18,7 @@ protocol IsExponeaReactNativeSDK {
 public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     required public override init() { }
     public func getVersion() -> String {
-        "1.5.1"
+        "1.5.2"
     }
 }
 

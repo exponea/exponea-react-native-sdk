@@ -1,6 +1,14 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.5.2
+#### July 13, 2023
+* Features
+  * Native iOS SDK updated to 2.16.4 version to XCode 14.3 support
+* Bug Fixes
+  * Fixed: Peer dependency to react was invalid
+
+
 ## Release Notes for 1.5.1
 #### June 08, 2023
 * Features
