@@ -81,7 +81,7 @@ project.ext.react = [
     enableHermes: false  // clean and rebuild if changing
 ]
 
-apply from: "../../node_modules/react-native/react.gradle"
+//apply from: "../../node_modules/react-native/react.gradle"
 
 if (getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains("gms")) {
     apply plugin: 'com.google.gms.google-services'

@@ -48,3 +48,6 @@ buck-out/
 
 # Pods
 /ios/Pods
+
+# testing
+/coverage
