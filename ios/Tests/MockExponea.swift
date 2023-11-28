@@ -96,6 +96,8 @@ class MockExponea: ExponeaType {
         }
     }
 
+    var inAppContentBlocksManager: ExponeaSDK.InAppContentBlocksManagerType?
+
     var safeModeEnabled: Bool {
         get { fatalError("Not implemented") }
         set { fatalError("Not implemented \(newValue)") }
@@ -130,6 +132,7 @@ class MockExponea: ExponeaType {
         pushNotificationTracking: Exponea.PushNotificationTracking,
         automaticSessionTracking: Exponea.AutomaticSessionTracking,
         defaultProperties: [String: JSONConvertible]?,
+        inAppContentBlocksPlaceholders: [String]?,
         flushingSetup: Exponea.FlushingSetup,
         allowDefaultCustomerProperties: Bool?,
         advancedAuthEnabled: Bool?
@@ -155,6 +158,7 @@ class MockExponea: ExponeaType {
         baseUrl: String?,
         appGroup: String?,
         defaultProperties: [String: JSONConvertible]?,
+        inAppContentBlocksPlaceholders: [String]?,
         allowDefaultCustomerProperties: Bool?,
         advancedAuthEnabled: Bool?
     ) {
@@ -168,6 +172,7 @@ class MockExponea: ExponeaType {
         baseUrl: String?,
         appGroup: String?,
         defaultProperties: [String: JSONConvertible]?,
+        inAppContentBlocksPlaceholders: [String]?,
         allowDefaultCustomerProperties: Bool?,
         advancedAuthEnabled: Bool?
     ) {

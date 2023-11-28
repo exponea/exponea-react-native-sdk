@@ -146,7 +146,9 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should set default properties`() {
-        Exponea.init(ApplicationProvider.getApplicationContext(), ExponeaConfiguration())
+        Exponea.init(ApplicationProvider.getApplicationContext(), ExponeaConfiguration(
+            projectToken = "mockToken"
+        ))
         module.setDefaultProperties(
             JavaOnlyMap.of(),
             MockResolvingPromise { assertEquals(hashMapOf<String, Any>(), Exponea.defaultProperties) }

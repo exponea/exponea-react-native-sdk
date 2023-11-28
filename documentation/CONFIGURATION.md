@@ -84,6 +84,8 @@ You can see the Typescript definition for Configuration object at [src/Configura
 
 * **advancedAuthEnabled** If true, Customer Token authentication is used for communication with BE for API listed in [Authorization](./AUTHORIZATION.md) document.
 
+* **inAppContentBlockPlaceholdersAutoLoad** Automatically load content of In-app content blocks assigned to these Placeholder IDs
+
 * **android** Specific configuration for Android
 
 * **ios** Specific configuration for iOS

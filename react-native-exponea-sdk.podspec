@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React-Core"
-  s.dependency "ExponeaSDK", "2.16.4"
+  s.dependency "ExponeaSDK", "2.20.0"
   s.dependency "AnyCodable-FlightSchool", "0.4.0"
 
   # Don't install the dependencies when we run `pod install` in the old architecture.

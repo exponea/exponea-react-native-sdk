@@ -85,6 +85,7 @@ class Exponea: RCTEventEmitter {
                 pushNotificationTracking: try parser.parsePushNotificationTracking(),
                 automaticSessionTracking: try parser.parseSessionTracking(),
                 defaultProperties: try parser.parseDefaultProperties(),
+                inAppContentBlocksPlaceholders: try parser.parseInAppContentBlocksPlaceholders(),
                 flushingSetup: try parser.parseFlushingSetup(),
                 allowDefaultCustomerProperties: try parser.parseAllowDefaultCustomerProperties(),
                 advancedAuthEnabled: try parser.parseAdvancedAuthEnabled()

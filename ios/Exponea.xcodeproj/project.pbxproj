@@ -32,6 +32,8 @@
 		05FD3772248FDE7F0078847C /* Exponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD3771248FDE7F0078847C /* Exponea.swift */; };
 		1A1686B3D648AB9F9CCAFDD9 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69FD96B26429EAD2DDF2E8BE /* libPods-Tests.a */; };
 		50A439BE1C21B62F27753C91 /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 976E6ED146A8BE7F4CB81AAA /* libPods-Exponea.a */; };
+		550CAAB52B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550CAAB42B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift */; };
+		550CAAB72B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */; };
 		5597718C2A14E63E009EAB3D /* Exponea+InAppMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597718B2A14E63E009EAB3D /* Exponea+InAppMessage.swift */; };
 		55B0FEC729A78B9A00F8FB7C /* Exponea+AppInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */; };
 		55F4BB3729A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */; };
@@ -91,6 +93,8 @@
 		05FD3773248FDFDD0078847C /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		07EB3281CEB025E5B3DDC15B /* Pods-Exponea.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.debug.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.debug.xcconfig"; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libExponea.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExponea.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		550CAAB42B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNInAppContentBlocksPlaceholderManager.swift; sourceTree = "<group>"; };
+		550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNInAppContentBlocksPlaceholderManager.m; sourceTree = "<group>"; };
 		5597718B2A14E63E009EAB3D /* Exponea+InAppMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+InAppMessage.swift"; sourceTree = "<group>"; };
 		55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+AppInbox.swift"; sourceTree = "<group>"; };
 		55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNAppInboxButtonManager.swift; sourceTree = "<group>"; };
@@ -165,6 +169,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */,
+				550CAAB42B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift */,
 				5597718B2A14E63E009EAB3D /* Exponea+InAppMessage.swift */,
 				55F4BB3829A8C3FB00CEDC7C /* RNAppInboxButtonManager.m */,
 				55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */,
@@ -216,6 +222,7 @@
 				05C542C32490E0010095903D /* Resources */,
 				05C542D02490E21F0095903D /* ShellScript */,
 				E545B6F81471575B57B6C9AB /* [CP] Copy Pods Resources */,
+				89026A4303671E0E2EBF32A5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -336,6 +343,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		89026A4303671E0E2EBF32A5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		8AF496C03A45D2BFF022565C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -406,6 +431,7 @@
 				05FD376F248FDE5A0078847C /* Exponea.m in Sources */,
 				052DAEA724A225F600A7A0A5 /* Exponea+Fetching.swift in Sources */,
 				05E660E3249A4C2F0033B199 /* ConfigurationParser.swift in Sources */,
+				550CAAB72B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m in Sources */,
 				05C69B8E249CF511008A4D9D /* ExponeaError.swift in Sources */,
 				05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */,
 				55F4BB3929A8C3FB00CEDC7C /* RNAppInboxButtonManager.m in Sources */,
@@ -418,6 +444,7 @@
 				052DAEA524A225C400A7A0A5 /* Exponea+Tracking.swift in Sources */,
 				55F4BB3729A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift in Sources */,
 				052DAEA924A2465400A7A0A5 /* Exponea+Anonymize.swift in Sources */,
+				550CAAB52B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -31,6 +31,8 @@ interface Configuration {
   android?: AndroidConfiguration;
   /** Platform specific settings for iOS */
   ios?: IOSConfiguration;
+  /** Automatically load content of In-app content blocks assigned to these Placeholder IDs */
+  inAppContentBlockPlaceholdersAutoLoad?: Array<string>
 }
 
 export interface AndroidConfiguration {

@@ -12,12 +12,15 @@ import trackIcon from '../img/track.png';
 import fetchIcon from '../img/fetch.png';
 import flushIcon from '../img/flush.png';
 import logIcon from '../img/log.png';
+import inAppCbIcon from '../img/content_blocks.png';
+import InAppCbScreen from './InAppCbScreen';
 
 enum Screen {
   Tracking = 'Tracking',
   Fetching = 'Fetching',
   Flushing = 'Flushing',
   Config = 'Config',
+  InAppCB = 'In-app CB',
 }
 
 const Tab = createBottomTabNavigator();
@@ -45,6 +48,11 @@ export default function TabNavigation(): React.ReactElement {
         name={Screen.Config}
         component={ConfigScreen}
       />
+      <Tab.Screen
+        options={getTabBarOptions(Screen.InAppCB)}
+        name={Screen.InAppCB}
+        component={InAppCbScreen}
+      />
     </Tab.Navigator>
   );
 }
@@ -59,6 +67,8 @@ function getIcon(name: Screen) {
       return flushIcon;
     case Screen.Config:
       return logIcon;
+    case Screen.InAppCB:
+      return inAppCbIcon;
   }
 }
 

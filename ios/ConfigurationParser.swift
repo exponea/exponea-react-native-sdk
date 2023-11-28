@@ -124,4 +124,8 @@ class ConfigurationParser {
     func parseAdvancedAuthEnabled() throws -> Bool? {
         return try dictionary.getOptionalSafely(property: "advancedAuthEnabled")
     }
+
+    func parseInAppContentBlocksPlaceholders() throws -> [String] {
+        return try dictionary.getOptionalSafely(property: "inAppContentBlockPlaceholdersAutoLoad") ?? []
+    }
 }

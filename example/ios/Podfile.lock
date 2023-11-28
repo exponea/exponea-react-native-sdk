@@ -3,9 +3,9 @@ PODS:
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.16.4):
+  - ExponeaSDK (2.20.0):
     - SwiftSoup (= 2.6.1)
-  - ExponeaSDK-Notifications (2.16.3)
+  - ExponeaSDK-Notifications (2.20.0)
   - FBLazyVector (0.72.6)
   - FBReactNativeSpec (0.72.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -349,7 +349,7 @@ PODS:
     - glog
   - react-native-exponea-sdk (1.5.2):
     - AnyCodable-FlightSchool (= 0.4.0)
-    - ExponeaSDK (= 2.16.4)
+    - ExponeaSDK (= 2.20.0)
     - React-Core
   - react-native-safe-area-context (3.4.1):
     - React-Core
@@ -689,8 +689,8 @@ SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  ExponeaSDK: 68f0ae7c0cb8cc6a1452b9ca53d0feaba581c93c
-  ExponeaSDK-Notifications: 298fe6dccc163de718d176782ae9df25f9dc7104
+  ExponeaSDK: 5f1e5cd77dafded29a7f654bc38db40bed100eaf
+  ExponeaSDK-Notifications: e1526805724729a97a0b774b834fda037cce1e17
   FBLazyVector: 748c0ef74f2bf4b36cfcccf37916806940a64c32
   FBReactNativeSpec: 966f29e4e697de53a3b366355e8f57375c856ad9
   Flipper: 6edb735e6c3e332975d1b17956bcc584eccf5818
@@ -720,7 +720,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: faca9c368233f59ed24601aca0185870466a96e9
   React-jsinspector: 194e32c6aab382d88713ad3dd0025c5f5c4ee072
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
-  react-native-exponea-sdk: 8589512f1ed302fa70c15830abedb29f9cdfc4a4
+  react-native-exponea-sdk: 937b5c275b816f5a1a01f521d149b13759c5e872
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   React-NativeModulesApple: 63505fb94b71e2469cab35bdaf36cca813cb5bfd
   React-perflogger: e3596db7e753f51766bceadc061936ef1472edc3
@@ -749,6 +749,6 @@ SPEC CHECKSUMS:
   Yoga: b76f1acfda8212aa16b7e26bcce3983230c82603
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: d68ac50c9e165e62133828ba6fec99d6e5cb0a45
+PODFILE CHECKSUM: 054bda3c53e0577793996547a5f53c2a50ed0b1b
 
 COCOAPODS: 1.13.0

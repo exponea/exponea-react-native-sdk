@@ -1,9 +1,7 @@
 import React from 'react';
 import {View, requireNativeComponent, ViewProps} from 'react-native';
 
-interface AppInboxButtonProps extends ViewProps {
-  style: {width: string; height: number};
-}
+type AppInboxButtonProps = ViewProps
 
 export default function AppInboxButton(
   props: AppInboxButtonProps,

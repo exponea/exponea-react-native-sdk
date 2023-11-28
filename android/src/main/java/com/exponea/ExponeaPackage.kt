@@ -1,6 +1,7 @@
 package com.exponea
 
 import com.exponea.widget.AppInboxButtonManager
+import com.exponea.widget.InAppContentBlocksPlaceholderManager
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
@@ -17,7 +18,8 @@ class ExponeaPackage : ReactPackage {
         reactContext: ReactApplicationContext
     ): MutableList<ViewManager<*, *>> {
         return arrayListOf(
-            AppInboxButtonManager()
+            AppInboxButtonManager(),
+            InAppContentBlocksPlaceholderManager()
         )
     }
 }

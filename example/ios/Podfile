@@ -5,7 +5,7 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
-platform :ios, '12.4'
+platform :ios, '13.4'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'example' do
@@ -42,6 +42,8 @@ target 'example' do
         :mac_catalyst_enabled => false
     )
 
+    __apply_Xcode_12_5_M1_post_install_workaround(pi)
+
     # Flipper requires a crude patch to bump up iOS deployment target, or "error: thread-local storage is not supported for the current target"
     # I'm not aware of any other way to fix this one other than bumping iOS deployment target to match react-native (iOS 11 now)
 
@@ -49,18 +51,17 @@ target 'example' do
     # https://github.com/facebook/flipper/issues/834 - 84 comments and still going...
     `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/RCT-Folly/folly/portability/Time.h`
     `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/Flipper-Folly/Time.h`
-    deployment_target = Gem::Version.new('12.4')
+    deployment_target = Gem::Version.new('13.4')
     pi.pods_project.targets.each do |target|
-        # Explicitly set pods deployment target for each build config to app deployment target
-          target.build_configurations.each do |config|
+        target.build_configurations.each do |config|
+            # Explicitly set pods deployment target for each build config to app deployment target
             current_pod_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
             pod_ios_deployment_target = Gem::Version.new(current_pod_target)
             if pod_ios_deployment_target <= deployment_target
-              config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+                config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
             end
-          end
+        end
     end
-
   end
 end
 

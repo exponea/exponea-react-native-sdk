@@ -112,12 +112,12 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     if (REACT_NATIVE_VERSION >= 71) {
-        implementation "com.facebook.react:react-android:"
+        implementation "com.facebook.react:react-android:0.72.6"
     } else {
         // noinspection GradleDynamicVersion
         implementation 'com.facebook.react:react-native:+'
     }
-    implementation 'com.exponea.sdk:sdk:3.6.1'
+    implementation 'com.exponea.sdk:sdk:3.10.0'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'org.danilopianini:gson-extras:0.2.2'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'

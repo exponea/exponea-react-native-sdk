@@ -55,6 +55,7 @@ export default class App extends React.Component<{}, AppState> {
       }, 1000);
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Exponea.setInAppMessageCallback(false, true, (action) => {
       console.log('InApp action received - App.tsx');
     });
@@ -85,9 +86,6 @@ export default class App extends React.Component<{}, AppState> {
     advancedAuthKey: string,
     baseUrl: string,
   ): void {
-    console.log(
-      `Configuring Exponea SDK with ${projectToken}, ${authorization}, ${advancedAuthKey} and ${baseUrl}`,
-    );
     Exponea.setLogLevel(LogLevel.VERBOSE);
     Exponea.checkPushSetup();
     // Prepare Example Advanced Auth
@@ -129,12 +127,13 @@ export default class App extends React.Component<{}, AppState> {
         },
       },
     });
-    Exponea.configure({
+    const configuration = {
       projectToken: projectToken,
       authorizationToken: authorization,
       baseUrl: baseUrl,
       allowDefaultCustomerProperties: false,
-      advancedAuthEnabled: (advancedAuthKey || '').trim().length != 0,
+      advancedAuthEnabled: (advancedAuthKey || '').trim().length !== 0,
+      inAppContentBlockPlaceholdersAutoLoad: ['example_top'],
       ios: {
         appGroup: 'group.com.exponea.ExponeaSDK-Example2',
       },
@@ -142,7 +141,11 @@ export default class App extends React.Component<{}, AppState> {
         pushIconResourceName: 'push_icon',
         pushAccentColorRGBA: '161, 226, 200, 220',
       },
-    })
+    };
+    console.log(
+      `Configuring Exponea SDK with ${JSON.stringify(configuration)}`,
+    );
+    Exponea.configure(configuration)
       .then(() => {
         this.setState({sdkConfigured: true});
       })

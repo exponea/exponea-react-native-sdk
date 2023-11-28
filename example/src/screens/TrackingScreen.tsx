@@ -1,12 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-  Platform,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, View, Alert, Platform} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 import ExponeaButton from '../components/ExponeaButton';
 import IdentifyCustomerModal from '../components/IdentifyCustomerModal';
@@ -102,7 +96,7 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
           onPress={() => {
             Exponea.fetchAppInbox()
               .then((list) => {
-                if (list.length == 0) {
+                if (list.length === 0) {
                   console.log('AppInbox is empty, identifyCustomer!');
                   return;
                 }

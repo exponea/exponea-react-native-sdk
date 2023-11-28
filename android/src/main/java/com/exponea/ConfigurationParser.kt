@@ -129,6 +129,13 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     )
                     parseAndroidConfig(androidConfig, context)
                 }
+                "inAppContentBlockPlaceholdersAutoLoad" -> {
+                    val placeholderIds = map.getNullSafelyArray(
+                        "inAppContentBlockPlaceholdersAutoLoad",
+                        emptyList<String>()
+                    ) ?: emptyList()
+                    configuration.inAppContentBlockPlaceholdersAutoLoad = placeholderIds
+                }
             }
         }
         return configuration
