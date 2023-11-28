@@ -75,6 +75,10 @@ You can see the Typescript definition for Configuration object at [src/Configura
 * **automaticSessionTracking** By default, the SDK tracks sessions for you. You can opt-out and implement your own session tracking.
 
 * **pushTokenTrackingFrequency** You can define your policy for tracking push notification token. Default value `ON_TOKEN_CHANGE` is recommended.
+  * Possible values are:
+    * ON_TOKEN_CHANGE - tracks push token if differs from previous tracked one
+    * EVERY_LAUNCH - tracks push token always
+    * DAILY - tracks push token once per day
 
 * **allowDefaultCustomerProperties** Flag to apply `defaultProperties` list to `identifyCustomer` tracking event. Default value `true` is used if is not defined.
 
