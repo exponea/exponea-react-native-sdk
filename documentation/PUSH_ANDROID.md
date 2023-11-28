@@ -115,7 +115,7 @@ import com.exponea.ExponeaModule;
 import com.huawei.hms.push.HmsMessageService;  
 import com.huawei.hms.push.RemoteMessage;  
   
-public class MessageService extends FirebaseMessagingService {  
+public class MessageService extends HmsMessageService {  
   
     @Override  
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {  
@@ -211,14 +211,13 @@ There is principal usage of `Exponea.anonymize()` as a sign-out feature in some 
 ```kotlin
 import com.facebook.react.ReactActivity;
 import com.exponea.sdk.Exponea
-import com.google.firebase.installations.FirebaseMessaging
+import com.huawei.hms.aaid.HmsInstanceId
 
 class SomeActivity : ReactActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-	    FirebaseMessaging.getInstance().token.addOnSuccessListener {
-                ExponeaModule.Companion.handleNewHmsToken(applicationContext, it)
-            }
+        val token = HmsInstanceId.getInstance(context).getToken("yourAppId", "HCM")
+        ExponeaModule.Companion.trackHmsPushToken(token)
 	}
 }
 ```
