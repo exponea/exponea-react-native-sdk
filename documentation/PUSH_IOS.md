@@ -172,6 +172,15 @@ class YourClass {
 }
 ```
 
+### Show notification if app is in foreground
+
+``` objc
+- (void)userNotificationCenter:(UNUserNotificationCenter* )center willPresentNotification:(UNNotification* )notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
+    completionHandler(UNNotificationPresentationOptionAlert);
+}
+```
+This method in your AppDelegate.m is called by system if app is in foreground state. Default implementation is to not showing of push notification and userNotificationCenter::didReceive is called automatically what tracks clicked event.
+
 #### Checklist:
  - push notification with image and buttons sent from Exponea web app should be properly displayed on your device. Push delivery tracking should work.
  - if you don't see buttons in the expanded push notification, it means the content extension is **not** running. Double check `UNNotificationExtensionCategory` in the Info.plist - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for extensions and main app.
