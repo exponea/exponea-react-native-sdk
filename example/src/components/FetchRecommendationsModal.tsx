@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, Alert, View} from 'react-native';
+import {StyleSheet, Text, Alert, View, ScrollView} from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
 import ExponeaModal from './ExponeaModal';
 import PropertyEditor from './PropertyEditor';
@@ -8,7 +8,6 @@ import ExponeaInput from './ExponeaInput';
 import {RecommendationOptions} from 'react-native-exponea-sdk/lib/Recommendation';
 import ExponeaPicker from './ExponeaPicker';
 import ListEditor from './ListEditor';
-import {ScrollView} from 'react-native-gesture-handler';
 
 interface FetchRecommendationsModalProps {
   visible: boolean;
