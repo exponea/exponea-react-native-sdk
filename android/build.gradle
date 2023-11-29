@@ -19,11 +19,12 @@ def detectReactNativeVersionString() {
             .trim()
 }
 def REACT_NATIVE_VERSION = detectReactNativeVersion()
+def REACT_NATIVE_VERSION_STRING = detectReactNativeVersionString()
 
 allprojects {
     configurations.all {
         resolutionStrategy {
-            force "com.facebook.react:react-native:" + detectReactNativeVersionString()
+            force "com.facebook.react:react-native:" + REACT_NATIVE_VERSION_STRING
         }
     }
 }
@@ -112,7 +113,7 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     if (REACT_NATIVE_VERSION >= 71) {
-        implementation "com.facebook.react:react-android:0.72.6"
+        implementation "com.facebook.react:react-android:" + REACT_NATIVE_VERSION_STRING
     } else {
         // noinspection GradleDynamicVersion
         implementation 'com.facebook.react:react-native:+'
