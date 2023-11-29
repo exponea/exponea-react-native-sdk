@@ -1,6 +1,19 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.6.0
+#### November 29, 2023
+* Features
+  * In-app content block feature has been added into SDK
+  * ReactNative support increased to 0.72.7
+  * Anonymize feature has been described with more details in documentation
+  * PUSH notification Payload structure has been documented
+  * PUSH handling described with more details in documentation
+  * Tracking of PUSH token has been described with more details in documentation
+* Bug Fixes
+  * Fixed: HMS token usage example in docu misused methods for GMS
+
+
 ## Release Notes for 1.5.2
 #### July 13, 2023
 * Features
