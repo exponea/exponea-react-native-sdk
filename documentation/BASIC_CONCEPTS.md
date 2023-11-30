@@ -28,7 +28,9 @@ async function cookieLogger() {
 React native applications code can be reloaded without restarting the native application itself, which speeds up the development process, but it also means that native code usually continues to run as if nothing happens. You should only configure the SDK once, when developing with hot reload enabled, you should check `Exponea.isConfigured()` before configuring Exponea SDK.
 
 ### Example
-``` javascript
+``` typescript
+import Configuration from 'react-native-exponea-sdk/lib/Configuration';
+
 async function configureExponea(configuration: Configuration) {
   try {
     if (!await Exponea.isConfigured()) {

@@ -31,6 +31,8 @@ React native applications code can be reloaded without restarting the native app
 
 Example
 ``` typescript
+import Configuration from 'react-native-exponea-sdk/lib/Configuration';
+
 async function configureExponea(configuration: Configuration) {
   try {
     if (!await Exponea.isConfigured()) {
