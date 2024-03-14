@@ -14,14 +14,7 @@ import flushIcon from '../img/flush.png';
 import logIcon from '../img/log.png';
 import inAppCbIcon from '../img/content_blocks.png';
 import InAppCbScreen from './InAppCbScreen';
-
-enum Screen {
-  Tracking = 'Tracking',
-  Fetching = 'Fetching',
-  Flushing = 'Flushing',
-  Config = 'Config',
-  InAppCB = 'In-app CB',
-}
+import {Screen} from './Screens'
 
 const Tab = createBottomTabNavigator();
 

@@ -347,7 +347,7 @@ PODS:
   - React-jsinspector (0.72.7)
   - React-logger (0.72.7):
     - glog
-  - react-native-exponea-sdk (1.5.2):
+  - react-native-exponea-sdk (1.6.0):
     - AnyCodable-FlightSchool (= 0.4.0)
     - ExponeaSDK (= 2.20.0)
     - React-Core
@@ -698,7 +698,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 10e6c77ff6b32274b8d152d08ed0328c4b30a821
   React-jsinspector: 8baadae51f01d867c3921213a25ab78ab4fbcd91
   React-logger: 8edc785c47c8686c7962199a307015e2ce9a0e4f
-  react-native-exponea-sdk: 937b5c275b816f5a1a01f521d149b13759c5e872
+  react-native-exponea-sdk: f1ee80d5cbfcb5648ac60b6ec5b7317c4ec1725c
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   React-NativeModulesApple: 6f63747fd6e237b646c61957a8f877a2713617af
   React-perflogger: 31ea61077185eb1428baf60c0db6e2886f141a5a
@@ -729,4 +729,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 054bda3c53e0577793996547a5f53c2a50ed0b1b
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.15.0

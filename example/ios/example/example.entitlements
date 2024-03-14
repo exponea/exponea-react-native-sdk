@@ -8,6 +8,7 @@
 	<array>
 		<string>webcredentials:panaxeo.com</string>
 		<string>applinks:panaxeo.com</string>
+		<string>applinks:old.panaxeo.com</string>
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>

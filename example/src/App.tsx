@@ -7,6 +7,8 @@ import {Alert, Linking, NativeModules} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 import PreloadingScreen from './screens/PreloadingScreen';
 import {LogLevel} from 'react-native-exponea-sdk/lib/ExponeaType';
+import * as RootNavigation from './util/RootNavigation';
+import {Screen} from './screens/Screens'
 
 interface AppState {
   preloaded: boolean;
@@ -22,15 +24,26 @@ export default class App extends React.Component<{}, AppState> {
     sdkConfigured: false,
   };
 
+  resolveDeeplinkDestination(url) {
+    if (url.includes('flush')) return Screen.Flushing
+    if (url.includes('track')) return Screen.Tracking
+    if (url.includes('manual')) return Screen.Fetching
+    if (url.includes('anonymize')) return Screen.Config
+    if (url.includes('inappcb')) return Screen.InAppCB
+    return null
+  }
+
   componentDidMount(): void {
     const openLink = (url: string | null) => {
       if (url != null) {
         setTimeout(() => {
-          console.log(`Link received url: ${url}`);
+          RootNavigation.navigate(this.resolveDeeplinkDestination(url))
+          console.log(`Link received: ${url}`);
           Alert.alert('Link received', `Url: ${url}`);
         }, 1000);
       }
     };
+
     Linking.addEventListener('url', (e) => openLink(e.url));
     Linking.getInitialURL().then(openLink);
 
@@ -70,7 +83,7 @@ export default class App extends React.Component<{}, AppState> {
       return <PreloadingScreen />;
     }
     return (
-      <NavigationContainer>
+      <NavigationContainer ref={RootNavigation.navigationRef}>
         {this.state.sdkConfigured ? (
           <TabNavigation />
         ) : (
