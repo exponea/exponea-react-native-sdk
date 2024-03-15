@@ -40,7 +40,7 @@ Exponea.identifyCustomer(
   {payingCustomer: true} // customer properties
 )
 ```
-> You can find more information about identifying customers, soft vs. hard IDs in [Exponea documentation](https://docs.exponea.com/docs/customer-identification)
+> You can find more information about identifying customers, soft vs. hard IDs in [Exponea documentation](https://documentation.bloomreach.com/engagement/docs/customer-identification)
 
 ## Default properties
 In [Configuration](./CONFIGURATION.md), you can set values in the to be sent in every tracking event. You can use them to track e.g. your application settings. Keep in mind these values will be overwritten if the tracking event has properties with the same key name.

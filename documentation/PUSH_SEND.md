@@ -11,7 +11,7 @@ Exponea web app provides great notifications builder, where you can customize al
 
   ![](images/send2.png)
 
-3. This will open a **Campaign Builder** where you can specify when/how your push notification is triggered. You can drag and drop components from the menu and connect triggers to actions. You can find more information on Campaign Builder in [Exponea documentation](https://docs.exponea.com/docs/scenarios-1).
+3. This will open a **Campaign Builder** where you can specify when/how your push notification is triggered. You can drag and drop components from the menu and connect triggers to actions. You can find more information on Campaign Builder in [Exponea documentation](https://documentation.bloomreach.com/engagement/docs/scenarios-1).
 
   ![](images/send3.png)
 

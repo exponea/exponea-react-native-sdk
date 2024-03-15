@@ -1,9 +1,9 @@
 # iOS Push notification setup
-The setup process for iOS is a bit more complicated, in some complex scenarios it's best to refer to [native iOS SDK documentation](https://github.com/exponea/exponea-ios-sdk/blob/develop/Documentation/PUSH.md)
+The setup process for iOS is a bit more complicated, in some complex scenarios it's best to refer to [native iOS SDK documentation](https://documentation.bloomreach.com/engagement/docs/ios-sdk-push-notifications)
 
 > Exponea iOS SDK contains self-check functionality to help you successfully setup push notifications. Self-check will try to track push token, request Exponea backend to send silent push to the device and check the app is ready to open push notifications. To enable self-check call `Exponea.checkPushSetup()` **before** configuring the SDK.
 
-> The behaviour of Push delivery and click tracking may be affected by the tracking consent feature, which in enabled mode considers the requirement of explicit consent for tracking. Read more in [tracking consent documentation](https://github.com/exponea/exponea-ios-sdk/blob/develop/Documentation/TRACKING_CONSENT.md).
+> The behaviour of Push delivery and click tracking may be affected by the tracking consent feature, which in enabled mode considers the requirement of explicit consent for tracking. Read more in [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/ios-sdk-tracking-consent).
 
 ## Setup process
  1. [Setting application capabilities](#1-application-capabilities)

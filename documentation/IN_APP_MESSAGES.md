@@ -1,5 +1,5 @@
 ## In-app messages
-Exponea SDK allows you to display native in-app messages based on definitions set up on Exponea web application. You can find information on how to create your messages in [Exponea documentation](https://docs.exponea.com/docs/in-app-messages).
+Exponea SDK allows you to display native in-app messages based on definitions set up on Exponea web application. You can find information on how to create your messages in [Exponea documentation](https://documentation.bloomreach.com/engagement/docs/in-app-messages).
 
 No developer work is required for in-app messages, they work automatically after the SDK is configured.
 
