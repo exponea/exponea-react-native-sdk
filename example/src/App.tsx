@@ -37,9 +37,9 @@ export default class App extends React.Component<{}, AppState> {
     const openLink = (url: string | null) => {
       if (url != null) {
         setTimeout(() => {
-          RootNavigation.navigate(this.resolveDeeplinkDestination(url))
           console.log(`Link received: ${url}`);
           Alert.alert('Link received', `Url: ${url}`);
+          RootNavigation.navigate(this.resolveDeeplinkDestination(url))
         }, 1000);
       }
     };
