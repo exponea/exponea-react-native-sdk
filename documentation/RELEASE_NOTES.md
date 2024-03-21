@@ -1,6 +1,14 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.6.1
+#### March 21, 2024
+* Features
+  * Native iOS SDK updated to 2.24.0 version
+* Bug Fixes
+  * Fixed: Native iOS SDK - SDK notifies initialization finish prematurely and causes ignoring of postponed SDK API methods
+
+
 ## Release Notes for 1.6.0
 #### November 29, 2023
 * Features
