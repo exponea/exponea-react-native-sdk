@@ -3,13 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android --variant=GmsDebug",
+    "android": "react-native run-android --mode=GmsDebug",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
     "build": "tsc",
-    "postinstall": "react-native-fix-image",
     "check-dependencies": "rnx-align-deps",
     "fix-dependencies": "rnx-align-deps --write"
   },
@@ -24,9 +23,8 @@
     "@typescript-eslint/parser": "^5.10.0",
     "deprecated-react-native-prop-types": "^2.3.0",
     "react": "18.2.0",
-    "react-native": "0.72.7",
-    "react-native-exponea-sdk": "link:../",
-    "react-native-fix-image": "^2.1.0",
+    "react-native": "0.73.6",
+    "react-native-exponea-sdk": "file:../",
     "react-native-gesture-handler": "^2.2.0",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-picker-select": "^9.0.0",
@@ -50,7 +48,7 @@
     "react-native-typescript-transformer": "^1.2.13",
     "react-test-renderer": "18.2.0",
     "typescript": "4.8.4",
-    "@react-native/metro-config": "^0.72.7",
+    "@react-native/metro-config": "^0.73.5",
     "eslint-plugin-ft-flow": "3.0.1"
   },
   "engines": {

@@ -128,6 +128,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false)
 
 android {
+    namespace "com.exponea.example"
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {
