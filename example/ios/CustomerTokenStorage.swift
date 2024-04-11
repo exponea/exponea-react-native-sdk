@@ -45,15 +45,11 @@ class CustomerTokenStorage {
     func retrieveJwtToken() -> String? {
         let now = Date().timeIntervalSince1970
         let timeDiffMinutes = abs(now - lastTokenRequestTime) / 60.0
-        if timeDiffMinutes < 5 {
+        if tokenCache != nil && timeDiffMinutes < 5 {
             // allows request for token once per 5 minutes, doesn't care if cache is NULL
             return tokenCache
         }
         lastTokenRequestTime = now
-        if tokenCache != nil {
-            // return cached value
-            return tokenCache
-        }
         semaphore.sync(flags: .barrier) {
             // recheck nullity just in case
             if tokenCache == nil {

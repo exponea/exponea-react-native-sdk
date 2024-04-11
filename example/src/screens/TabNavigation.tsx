@@ -14,7 +14,7 @@ import flushIcon from '../img/flush.png';
 import logIcon from '../img/log.png';
 import inAppCbIcon from '../img/content_blocks.png';
 import InAppCbScreen from './InAppCbScreen';
-import {Screen} from './Screens'
+import {Screen} from './Screens';
 
 const Tab = createBottomTabNavigator();
 

@@ -8,7 +8,7 @@ import Exponea from 'react-native-exponea-sdk';
 import PreloadingScreen from './screens/PreloadingScreen';
 import {LogLevel} from 'react-native-exponea-sdk/lib/ExponeaType';
 import * as RootNavigation from './util/RootNavigation';
-import {Screen} from './screens/Screens'
+import {Screen} from './screens/Screens';
 
 interface AppState {
   preloaded: boolean;
@@ -25,12 +25,22 @@ export default class App extends React.Component<{}, AppState> {
   };
 
   resolveDeeplinkDestination(url) {
-    if (url.includes('flush')) return Screen.Flushing
-    if (url.includes('track')) return Screen.Tracking
-    if (url.includes('manual')) return Screen.Fetching
-    if (url.includes('anonymize')) return Screen.Config
-    if (url.includes('inappcb')) return Screen.InAppCB
-    return null
+    if (url.includes('flush')) {
+      return Screen.Flushing;
+    }
+    if (url.includes('track')) {
+      return Screen.Tracking;
+    }
+    if (url.includes('manual')) {
+      return Screen.Fetching;
+    }
+    if (url.includes('anonymize')) {
+      return Screen.Config;
+    }
+    if (url.includes('inappcb')) {
+      return Screen.InAppCB;
+    }
+    return null;
   }
 
   componentDidMount(): void {
@@ -39,7 +49,7 @@ export default class App extends React.Component<{}, AppState> {
         setTimeout(() => {
           console.log(`Link received: ${url}`);
           Alert.alert('Link received', `Url: ${url}`);
-          RootNavigation.navigate(this.resolveDeeplinkDestination(url))
+          RootNavigation.navigate(this.resolveDeeplinkDestination(url));
         }, 1000);
       }
     };

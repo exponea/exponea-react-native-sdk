@@ -6,6 +6,7 @@ module.exports = {
     '@react-native',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
   ],
   ignorePatterns: ['metro.config.js', 'js'],
   rules: {

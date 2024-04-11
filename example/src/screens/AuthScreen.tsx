@@ -14,10 +14,18 @@ interface AuthScreenProps {
 }
 
 export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
-  const [projectToken, setProjectToken] = React.useState('');
-  const [authorization, setAuthorization] = React.useState('');
-  const [advancedAuthKey, setAdvancedAuthKey] = React.useState('');
-  const [baseUrl, setBaseUrl] = React.useState('');
+  const [projectToken, setProjectToken] = React.useState(
+    '',
+  );
+  const [authorization, setAuthorization] = React.useState(
+    '',
+  );
+  const [advancedAuthKey, setAdvancedAuthKey] = React.useState(
+    '',
+  );
+  const [baseUrl, setBaseUrl] = React.useState(
+    '',
+  );
   const buttonDisabled =
     projectToken === '' || authorization === '' || baseUrl === '';
   return (
