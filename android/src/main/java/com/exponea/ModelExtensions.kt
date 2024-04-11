@@ -5,6 +5,8 @@ import com.exponea.sdk.models.CampaignData
 import com.exponea.sdk.models.CustomerRecommendation
 import com.exponea.sdk.models.CustomerRecommendationDeserializer
 import com.exponea.sdk.models.DateFilter
+import com.exponea.sdk.models.InAppContentBlock
+import com.exponea.sdk.models.InAppContentBlockAction
 import com.exponea.sdk.models.InAppMessage
 import com.exponea.sdk.models.InAppMessageButton
 import com.exponea.sdk.models.InAppMessagePayload
@@ -97,6 +99,32 @@ internal fun Map<String, Any?>.toInAppMessage(): InAppMessage? {
         isHtml = source.getNullSafely("is_html"),
         rawHasTrackingConsent = source.getNullSafely("has_tracking_consent"),
         consentCategoryTracking = source.getNullSafely("consent_category_tracking")
+    )
+}
+
+internal fun Map<String, Any?>.toInAppContentBlock(): InAppContentBlock? {
+    val source = this
+    val dateFilter = source.getNullSafelyMap<Any>("date_filter")?.toDateFilter() ?: return null
+    return InAppContentBlock(
+        id = source.getRequired("id"),
+        name = source.getRequired("name"),
+        dateFilter = dateFilter,
+        rawFrequency = source.getNullSafely("frequency"),
+        priority = source.getNullSafely("load_priority"),
+        consentCategoryTracking = source.getNullSafely("consentCategoryTracking"),
+        rawContentType = source.getNullSafely("rawContentType"),
+        content = source.getNullSafelyMap("content"),
+        placeholders = source.getRequired("placeholders")
+    )
+}
+
+internal fun Map<String, Any?>.toInAppContentBlockAction(): InAppContentBlockAction? {
+    val source = this
+    val dateFilter = source.getNullSafelyMap<Any>("date_filter")?.toDateFilter() ?: return null
+    return InAppContentBlockAction(
+        type = source.getRequired("type"),
+        name = source.getNullSafely("name"),
+        url = source.getNullSafely("url")
     )
 }
 

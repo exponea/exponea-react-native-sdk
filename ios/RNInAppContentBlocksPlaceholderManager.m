@@ -12,5 +12,7 @@
 
 @interface RCT_EXTERN_MODULE(RNInAppContentBlocksPlaceholderManager, RCTViewManager)
 RCT_EXPORT_VIEW_PROPERTY(placeholderId, NSString)
+RCT_EXPORT_VIEW_PROPERTY(overrideDefaultBehavior, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(onDimensChanged, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onInAppContentBlockEvent, RCTDirectEventBlock)
 @end

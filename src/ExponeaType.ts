@@ -206,6 +206,30 @@ interface ExponeaType {
   trackInAppMessageCloseWithoutTrackingConsent(
     params: Record<string, string>,
   ): Promise<void>;
+
+  trackInAppContentBlockClick(params: Record<string, string>): Promise<void>;
+
+  trackInAppContentBlockClickWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void>;
+
+  trackInAppContentBlockClose(params: Record<string, string>): Promise<void>;
+
+  trackInAppContentBlockCloseWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void>;
+
+  trackInAppContentBlockShown(params: Record<string, string>): Promise<void>;
+
+  trackInAppContentBlockShownWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void>;
+
+  trackInAppContentBlockError(params: Record<string, string>): Promise<void>;
+
+  trackInAppContentBlockErrorWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void>;
 }
 
 export enum FlushMode {
@@ -272,6 +296,24 @@ export interface InAppMessage {
 export interface InAppMessageButton {
   text?: string;
   url?: string;
+}
+
+export interface InAppContentBlock {
+  id: string,
+  name: string,
+  date_filter?: JsonObject,
+  frequency?: string,
+  load_priority?: number,
+  consentCategoryTracking?: string,
+  content_type?: string,
+  content?: JsonObject,
+  placeholders: []
+}
+
+export interface InAppContentBlockAction {
+  type: string,
+  name?: string,
+  url?: string,
 }
 
 export default ExponeaType;

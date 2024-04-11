@@ -298,6 +298,46 @@ const mockExponea: ExponeaType = {
   ): Promise<void> {
     return Promise.resolve();
   },
+
+  trackInAppContentBlockClick(params: Record<string, string>): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppContentBlockClickWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppContentBlockClose(params: Record<string, string>): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppContentBlockCloseWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppContentBlockShown(params: Record<string, string>): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppContentBlockShownWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppContentBlockError(params: Record<string, string>): Promise<void> {
+    return Promise.resolve();
+  },
+
+  trackInAppContentBlockErrorWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return Promise.resolve();
+  },
 };
 
 describe('parameter serialization and typings', () => {

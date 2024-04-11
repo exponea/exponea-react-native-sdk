@@ -21,15 +21,20 @@ class RNInAppContentBlocksPlaceholderManager: RCTViewManager {
     }
 }
 
-class InAppContentBlocksPlaceholder: UIView {
+class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackType {
     @objc var onDimensChanged: RCTDirectEventBlock?
+    @objc var onInAppContentBlockEvent: RCTDirectEventBlock?
     @objc var placeholderId: String? {
         didSet {
             self.setPlaceholderId(placeholderId)
         }
     }
+    @objc var overrideDefaultBehavior: Bool = false
     private var currentPlaceholderId: String?
     private var currentPlaceholderInstance: StaticInAppContentBlockView?
+    
+    private var currentOriginalBehavior: InAppContentBlockCallbackType?
+
     private func setPlaceholderId(_ newPlaceholderId: String?) {
         ExponeaSDK.Exponea.logger.log(
             .verbose,
@@ -59,8 +64,11 @@ class InAppContentBlocksPlaceholder: UIView {
                     height: placeholderInstance.frame.height
                 )
             }
+            currentOriginalBehavior = currentPlaceholderInstance?.behaviourCallback
+            currentPlaceholderInstance?.behaviourCallback = self
         } else {
             currentPlaceholderInstance = nil
+            currentOriginalBehavior = nil
         }
         self.subviews.forEach { $0.removeFromSuperview() }
         ExponeaSDK.Exponea.logger.log(
@@ -81,6 +89,7 @@ class InAppContentBlocksPlaceholder: UIView {
             newPlaceholderInstance.reload()
         }
     }
+    
     private func notifyDimensChanged(width: CGFloat, height: CGFloat) {
         guard let onDimensChanged = onDimensChanged else {
             ExponeaSDK.Exponea.logger.log(.error, message: "InAppCB: Callback for dimensions change not registered")
@@ -90,5 +99,57 @@ class InAppContentBlocksPlaceholder: UIView {
             "width": width,
             "height": height
         ])
+    }
+    
+    private func notifyInAppContentBlockEvent(eventType: String, placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse?, action: ExponeaSDK.InAppContentBlockAction?, errorMessage: String?) {
+        guard let onInAppContentBlockEvent = onInAppContentBlockEvent else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "InAppCB: Callback for InApp content block event not registered")
+            return
+        }
+        onInAppContentBlockEvent([
+            "eventType": eventType,
+            "placeholderId": placeholderId,
+            "contentBlock": contentBlock,
+            "action": action,
+            "errorMessage": errorMessage,
+        ])
+    }
+
+    func onMessageShown(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
+        notifyInAppContentBlockEvent(eventType: "onMessageShown", placeholderId: placeholderId, contentBlock: contentBlock, action: nil, errorMessage: nil)
+        if !overrideDefaultBehavior {
+            currentOriginalBehavior?.onMessageShown(placeholderId: placeholderId, contentBlock: contentBlock)
+        }
+    }
+
+    func onNoMessageFound(placeholderId: String) {
+        notifyInAppContentBlockEvent(eventType: "onNoMessageFound", placeholderId: placeholderId, contentBlock: nil, action: nil, errorMessage: nil)
+        if !overrideDefaultBehavior {
+            currentOriginalBehavior?.onNoMessageFound(placeholderId: placeholderId)
+        }
+    }
+
+    func onError(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse?, errorMessage: String) {
+        guard let contentBlock else {
+            return
+        }
+        notifyInAppContentBlockEvent(eventType: "onError", placeholderId: placeholderId, contentBlock: contentBlock, action: nil, errorMessage: errorMessage)
+        if !overrideDefaultBehavior {
+            currentOriginalBehavior?.onError( placeholderId: placeholderId, contentBlock: contentBlock, errorMessage: errorMessage)
+        }
+    }
+
+    func onCloseClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
+        notifyInAppContentBlockEvent(eventType: "onCloseClicked", placeholderId: placeholderId, contentBlock: contentBlock, action: nil, errorMessage: nil)
+        if !overrideDefaultBehavior {
+            currentOriginalBehavior?.onCloseClicked(placeholderId: placeholderId, contentBlock: contentBlock)
+        }
+    }
+
+    func onActionClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse, action: ExponeaSDK.InAppContentBlockAction) {
+        notifyInAppContentBlockEvent(eventType: "onActionClicked", placeholderId: placeholderId, contentBlock: contentBlock, action: action, errorMessage: nil)
+        if !overrideDefaultBehavior {
+            currentOriginalBehavior?.onActionClicked(placeholderId: placeholderId, contentBlock: contentBlock, action: action)
+        }
     }
 }

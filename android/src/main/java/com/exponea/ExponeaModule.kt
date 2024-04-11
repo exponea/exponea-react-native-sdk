@@ -744,4 +744,127 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
             promise.resolve(permissionGranted)
         }
     }
+
+    @ReactMethod
+    fun trackInAppContentBlockClick(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively()
+        val placeholderId: String = data.getRequired("placeholderId")
+        val inAppContentBlock = (data.getRequired("inAppContentBlock") as Map<String, Any>).toInAppContentBlock()
+        val inAppContentBlockAction = (data.getRequired("inAppContentBlockAction") as Map<String, Any>)
+            .toInAppContentBlockAction()
+        if (inAppContentBlock == null || inAppContentBlockAction == null) {
+            promise.reject(ExponeaDataException("InApp content block data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppContentBlockClick(placeholderId, inAppContentBlockAction, inAppContentBlock)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppContentBlockClickWithoutTrackingConsent(
+        params: ReadableMap,
+        promise: Promise
+    ) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively()
+        val placeholderId: String = data.getRequired("placeholderId")
+        val inAppContentBlock = (data.getRequired("inAppContentBlock") as Map<String, Any>).toInAppContentBlock()
+        val inAppContentBlockAction = (data.getRequired("inAppContentBlockAction") as Map<String, Any>)
+            .toInAppContentBlockAction()
+        if (inAppContentBlock == null || inAppContentBlockAction == null) {
+            promise.reject(ExponeaDataException("InApp content block data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppContentBlockClickWithoutTrackingConsent(
+            placeholderId,
+            inAppContentBlockAction,
+            inAppContentBlock
+        )
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppContentBlockClose(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively()
+        val placeholderId: String = data.getRequired("placeholderId")
+        val inAppContentBlock = (data.getRequired("inAppContentBlock") as Map<String, Any>).toInAppContentBlock()
+        if (inAppContentBlock == null) {
+            promise.reject(ExponeaDataException("InApp content block data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppContentBlockClose(placeholderId, inAppContentBlock)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppContentBlockCloseWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively()
+        val placeholderId: String = data.getRequired("placeholderId")
+        val inAppContentBlock = (data.getRequired("inAppContentBlock") as Map<String, Any>).toInAppContentBlock()
+        if (inAppContentBlock == null) {
+            promise.reject(ExponeaDataException("InApp content block data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppContentBlockCloseWithoutTrackingConsent(placeholderId, inAppContentBlock)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppContentBlockShown(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively()
+        val placeholderId: String = data.getRequired("placeholderId")
+        val inAppContentBlock = (data.getRequired("inAppContentBlock") as Map<String, Any>).toInAppContentBlock()
+        if (inAppContentBlock == null) {
+            promise.reject(ExponeaDataException("InApp content block data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppContentBlockShown(placeholderId, inAppContentBlock)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppContentBlockShownWithoutTrackingConsent(
+        params: ReadableMap,
+        promise: Promise
+    ) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively()
+        val placeholderId: String = data.getRequired("placeholderId")
+        val inAppContentBlock = (data.getRequired("inAppContentBlock") as Map<String, Any>).toInAppContentBlock()
+        if (inAppContentBlock == null) {
+            promise.reject(ExponeaDataException("InApp content block data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppContentBlockShownWithoutTrackingConsent(placeholderId, inAppContentBlock)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppContentBlockError(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively()
+        val placeholderId: String = data.getRequired("placeholderId")
+        val inAppContentBlock = (data.getRequired("inAppContentBlock") as Map<String, Any>).toInAppContentBlock()
+        val errorMessage: String = data.getRequired("errorMessage")
+        if (inAppContentBlock == null) {
+            promise.reject(ExponeaDataException("InApp content block data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppContentBlockError(placeholderId, inAppContentBlock, errorMessage)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun trackInAppContentBlockErrorWithoutTrackingConsent(
+        params: ReadableMap,
+        promise: Promise
+    ) = catchAndReject(promise) {
+        val data = params.toHashMapRecursively()
+        val placeholderId: String = data.getRequired("placeholderId")
+        val inAppContentBlock = (data.getRequired("inAppContentBlock") as Map<String, Any>).toInAppContentBlock()
+        val errorMessage: String = data.getRequired("errorMessage")
+        if (inAppContentBlock == null) {
+            promise.reject(ExponeaDataException("InApp content block data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.trackInAppContentBlockErrorWithoutTrackingConsent(placeholderId, inAppContentBlock, errorMessage)
+        promise.resolve(null)
+    }
 }

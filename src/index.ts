@@ -243,6 +243,54 @@ const Exponea: ExponeaType = {
       params,
     );
   },
+
+  trackInAppContentBlockClick(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackInAppContentBlockClick(params);
+  },
+
+  trackInAppContentBlockClickWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackInAppContentBlockClickWithoutTrackingConsent(
+      params,
+    );
+  },
+
+  trackInAppContentBlockClose(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackInAppContentBlockClose(params);
+  },
+
+  trackInAppContentBlockCloseWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackInAppContentBlockCloseWithoutTrackingConsent(
+      params,
+    );
+  },
+
+  trackInAppContentBlockShown(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackInAppContentBlockShown(params);
+  },
+
+  trackInAppContentBlockShownWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackInAppContentBlockShownWithoutTrackingConsent(
+      params,
+    );
+  },
+
+  trackInAppContentBlockError(params: Record<string, string>): Promise<void> {
+    return NativeModules.Exponea.trackInAppContentBlockError(params);
+  },
+
+  trackInAppContentBlockErrorWithoutTrackingConsent(
+    params: Record<string, string>,
+  ): Promise<void> {
+    return NativeModules.Exponea.trackInAppContentBlockErrorWithoutTrackingConsent(
+      params,
+    );
+  },
 };
 
 let pushOpenedUserListener: ((openedPush: OpenedPush) => void) | null = null;
