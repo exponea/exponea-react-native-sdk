@@ -24,7 +24,7 @@ export default class App extends React.Component<{}, AppState> {
     sdkConfigured: false,
   };
 
-  resolveDeeplinkDestination(url) {
+  resolveDeeplinkDestination(url: string) {
     if (url.includes('flush')) {
       return Screen.Flushing;
     }
@@ -49,7 +49,10 @@ export default class App extends React.Component<{}, AppState> {
         setTimeout(() => {
           console.log(`Link received: ${url}`);
           Alert.alert('Link received', `Url: ${url}`);
-          RootNavigation.navigate(this.resolveDeeplinkDestination(url));
+          const screenToOpen = this.resolveDeeplinkDestination(url)
+          if (screenToOpen != null) {
+            RootNavigation.navigate(screenToOpen, undefined)
+          }
         }, 1000);
       }
     };
