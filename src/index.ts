@@ -124,6 +124,10 @@ const Exponea: ExponeaType = {
     return NativeModules.Exponea.requestPushAuthorization();
   },
 
+  async requestPushAuthorization(): Promise<boolean> {
+    return NativeModules.Exponea.requestPushAuthorization();
+  },
+
   setAppInboxProvider: NativeModules.Exponea.setAppInboxProvider,
 
   async trackAppInboxOpened(message: AppInboxMessage): Promise<void> {

@@ -174,6 +174,10 @@ const mockExponea: ExponeaType = {
     return Promise.resolve(true);
   },
 
+  requestPushAuthorization(): Promise<boolean> {
+    return Promise.resolve(true);
+  },
+
   setAppInboxProvider(withStyle: AppInboxStyle): Promise<void> {
     lastArgumentsJson = JSON.stringify([withStyle]);
     return Promise.resolve();

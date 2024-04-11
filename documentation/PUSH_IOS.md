@@ -63,9 +63,9 @@ To be able to send push notifications from Exponea backend, you need to connect 
 [Exponea web app push notification configuration](./APNS.md) guide contains screenshots showing where the data is located.
 
 ## 5. Authorizing for receiving push notifications
-You'll need a special permission for notifications visible to the user. To request it, call `Exponea.requestIosPushAuthorization()` from **javascript**.
+You'll need a special permission for notifications visible to the user. To request it, call `Exponea.requestPushAuthorization()` from **javascript**.
 ``` typescript 
-Exponea.requestIosPushAuthorization()
+Exponea.requestPushAuthorization()
 .then(accepted => {
   console.log(`User has ${accepted ? 'accepted': 'rejected'} push notifications.`)
 })

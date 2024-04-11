@@ -107,7 +107,16 @@ interface ExponeaType {
 
   removeInAppMessageCallback(): void;
 
+  /**
+   * Requests authorization and subsequently registers for receiving notifications for iOS platform
+   * @deprecated use `requestPushAuthorization` instead
+   */
   requestIosPushAuthorization(): Promise<boolean>;
+
+  /**
+   * Requests authorization and subsequently registers for receiving notifications for both Android and iOS platform
+   */
+  requestPushAuthorization(): Promise<boolean>;
 
   setAppInboxProvider(withStyle: AppInboxStyle): Promise<void>;
 

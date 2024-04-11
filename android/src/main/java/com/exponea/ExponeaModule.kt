@@ -737,4 +737,11 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         Exponea.trackInAppMessageCloseWithoutTrackingConsent(data)
         promise.resolve(null)
     }
+
+    @ReactMethod
+    fun requestPushAuthorization(promise: Promise) = catchAndReject(promise) {
+        Exponea.requestPushAuthorization(reactContext) { permissionGranted ->
+            promise.resolve(permissionGranted)
+        }
+    }
 }
