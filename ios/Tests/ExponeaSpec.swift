@@ -99,7 +99,7 @@ class ExponeaSpec: QuickSpec {
                         resolve: { _ in },
                         reject: { errorCode, description, error in
                             expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
+                            expect(description as? String).to(equal(ExponeaError.notConfigured.localizedDescription))
                             expect(error?.localizedDescription)
                                 .to(equal(ExponeaError.notConfigured.localizedDescription))
                             done()

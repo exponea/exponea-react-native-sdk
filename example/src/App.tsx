@@ -49,9 +49,9 @@ export default class App extends React.Component<{}, AppState> {
         setTimeout(() => {
           console.log(`Link received: ${url}`);
           Alert.alert('Link received', `Url: ${url}`);
-          const screenToOpen = this.resolveDeeplinkDestination(url)
+          const screenToOpen = this.resolveDeeplinkDestination(url);
           if (screenToOpen != null) {
-            RootNavigation.navigate(screenToOpen, undefined)
+            RootNavigation.navigate(screenToOpen);
           }
         }, 1000);
       }

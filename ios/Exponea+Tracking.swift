@@ -332,7 +332,7 @@ extension Exponea {
             isUserInteraction: isUserInteraction
         )
     }
-    
+
     func parseInAppContentBlockAction(data: NSDictionary) throws -> InAppContentBlockAction {
         var actionType: InAppContentBlockActionType = .close
         if let typeString: String = try data.getRequiredSafely(property: "type") {
@@ -343,11 +343,11 @@ extension Exponea {
             default: throw ExponeaDataError.invalidValue(for: "type")
             }
         }
-        let name : String? = try data.getOptionalSafely(property: "name")
-        let url : String?  = try data.getOptionalSafely(property: "url")
+        let name: String? = try data.getOptionalSafely(property: "name")
+        let url: String?  = try data.getOptionalSafely(property: "url")
         return InAppContentBlockAction(name: name, url: url, type: actionType)
     }
-    
+
     @objc(trackInAppContentBlockClick:resolve:reject:)
     func trackInAppContentBlockClick(
         data: NSDictionary,
@@ -363,7 +363,10 @@ extension Exponea {
               let inAppContentBlockAction = try? parseInAppContentBlockAction(data: actionData),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
-              let inAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: responseJson)
+              let inAppContentBlockResponse = try? JSONDecoder().decode(
+                InAppContentBlockResponse.self,
+                from: responseJson
+              )
         else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
@@ -376,7 +379,7 @@ extension Exponea {
             message: inAppContentBlockResponse
         )
     }
-    
+
     @objc(trackInAppContentBlockClickWithoutTrackingConsent:resolve:reject:)
     func trackInAppContentBlockClickWithoutTrackingConsent(
         data: NSDictionary,
@@ -392,7 +395,10 @@ extension Exponea {
               let inAppContentBlockAction = try? parseInAppContentBlockAction(data: actionData),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
-              let inAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: responseJson)
+              let inAppContentBlockResponse = try? JSONDecoder().decode(
+                InAppContentBlockResponse.self,
+                from: responseJson
+              )
         else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
@@ -405,7 +411,7 @@ extension Exponea {
             message: inAppContentBlockResponse
         )
     }
-    
+
     @objc(trackInAppContentBlockClose:resolve:reject:)
     func trackInAppContentBlockClose(
         data: NSDictionary,
@@ -419,7 +425,10 @@ extension Exponea {
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
-              let inAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: responseJson)
+              let inAppContentBlockResponse = try? JSONDecoder().decode(
+                InAppContentBlockResponse.self,
+                from: responseJson
+              )
         else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
@@ -431,7 +440,7 @@ extension Exponea {
             message: inAppContentBlockResponse
         )
     }
-    
+
     @objc(trackInAppContentBlockCloseWithoutTrackingConsent:resolve:reject:)
     func trackInAppContentBlockCloseWithoutTrackingConsent(
         data: NSDictionary,
@@ -445,7 +454,10 @@ extension Exponea {
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
-              let inAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: responseJson)
+              let inAppContentBlockResponse = try? JSONDecoder().decode(
+                InAppContentBlockResponse.self,
+                from: responseJson
+              )
         else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
@@ -457,7 +469,7 @@ extension Exponea {
             message: inAppContentBlockResponse
         )
     }
-    
+
     @objc(trackInAppContentBlockShown:resolve:reject:)
     func trackInAppContentBlockShown(
         data: NSDictionary,
@@ -471,7 +483,10 @@ extension Exponea {
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
-              let inAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: responseJson)
+              let inAppContentBlockResponse = try? JSONDecoder().decode(
+                InAppContentBlockResponse.self,
+                from: responseJson
+              )
         else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
@@ -483,7 +498,7 @@ extension Exponea {
             message: inAppContentBlockResponse
         )
     }
-    
+
     @objc(trackInAppContentBlockShownWithoutTrackingConsent:resolve:reject:)
     func trackInAppContentBlockShownWithoutTrackingConsent(
         data: NSDictionary,
@@ -497,7 +512,10 @@ extension Exponea {
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
-              let inAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: responseJson)
+              let inAppContentBlockResponse = try? JSONDecoder().decode(
+                InAppContentBlockResponse.self,
+                from: responseJson
+              )
         else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
@@ -509,7 +527,7 @@ extension Exponea {
             message: inAppContentBlockResponse
         )
     }
-    
+
     @objc(trackInAppContentBlockError:resolve:reject:)
     func trackInAppContentBlockError(
         data: NSDictionary,
@@ -523,7 +541,10 @@ extension Exponea {
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
-              let inAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: responseJson),
+              let inAppContentBlockResponse = try? JSONDecoder().decode(
+                InAppContentBlockResponse.self,
+                from: responseJson
+              ),
               let errorMessage: String = try? data.getOptionalSafely(property: "errorMessage")
         else {
             rejectPromise(reject, error: ExponeaError.generalError(
@@ -537,7 +558,7 @@ extension Exponea {
             errorMessage: errorMessage
         )
     }
-    
+
     @objc(trackInAppContentBlockErrorWithoutTrackingConsent:resolve:reject:)
     func trackInAppContentBlockErrorWithoutTrackingConsent(
         data: NSDictionary,
@@ -551,7 +572,10 @@ extension Exponea {
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
-              let inAppContentBlockResponse = try? JSONDecoder().decode(InAppContentBlockResponse.self, from: responseJson),
+              let inAppContentBlockResponse = try? JSONDecoder().decode(
+                InAppContentBlockResponse.self,
+                from: responseJson
+              ),
               let errorMessage: String = try? data.getOptionalSafely(property: "errorMessage")
         else {
             rejectPromise(reject, error: ExponeaError.generalError(

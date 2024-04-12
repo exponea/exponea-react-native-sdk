@@ -57,16 +57,14 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
             this.setState({trackingEvent: true});
           }}
         />
-          <ExponeaButton
-              title="Authorize push notifications"
-              onPress={() => {
-                  Exponea.requestPushAuthorization()
-                      .then((result) =>
-                          console.log(`Authorization result: ${result}`),
-                      )
-                      .catch((error) => console.log(`Authorization error: ${error}`));
-              }}
-          />
+        <ExponeaButton
+          title="Authorize push notifications"
+          onPress={() => {
+            Exponea.requestPushAuthorization()
+              .then((result) => console.log(`Authorization result: ${result}`))
+              .catch((error) => console.log(`Authorization error: ${error}`));
+          }}
+        />
         <AppInboxButton
           style={{
             width: '100%',
@@ -128,9 +126,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonProps: {
-    textOverride: 'Example Inbox',
     borderRadius: 5,
-    showIcon: true,
-    enabled: true,
   },
 });

@@ -123,7 +123,10 @@ class CustomerTokenStorage {
             }
             return responseData.token
         } catch let error {
-            Exponea.logger.log(.error, message: "Example token cannot be parsed due error \(error.localizedDescription)")
+            Exponea.logger.log(
+              .error,
+              message: "Example token cannot be parsed due error \(error.localizedDescription)"
+            )
             return nil
         }
     }

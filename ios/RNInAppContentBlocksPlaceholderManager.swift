@@ -32,7 +32,7 @@ class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackType {
     @objc var overrideDefaultBehavior: Bool = false
     private var currentPlaceholderId: String?
     private var currentPlaceholderInstance: StaticInAppContentBlockView?
-    
+
     private var currentOriginalBehavior: InAppContentBlockCallbackType?
 
     private func setPlaceholderId(_ newPlaceholderId: String?) {
@@ -89,7 +89,7 @@ class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackType {
             newPlaceholderInstance.reload()
         }
     }
-    
+
     private func notifyDimensChanged(width: CGFloat, height: CGFloat) {
         guard let onDimensChanged = onDimensChanged else {
             ExponeaSDK.Exponea.logger.log(.error, message: "InAppCB: Callback for dimensions change not registered")
@@ -100,10 +100,19 @@ class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackType {
             "height": height
         ])
     }
-    
-    private func notifyInAppContentBlockEvent(eventType: String, placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse?, action: ExponeaSDK.InAppContentBlockAction?, errorMessage: String?) {
+
+    private func notifyInAppContentBlockEvent(
+        eventType: String,
+        placeholderId: String,
+        contentBlock: ExponeaSDK.InAppContentBlockResponse?,
+        action: ExponeaSDK.InAppContentBlockAction?,
+        errorMessage: String?
+    ) {
         guard let onInAppContentBlockEvent = onInAppContentBlockEvent else {
-            ExponeaSDK.Exponea.logger.log(.error, message: "InAppCB: Callback for InApp content block event not registered")
+            ExponeaSDK.Exponea.logger.log(
+                .error,
+                message: "InAppCB: Callback for InApp content block event not registered"
+            )
             return
         }
         onInAppContentBlockEvent([
@@ -111,19 +120,31 @@ class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackType {
             "placeholderId": placeholderId,
             "contentBlock": contentBlock,
             "action": action,
-            "errorMessage": errorMessage,
+            "errorMessage": errorMessage
         ])
     }
 
     func onMessageShown(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
-        notifyInAppContentBlockEvent(eventType: "onMessageShown", placeholderId: placeholderId, contentBlock: contentBlock, action: nil, errorMessage: nil)
+        notifyInAppContentBlockEvent(
+            eventType: "onMessageShown",
+            placeholderId: placeholderId,
+            contentBlock: contentBlock,
+            action: nil,
+            errorMessage: nil
+        )
         if !overrideDefaultBehavior {
             currentOriginalBehavior?.onMessageShown(placeholderId: placeholderId, contentBlock: contentBlock)
         }
     }
 
     func onNoMessageFound(placeholderId: String) {
-        notifyInAppContentBlockEvent(eventType: "onNoMessageFound", placeholderId: placeholderId, contentBlock: nil, action: nil, errorMessage: nil)
+        notifyInAppContentBlockEvent(
+            eventType: "onNoMessageFound",
+            placeholderId: placeholderId,
+            contentBlock: nil,
+            action: nil,
+            errorMessage: nil
+        )
         if !overrideDefaultBehavior {
             currentOriginalBehavior?.onNoMessageFound(placeholderId: placeholderId)
         }
@@ -133,23 +154,53 @@ class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackType {
         guard let contentBlock else {
             return
         }
-        notifyInAppContentBlockEvent(eventType: "onError", placeholderId: placeholderId, contentBlock: contentBlock, action: nil, errorMessage: errorMessage)
+        notifyInAppContentBlockEvent(
+            eventType: "onError",
+            placeholderId: placeholderId,
+            contentBlock: contentBlock,
+            action: nil,
+            errorMessage: errorMessage
+        )
         if !overrideDefaultBehavior {
-            currentOriginalBehavior?.onError( placeholderId: placeholderId, contentBlock: contentBlock, errorMessage: errorMessage)
+            currentOriginalBehavior?.onError(
+                placeholderId: placeholderId,
+                contentBlock: contentBlock,
+                errorMessage: errorMessage
+            )
         }
     }
 
     func onCloseClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
-        notifyInAppContentBlockEvent(eventType: "onCloseClicked", placeholderId: placeholderId, contentBlock: contentBlock, action: nil, errorMessage: nil)
+        notifyInAppContentBlockEvent(
+            eventType: "onCloseClicked",
+            placeholderId: placeholderId,
+            contentBlock: contentBlock,
+            action: nil,
+            errorMessage: nil
+        )
         if !overrideDefaultBehavior {
             currentOriginalBehavior?.onCloseClicked(placeholderId: placeholderId, contentBlock: contentBlock)
         }
     }
 
-    func onActionClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse, action: ExponeaSDK.InAppContentBlockAction) {
-        notifyInAppContentBlockEvent(eventType: "onActionClicked", placeholderId: placeholderId, contentBlock: contentBlock, action: action, errorMessage: nil)
+    func onActionClicked(
+        placeholderId: String,
+        contentBlock: ExponeaSDK.InAppContentBlockResponse,
+        action: ExponeaSDK.InAppContentBlockAction
+    ) {
+        notifyInAppContentBlockEvent(
+            eventType: "onActionClicked",
+            placeholderId: placeholderId,
+            contentBlock: contentBlock,
+            action: action,
+            errorMessage: nil
+        )
         if !overrideDefaultBehavior {
-            currentOriginalBehavior?.onActionClicked(placeholderId: placeholderId, contentBlock: contentBlock, action: action)
+            currentOriginalBehavior?.onActionClicked(
+                placeholderId: placeholderId,
+                contentBlock: contentBlock,
+                action: action
+            )
         }
     }
 }

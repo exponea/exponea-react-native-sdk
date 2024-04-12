@@ -355,11 +355,77 @@ class MockExponea: ExponeaType {
         fatalError("Not implemented")
     }
 
-    func trackInAppMessageCloseClickWithoutTrackingConsent(message: ExponeaSDK.InAppMessage, isUserInteraction: Bool?) {
+    func trackInAppMessageCloseClickWithoutTrackingConsent(
+        message: ExponeaSDK.InAppMessage,
+        isUserInteraction: Bool?
+    ) {
         fatalError("Not implemented")
     }
 
-    func trackInAppMessageClose(message: ExponeaSDK.InAppMessage, isUserInteraction: Bool?) {
+    func trackInAppMessageClose(
+        message: ExponeaSDK.InAppMessage,
+        isUserInteraction: Bool?
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppContentBlockClick(
+        placeholderId: String,
+        action: ExponeaSDK.InAppContentBlockAction,
+        message: ExponeaSDK.InAppContentBlockResponse
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppContentBlockClickWithoutTrackingConsent(
+        placeholderId: String,
+        action: ExponeaSDK.InAppContentBlockAction,
+        message: ExponeaSDK.InAppContentBlockResponse
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppContentBlockClose(
+        placeholderId: String,
+        message: ExponeaSDK.InAppContentBlockResponse
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppContentBlockCloseWithoutTrackingConsent(
+        placeholderId: String,
+        message: ExponeaSDK.InAppContentBlockResponse
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppContentBlockShown(
+        placeholderId: String,
+        message: ExponeaSDK.InAppContentBlockResponse
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppContentBlockShownWithoutTrackingConsent(
+        placeholderId: String,
+        message: ExponeaSDK.InAppContentBlockResponse
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppContentBlockError(
+        placeholderId: String,
+        message: ExponeaSDK.InAppContentBlockResponse,
+        errorMessage: String
+    ) {
+        fatalError("Not implemented")
+    }
+
+    func trackInAppContentBlockErrorWithoutTrackingConsent(
+        placeholderId: String,
+        message: ExponeaSDK.InAppContentBlockResponse,
+        errorMessage: String
+    ) {
         fatalError("Not implemented")
     }
 }

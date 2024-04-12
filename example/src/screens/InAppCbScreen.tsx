@@ -6,7 +6,7 @@ import icon1 from '../img/ic_dialog_map.png';
 import icon2 from '../img/ic_media_route.png';
 import icon3 from '../img/ic_menu_search.png';
 import icon4 from '../img/ic_star.png';
-import { InAppContentBlock } from '../../../src/ExponeaType';
+import {InAppContentBlock} from '../../../src/ExponeaType';
 import Exponea from 'react-native-exponea-sdk';
 
 interface ProductsViewModel {

@@ -13,7 +13,11 @@ target 'Exponea' do
 
   config = use_native_modules!
 
-  use_react_native!(:path => config[:reactNativePath])
+  use_react_native!(
+      :path => config[:reactNativePath],
+      # to enable hermes on iOS, change `false` to `true` and then install pods
+      :hermes_enabled => false
+    )
 
   pod "ExponeaSDK", "2.25.2"
   pod 'AnyCodable-FlightSchool', '0.4.0'
@@ -34,8 +38,8 @@ post_install do |pi|
 
     # We need to make one crude patch to RCT-Folly - set `__IPHONE_10_0` to our iOS target + 1
     # https://github.com/facebook/flipper/issues/834 - 84 comments and still going...
-   `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/RCT-Folly/folly/portability/Time.h`
-   `sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/Flipper-Folly/Time.h`
+   #`sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/RCT-Folly/folly/portability/Time.h`
+   #`sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/Flipper-Folly/Time.h`
 
    # fixes error: Signing for "React-Core-AccessibilityResources" requires a development team.
    # from https://github.com/CocoaPods/CocoaPods/issues/11402#issuecomment-1201464693

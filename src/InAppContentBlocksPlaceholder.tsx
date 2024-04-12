@@ -21,7 +21,12 @@ interface DimensInfo {
 export default function InAppContentBlocksPlaceholder(
     props: InAppContentBlocksPlaceholderProps,
 ): React.ReactElement {
-    const {placeholderId, overrideDefaultBehavior, style: viewStyle, ...viewProps} = props
+    const {
+        placeholderId,
+        overrideDefaultBehavior,
+        style: viewStyle,
+        ...viewProps
+    } = props
     const [dimens, setDimens] = useState(({} as DimensInfo))
     function _onDimensChanged(event: NativeSyntheticEvent<DimensEvent>) {
         setDimens({

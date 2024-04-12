@@ -796,7 +796,10 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     }
 
     @ReactMethod
-    fun trackInAppContentBlockCloseWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+    fun trackInAppContentBlockCloseWithoutTrackingConsent(
+        params: ReadableMap,
+        promise: Promise
+    ) = catchAndReject(promise) {
         val data = params.toHashMapRecursively()
         val placeholderId: String = data.getRequired("placeholderId")
         val inAppContentBlock = (data.getRequired("inAppContentBlock") as Map<String, Any>).toInAppContentBlock()
