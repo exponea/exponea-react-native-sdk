@@ -1,6 +1,16 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.7.0
+#### April 12, 2024
+* Features
+  * ReactNative support increased to 0.73.6
+  * In-app content blocks behaviour handler added
+  * Android PUSH notification permission request support
+* Bug Fixes
+  * Fixed: Duplicate projectToken in configuration example in configuration.md docu
+
+
 ## Release Notes for 1.6.1
 #### March 21, 2024
 * Features
