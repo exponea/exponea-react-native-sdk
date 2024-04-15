@@ -23,16 +23,19 @@ iOS native module is written in Swift, since that's also used for our native SDK
 
 ## Example application
 To test and showcase the functionality of the SDK, we provide an example application in `/example`. Example application is linked to the package directly, but there are some caveats.
+
+### Prerequisites for running the example application
 * Linked package is linked as a symbolic link, which includes `node_modules` as well. This results in Metro bundler running 2 instances of React and errors on app startup. Make sure you `rm -rf node_modules` in package before running `yarn` in `example` folder.
 * Same goes for `Pods` in `ios` folder. If you see errors building for iOS, try `rm -rf ios/Pods`.
 * When making changes to javascript part of the package, don't forget to build it with `yarn run build`.
 * When making changes to iOS native module, you sometimes need to reinstall the dependency for example app with `pod install` in `example/ios`
 
 ### Running example application
+0. check previous section and make sure you followed all the necessary steps, package itself should be clean. 
 1. `cd example`
-2. `yarn` to install dependencies - check previous section, package itself should be clean
+2. `yarn` to install dependencies.
 3. you can start Metro bundler on your own using `yarn run start`
-4. `react-native run-android` to build and run the Android application. You can also open `android` folder in Android Studio and build yourself. 
+4. `react-native run-android --mode=GmsDebug` to build and run the Android application for GMS.  Use `HmsDebug` to build application for Huawei devices without GooglePlay services but with HMS Core. For React Native version <0.73, use `--variant` instead of `--mode`, see [#2026](https://github.com/react-native-community/cli/pull/2026). You can also open `android` folder in Android Studio and build yourself. 
 5. `pod install` in `example/ios` to install dependencies for ios application.
 6. `react-native run-ios` to build and run the iOS application. You can also open workspace in `ios` folder in XCode and build yourself. It's recommended - you'll get logs easily this way.
 
