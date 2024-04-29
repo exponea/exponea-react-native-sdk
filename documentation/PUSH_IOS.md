@@ -44,7 +44,55 @@ To react to push notification related events, the application's AppDelegate must
   }
   ```
 
-> If you cannot/don't want to use ExponeaRNAppDelegate superclass, import `ExponeaRNAppDelegate.h` in `AppDelegate.m` and copy over the methods/add calls to Exponea to existing ones. You'll also have to set the `UNUserNotificationCenter` delegate and code for processing notifications to `didFinishLaunchingWithOptions`.
+> If you cannot/don't want to use ExponeaRNAppDelegate superclass, e.g. you are using RCTAppDelegate introduced in React Native 0.71, import `ExponeaRNAppDelegate.h` in `AppDelegate.m` and copy over the methods/add calls to Exponea to existing ones. You'll also have to set the `UNUserNotificationCenter` delegate and code for processing notifications to `didFinishLaunchingWithOptions`. Your implementation of AppDelegate should look like this:
+
+  ``` objc
+#import <ExponeaRNAppDelegate.h>
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  ...
+  // Set UNUserNotificationCenter delegate
+  [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+  ...
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
+ restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
+{
+  // call Exponea continueUserActivity method
+  [Exponea continueUserActivity: userActivity];
+  ...
+}
+
+...
+
+// Methods copied from ExponeaRNAppDelegate
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    [Exponea handlePushNotificationToken: deviceToken];
+}
+
+- (void)application:(UIApplication *)application
+        didReceiveRemoteNotification:(NSDictionary *)userInfo
+        fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    [Exponea handlePushNotificationOpenedWithUserInfo:userInfo];
+    completionHandler(UIBackgroundFetchResultNewData);
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+        didReceiveNotificationResponse:(UNNotificationResponse *)response
+        withCompletionHandler:(void (^)(void))completionHandler
+{
+    [Exponea handlePushNotificationOpenedWithResponse: response];
+    completionHandler();
+}
+
+@end
+  ```
 
 ## 3. App group configuration
 To enable push notifications, you'll need to set your app group created in the previous step. App group is a property of the `Configuration` javascript object.
