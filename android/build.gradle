@@ -154,7 +154,7 @@ afterEvaluate {
                     licenses {
                         license {
                             name = packageJson.license
-                            url = packageJson.repository.baseUrl + '/blob/master/' + packageJson.licenseFilename
+                            url = packageJson.repository.baseUrl + '/blob/main/' + packageJson.licenseFilename
                             distribution = 'repo'
                         }
                     }
