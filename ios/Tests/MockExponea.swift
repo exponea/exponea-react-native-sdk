@@ -428,6 +428,13 @@ class MockExponea: ExponeaType {
     ) {
         fatalError("Not implemented")
     }
+
+    func getSegments(
+        category: ExponeaSDK.SegmentCategory,
+        successCallback: @escaping ExponeaSDK.TypeBlock<[ExponeaSDK.SegmentDTO]>
+    ) {
+        fatalError("Not implemented")
+    }
 }
 
 class TestDefaultInAppDelegate: InAppMessageActionDelegate {

@@ -2,7 +2,8 @@
 import ExponeaType, {
   FlushMode,
   InAppMessageAction,
-  LogLevel,
+  LogLevel, Segment,
+  SegmentationDataCallback,
 } from './ExponeaType';
 import Configuration from './Configuration';
 import {RecommendationOptions, Recommendation} from './Recommendation';
@@ -13,6 +14,8 @@ import EventType from './EventType';
 import AppInboxStyle from './AppInboxStyle';
 import {AppInboxMessage} from './AppInboxMessage';
 import {AppInboxAction} from './AppInboxAction';
+import configuration from "./Configuration";
+import exponeaProject from "./ExponeaProject";
 
 /*
 Purpose of this file is to test typescript typings and serialization of parameters and return types
@@ -338,6 +341,25 @@ const mockExponea: ExponeaType = {
   ): Promise<void> {
     return Promise.resolve();
   },
+
+  getSegments(exposingCategory: string): Promise<Array<Segment>> {
+    lastArgumentsJson = exposingCategory;
+    return Promise.resolve([]);
+  },
+
+  registerSegmentationDataCallback(callback: SegmentationDataCallback): void {
+    lastArgumentsJson = JSON.stringify({
+      exposingCategory: callback.exposingCategory,
+      includeFirstLoad: callback.includeFirstLoad
+    })
+  },
+
+  unregisterSegmentationDataCallback(callback: SegmentationDataCallback): void {
+    lastArgumentsJson = JSON.stringify({
+      exposingCategory: callback.exposingCategory,
+      includeFirstLoad: callback.includeFirstLoad
+    })
+  }
 };
 
 describe('parameter serialization and typings', () => {
@@ -558,5 +580,27 @@ describe('parameter serialization and typings', () => {
     }]
     `.replace(/\s/g, ''),
     );
+  });
+  test('Segmentation callback registration', () => {
+    const callback = new SegmentationDataCallback(
+        "discovery",
+        true,
+        data => {
+          // nothing to do here
+        }
+    );
+    mockExponea.registerSegmentationDataCallback(callback)
+    expect(lastArgumentsJson).toBe(`{"exposingCategory":"discovery","includeFirstLoad":true}`)
+  });
+  test('Segmentation callback un-registration', () => {
+    const callback = new SegmentationDataCallback(
+        "discovery",
+        true,
+        data => {
+          // nothing to do here
+        }
+    );
+    mockExponea.unregisterSegmentationDataCallback(callback)
+    expect(lastArgumentsJson).toBe(`{"exposingCategory":"discovery","includeFirstLoad":true}`)
   });
 });

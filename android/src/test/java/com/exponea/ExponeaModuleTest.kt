@@ -14,6 +14,7 @@ import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import io.mockk.verify
+import kotlin.test.assertNotNull
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -159,5 +160,40 @@ internal class ExponeaModuleTest {
                 assertEquals(hashMapOf("key" to "value", "number" to 123.0), Exponea.defaultProperties)
             }
         )
+    }
+
+    @Test
+    fun `should register segmentation callback`() {
+        val exposingCategory = "discovery"
+        val includeFirstLoad = false
+        module.registerSegmentationDataCallback(exposingCategory, includeFirstLoad, MockResolvingPromise {
+            assertNotNull(it.result)
+            assertTrue(it.result is String)
+            assertTrue((it.result as String).isNotBlank())
+        })
+        assertEquals(1, module.segmentationDataCallbacks.size)
+        assertEquals(exposingCategory, module.segmentationDataCallbacks[0].exposingCategory)
+        assertEquals(includeFirstLoad, module.segmentationDataCallbacks[0].includeFirstLoad)
+    }
+
+    @Test
+    fun `should unregister segmentation callback successfully`() {
+        val exposingCategory = "discovery"
+        val includeFirstLoad = false
+        var callbackInstanceId: String? = null
+        module.registerSegmentationDataCallback(exposingCategory, includeFirstLoad, MockResolvingPromise {
+            callbackInstanceId = it.result as String
+        })
+        assertNotNull(callbackInstanceId)
+        module.unregisterSegmentationDataCallback(callbackInstanceId!!, MockResolvingPromise {
+            assertEquals(MockPromise.PromiseStatus.fulfilled, it.status)
+        })
+    }
+
+    @Test
+    fun `should failed while unregistering of non-existing segmentation callback`() {
+        module.unregisterSegmentationDataCallback("non-existing-id", MockRejectingPromise {
+            assertEquals(MockPromise.PromiseStatus.rejected, it.status)
+        })
     }
 }

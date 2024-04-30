@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, Platform} from 'react-native';
+import {StyleSheet, View, Platform} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
 interface ExponeaPickerProps<T> {

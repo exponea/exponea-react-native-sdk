@@ -68,6 +68,8 @@ class Exponea: RCTEventEmitter {
     var inAppOverrideDefaultBehavior: Bool = false
     var inAppTrackActions: Bool = true
 
+    var segmentationDataCallbacks: [ReactNativeSegmentationDataCallback] = []
+
     func rejectPromise(_ reject: RCTPromiseRejectBlock, error: Error) {
         reject(errorCode, error.localizedDescription, error)
     }

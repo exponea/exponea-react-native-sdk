@@ -40,6 +40,7 @@ android {
     * [In-app messages](./documentation/IN_APP_MESSAGES.md)
     * [In-app content blocks](./documentation/IN_APP_CONTENT_BLOCKS.md)
   * [App Inbox](./documentation/APP_INBOX.md)
+  * [Segmentation](./documentation/SEGMENTATION.md)
   * [Example/Package development documentation](./documentation/DEVELOPMENT.md) - Learn how to build example application or the package itself
   * [SDK version update guide](./documentation/VERSION_UPDATE.md)
 

@@ -1,12 +1,13 @@
-import {NativeModules, NativeEventEmitter, Platform} from 'react-native';
-import ExponeaType, {OpenedPush, InAppMessageAction} from './ExponeaType';
+import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
+import ExponeaType, {InAppMessageAction, OpenedPush, Segment, SegmentationDataCallback} from './ExponeaType';
 import ExponeaProject from './ExponeaProject';
 import EventType from './EventType';
 import {JsonObject} from './Json';
 import Consent from './Consent';
-import {RecommendationOptions, Recommendation} from './Recommendation';
+import {Recommendation, RecommendationOptions} from './Recommendation';
 import {AppInboxMessage} from './AppInboxMessage';
 import {AppInboxAction} from './AppInboxAction';
+import {SegmentationCallbackBridge} from "./SegmentationCallbackBridge";
 
 /*
 React native bridge doesn't like optional parameters, we have to implement it ourselves.
@@ -291,6 +292,45 @@ const Exponea: ExponeaType = {
       params,
     );
   },
+
+  registerSegmentationDataCallback(
+      callback: SegmentationDataCallback
+  ): void {
+    const bridge = new SegmentationCallbackBridge(callback)
+    const promise: Promise<string> = NativeModules.Exponea.registerSegmentationDataCallback(
+        callback.exposingCategory,
+        callback.includeFirstLoad
+    );
+    promise.then(callbackId => {
+      bridge.assignNativeCallbackId(callbackId);
+      segmentationCallbackBridges.push(bridge);
+      eventEmitter.addListener(bridge.getEventEmitterKey(), (data: string) => {
+        callback.onNewData(JSON.parse(data));
+      })
+    })
+  },
+
+  unregisterSegmentationDataCallback(
+      callback: SegmentationDataCallback
+  ): void {
+    const assignedBridgeIndex = segmentationCallbackBridges
+        .findIndex(item => item.callback === callback);
+    if (assignedBridgeIndex < 0) {
+      return;
+    }
+    const assignedBridge = segmentationCallbackBridges[assignedBridgeIndex];
+    const promise: Promise<void> = NativeModules.Exponea.unregisterSegmentationDataCallback(
+        assignedBridge.nativeCallbackId
+    );
+    promise.then(value => {
+      segmentationCallbackBridges.splice(assignedBridgeIndex, 1);
+      eventEmitter.removeAllListeners(assignedBridge.getEventEmitterKey());
+    });
+  },
+
+  async getSegments(exposingCategory: string): Promise<Array<Segment>> {
+    return JSON.parse(await NativeModules.Exponea.getSegments(exposingCategory))
+  },
 };
 
 let pushOpenedUserListener: ((openedPush: OpenedPush) => void) | null = null;
@@ -298,6 +338,8 @@ let pushReceivedUserListener: ((data: JsonObject) => void) | null = null;
 let inAppMessageCallback: ((action: InAppMessageAction) => void) | null = null;
 
 const eventEmitter = new NativeEventEmitter(NativeModules.Exponea);
+
+const segmentationCallbackBridges: SegmentationCallbackBridge[] = []
 
 eventEmitter.addListener('pushOpened', (pushOpened: string) => {
   pushOpenedUserListener && pushOpenedUserListener(JSON.parse(pushOpened));

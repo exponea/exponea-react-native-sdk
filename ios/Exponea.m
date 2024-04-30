@@ -83,4 +83,8 @@ RCT_EXTERN_METHOD(setAutoPushNotification:(BOOL)enabled resolve:(RCTPromiseResol
 RCT_EXTERN_METHOD(setCampaignTTL:(double)seconds resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(isExponeaPushNotification:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(registerSegmentationDataCallback:(NSString *)exposingCategory includeFirstLoad:(BOOL)includeFirstLoad resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(unregisterSegmentationDataCallback:(NSString *)callbackInstanceId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getSegments:(NSString *)exposingCategory resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end

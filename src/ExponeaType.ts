@@ -230,6 +230,16 @@ interface ExponeaType {
   trackInAppContentBlockErrorWithoutTrackingConsent(
     params: Record<string, string>,
   ): Promise<void>;
+
+  registerSegmentationDataCallback(
+      callback: SegmentationDataCallback
+  ): void;
+
+  unregisterSegmentationDataCallback(
+      callback: SegmentationDataCallback
+  ): void;
+
+  getSegments(exposingCategory: string): Promise<Array<Segment>>;
 }
 
 export enum FlushMode {
@@ -315,5 +325,25 @@ export interface InAppContentBlockAction {
   name?: string,
   url?: string,
 }
+
+export class SegmentationDataCallback {
+  readonly exposingCategory: string;
+  readonly includeFirstLoad: boolean;
+  private readonly onNewDataFunc: (data: Array<Segment>) => void;
+  constructor(
+      exposingCategory: string,
+      includeFirstLoad: boolean,
+      callback: (data: Array<Segment>) => void,
+  ) {
+    this.exposingCategory = exposingCategory;
+    this.includeFirstLoad = includeFirstLoad;
+    this.onNewDataFunc = callback;
+  }
+  onNewData(data: Array<Segment>): void {
+    this.onNewDataFunc(data)
+  }
+}
+
+export type Segment = Record<string, string>
 
 export default ExponeaType;

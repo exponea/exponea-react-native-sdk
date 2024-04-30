@@ -12,6 +12,7 @@ import com.exponea.sdk.models.ExponeaProject
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
+import com.exponea.sdk.models.Segment
 import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
 import com.exponea.sdk.util.Logger
 import com.exponea.style.AppInboxStyleParser
@@ -22,6 +23,7 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.gson.Gson
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 
 class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -32,6 +34,10 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         constructor(message: String, cause: Throwable) : super(message, cause)
     }
     class ExponeaFetchException(message: String) : Exception(message)
+    class ExponeaInvalidUsageException : Exception {
+        constructor(message: String) : super(message)
+        constructor(message: String, cause: Throwable) : super(message, cause)
+    }
 
     companion object {
         var currentInstance: ExponeaModule? = null
@@ -96,6 +102,8 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     private var pushReceivedListenerSet = false
     // We have to hold received push data until pushReceivedListener set in JS
     private var pendingReceivedPushData: Map<String, Any>? = null
+
+    internal val segmentationDataCallbacks = CopyOnWriteArrayList<ReactNativeSegmentationDataCallback>()
 
     override fun getName(): String {
         return "Exponea"
@@ -869,5 +877,55 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         }
         Exponea.trackInAppContentBlockErrorWithoutTrackingConsent(placeholderId, inAppContentBlock, errorMessage)
         promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun registerSegmentationDataCallback(
+        exposingCategory: String,
+        includeFirstLoad: Boolean,
+        promise: Promise
+    ) = catchAndReject(promise) {
+        val segmentationDataCallback = ReactNativeSegmentationDataCallback(
+            exposingCategory,
+            includeFirstLoad
+        ) { callbackInstance, segments ->
+            sendNewSegmentsData(callbackInstance, segments)
+        }
+        Exponea.registerSegmentationDataCallback(segmentationDataCallback)
+        segmentationDataCallbacks.add(segmentationDataCallback)
+        promise.resolve(segmentationDataCallback.instanceId)
+    }
+
+    @ReactMethod
+    fun unregisterSegmentationDataCallback(
+        callbackInstanceId: String,
+        promise: Promise
+    ) = catchAndReject(promise) {
+        val segmentationCallbackToRemove = segmentationDataCallbacks.find { it.instanceId == callbackInstanceId }
+        if (segmentationCallbackToRemove == null) {
+            promise.reject(ExponeaInvalidUsageException(
+                "Segmentation callback $callbackInstanceId has not been found"
+            ))
+            return@catchAndReject
+        }
+        Exponea.unregisterSegmentationDataCallback(segmentationCallbackToRemove)
+        segmentationDataCallbacks.remove(segmentationCallbackToRemove)
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun getSegments(
+        exposingCategory: String,
+        promise: Promise
+    ) = catchAndReject(promise) {
+        Exponea.getSegments(exposingCategory) {
+            promise.resolve(Gson().toJson(it))
+        }
+    }
+
+    private fun sendNewSegmentsData(callbackInstance: ReactNativeSegmentationDataCallback, segments: List<Segment>) {
+        reactContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(callbackInstance.eventEmitterKey, Gson().toJson(segments))
     }
 }

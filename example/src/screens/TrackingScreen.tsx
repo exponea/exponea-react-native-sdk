@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, Text, View, Alert, Platform} from 'react-native';
+import {StyleSheet, Text, View, Alert} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 import ExponeaButton from '../components/ExponeaButton';
 import IdentifyCustomerModal from '../components/IdentifyCustomerModal';

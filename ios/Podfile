@@ -19,7 +19,7 @@ target 'Exponea' do
       :hermes_enabled => false
     )
 
-  pod "ExponeaSDK", "2.25.2"
+  pod "ExponeaSDK", "2.26.0"
   pod 'AnyCodable-FlightSchool', '0.4.0'
 end
 
