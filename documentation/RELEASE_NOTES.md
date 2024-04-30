@@ -119,7 +119,7 @@
 #### February 15, 2022
 * Features
   * React native upgraded to 0.67
-  * Native Android SDK updated to 3.0.2 - [Android SDK Release notes](https://github.com/exponea/exponea-android-sdk/blob/develop/Documentation/RELEASE_NOTES.md)
+  * Native Android SDK updated to 3.0.2 - [Android SDK Release notes](https://github.com/exponea/exponea-android-sdk/blob/main/Documentation/RELEASE_NOTES.md)
   * Native iOS SDK updated to 2.11.2 - [iOS SDK Release notest](https://documentation.bloomreach.com/engagement/docs/ios-sdk-release-notes#release-notes-for-2112)
   * Gradle 7 support
 * Bug Fixes
