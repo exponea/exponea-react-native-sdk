@@ -1,6 +1,14 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.8.0
+#### April 30, 2024
+* Features
+  * Segmentation API feature support
+  * Case of using RCTAppDelegate described more deeply in documentation
+  * How to run example app documentation update
+
+
 ## Release Notes for 1.7.0
 #### April 12, 2024
 * Features
