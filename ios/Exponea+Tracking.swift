@@ -112,6 +112,7 @@ extension Exponea {
             return
         }
         Exponea.exponeaInstance.trackPushToken(token)
+        resolve(nil)
     }
 
     @objc(trackHmsPushToken:resolve:reject:)
