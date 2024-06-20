@@ -1,6 +1,14 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.8.1
+#### June 20, 2024
+* Features
+  * Native iOS SDK updated to 2.26.2 and Android to 3.14.0
+* Bug Fixes
+  * Fixed: SDK Privacy manifest value is assigned under wrong key (in native iOS SDK)
+
+
 ## Release Notes for 1.8.0
 #### April 30, 2024
 * Features
