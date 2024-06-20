@@ -3,7 +3,7 @@ PODS:
   - boost (1.83.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (2.26.0):
+  - ExponeaSDK (2.26.2):
     - SwiftSoup (= 2.6.1)
   - ExponeaSDK-Notifications (2.26.0)
   - FBLazyVector (0.73.6)
@@ -915,9 +915,9 @@ PODS:
   - React-Mapbuffer (0.73.6):
     - glog
     - React-debug
-  - react-native-exponea-sdk (1.7.0):
+  - react-native-exponea-sdk (1.8.0):
     - AnyCodable-FlightSchool (= 0.4.0)
-    - ExponeaSDK (= 2.26.0)
+    - ExponeaSDK (= 2.26.2)
     - React-Core
   - react-native-safe-area-context (3.4.1):
     - React-Core
@@ -1321,7 +1321,7 @@ SPEC CHECKSUMS:
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
-  ExponeaSDK: 87028b79287b04a612db35480ff735fe6e60eed2
+  ExponeaSDK: 6d33b94c85a0cfc353b5d448ae3dfd7a2ee3c75a
   ExponeaSDK-Notifications: 2db3456bb743ffaf716aa6102730f3dce33b18f6
   FBLazyVector: f64d1e2ea739b4d8f7e4740cde18089cd97fe864
   FBReactNativeSpec: 9f2b8b243131565335437dba74923a8d3015e780
@@ -1358,7 +1358,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 85583ef014ce53d731a98c66a0e24496f7a83066
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
-  react-native-exponea-sdk: fab3177aabc73fdb833e45f6f376c74661851c62
+  react-native-exponea-sdk: 0eb8df8b96cb310e944cbfa17bf7424cf5d85c4a
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
   React-NativeModulesApple: ae99dc0e80c9027f54572c45635449fbdc36e4f1
@@ -1387,7 +1387,7 @@ SPEC CHECKSUMS:
   RNScreens: 17e2f657f1b09a71ec3c821368a04acbb7ebcb46
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   SwiftSoup: 5dd2c1b06afc964f30d99894af6ede22ede627aa
-  Yoga: 805bf71192903b20fc14babe48080582fee65a80
+  Yoga: d17d2cc8105eed528474683b42e2ea310e1daf61
 
 PODFILE CHECKSUM: dea8e28dac37a572bc851de7922fa4cbd48a9140
 
