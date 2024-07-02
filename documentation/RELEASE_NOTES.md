@@ -1,6 +1,12 @@
 ## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
 
 ## Release Notes
+## Release Notes for 1.8.2
+#### July 02, 2024
+* Fixed:
+  * Fixes an issue with Segmentation API for not supported event type - Segmentation API refactored to be compatible with native modules
+
+
 ## Release Notes for 1.8.1
 #### June 20, 2024
 * Features
