@@ -67,7 +67,11 @@ extension Exponea {
         _ callbackInstance: ReactNativeSegmentationDataCallback,
         _ segments: [SegmentDTO]
     ) {
-        guard let data = try? JSONEncoder().encode(segments),
+        let dataMap = SegmentationDataWrapper.init(
+            callbackId: callbackInstance.instanceId,
+            data: segments
+        )
+        guard let data = try? JSONEncoder().encode(dataMap),
               let body = String(data: data, encoding: .utf8) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize segments data.")
             return
@@ -81,6 +85,7 @@ extension Exponea {
 
 class ReactNativeSegmentationDataCallback {
     let instanceId = UUID().uuidString
+    let eventEmitterKey = "newSegments"
 
     let exposingCategory: SegmentCategory
     let includeFirstLoad: Bool
@@ -95,9 +100,6 @@ class ReactNativeSegmentationDataCallback {
             self.onNewData(self, data)
         }
     }()
-    lazy var eventEmitterKey: String = {
-        return "newSegmentsFor\(instanceId)"
-    }()
 
     init(
         category: SegmentCategory,
@@ -107,5 +109,15 @@ class ReactNativeSegmentationDataCallback {
         self.exposingCategory = category
         self.includeFirstLoad = includeFirstLoad
         self.onNewData = onNewData
+    }
+}
+
+struct SegmentationDataWrapper: Hashable, Codable {
+    public let callbackId: String
+    public let data: [SegmentDTO]
+
+    public enum CodingKeys: String, CodingKey {
+        case callbackId
+        case data
     }
 }

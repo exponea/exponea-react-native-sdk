@@ -924,8 +924,12 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     }
 
     private fun sendNewSegmentsData(callbackInstance: ReactNativeSegmentationDataCallback, segments: List<Segment>) {
+        val dataMap = mapOf(
+            "callbackId" to callbackInstance.instanceId,
+            "data" to segments
+        )
         reactContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(callbackInstance.eventEmitterKey, Gson().toJson(segments))
+            .emit(callbackInstance.eventEmitterKey, Gson().toJson(dataMap))
     }
 }

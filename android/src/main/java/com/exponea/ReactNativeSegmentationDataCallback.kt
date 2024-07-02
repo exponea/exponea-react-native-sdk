@@ -11,7 +11,7 @@ class ReactNativeSegmentationDataCallback(
     private val reactModuleCallback: (ReactNativeSegmentationDataCallback, List<Segment>) -> Unit
 ) : SegmentationDataCallback() {
     val instanceId = UUID.randomUUID().toString()
-    val eventEmitterKey = "newSegmentsFor$instanceId"
+    val eventEmitterKey = "newSegments"
     override fun onNewData(segments: List<Segment>) {
         Logger.d(this, "Segments: New segments for '$exposingCategory' received: $segments")
         reactModuleCallback.invoke(this, segments)

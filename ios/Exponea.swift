@@ -35,7 +35,7 @@ class Exponea: RCTEventEmitter {
 
     @objc(supportedEvents)
     override func supportedEvents() -> [String] {
-        return ["pushOpened", "pushReceived", "inAppAction"]
+        return ["pushOpened", "pushReceived", "inAppAction", "newSegments"]
     }
 
     override func sendEvent(withName name: String!, body: Any) {

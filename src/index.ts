@@ -7,7 +7,7 @@ import Consent from './Consent';
 import {Recommendation, RecommendationOptions} from './Recommendation';
 import {AppInboxMessage} from './AppInboxMessage';
 import {AppInboxAction} from './AppInboxAction';
-import {SegmentationCallbackBridge} from "./SegmentationCallbackBridge";
+import {SegmentationCallbackBridge, SegmentationDataWrapper} from "./SegmentationCallbackBridge";
 
 /*
 React native bridge doesn't like optional parameters, we have to implement it ourselves.
@@ -305,7 +305,10 @@ const Exponea: ExponeaType = {
       bridge.assignNativeCallbackId(callbackId);
       segmentationCallbackBridges.push(bridge);
       eventEmitter.addListener(bridge.getEventEmitterKey(), (data: string) => {
-        callback.onNewData(JSON.parse(data));
+        const receivedData: SegmentationDataWrapper = JSON.parse(data)
+        if (bridge.nativeCallbackId == receivedData.callbackId) {
+          callback.onNewData(JSON.parse(data));
+        }
       })
     })
   },

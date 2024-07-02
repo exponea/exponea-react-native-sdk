@@ -1,4 +1,4 @@
-import {SegmentationDataCallback} from "./ExponeaType";
+import {Segment, SegmentationDataCallback} from "./ExponeaType";
 
 /**
  * Keeps info to ensure communication 'bridge' within SegmentationDataCallback and native implementation.
@@ -15,6 +15,11 @@ export class SegmentationCallbackBridge {
     }
 
     getEventEmitterKey(): string {
-        return "newSegmentsFor" + this.nativeCallbackId
+        return "newSegments"
     }
+}
+
+export interface SegmentationDataWrapper {
+    callbackId: string;
+    data: Array<Segment>
 }
