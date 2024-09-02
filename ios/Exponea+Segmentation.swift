@@ -57,6 +57,9 @@ extension Exponea {
             guard let data = try? JSONEncoder().encode(segments),
                   let body = String(data: data, encoding: .utf8) else {
                 ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize segments data.")
+                self.rejectPromise(reject, error: ExponeaError.generalError(
+                    "Unable to serialize segments data."
+                ))
                 return
             }
             resolve(body)

@@ -286,6 +286,7 @@ class Exponea: RCTEventEmitter {
         } else {
             exponea.setAutomaticSessionTracking(automaticSessionTracking: .disabled)
         }
+        resolve(nil)
     }
 
     @objc(setAutoPushNotification:resolve:reject:)

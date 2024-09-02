@@ -192,7 +192,7 @@ class MockExponea: ExponeaType {
     }
 
     func trackPayment(properties: [String: JSONConvertible], timestamp: Double?) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackPayment", params: [properties, timestamp]))
     }
 
     func identifyCustomer(
@@ -212,11 +212,11 @@ class MockExponea: ExponeaType {
     }
 
     func trackPushToken(_ token: Data) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackPushToken", params: [token]))
     }
 
     func trackPushToken(_ token: String?) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackPushToken", params: [token]))
     }
 
     func handlePushNotificationToken(deviceToken: Data) {
@@ -224,7 +224,7 @@ class MockExponea: ExponeaType {
     }
 
     func trackPushOpened(with userInfo: [AnyHashable: Any]) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackPushOpened", params: [userInfo]))
     }
 
     func handlePushNotificationOpened(response: UNNotificationResponse) {
@@ -270,7 +270,7 @@ class MockExponea: ExponeaType {
     }
 
     func trackPushOpenedWithoutTrackingConsent(with userInfo: [AnyHashable: Any]) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackPushOpenedWithoutTrackingConsent", params: [userInfo]))
     }
 
     func handlePushNotificationOpenedWithoutTrackingConsent(userInfo: [AnyHashable: Any], actionIdentifier: String?) {
@@ -282,11 +282,14 @@ class MockExponea: ExponeaType {
         buttonText: String?,
         buttonLink: String?
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(
+            name: "trackInAppMessageClickWithoutTrackingConsent",
+            params: [message, buttonText, buttonLink]
+        ))
     }
 
     func trackInAppMessageCloseClickWithoutTrackingConsent(message: ExponeaSDK.InAppMessage) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackInAppMessageCloseClickWithoutTrackingConsent", params: [message]))
     }
 
     func trackAppInboxOpened(message: ExponeaSDK.MessageItem) {
@@ -344,7 +347,7 @@ class MockExponea: ExponeaType {
     }
 
     func trackPushReceived(userInfo: [AnyHashable: Any]) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackPushReceived", params: [userInfo]))
     }
 
     func trackPushReceivedWithoutTrackingConsent(content: UNNotificationContent) {
@@ -352,21 +355,24 @@ class MockExponea: ExponeaType {
     }
 
     func trackPushReceivedWithoutTrackingConsent(userInfo: [AnyHashable: Any]) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackPushReceivedWithoutTrackingConsent", params: [userInfo]))
     }
 
     func trackInAppMessageCloseClickWithoutTrackingConsent(
         message: ExponeaSDK.InAppMessage,
         isUserInteraction: Bool?
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(
+            name: "trackInAppMessageCloseClickWithoutTrackingConsent",
+            params: [message, isUserInteraction]
+        ))
     }
 
     func trackInAppMessageClose(
         message: ExponeaSDK.InAppMessage,
         isUserInteraction: Bool?
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackInAppMessageClose", params: [message, isUserInteraction]))
     }
 
     func trackInAppContentBlockClick(
@@ -374,7 +380,7 @@ class MockExponea: ExponeaType {
         action: ExponeaSDK.InAppContentBlockAction,
         message: ExponeaSDK.InAppContentBlockResponse
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackInAppContentBlockClick", params: [placeholderId, action, message]))
     }
 
     func trackInAppContentBlockClickWithoutTrackingConsent(
@@ -382,35 +388,38 @@ class MockExponea: ExponeaType {
         action: ExponeaSDK.InAppContentBlockAction,
         message: ExponeaSDK.InAppContentBlockResponse
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(
+            name: "trackInAppContentBlockClickWithoutTrackingConsent",
+            params: [placeholderId, action, message]
+        ))
     }
 
     func trackInAppContentBlockClose(
         placeholderId: String,
         message: ExponeaSDK.InAppContentBlockResponse
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackInAppContentBlockClose", params: [placeholderId, message]))
     }
 
     func trackInAppContentBlockCloseWithoutTrackingConsent(
         placeholderId: String,
         message: ExponeaSDK.InAppContentBlockResponse
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackInAppContentBlockCloseWithoutTrackingConsent", params: [placeholderId, message]))
     }
 
     func trackInAppContentBlockShown(
         placeholderId: String,
         message: ExponeaSDK.InAppContentBlockResponse
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackInAppContentBlockShown", params: [placeholderId, message]))
     }
 
     func trackInAppContentBlockShownWithoutTrackingConsent(
         placeholderId: String,
         message: ExponeaSDK.InAppContentBlockResponse
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackInAppContentBlockShownWithoutTrackingConsent", params: [placeholderId, message]))
     }
 
     func trackInAppContentBlockError(
@@ -418,7 +427,7 @@ class MockExponea: ExponeaType {
         message: ExponeaSDK.InAppContentBlockResponse,
         errorMessage: String
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "trackInAppContentBlockError", params: [placeholderId, message, errorMessage]))
     }
 
     func trackInAppContentBlockErrorWithoutTrackingConsent(
@@ -426,14 +435,18 @@ class MockExponea: ExponeaType {
         message: ExponeaSDK.InAppContentBlockResponse,
         errorMessage: String
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(
+            name: "trackInAppContentBlockErrorWithoutTrackingConsent",
+            params: [placeholderId, message, errorMessage]
+        ))
     }
 
     func getSegments(
         category: ExponeaSDK.SegmentCategory,
         successCallback: @escaping ExponeaSDK.TypeBlock<[ExponeaSDK.SegmentDTO]>
     ) {
-        fatalError("Not implemented")
+        calls.append(Call(name: "getSegments", params: [category]))
+        successCallback([])
     }
 }
 

@@ -112,6 +112,7 @@ extension Exponea {
             return
         }
         Exponea.exponeaInstance.trackPushToken(token)
+        resolve(nil)
     }
 
     @objc(trackHmsPushToken:resolve:reject:)
@@ -140,6 +141,7 @@ extension Exponea {
                 val.jsonConvertible
             }
             Exponea.exponeaInstance.trackPushReceived(userInfo: data)
+            resolve(nil)
         } catch {
             rejectPromise(reject, error: error)
         }
@@ -162,6 +164,7 @@ extension Exponea {
                 val.jsonConvertible
             }
             Exponea.exponeaInstance.trackPushReceivedWithoutTrackingConsent(userInfo: data)
+            resolve(nil)
         } catch {
             rejectPromise(reject, error: error)
         }
@@ -184,6 +187,7 @@ extension Exponea {
                 val.jsonConvertible
             }
             Exponea.exponeaInstance.trackPushOpened(with: data)
+            resolve(nil)
         } catch {
             rejectPromise(reject, error: error)
         }
@@ -206,6 +210,7 @@ extension Exponea {
                 val.jsonConvertible
             }
             Exponea.exponeaInstance.trackPushOpenedWithoutTrackingConsent(with: data)
+            resolve(nil)
         } catch {
             rejectPromise(reject, error: error)
         }
@@ -228,6 +233,7 @@ extension Exponea {
                 val.jsonConvertible
             }
             Exponea.exponeaInstance.trackPayment(properties: data, timestamp: nil)
+            resolve(nil)
         } catch {
             rejectPromise(reject, error: error)
         }
@@ -259,6 +265,7 @@ extension Exponea {
             buttonText: try? button.getOptionalSafely(property: "text"),
             buttonLink: link
         )
+        resolve(nil)
     }
 
     @objc(trackInAppMessageClickWithoutTrackingConsent:resolve:reject:)
@@ -287,6 +294,7 @@ extension Exponea {
             buttonText: try? button.getOptionalSafely(property: "text"),
             buttonLink: link
         )
+        resolve(nil)
     }
 
     @objc(trackInAppMessageClose:isUserInteraction:resolve:reject:)
@@ -296,6 +304,10 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(reject, error: ExponeaError.notConfigured)
+            return
+        }
         guard let json = try? JSONSerialization.data(withJSONObject: message),
               let inAppMessage = try? JSONDecoder().decode(InAppMessage.self, from: json) else {
             rejectPromise(reject, error: ExponeaError.generalError(
@@ -307,6 +319,7 @@ extension Exponea {
             message: inAppMessage,
             isUserInteraction: isUserInteraction
         )
+        resolve(nil)
     }
 
     @objc(trackInAppMessageCloseWithoutTrackingConsent:isUserInteraction:resolve:reject:)
@@ -331,6 +344,7 @@ extension Exponea {
             message: inAppMessage,
             isUserInteraction: isUserInteraction
         )
+        resolve(nil)
     }
 
     func parseInAppContentBlockAction(data: NSDictionary) throws -> InAppContentBlockAction {
@@ -378,6 +392,7 @@ extension Exponea {
             action: inAppContentBlockAction,
             message: inAppContentBlockResponse
         )
+        resolve(nil)
     }
 
     @objc(trackInAppContentBlockClickWithoutTrackingConsent:resolve:reject:)
@@ -410,6 +425,7 @@ extension Exponea {
             action: inAppContentBlockAction,
             message: inAppContentBlockResponse
         )
+        resolve(nil)
     }
 
     @objc(trackInAppContentBlockClose:resolve:reject:)
@@ -439,6 +455,7 @@ extension Exponea {
             placeholderId: placeholderId,
             message: inAppContentBlockResponse
         )
+        resolve(nil)
     }
 
     @objc(trackInAppContentBlockCloseWithoutTrackingConsent:resolve:reject:)
@@ -468,6 +485,7 @@ extension Exponea {
             placeholderId: placeholderId,
             message: inAppContentBlockResponse
         )
+        resolve(nil)
     }
 
     @objc(trackInAppContentBlockShown:resolve:reject:)
@@ -497,6 +515,7 @@ extension Exponea {
             placeholderId: placeholderId,
             message: inAppContentBlockResponse
         )
+        resolve(nil)
     }
 
     @objc(trackInAppContentBlockShownWithoutTrackingConsent:resolve:reject:)
@@ -526,6 +545,7 @@ extension Exponea {
             placeholderId: placeholderId,
             message: inAppContentBlockResponse
         )
+        resolve(nil)
     }
 
     @objc(trackInAppContentBlockError:resolve:reject:)
@@ -557,6 +577,7 @@ extension Exponea {
             message: inAppContentBlockResponse,
             errorMessage: errorMessage
         )
+        resolve(nil)
     }
 
     @objc(trackInAppContentBlockErrorWithoutTrackingConsent:resolve:reject:)
@@ -588,5 +609,6 @@ extension Exponea {
             message: inAppContentBlockResponse,
             errorMessage: errorMessage
         )
+        resolve(nil)
     }
 }

@@ -915,7 +915,7 @@ PODS:
   - React-Mapbuffer (0.73.6):
     - glog
     - React-debug
-  - react-native-exponea-sdk (1.8.1):
+  - react-native-exponea-sdk (1.8.2):
     - AnyCodable-FlightSchool (= 0.4.0)
     - ExponeaSDK (= 2.26.2)
     - React-Core
@@ -1358,7 +1358,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 85583ef014ce53d731a98c66a0e24496f7a83066
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
-  react-native-exponea-sdk: df812ea1b8eaf293c0384c5748a84c83a8b97dd1
+  react-native-exponea-sdk: 9e6f01030ef5c73027a305bfb8dfaff2dbf29da8
   react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
   React-NativeModulesApple: ae99dc0e80c9027f54572c45635449fbdc36e4f1
