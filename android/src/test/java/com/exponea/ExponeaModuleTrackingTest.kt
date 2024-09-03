@@ -3,13 +3,18 @@ package com.exponea
 import androidx.test.core.app.ApplicationProvider
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.CustomerIds
+import com.exponea.sdk.models.NotificationAction
+import com.exponea.sdk.models.NotificationData
 import com.exponea.sdk.models.PropertiesList
 import com.facebook.react.bridge.JavaOnlyMap
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableMap
 import io.mockk.every
 import io.mockk.mockkObject
+import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
+import kotlin.test.assertTrue
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -238,4 +243,195 @@ internal class ExponeaModuleTrackingTest {
             }
         )
     }
+
+    @Test
+    fun `tracks delivered production push notification`() {
+        every { Exponea.isInitialized } returns true
+        val notificationSlot = slot<NotificationData>()
+        module.trackDeliveredPush(
+            getPushNotificationAsMap(),
+            MockResolvingPromise {
+                verify {
+                    Exponea.trackDeliveredPush(
+                        capture(notificationSlot),
+                        any()
+                    )
+                }
+            }
+        )
+        assertTrue(notificationSlot.isCaptured)
+        val data = notificationSlot.captured
+        assertEquals(true, data.hasTrackingConsent)
+        assertEquals("campaign", data.eventType)
+        assertEquals(hashMapOf(
+            "event_type" to "campaign",
+            "campaign_id" to "5db9ab54b073dfb424ccfa6f",
+            "campaign_name" to "Wassil's push",
+            "action_id" to 2.0,
+            "action_name" to "Unnamed mobile push",
+            "action_type" to "mobile notification",
+            "campaign_policy" to "",
+            "platform" to "android",
+            "language" to "",
+            "subject" to "Notification title",
+            "recipient" to "eMxrdLuMalE:APA91bFgzKPVtem5aA0ZL0PFm_FgksAtVCOhzIQywX7DZQx2dKiVUepgl_Yw2aIrGZ7gpblCHltL6PWfXLoRw_5aZvV9swkPtUNwYjMNoF2f7igXgNe5Ovgyi8q5fmoX9QVHtyt8C-0Z", // ktlint-disable max-line-length
+            "sent_timestamp" to 1614585422.20,
+            "type" to "push"
+        ), data.attributes)
+        val campaignData = data.campaignData
+        assertEquals("Testing mobile push", campaignData.campaign)
+        assertEquals("term", campaignData.term)
+        assertEquals("mobile_push_notification", campaignData.medium)
+        assertEquals("content campaign", campaignData.content)
+        assertEquals(null, campaignData.payload)
+        assertEquals("exponea", campaignData.source)
+        assertEquals(mapOf(
+            "campaign_id" to "5db9ab54b073dfb424ccfa6f",
+            "campaign_name" to "Wassil's push",
+            "action_id" to 2.0,
+            "action_name" to "Unnamed mobile push",
+            "action_type" to "mobile notification",
+            "campaign_policy" to "",
+            "platform" to "android",
+            "language" to "",
+            "subject" to "Notification title",
+            "recipient" to "eMxrdLuMalE:APA91bFgzKPVtem5aA0ZL0PFm_FgksAtVCOhzIQywX7DZQx2dKiVUepgl_Yw2aIrGZ7gpblCHltL6PWfXLoRw_5aZvV9swkPtUNwYjMNoF2f7igXgNe5Ovgyi8q5fmoX9QVHtyt8C-0Z", // ktlint-disable max-line-length
+            "sent_timestamp" to 1614585422.20,
+            "type" to "push",
+            "utm_source" to "exponea",
+            "utm_medium" to "mobile_push_notification",
+            "utm_campaign" to "Testing mobile push",
+            "utm_content" to "content campaign",
+            "utm_term" to "term"
+        ), data.getTrackingData())
+    }
+
+    @Test
+    fun `tracks clicked production push notification`() {
+        every { Exponea.isInitialized } returns true
+        val notificationSlot = slot<NotificationData>()
+        val actionSlot = slot<NotificationAction>()
+        module.trackClickedPush(
+            getPushNotificationAsMap() + getPushNotificationActionAsMap(),
+            MockResolvingPromise {
+                verify {
+                    Exponea.trackClickedPush(
+                        capture(notificationSlot),
+                        capture(actionSlot),
+                        any()
+                    )
+                }
+            }
+        )
+        assertTrue(notificationSlot.isCaptured)
+        val data = notificationSlot.captured
+        assertEquals(true, data.hasTrackingConsent)
+        assertEquals("campaign", data.eventType)
+        assertEquals(hashMapOf(
+            "event_type" to "campaign",
+            "campaign_id" to "5db9ab54b073dfb424ccfa6f",
+            "campaign_name" to "Wassil's push",
+            "action_id" to 2.0,
+            "action_name" to "Unnamed mobile push",
+            "action_type" to "mobile notification",
+            "campaign_policy" to "",
+            "platform" to "android",
+            "language" to "",
+            "subject" to "Notification title",
+            "recipient" to "eMxrdLuMalE:APA91bFgzKPVtem5aA0ZL0PFm_FgksAtVCOhzIQywX7DZQx2dKiVUepgl_Yw2aIrGZ7gpblCHltL6PWfXLoRw_5aZvV9swkPtUNwYjMNoF2f7igXgNe5Ovgyi8q5fmoX9QVHtyt8C-0Z", // ktlint-disable max-line-length
+            "sent_timestamp" to 1614585422.20,
+            "type" to "push"
+        ), data.attributes)
+        val campaignData = data.campaignData
+        assertEquals("Testing mobile push", campaignData.campaign)
+        assertEquals("term", campaignData.term)
+        assertEquals("mobile_push_notification", campaignData.medium)
+        assertEquals("content campaign", campaignData.content)
+        assertEquals(null, campaignData.payload)
+        assertEquals("exponea", campaignData.source)
+        assertEquals(mapOf(
+            "campaign_id" to "5db9ab54b073dfb424ccfa6f",
+            "campaign_name" to "Wassil's push",
+            "action_id" to 2.0,
+            "action_name" to "Unnamed mobile push",
+            "action_type" to "mobile notification",
+            "campaign_policy" to "",
+            "platform" to "android",
+            "language" to "",
+            "subject" to "Notification title",
+            "recipient" to "eMxrdLuMalE:APA91bFgzKPVtem5aA0ZL0PFm_FgksAtVCOhzIQywX7DZQx2dKiVUepgl_Yw2aIrGZ7gpblCHltL6PWfXLoRw_5aZvV9swkPtUNwYjMNoF2f7igXgNe5Ovgyi8q5fmoX9QVHtyt8C-0Z", // ktlint-disable max-line-length
+            "sent_timestamp" to 1614585422.20,
+            "type" to "push",
+            "utm_source" to "exponea",
+            "utm_medium" to "mobile_push_notification",
+            "utm_campaign" to "Testing mobile push",
+            "utm_content" to "content campaign",
+            "utm_term" to "term"
+        ), data.getTrackingData())
+        assertTrue(actionSlot.isCaptured)
+        val notificationAction = actionSlot.captured
+        assertEquals("button", notificationAction.actionType)
+        assertEquals("Clicked action", notificationAction.actionName)
+        assertEquals("https://example.com", notificationAction.url)
+    }
+
+    private fun getPushNotificationActionAsMap(): ReadableMap {
+        return mapOf(
+            "actionType" to "button",
+            "actionName" to "Clicked action",
+            "url" to "https://example.com"
+        ).toReadableMap()
+    }
+
+    private fun getPushNotificationAsMap(): ReadableMap {
+        return mapOf(
+            "notification_id" to "1",
+            "action" to "app",
+            "actions" to """[
+                {"action":"app","title":"Action 1 title"},
+                {"action":"deeplink","title":"Action 2 title","url":"http:\/\/deeplink?search=something"},
+                {"action":"browser","title":"Action 3 title","url":"http:\/\/google.com?search=something"}
+            ]""".trimIndent(),
+            "url_params" to """
+                {"utm_campaign":"Testing mobile push","utm_medium":"mobile_push_notification","utm_source":"exponea","utm_term":"term","utm_content":"content campaign"}
+            """.trimIndent(),
+            "title" to "Notification title",
+            "attributes" to """{
+                "campaign_name":"Wassil's push",
+                "event_type":"campaign",
+                "action_id":2,
+                "action_type":"mobile notification",
+                "campaign_policy":"",
+                "subject":"Notification title",
+                "action_name":"Unnamed mobile push",
+                "recipient":"eMxrdLuMalE:APA91bFgzKPVtem5aA0ZL0PFm_FgksAtVCOhzIQywX7DZQx2dKiVUepgl_Yw2aIrGZ7gpblCHltL6PWfXLoRw_5aZvV9swkPtUNwYjMNoF2f7igXgNe5Ovgyi8q5fmoX9QVHtyt8C-0Z",
+                "language":"",
+                "campaign_id":"5db9ab54b073dfb424ccfa6f",
+                "platform":"android",
+                "sent_timestamp":1614585422.20,
+                "type":"push"
+            }""".trimIndent(),
+            "message" to "Notification text"
+        ).toReadableMap()
+    }
+}
+
+private operator fun ReadableMap.plus(second: ReadableMap): ReadableMap {
+    return (this.toHashMap() + second.toHashMap()).toReadableMap()
+}
+
+private fun <K : Any, V : Any> Map<K, V?>.toReadableMap(): ReadableMap {
+    return JavaOnlyMap.of(*toVarargArray())
+}
+
+private fun <K : Any, V : Any> Map<K, V?>.toVarargArray(): Array<Any> {
+    val result = mutableListOf<Any>()
+    for ((key, value) in this) {
+        if (value == null) {
+            continue
+        }
+        result.add(key)
+        result.add(value)
+    }
+    return result.toTypedArray()
 }

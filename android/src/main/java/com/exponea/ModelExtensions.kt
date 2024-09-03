@@ -26,6 +26,7 @@ import com.exponea.sdk.models.eventfilter.EventFilterOperatorSerializer
 import com.exponea.sdk.models.eventfilter.EventPropertyFilter
 import com.exponea.sdk.models.eventfilter.PropertyAttribute
 import com.exponea.sdk.models.eventfilter.TimestampAttribute
+import com.exponea.sdk.util.GdprTracking
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializer
@@ -208,32 +209,32 @@ internal fun Map<String, Any?>.toInAppMessagePayloadButton(): InAppMessagePayloa
     )
 }
 
-internal fun Map<String, Any?>.toNotificationData(): NotificationData? {
+internal fun Map<String, String>.toNotificationData(): NotificationData? {
     val source = this
-    val attributes = source
-        .getNullSafelyMap<Any>("attributes") as? HashMap<String, Any>
-        ?: return null
-    val campaignData = source.getNullSafelyMap<Any>("campaignData")?.toCampaignData()
-        ?: return null
+    val attributes: HashMap<String, Any> = GSON.fromJson(source["data"] ?: source["attributes"] ?: "{}")
+    val campaignMap: Map<String, String> = GSON.fromJson(source["url_params"] ?: "{}")
+    val consentCategoryTracking: String? = source["consent_category_tracking"]
+    val hasTrackingConsent: Boolean = GdprTracking.hasTrackingConsent(source["has_tracking_consent"])
+    val campaignData = campaignMap.toCampaignData()
     return NotificationData(
-        attributes = attributes,
-        campaignData = campaignData,
-        consentCategoryTracking = source.getNullSafely("consentCategoryTracking"),
-        hasTrackingConsent = source.getRequired("hasTrackingConsent")
+        attributes,
+        campaignData,
+        consentCategoryTracking,
+        hasTrackingConsent
     )
 }
 
-internal fun Map<String, Any?>.toCampaignData(): CampaignData {
+internal fun Map<String, String>.toCampaignData(): CampaignData {
     val source = this
     return CampaignData(
-        source = source.getNullSafely("source"),
-        campaign = source.getNullSafely("campaign"),
-        content = source.getNullSafely("content"),
-        medium = source.getNullSafely("medium"),
-        term = source.getNullSafely("term"),
-        payload = source.getNullSafely("payload"),
-        createdAt = source.getNullSafely("createdAt") ?: currentTimeSeconds(),
-        completeUrl = source.getNullSafely("completeUrl")
+        source = source["utm_source"],
+        campaign = source["utm_campaign"],
+        content = source["utm_content"],
+        medium = source["utm_medium"],
+        term = source["utm_term"],
+        payload = source["xnpe_cmp"],
+        createdAt = currentTimeSeconds(),
+        completeUrl = null
     )
 }
 

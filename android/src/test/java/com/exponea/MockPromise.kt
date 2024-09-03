@@ -71,7 +71,9 @@ open class MockPromise(val onResolved: (MockPromise) -> Unit, val onRejected: (M
 }
 
 class MockResolvingPromise(onResolved: (MockPromise) -> Unit) :
-    MockPromise(onResolved, { fail("Expected promise to be resolved") })
+    MockPromise(onResolved, {
+        fail("Expected promise to be resolved but error occurred: {${it.errorThrowable?.localizedMessage}}")
+    })
 
 class MockRejectingPromise(onRejected: (MockPromise) -> Unit) :
     MockPromise({ fail("Expected promise to be rejected") }, onRejected)

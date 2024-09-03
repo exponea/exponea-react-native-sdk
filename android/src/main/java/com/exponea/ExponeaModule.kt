@@ -646,38 +646,34 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     @ReactMethod
     fun trackDeliveredPush(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        val notification = params.toHashMapRecursively().toNotificationData()
-        val receivedSeconds = params
-            .toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        val notification = params.toMapStringString().toNotificationData()
+        val receivedSeconds = params.toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
         Exponea.trackDeliveredPush(notification, receivedSeconds)
         promise.resolve(null)
     }
 
     @ReactMethod
     fun trackDeliveredPushWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        val notification = params.toHashMapRecursively().toNotificationData()
-        val receivedSeconds = params
-            .toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        val notification = params.toMapStringString().toNotificationData()
+        val receivedSeconds = params.toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
         Exponea.trackDeliveredPushWithoutTrackingConsent(notification, receivedSeconds)
         promise.resolve(null)
     }
 
     @ReactMethod
     fun trackClickedPush(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        val notification = params.toHashMapRecursively().toNotificationData()
+        val notification = params.toMapStringString().toNotificationData()
         val notificationAction = params.toHashMapRecursively().toNotificationAction()
-        val receivedSeconds = params
-            .toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        val receivedSeconds = params.toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
         Exponea.trackClickedPush(notification, notificationAction, receivedSeconds)
         promise.resolve(null)
     }
 
     @ReactMethod
     fun trackClickedPushWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        val notification = params.toHashMapRecursively().toNotificationData()
+        val notification = params.toMapStringString().toNotificationData()
         val notificationAction = params.toHashMapRecursively().toNotificationAction()
-        val receivedSeconds = params
-            .toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
+        val receivedSeconds = params.toHashMapRecursively().getNullSafely("receivedSeconds") ?: currentTimeSeconds()
         Exponea.trackClickedPushWithoutTrackingConsent(notification, notificationAction, receivedSeconds)
         promise.resolve(null)
     }

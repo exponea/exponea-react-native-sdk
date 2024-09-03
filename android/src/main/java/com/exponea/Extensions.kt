@@ -14,6 +14,8 @@ import com.facebook.react.bridge.ReadableType
 import com.facebook.react.bridge.ReadableType.Array
 import com.facebook.react.bridge.ReadableType.Null
 import com.facebook.react.bridge.ReadableType.Number
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.Date
 import kotlin.reflect.KClass
 import kotlin.text.RegexOption.IGNORE_CASE
@@ -42,6 +44,16 @@ internal fun ReadableMap.toHashMapRecursively(): Map<String, Any?> {
             it.value is ReadableArray -> (it.value as ReadableArray).toArrayListRecursively()
             else -> it.value
         }
+    }
+}
+
+internal fun ReadableMap.toMapStringString(): Map<String, String> {
+    val map = this.toHashMap()
+    return map.mapValues {
+        when {
+            it.value is String -> it.value
+            else -> GSON.toJson(it.value)
+        } as String
     }
 }
 
@@ -479,3 +491,5 @@ internal fun Int.asColorString(): String {
 }
 
 fun currentTimeSeconds() = Date().time / 1000.0
+
+internal inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, object : TypeToken<T>() {}.type)
