@@ -1,63 +1,220 @@
-# Tracking
-Exponea SDK allows you to track events that occur while using the app and add properties of your customer. When SDK is first initialized we generate a cookie for the customer that will be used for all the tracking. You can retrieve that cookie using `Exponea.getCustomerCookie()`.
+---
+title: Tracking
+excerpt: Track customers and events using the React Native SDK
+slug: react-native-sdk-tracking
+categorySlug: integrations
+parentDocSlug: react-native-sdk
+---
 
-> If you need to reset the tracking and start fresh with a new user, you can use [Anonymize](./ANONYMIZE.md) functionality.
+You can track events in Engagement to learn more about your app’s usage patterns and to segment your customers by their interactions.
 
-## Track events
-> Some events are tracked automatically. We track installation event once for every customer and when `automaticSessionTracking` is enabled in [Configuration](./CONFIGURATION.md) we automatically track session events.
+By default, the SDK tracks certain events automatically, including:
 
-You can define any event types for each of your projects based on your business model or your current goals. If you have product e-commerce website, your basic customer journey will probably/most likely be:
+* Installation (after app installation and after invoking [anonymize](#anonymize))
+* User session start and end
+* Banner event for showing an in-app message or content block
 
-* Visiting your App
-* Searching for specific product
-* Product page
-* Adding product to the cart
-* Going through ordering process
-* Payment
+Additionally, you can track any custom event relevant to your business.
 
-So the possible events for tracking will be: ‘search’, ‘product view’, ‘add product to cart’, ‘checkout’, ‘purchase’. Remember that you can define any event names you wish. Our recommendation is to make them self-descriptive and human understandable.
+## Events
 
-Once the SDK is configured, you can track your events using `trackEvent` function:
+### Track event
+
+Use the `trackEvent()` method to track any custom event type relevant to your business.
+
+You can use any name for a custom event type. We recommended using a descriptive and human-readable name.
+
+Refer to the [Custom events](https://documentation.bloomreach.com/engagement/docs/custom-events) documentation for an overview of commonly used custom events.
+
+#### Arguments
+
+
+| Name                     | Type       | Description |
+| -------------------------| -----------| ----------- |
+| eventName **(required)** | String     | Name of the event type, for example `screen_view`. |
+| properties               | JsonObject | Dictionary of event properties. |
+| timestamp                | number     | Unix timestamp (in seconds) specifying when the event was tracked. The default value is the current time. |
+
+#### Examples
+
+Imagine you want to track which screens a customer views. You can create a custom event `screen_view` for this.
+
+First, create a dictionary with properties you want to track with this event. In our example, you want to track the name of the screen, so you include a property `screen_name` along with any other relevant properties:
 
 ```typescript
-Exponea.trackEvent(
-  "purchase", // event name
+let properties = {
+  screen_name: "dashboard",
+  other_property: 123.45,
+}
+```
+
+Pass the event object to `trackEvent()` as follows:
+
+```typescript
+Exponea.trackEvent("screen_view", properties)
+```
+
+The second example below shows how you can use a nested structure for complex properties if needed:
+
+```typescript
+let properties = {
+  purchase_status: "success",
+  product_list: [
+    {
+      product_id: "abc123",
+      quantity: 2,
+    },
+    {
+      product_id: "abc456",
+      quantity: 1,
+    },
+  ],
+  total_price: 7.99,
+}
+Exponea.trackEvent("purchase", properties)
+```
+
+> 👍
+>
+> Optionally, you can provide a custom `timestamp` if the event happened at a different time. By default the current time will be used.
+
+## Customers
+
+[Identifying your customers](https://documentation.bloomreach.com/engagement/docs/customer-identification) allows you to track them across devices and platforms, improving the quality of your customer data.
+
+Without identification, events are tracked for an anonymous customer, only identified by a cookie. Once the customer is identified by a hard ID, these events will be transferred to a newly identified customer.
+
+> 👍
+>
+> Keep in mind that, while an app user and a customer record can be related by a soft or hard ID, they are separate entities, each with their own lifecycle. Take a moment to consider how their lifecycles relate and when to use [identify](#identify) and [anonymize](#anonymize).
+
+### Identify
+
+Use the `identifyCustomer()` method to identify a customer using their unique [hard ID](https://documentation.bloomreach.com/engagement/docs/customer-identification#hard-id).
+
+The default hard ID is `registered` and its value is typically the customer's email address. However, your Engagement project may define a different hard ID.
+
+Optionally, you can track additional customer properties such as first and last names, age, etc.
+
+#### Arguments
+
+| Name                       | Type                   | Description |
+| -------------------------- | ---------------------- | ----------- |
+| customerIds **(required)** | Record<string, string> | Dictionary of customer unique identifiers. Only identifiers defined in the Engagement project are accepted. |
+| properties                 | JsonObject             | Dictionary of customer properties. |
+
+#### Examples
+
+First, create a record containing at least the customer's hard ID:
+
+```typescript
+let customerIds = {
+  registered: "jane.doe@example.com"
+}
+```
+
+Optionally, create a dictionary with additional customer properties:
+
+```typescript
+let properties = {
+  first_name: "Jane",
+  last_name: "Doe",
+  age: 32   
+}
+```
+
+Pass the `customerIds` and `properties` dictionaries to `identifyCustomer()`:
+
+```typescript
+Exponea.identifyCustomer(customerIds, properties);
+```
+
+If you only want to update the customer ID without any additional properties, you can pass an empty dictionary into `properties`:
+
+```typescript
+Exponea.identifyCustomer(customerIds, {});
+```
+
+### Anonymize
+
+Use the `anonymize()` method to delete all information stored locally and reset the current SDK state. A typical use case for this is when the user signs out of the app.
+
+Invoking this method will cause the SDK to:
+
+* Remove the push notification token for the current customer from local device storage and the customer profile in Engagement.
+* Clear local repositories and caches, excluding tracked events.
+* Track a new session start if `automaticSessionTracking` is enabled.
+* Create a new customer record in Engagement (a new `cookie` soft ID is generated).
+* Assign the previous push notification token to the new customer record.
+* Preload in-app messages, in-app content blocks, and app inbox for the new customer.
+* Track a new `installation` event for the new customer.
+
+You can also use the `anonymize` method to switch to a different Engagement project. The SDK will then track events to a new customer record in the new project, similar to the first app session after installation on a new device.
+
+#### Examples
+
+```typescript
+Exponea.anonymize()
+```
+
+Switch to a different project:
+
+```typescript
+Exponea.anonymize(
   {
-    item_name: "product",
-    price: 123.45,
-    onSale: false
+    projectToken: "new-project-token",
+    authorizationToken: "new-authorization-token"
+  },
+  {
+    [EventType.PAYMENT]: [
+      {
+        projectToken: "special-project-for-payments",
+        authorizationToken: "payment-authorization-token",
+        baseUrl: "https://api-payments.some-domain.com"
+      }
+    ]
   }
 )
 ```
 
-## Track customer properties
-Some data can not be represented as an event, but rather a fact about your customer e.g. an email or country.
+## Sessions
 
-Save or update your customer data using `identifyCustomer` function:
+The SDK tracks sessions automatically by default, producing two events: `session_start` and `session_end`.
+
+The session represents the actual time spent in the app. It starts when the application is launched and ends when it goes into the background. If the user returns to the app before the session times out, the application will continue the current session.
+
+The default session timeout is 20 seconds. Set `sessionTimeout` in the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) to specify a different timeout.
+
+### Track session manually
+
+To disable automatic session tracking, set `automaticSessionTracking` to `false` in the [SDK configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
+
+Use the `trackSessionStart()` and `trackSessionEnd()` methods to track sessions manually.
+
+#### Examples
+
 ```typescript
-Exponea.identifyCustomer(
-  {registered: "email@domain.com"}, // customer identifiers
-  {payingCustomer: true} // customer properties
-)
+Exponea.trackSessionStart()
 ```
-> You can find more information about identifying customers, soft vs. hard IDs in [Exponea documentation](https://documentation.bloomreach.com/engagement/docs/customer-identification)
+
+```typescript
+Exponea.trackSessionEnd()
+```
 
 ## Default properties
-In [Configuration](./CONFIGURATION.md), you can set values in the to be sent in every tracking event. You can use them to track e.g. your application settings. Keep in mind these values will be overwritten if the tracking event has properties with the same key name.
 
-## Flushing data
-Flushing is the process of uploading tracking events to Exponea servers. All tracked events and customer properties are stored in the internal database of the Exponea SDK and later flushed based on flushing settings. When an event is successfully sent to Exponea API, the object will be deleted from the local database.
+You can [configure](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) default properties to be tracked with every event. Note that the value of a default property will be overwritten if the tracking event has a property with the same key.
 
-> By default, Exponea SDK automatically takes care of flushing events to the Exponea API. This feature can be turned off by calling `Exponea.setFlushMode(FlushMode.MANUAL)`. Please be careful with turning automatic flushing off because if you turn it off, you need to manually call Exponea.flush() to flush the tracked events manually every time there is something to flush.
+```typescript
+Exponea.configure({
+  projectToken: "YOUR_PROJECT_TOKEN",
+  authorizationToken: "YOUR_API_KEY",
+  baseUrl: "YOUR_API_BASE_URL",
+  defaultProperties: {
+    thisIsADefaultStringProperty: "This is a default string value",
+    thisIsADefaultIntProperty: 1
+  } 
+}).catch(error => console.log(error))
+```
 
-Exponea SDK will only flush data when the device has a stable internet connection. If a connection/server error occurs when flushing the data, it will keep the data stored until it can be flushed at a later time.
-
-You can set your flush mode with `setFlushMode()` function to one of following values:
-  * `FlushMode.IMMEDIATE` *(default and recommended setting)* - Events are flushed to Exponea backend immediately when they are tracked.
-  * `FlushMode.PERIOD` - Events are flushed to Exponea backend periodically based on period set with `Exponea.setFlushPeriod(seconds)`.
-  * `FlushMode.APP_CLOSE`- Events are flushed to Exponea backend when application is closed.
-  * `FlushMode.MANUAL` - Events are flushed to Exponea when `flushData()` is manually called by the developer.
-
-## Manual session tracking
-If you decide to opt out of our `automaticSessionTracking`, you can track sessions manually with `Exponea.trackSessionStart()` and `Exponea.trackSessionEnd()`.
-
+After initializing the SDK, you can change the default properties using the method `Exponea.setDefaultProperties()`.

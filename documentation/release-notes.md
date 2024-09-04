@@ -1,6 +1,17 @@
-## :arrow_double_up: [SDK version update guide](./VERSION_UPDATE.md)
+---
+title: Release notes
+excerpt: Exponea React Native SDK release notes
+slug: react-native-sdk-release-notes
+categorySlug: integrations
+parentDocSlug: react-native-sdk
+---
+
+> 📘
+>
+> Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
+
 ## Release Notes for 1.8.2
 #### July 02, 2024
 * Fixed:

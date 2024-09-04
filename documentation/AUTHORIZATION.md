@@ -1,51 +1,54 @@
-## Authorization
+---
+title: Authorization
+excerpt: Full authorization reference for the React Native SDK
+slug: react-native-sdk-authorization
+categorySlug: integrations
+parentDocSlug: react-native-sdk-setup
+---
 
-Data between SDK and BE are delivered trough authorized HTTP/HTTPS communication. Level of security has to be defined by developer.
-All authorization modes are used to set `Authorization` HTTP/HTTPS header.
+The SDK exchanges data with the Engagement APIs through authorized HTTP/HTTPS communication. The SDK supports two authorization modes: the default **token authorization** for public API access and the more secure **customer token authorization** for private API access. Developers can choose the appropriate authorization mode for the required level of security.
 
-### Token authorization
+## Token authorization
 
-This mode is required and has to be set by `authorization` parameter in `ExponeaConfiguration`. See [configuration](./CONFIGURATION.md).
+The default token authorization mode provides [public API access](https://documentation.bloomreach.com/engagement/reference/authentication#public-api-access) using an API key as a token. 
 
-Token authorization mode has to be given in `Token <value>` format. It is used for all public API access by default:
+Token authorization is used for the following API endpoints by default:
 
-* `POST /track/v2/projects/<projectToken>/customers` as tracking of customer data
-* `POST /track/v2/projects/<projectToken>/customers/events` as tracking of event data
-* `POST /track/v2/projects/<projectToken>/campaigns/clicks` as tracking campaign events
-* `POST /data/v2/projects/<projectToken>/customers/attributes` as fetching customer attributes
-* `POST /data/v2/projects/<projectToken>/consent/categories` as fetching consents
-* `POST /webxp/s/<projectToken>/inappmessages?v=1` as fetching InApp messages
-* `POST /webxp/projects/<projectToken>/appinbox/fetch` as fetching of AppInbox data
-* `POST /webxp/projects/<projectToken>/appinbox/markasread` as marking of AppInbox message as read
-* `POST /campaigns/send-self-check-notification?project_id=<projectToken>` as part of SelfCheck push notification flow
+* `POST /track/v2/projects/<projectToken>/customers` for tracking of customer data
+* `POST /track/v2/projects/<projectToken>/customers/events` for tracking of event data
+* `POST /track/v2/projects/<projectToken>/campaigns/clicks` for tracking campaign events
+* `POST /data/v2/projects/<projectToken>/customers/attributes` for fetching customer attributes
+* `POST /data/v2/projects/<projectToken>/consent/categories` for fetching consents
+* `POST /webxp/s/<projectToken>/inappmessages?v=1` for fetching InApp messages
+* `POST /webxp/projects/<projectToken>/appinbox/fetch` for fetching of AppInbox data
+* `POST /webxp/projects/<projectToken>/appinbox/markasread` for marking of AppInbox message as read
+* `POST /campaigns/send-self-check-notification?project_id=<projectToken>` for part of self-check push notification flow
 
-Please check more details about [Public API](https://documentation.bloomreach.com/engagement/reference/authentication#public-api-access).
+Developers must set the token using the `authorizationToken` [configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) parameter when [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
 
-``` typescript
+```typescript
 import Exponea from 'react-native-exponea-sdk'
 
 Exponea.configure({
-  authorizationToken: "Token yourPublicApiTokenAbc123",
+  authorizationToken: "Token YOUR_API_KEY",
   ...
 }).catch(error => console.log(error))
 ```
 
-> There is no change nor migration needed in case of using of `authorization` parameter if you are already using SDK in your app.
+## Customer token authorization
 
-### Customer Token authorization
+Customer token authorization is optional and provides [private API access](https://documentation.bloomreach.com/engagement/reference/authentication#private-api-access) to select Engagement API endpoints. The [customer token](https://documentation.bloomreach.com/engagement/docs/customer-token) contains encoded customer IDs and a signature. When the Bloomreach Engagement API receives a customer token, it first verifies the signature and only processes the request if the signature is valid.
 
-JSON Web Tokens are an open, industry standard [RFC 7519](https://tools.ietf.org/html/rfc7519) method for representing claims securely between SDK and BE. We recommend this method to be used according to higher security.
+The customer token is encoded using **JSON Web Token (JWT)**, an open industry standard [RFC 7519](https://tools.ietf.org/html/rfc7519) that defines a compact and self-contained way for securely transmitting information between parties.
 
-This mode is optional and may be set by `advancedAuthEnabled` parameter in `ExponeaConfiguration`. See [configuration](./CONFIGURATION.md).
+The SDK sends the customer token in `Bearer <value>` format. Currently, the SDK supports customer token authorization for the following Engagement API endpoints:
 
-Authorization value is used in `Bearer <value>` format. Currently, it is supported for listed API (for others Token authorization is used when `advancedAuthEnabled = true`):
+* `POST /webxp/projects/<projectToken>/appinbox/fetch` for fetching of AppInbox data
+* `POST /webxp/projects/<projectToken>/appinbox/markasread` for marking of AppInbox message as read
 
-* `POST /webxp/projects/<projectToken>/appinbox/fetch` as fetching of AppInbox data
-* `POST /webxp/projects/<projectToken>/appinbox/markasread` as marking of AppInbox message as read
+Developers can enable customer token authorization by setting the `advancedAuthEnabled` [configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) parameter to `true` when [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
 
-To activate this mode you need to set `advancedAuthEnabled` parameter `true` in `ExponeaConfiguration` as in given example:
-
-``` typescript
+```typescript
 import Exponea from 'react-native-exponea-sdk'
 
 Exponea.configure({
@@ -54,11 +57,20 @@ Exponea.configure({
 }).catch(error => console.log(error))
 ```
 
-Then an implementation of Authorization provider is needed. Provider has to be written in native code and differently for each platform.
+Additionally, developers must implement an authorization provider that provides a valid JWT token that encodes the relevant customer ID(s) and private API key ID. You must implement a different provider in native code for each platform.
+
+> ❗️
+>
+> Customer tokens must be generated by a party that can securely verify the customer's identity. Usually, this means that customer tokens should be generated during the application backend login procedure. When the customer identity is verified (using password, 3rd party authentication, Single Sign-On, etc.), the application backend should generate the customer token and send it to the device running the SDK.
+
+> 📘
+>
+> Refer to [Generating customer token](https://documentation.bloomreach.com/engagement/docs/customer-token#generating-customer-token) in the customer token documentation for step-by-step instructions to generate a JWT customer token.
+
 
 ### Android authorization provider
 
-First step is to implement an interface of `com.exponea.RNAuthorizationProvider` as in given example:
+First, implement the `com.exponea.RNAuthorizationProvider` interface as in the following example:
 
 ```java
 public class ExampleAuthProvider implements RNAuthorizationProvider {
@@ -70,9 +82,11 @@ public class ExampleAuthProvider implements RNAuthorizationProvider {
 }
 ```
 
-> If your Android native code is written in Kotlin, you may implement from `com.exponea.sdk.services.AuthorizationProvider` directly
+> 👍
+>
+> If your Android native code is written in Kotlin, you may implement `com.exponea.sdk.services.AuthorizationProvider` directly.
 
-Final step is to register your AuthorizationProvider to AndroidManifest.xml file as:
+Then register your authorization provider in the `AndroidManifest.xml` file as in the following example:
 
 ```xml
 <application
@@ -84,19 +98,28 @@ Final step is to register your AuthorizationProvider to AndroidManifest.xml file
 </application>
 ```
 
-If you define AuthorizationProvider but is not working correctly, SDK initialization will fail. Please check for logs.
-1. If you enable Customer Token authorization by configuration flag `advancedAuthEnabled` and implementation has not been found, you'll see log
-`Advanced auth has been enabled but provider has not been found`
-2. If you register class in AndroidManifest.xml but it cannot been found, you'll see log
-`Registered <your class> class has not been found` with detailed info.
-3. If you register class in AndroidManifest.xml but it is not implementing auth interface, you will see log
-`Registered <your class> class has to implement com.exponea.sdk.services.AuthorizationProvider`
+#### Troubleshooting
 
-AuthorizationProvider is loaded while SDK is initializing or after `Exponea.anonymize()` is called; so you're able to see these logs in that time in case of any problem.
+If your authorization provider is not working correctly, SDK initialization will fail. Check the log for details:
+
+1. If you enable customer token authorization using the configuration flag `advancedAuthEnabled` but the SDK can't find an AuthorizationProvider implementation, you'll see the following message logged:
+   ```
+   Advanced auth has been enabled but provider has not been found
+   ```
+2. If you register your class in `AndroidManifest.xml` but the SDK can't find that class, you'll see the following message logged:
+   ```
+   Registered <your class> class has not been found` with detailed info.
+   ```
+3. If you register your class in `AndroidManifest.xml` but the class doesn't implement the `AuthorizationProvider` interface, you'll see the following message logged:
+   ```
+   Registered <your class> class has to implement com.exponea.sdk.services.AuthorizationProvider
+   ```
+
+The AuthorizationProvider is loaded during SDK initialization or after calling `ExponeaPlugin().anonymize()`. You should see the above log messages at the same time.
 
 ### iOS authorization provider
 
-Single step is to implement a protocol of `AuthorizationProviderType` with @objc attribute as in given example:
+Implement the `AuthorizationProviderType` protocol with the `@objc` attribute as in the following example:
 
 ```swift
 @objc(ExponeaAuthProvider)
@@ -108,11 +131,28 @@ public class ExampleAuthProvider: NSObject, AuthorizationProviderType {
 }
 ```
 
-#### Asynchronous implementation of AuthorizationProvider
+#### Troubleshooting
 
-Token value is requested for every HTTP call in runtime. Method `getAuthorizationToken()` is written for synchronously usage but is invoked in background thread. Therefore, you are able to block any asynchronous token retrieval (i.e. other HTTP call) and waits for result by blocking this thread. In case of error result of your token retrieval you may return NULL value but request will automatically fail.
+If you define `ExponeaAuthProvider` but it is not working as expected, check the logs for the following:
 
-As example for Android:
+1. If you enable customer token authorization by setting the configuration flag `advancedAuthEnabled` to `true` but the SDK can't find a provider implementation, it will log the following message:
+   ```
+   Advanced authorization flag has been enabled without provider
+   ```
+2. The registered class musty extend `NSObject`. If it doesn't, you'll see the following log message:
+   ```
+   Class ExponeaAuthProvider does not conform to NSObject
+   ```
+2. The registered class must conform to `AuthorizationProviderType`. If it doesn't, you'll see the following log message:
+   ```
+   Class ExponeaAuthProvider does not conform to AuthorizationProviderType
+   ```
+
+### Asynchronous authorization provider implementation
+
+The customer token value is requested for every HTTP call at runtime. The method `getAuthorizationToken()` is written for synchronous usage but is invoked in a background thread. Therefore, you are able to block any asynchronous token retrieval (i.e. other HTTP call) and wait for the result by blocking this thread. If the token retrieval fails, you may return a NULL value but the request will automatically fail.
+
+#### Example for Android:
 
 ```kotlin
 class ExampleAuthProvider : AuthorizationProvider {
@@ -127,7 +167,7 @@ class ExampleAuthProvider : AuthorizationProvider {
 }
 ```
 
-As example for iOS:
+#### Example for iOS:
 
 ```swift
 @objc(ExponeaAuthProvider)
@@ -147,14 +187,17 @@ public class ExampleAuthProvider: NSObject, AuthorizationProviderType {
 }
 ```
 
-> Multiple network libraries are supporting a different approaches (coroutines, Promises, Rx, etc...) but principle stays same - feel free to block invocation of `getAuthorizationToken` method.
+> 👍
+>
+> Different network libraries support different approaches but the principle stays same - feel free to block the invocation of the `getAuthorizationToken` method.
 
-#### Customer Token retrieval policy
+### Customer token retrieval policy
 
-Token value is requested for every HTTP call (listed previously in this doc) that requires it.
-As it is common thing that JWT tokens have own expiration lifetime so may be used multiple times. Thus information cannot be read from JWT token value directly so SDK is not storing token in any cache. As developer, you may implement any type of token cache behavior you want.
+The customer token value is requested for every HTTP call that requires it.
 
-As example for Android:
+Typically, JWT tokens have their own expiration lifetime and can be used multiple times. The SDK does not store the token in any cache. Developers may implement their own token cache as they see fit. For example:
+
+Example for Android:
 
 ```kotlin
 class ExampleAuthProvider : AuthorizationProvider {
@@ -175,7 +218,7 @@ class ExampleAuthProvider : AuthorizationProvider {
 }
 ```
 
-As example or iOS:
+Example for iOS:
 
 ```swift
 @objc(ExponeaAuthProvider)
@@ -198,6 +241,10 @@ public class ExampleAuthProvider: NSObject, AuthorizationProviderType {
 }
 ```
 
-> Please consider to store your cached token in more secured way. Android offers you multiple options such as using [KeyStore](https://developer.android.com/training/articles/keystore) or use [Encrypted Shared Preferences](https://developer.android.com/reference/androidx/security/crypto/EncryptedSharedPreferences), for iOS try to use [Keychain](https://developer.apple.com/documentation/security/certificate_key_and_trust_services/keys/storing_keys_in_the_keychain) or use [CryptoKit](https://developer.apple.com/documentation/cryptokit/)
+> ❗️
+>
+> Please consider to store your cached token more securely. Android offers multiple options such as [KeyStore](https://developer.android.com/training/articles/keystore) or [Encrypted Shared Preferences](https://developer.android.com/reference/androidx/security/crypto/EncryptedSharedPreferences).
 
-> :warning: Customer Token is valid until its expiration and is assigned to current customer IDs. Bear in mind that if customer IDs have changed (during `identifyCustomer` or `anonymize` method) your Customer token is invalid for future HTTP requests invoked for new customer IDs.
+> ❗️
+>
+> A customer token is valid until its expiration and is assigned to the current customer IDs. Bear in mind that if customer IDs change (due to invoking the `identifyCustomer` or `anonymize` methods), the customer token may become invalid for future HTTP requests invoked for new customer IDs.
