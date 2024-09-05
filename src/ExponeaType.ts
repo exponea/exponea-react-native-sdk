@@ -201,10 +201,14 @@ interface ExponeaType {
     params: Record<string, string>,
   ): Promise<void>;
 
-  trackInAppMessageClose(params: Record<string, string>): Promise<void>;
+  trackInAppMessageClose(
+    params: Record<string, string>, 
+    interaction: boolean
+  ): Promise<void>;
 
   trackInAppMessageCloseWithoutTrackingConsent(
     params: Record<string, string>,
+    interaction: boolean
   ): Promise<void>;
 
   trackInAppContentBlockClick(params: Record<string, string>): Promise<void>;

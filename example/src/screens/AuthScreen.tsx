@@ -36,23 +36,23 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
       />
       <ExponeaInput
         value={projectToken}
-        onChangeText={(text) => setProjectToken(text)}
+        onChangeText={text => setProjectToken(text)}
         placeholder="Project token"
       />
       <ExponeaInput
         value={authorization}
         placeholder="Authorization token"
-        onChangeText={(text) => setAuthorization(text)}
+        onChangeText={text => setAuthorization(text)}
       />
       <ExponeaInput
         value={advancedAuthKey}
-        onChangeText={(text) => setAdvancedAuthKey(text)}
+        onChangeText={text => setAdvancedAuthKey(text)}
         placeholder="Advanced Auth key"
       />
       <ExponeaInput
         value={baseUrl}
         placeholder="Base URL"
-        onChangeText={(text) => setBaseUrl(text)}
+        onChangeText={text => setBaseUrl(text)}
       />
       <ExponeaButton
         disabled={buttonDisabled}

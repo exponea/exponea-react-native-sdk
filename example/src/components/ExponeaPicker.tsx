@@ -22,7 +22,7 @@ export default function ExponeaPicker<T>(
         }}
         value={props.value}
         onValueChange={onValueChange}
-        items={Object.keys(props.options).map((label) => ({
+        items={Object.keys(props.options).map(label => ({
           label,
           value: props.options[label],
         }))}

@@ -15,7 +15,6 @@ interface AppState {
   sdkConfigured: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface CustomerTokenStorage {}
 
 export default class App extends React.Component<{}, AppState> {
@@ -57,10 +56,10 @@ export default class App extends React.Component<{}, AppState> {
       }
     };
 
-    Linking.addEventListener('url', (e) => openLink(e.url));
+    Linking.addEventListener('url', e => openLink(e.url));
     Linking.getInitialURL().then(openLink);
 
-    Exponea.setPushOpenedListener((pushOpened) => {
+    Exponea.setPushOpenedListener(pushOpened => {
       // we'll wait for the app to fully resume before showing the alert
       setTimeout(() => {
         const data = JSON.stringify(pushOpened, null, 2);
@@ -71,7 +70,7 @@ export default class App extends React.Component<{}, AppState> {
       }, 1000);
     });
 
-    Exponea.setPushReceivedListener((data) => {
+    Exponea.setPushReceivedListener(data => {
       // we'll wait for the app to fully resume before showing the alert
       setTimeout(() => {
         Alert.alert(
@@ -82,11 +81,11 @@ export default class App extends React.Component<{}, AppState> {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    Exponea.setInAppMessageCallback(false, true, (action) => {
+    Exponea.setInAppMessageCallback(false, true, action => {
       console.log('InApp action received - App.tsx');
     });
 
-    Exponea.isConfigured().then((configured) => {
+    Exponea.isConfigured().then(configured => {
       this.setState({preloaded: true, sdkConfigured: configured});
     });
   }
@@ -175,7 +174,7 @@ export default class App extends React.Component<{}, AppState> {
       .then(() => {
         this.setState({sdkConfigured: true});
       })
-      .catch((error) =>
+      .catch(error =>
         Alert.alert('Error configuring Exponea SDK', error.message),
       );
   }

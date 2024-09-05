@@ -292,12 +292,16 @@ const mockExponea: ExponeaType = {
     return Promise.resolve();
   },
 
-  trackInAppMessageClose(params: Record<string, string>): Promise<void> {
+  trackInAppMessageClose(
+    params: Record<string, string>, 
+    interaction = true
+  ): Promise<void> {
     return Promise.resolve();
   },
 
   trackInAppMessageCloseWithoutTrackingConsent(
     params: Record<string, string>,
+    interaction = true
   ): Promise<void> {
     return Promise.resolve();
   },

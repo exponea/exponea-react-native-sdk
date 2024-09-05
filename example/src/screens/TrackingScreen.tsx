@@ -22,8 +22,8 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
 
   componentDidMount(): void {
     Exponea.getCustomerCookie()
-      .then((cookie) => this.setState({customerCookie: cookie}))
-      .catch((error) => {
+      .then(cookie => this.setState({customerCookie: cookie}))
+      .catch(error => {
         Alert.alert('Error getting customer Cookie', error.message);
       });
   }
@@ -61,8 +61,8 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
           title="Authorize push notifications"
           onPress={() => {
             Exponea.requestPushAuthorization()
-              .then((result) => console.log(`Authorization result: ${result}`))
-              .catch((error) => console.log(`Authorization error: ${error}`));
+              .then(result => console.log(`Authorization result: ${result}`))
+              .catch(error => console.log(`Authorization error: ${error}`));
           }}
         />
         <AppInboxButton
@@ -76,7 +76,7 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
           title="Inbox fetch test"
           onPress={() => {
             Exponea.fetchAppInbox()
-              .then((list) => {
+              .then(list => {
                 console.log(`AppInbox loaded of size ${list.length}`);
                 if (list.length > 0) {
                   console.log(
@@ -84,29 +84,29 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
                   );
                 }
               })
-              .catch((error) => console.log(`AppInbox error: ${error}`));
+              .catch(error => console.log(`AppInbox error: ${error}`));
           }}
         />
         <ExponeaButton
           title="Inbox fetch first message"
           onPress={() => {
             Exponea.fetchAppInbox()
-              .then((list) => {
+              .then(list => {
                 if (list.length === 0) {
                   console.log('AppInbox is empty, identifyCustomer!');
                   return;
                 }
                 Exponea.fetchAppInboxItem(list[0].id)
-                  .then((message) =>
+                  .then(message =>
                     console.log(
                       `AppInbox first message: ${JSON.stringify(message)}`,
                     ),
                   )
-                  .catch((error) =>
+                  .catch(error =>
                     console.log(`AppInbox message error: ${error}`),
                   );
               })
-              .catch((error) => console.log(`AppInbox error: ${error}`));
+              .catch(error => console.log(`AppInbox error: ${error}`));
           }}
         />
       </View>

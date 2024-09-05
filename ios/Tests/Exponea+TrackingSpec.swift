@@ -625,6 +625,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 waitUntil { done in
                     exponea.trackInAppMessageClose(
                         message: getInAppMessageAsDic(),
+                        isUserInteraction: true,
                         resolve: { result in
                             expect(result).to(beNil())
                             guard mockExponea.calls.count == 2 else {
@@ -675,6 +676,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 waitUntil { done in
                     exponea.trackInAppMessageClose(
                         message: getInAppMessageAsDic(),
+                        isUserInteraction: true,
                         resolve: { _ in },
                         reject: { errorCode, description, error in
                             expect(errorCode).to(equal("ExponeaSDK"))

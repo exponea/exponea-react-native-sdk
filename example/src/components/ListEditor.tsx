@@ -18,7 +18,7 @@ export default function ListEditor(props: ListEditorProps): React.ReactElement {
   };
   return (
     <View style={styles.container}>
-      {props.values.map((value) => (
+      {props.values.map(value => (
         <Text key={value} style={styles.item}>
           {value}
         </Text>

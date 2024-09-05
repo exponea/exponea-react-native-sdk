@@ -1,14 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {FlatList, Image, Platform, StyleSheet, Text, View} from 'react-native';
-import InAppContentBlocksPlaceholder from '../../../src/InAppContentBlocksPlaceholder';
+import InAppContentBlocksPlaceholder from 'react-native-exponea-sdk/lib/InAppContentBlocksPlaceholder';
 import icon1 from '../img/ic_dialog_map.png';
 import icon2 from '../img/ic_media_route.png';
 import icon3 from '../img/ic_menu_search.png';
 import icon4 from '../img/ic_star.png';
 
 interface ProductsViewModel {
-  icon: ImageData;
+  icon: string;
   title: string;
   description: string;
   showAd: boolean;
@@ -28,7 +28,7 @@ export default function InAppCbScreen(): React.ReactElement {
       ) {
         // show content block
         result.push({
-          icon: icon1,
+          icon: Image.resolveAssetSource(icon1).uri,
           title: 'CB',
           description: '',
           showAd: true,
@@ -48,7 +48,7 @@ export default function InAppCbScreen(): React.ReactElement {
       const prodDescription =
         prodDescriptions[Math.floor(Math.random() * prodDescriptions.length)];
       result.push({
-        icon: prodIcon,
+        icon: Image.resolveAssetSource(prodIcon).uri,
         title: 'Product ' + i,
         description: prodDescription,
         showAd: false,
@@ -76,7 +76,7 @@ export default function InAppCbScreen(): React.ReactElement {
       <Text>Products (Placeholder: example_list)</Text>
       <FlatList
         data={productsArray}
-        renderItem={(item) => {
+        renderItem={item => {
           if (item.item.showAd) {
             return (
               <InAppContentBlocksPlaceholder
@@ -103,7 +103,7 @@ export default function InAppCbScreen(): React.ReactElement {
                     height: 28,
                     marginRight: 8,
                   }}
-                  source={item.item.icon}
+                  source={{uri: item.item.icon}}
                 />
                 <View>
                   <Text>{item.item.title}</Text>

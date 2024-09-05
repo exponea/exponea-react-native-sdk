@@ -26,9 +26,7 @@ export default function IdentifyCustomerModal(
         setIds({});
         setProperties({});
       })
-      .catch((error) =>
-        Alert.alert('Error identifying customer', error.message),
-      );
+      .catch(error => Alert.alert('Error identifying customer', error.message));
   };
   return (
     <ExponeaModal visible={props.visible} onClose={props.onClose}>

@@ -39,13 +39,13 @@ export default function FetchRecommendationsModal(
     setSize('');
     props.onClose();
     Exponea.fetchRecommendations(options)
-      .then((recommendations) => {
+      .then(recommendations => {
         Alert.alert(
           'Received recommendations',
           JSON.stringify(recommendations, null, 2),
         );
       })
-      .catch((error) =>
+      .catch(error =>
         Alert.alert('Error fetching recommendations', error.message),
       );
   };

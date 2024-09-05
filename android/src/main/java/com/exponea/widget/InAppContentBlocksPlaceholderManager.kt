@@ -10,12 +10,14 @@ import com.exponea.sdk.models.InAppContentBlockPlaceholderConfiguration
 import com.exponea.sdk.util.Logger
 import com.exponea.sdk.view.InAppContentBlockPlaceholderView
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.PixelUtil
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.annotations.ReactProp
-import com.facebook.react.uimanager.events.RCTEventEmitter
+import com.facebook.react.uimanager.events.Event
 import com.google.gson.Gson
 
 class InAppContentBlocksPlaceholderManager : SimpleViewManager<InAppContentBlocksPlaceholder>() {
@@ -74,8 +76,11 @@ class InAppContentBlocksPlaceholderManager : SimpleViewManager<InAppContentBlock
             putDouble("width", width.toDouble())
             putDouble("height", height.toDouble())
         }
-        val eventEmitter = context.getJSModule(RCTEventEmitter::class.java)
-        eventEmitter.receiveEvent(viewId, "dimensChanged", event)
+        val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, viewId)
+        val surfaceId: Int = UIManagerHelper.getSurfaceId(context)
+        dispatcher?.dispatchEvent(
+            DimensChangedEvent(surfaceId, viewId, event)
+        )
     }
 
     private fun notifyInAppContentBlockEvent(
@@ -94,8 +99,11 @@ class InAppContentBlocksPlaceholderManager : SimpleViewManager<InAppContentBlock
             putString("action", Gson().toJson(action))
             putString("errorMessage", errorMessage)
         }
-        val eventEmitter = context.getJSModule(RCTEventEmitter::class.java)
-        eventEmitter.receiveEvent(viewId, "inAppContentBlockEvent", event)
+        val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, viewId)
+        val surfaceId: Int = UIManagerHelper.getSurfaceId(context)
+        dispatcher?.dispatchEvent(
+            InAppContentBlockEvent(surfaceId, viewId, event)
+        )
     }
 }
 
@@ -230,4 +238,22 @@ class InAppContentBlocksPlaceholder(context: Context?) : LinearLayout(context) {
     ) {
         inAppContentBlockEventListener = listener
     }
+}
+
+class DimensChangedEvent(
+    surfaceId: Int,
+    viewTag: Int,
+    private val event: WritableMap
+) : Event<DimensChangedEvent>(surfaceId, viewTag) {
+    override fun getEventName(): String = "dimensChanged"
+    override fun getEventData(): WritableMap = event
+}
+
+class InAppContentBlockEvent(
+    surfaceId: Int,
+    viewTag: Int,
+    private val event: WritableMap
+) : Event<InAppContentBlockEvent>(surfaceId, viewTag) {
+    override fun getEventName(): String = "inAppContentBlockEvent"
+    override fun getEventData(): WritableMap = event
 }

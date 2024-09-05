@@ -73,7 +73,7 @@ export default class KeyboardSpacer extends Component {
   }
 
   componentWillUnmount() {
-    this._listeners.forEach((listener) => listener.remove());
+    this._listeners.forEach(listener => listener.remove());
   }
 
   updateKeyboardSpace(event) {

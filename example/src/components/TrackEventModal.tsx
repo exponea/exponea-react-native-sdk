@@ -25,7 +25,7 @@ export default function TrackEventModal(
         props.onClose();
         setProperties({});
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(`Error occured while tracking event ${error.message}`);
         Alert.alert('Error tracking event', error.message);
       });

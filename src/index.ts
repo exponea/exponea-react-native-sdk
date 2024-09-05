@@ -233,15 +233,20 @@ const Exponea: ExponeaType = {
     );
   },
 
-  trackInAppMessageClose(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackInAppMessageClose(params);
+  trackInAppMessageClose(
+    params: Record<string, string>,
+    interaction = true
+  ): Promise<void> {
+    return NativeModules.Exponea.trackInAppMessageClose(params, interaction);
   },
 
   trackInAppMessageCloseWithoutTrackingConsent(
     params: Record<string, string>,
+    interaction = true
   ): Promise<void> {
     return NativeModules.Exponea.trackInAppMessageCloseWithoutTrackingConsent(
       params,
+      interaction
     );
   },
 

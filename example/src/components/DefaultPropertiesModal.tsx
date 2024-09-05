@@ -22,11 +22,11 @@ export default function DefaultPropertiesModal(
 
   React.useEffect(() => {
     Exponea.getDefaultProperties()
-      .then((properties) => {
+      .then(properties => {
         setCurrentPropertiesLoaded(true);
         setCurrentProperties(properties);
       })
-      .catch((error) =>
+      .catch(error =>
         Alert.alert('Error getting default properties', error.message),
       );
   }, [props]);
@@ -36,7 +36,7 @@ export default function DefaultPropertiesModal(
         props.onClose();
         setNewProperties({});
       })
-      .catch((error) =>
+      .catch(error =>
         Alert.alert('Error setting default properties', error.message),
       );
   };

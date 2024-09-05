@@ -721,24 +721,32 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     }
 
     @ReactMethod
-    fun trackInAppMessageClose(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+    fun trackInAppMessageClose(
+        params: ReadableMap,
+        isUserInteraction: Boolean,
+        promise: Promise
+    ) = catchAndReject(promise) {
         val data = params.toHashMapRecursively().toInAppMessage()
         if (data == null) {
             promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
             return@catchAndReject
         }
-        Exponea.trackInAppMessageClose(data)
+        Exponea.trackInAppMessageClose(data, isUserInteraction)
         promise.resolve(null)
     }
 
     @ReactMethod
-    fun trackInAppMessageCloseWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
+    fun trackInAppMessageCloseWithoutTrackingConsent(
+        params: ReadableMap,
+        isUserInteraction: Boolean,
+        promise: Promise
+    ) = catchAndReject(promise) {
         val data = params.toHashMapRecursively().toInAppMessage()
         if (data == null) {
             promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
             return@catchAndReject
         }
-        Exponea.trackInAppMessageCloseWithoutTrackingConsent(data)
+        Exponea.trackInAppMessageCloseWithoutTrackingConsent(data, isUserInteraction)
         promise.resolve(null)
     }
 

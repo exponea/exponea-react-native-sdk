@@ -300,7 +300,7 @@ extension Exponea {
     @objc(trackInAppMessageClose:isUserInteraction:resolve:reject:)
     func trackInAppMessageClose(
         message: NSDictionary,
-        isUserInteraction: Bool = true,
+        isUserInteraction: Bool,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
@@ -325,7 +325,7 @@ extension Exponea {
     @objc(trackInAppMessageCloseWithoutTrackingConsent:isUserInteraction:resolve:reject:)
     func trackInAppMessageCloseWithoutTrackingConsent(
         message: NSDictionary,
-        isUserInteraction: Bool = true,
+        isUserInteraction: Bool,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {

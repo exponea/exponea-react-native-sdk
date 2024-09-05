@@ -56,7 +56,7 @@ function PropertyList(props: {
 }): React.ReactElement {
   return (
     <View>
-      {Object.keys(props.properties).map((key) => (
+      {Object.keys(props.properties).map(key => (
         <Property
           key={key}
           propertyKey={key}
