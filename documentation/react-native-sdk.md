@@ -39,6 +39,7 @@ The SDK is [available as open source on GitHub](https://github.com/exponea/expon
   - [In-app messages](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-messages)
   - [In-app content blocks](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-content-blocks)
 - [App Inbox](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-app-inbox)
+- [Segmentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-segmentation)
 - [Example app](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app)
 - [Development](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-development)
 - [Release notes](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-release-notes)
