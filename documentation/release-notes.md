@@ -11,6 +11,16 @@ parentDocSlug: react-native-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
 
 ## Release Notes
+## Release Notes for 1.9.0
+#### September 10, 2024
+* Added:
+  * Introduces improved SDK documentation at [documentation.bloomreach.com](https://documentation.bloomreach.com)
+  * Adds support for React Native 0.74.5.
+    * Enables React Native’s New Architecture through the interop layer.
+* Fixed:
+  * Fixes incorrectly mapped parameters in the push notification tracking methods.
+  * Fixes an issue where the application would hang due to an unresolved Promise.
+
 
 ## Release Notes for 1.8.2
 #### July 02, 2024
