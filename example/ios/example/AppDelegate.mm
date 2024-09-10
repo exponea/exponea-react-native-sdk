@@ -30,11 +30,6 @@
 #endif
 }
 
-- (BOOL)bridgelessEnabled
-{
- return YES;
-}
-
 /// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
 ///
 /// @see: https://reactjs.org/blog/2022/03/29/react-v18.html
