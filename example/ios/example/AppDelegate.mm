@@ -44,7 +44,6 @@
  restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
   [Exponea continueUserActivity: userActivity];
-  [super application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
   return [RCTLinkingManager
           application:application
           continueUserActivity:userActivity
