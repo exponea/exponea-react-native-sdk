@@ -10,13 +10,15 @@ parentDocSlug: react-native-sdk
 
 The Exponea React Native SDK can be installed in your app using [yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/). [CocoaPods](https://cocoapods.org/) is required to set up the iOS app.
 
+The SDK is compatible with React Native 0.69.0 - 0.74.5. Earlier versions may work but have not been tested.
+
 > ❗️
 >
 > Please note that projects using Expo Managed Workflow must switch to Bare Workflow to be able to use the Exponea React Native SDK.
 
 > 📘
 >
-> Refer to https://github.com/exponea/exponea-react-native-sdk for the latest Exponea Android SDK release.
+> Refer to https://github.com/exponea/exponea-react-native-sdk for the latest Exponea React Native SDK release.
 
 ### Install package
 
