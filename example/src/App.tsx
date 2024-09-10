@@ -30,11 +30,11 @@ export default class App extends React.Component<{}, AppState> {
     if (url.includes('track')) {
       return Screen.Tracking;
     }
-    if (url.includes('manual')) {
+    if (url.includes('fetch')) {
       return Screen.Fetching;
     }
     if (url.includes('anonymize')) {
-      return Screen.Config;
+      return Screen.Anonymize;
     }
     if (url.includes('inappcb')) {
       return Screen.InAppCB;

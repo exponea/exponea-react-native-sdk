@@ -1,16 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, Text, View, Alert} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 import ExponeaButton from '../components/ExponeaButton';
 import IdentifyCustomerModal from '../components/IdentifyCustomerModal';
 import TrackEventModal from '../components/TrackEventModal';
 import AppInboxButton from 'react-native-exponea-sdk/lib/AppInboxButton';
+import DefaultPropertiesModal from '../components/DefaultPropertiesModal.tsx';
 
 interface AppState {
   customerCookie: string;
   identifyingCustomer: boolean;
   trackingEvent: boolean;
+  defPropsModalShown: boolean;
 }
 
 export default class TrackingScreen extends React.Component<{}, AppState> {
@@ -18,6 +20,7 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
     customerCookie: '?',
     identifyingCustomer: false,
     trackingEvent: false,
+    defPropsModalShown: false,
   };
 
   componentDidMount(): void {
@@ -55,6 +58,18 @@ export default class TrackingScreen extends React.Component<{}, AppState> {
           title="Track event"
           onPress={() => {
             this.setState({trackingEvent: true});
+          }}
+        />
+        <DefaultPropertiesModal
+          visible={this.state.defPropsModalShown}
+          onClose={() => {
+            this.setState({defPropsModalShown: false});
+          }}
+        />
+        <ExponeaButton
+          title="Default properties"
+          onPress={() => {
+            this.setState({defPropsModalShown: true});
           }}
         />
         <ExponeaButton

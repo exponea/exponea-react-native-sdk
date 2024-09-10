@@ -14,7 +14,7 @@ interface TrackEventModalProps {
 export default function TrackEventModal(
   props: TrackEventModalProps,
 ): React.ReactElement {
-  const [eventType, setEventType] = React.useState('custom_event');
+  const [eventType, setEventType] = React.useState('event_name');
   const [properties, setProperties] = React.useState({});
 
   const trackEvent = () => {
@@ -22,13 +22,13 @@ export default function TrackEventModal(
     Exponea.trackEvent(eventType, properties)
       .then(() => {
         console.log('Closing tracking event dialog');
-        props.onClose();
         setProperties({});
       })
       .catch(error => {
         console.log(`Error occured while tracking event ${error.message}`);
         Alert.alert('Error tracking event', error.message);
       });
+    props.onClose();
   };
   return (
     <ExponeaModal visible={props.visible} onClose={props.onClose}>

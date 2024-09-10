@@ -7,11 +7,11 @@ import {StyleSheet, Image} from 'react-native';
 import TrackingScreen from './TrackingScreen';
 import FetchingScreen from './FetchingScreen';
 import FlushingScreen from './FlushingScreen';
-import ConfigScreen from './ConfigScreen';
+import AnonymizeScreen from './AnonymizeScreen.tsx';
 import trackIcon from '../img/track.png';
 import fetchIcon from '../img/fetch.png';
 import flushIcon from '../img/flush.png';
-import logIcon from '../img/log.png';
+import anonymizeIcon from '../img/anonymize.png';
 import inAppCbIcon from '../img/content_blocks.png';
 import InAppCbScreen from './InAppCbScreen';
 import {Screen} from './Screens';
@@ -37,9 +37,9 @@ export default function TabNavigation(): React.ReactElement {
         component={FlushingScreen}
       />
       <Tab.Screen
-        options={getTabBarOptions(Screen.Config)}
-        name={Screen.Config}
-        component={ConfigScreen}
+        options={getTabBarOptions(Screen.Anonymize)}
+        name={Screen.Anonymize}
+        component={AnonymizeScreen}
       />
       <Tab.Screen
         options={getTabBarOptions(Screen.InAppCB)}
@@ -58,8 +58,8 @@ function getIcon(name: Screen) {
       return fetchIcon;
     case Screen.Flushing:
       return flushIcon;
-    case Screen.Config:
-      return logIcon;
+    case Screen.Anonymize:
+      return anonymizeIcon;
     case Screen.InAppCB:
       return inAppCbIcon;
   }

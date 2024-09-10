@@ -2,6 +2,6 @@ export enum Screen {
   Tracking = 'Tracking',
   Fetching = 'Fetching',
   Flushing = 'Flushing',
-  Config = 'Config',
+  Anonymize = 'Anonymize',
   InAppCB = 'In-app CB',
 }
