@@ -33,15 +33,90 @@ To be able to send [push notifications](https://documentation.bloomreach.com/eng
 2. Implement Firebase messaging in your app.
 3. Configure the Firebase Cloud Messaging integration in the Engagement web app.
 
-> 📘
->
-> Follow the instructions in [Firebase Cloud Messaging](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase) in the native Android SDK documentation.
->
-> Note that the root of your Android project is `/android`.
-
 > 👍
 >
 > Please note that with Google deprecating and removing the FCM legacy API in June 2024, Bloomreach Engagement is now using Firebase HTTP v1 API.
+
+#### Set up Firebase
+
+First, you must set up a Firebase project. For step-by-step instructions, please refer to [Add Firebase to your Android project](https://firebase.google.com/docs/android/setup#console) in the official Firebase documentation.
+
+> 📘
+>
+> When following the Firebase documentation, note that the root of your Android project is `/android`.
+
+To summarize, you'll create a project using the Firebase console, download a generated `google-services.json` configuration file and add it to your app, and update the Gradle build scripts in your app.
+
+In addition, you must add a dependency on Firebase messaging to `android/app/build.gradle`.
+
+```groovy
+dependencies {
+    ...
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    ...
+}
+```
+
+#### Checklist:
+- [ ] The `google-services.json` file downloaded from the Firebase console is in your **application** folder, for example, *my-project/app/google-services.json*.
+- [ ] Your **application** Gradle build file (*android/app/build.gradle*) contains `apply plugin: 'com.google.gms.google-services'`.
+- [ ] Your **top level** Gradle build file (*android/build.gradle*) has `classpath 'com.google.gms:google-services:X.X.X'` listed in the build script dependencies.
+
+#### Implement Firebase messaging in your app
+
+Next, you must create and register a service that extends `FirebaseMessagingService`. The service should call `handleRemoteMessage` in the `onMessageReceived` method and `handleNewToken` in the `onNewToken` method. The SDK's automatic tracking relies on your app providing this implementation.
+
+1. Create the service:
+   ```kotlin
+   import android.app.NotificationManager;  
+   import android.content.Context;  
+   import androidx.annotation.NonNull;  
+   import com.exponea.ExponeaModule;  
+   import com.google.firebase.messaging.FirebaseMessagingService;  
+   import com.google.firebase.messaging.RemoteMessage;  
+    
+   public class MessageService extends FirebaseMessagingService {  
+    
+       @Override  
+       public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {  
+           super.onMessageReceived(remoteMessage);  
+           ExponeaModule.Companion.handleRemoteMessage(
+               getApplicationContext(),
+               remoteMessage.getData(),  
+               (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)
+           );  
+       }  
+    
+       @Override  
+       public void onNewToken(@NonNull String token) {  
+           super.onNewToken(token);  
+           ExponeaModule.Companion.handleNewToken(
+               getApplicationContext(), 
+               token
+           );  
+       }  
+   }
+   ```
+2. Register the service in `AndroidManifest.xml`:
+   ```xml
+   ...
+   <application>  
+     <service android:name=".MessageService" android:exported="false" >  
+       <intent-filter> 
+         <action android:name="com.google.firebase.MESSAGING_EVENT" />  
+       </intent-filter> 
+     </service>
+   </application>
+   ...
+   ```
+
+> ❗️
+>
+> The methods `ExponeaModule.handleNewToken` and `ExponeaModule.handleRemoteMessage` can be used before SDK initialization if a previous initialization was done. In such a case, each method will track events with the configuration of the last initialization. Consider initializing the SDK in `Application::onCreate` to make sure a fresh configuration is applied in case of an application update.
+
+#### Configure the Firebase Cloud Messaging integration in Engagement
+
+Follow the instructions in [Configure the Firebase Cloud Messaging integration in Engagement](https://documentation.bloomreach.com/sandbox/docs/android-sdk-firebase#configure-the-firebase-cloud-messaging-integration-in-engagement) for the Android SDK.
 
 ### Huawei integration
 
@@ -51,9 +126,67 @@ To be able to send [push notifications](https://documentation.bloomreach.com/eng
 2. Implement HMS in your app.
 3. Configure the Huawei Push Service integration in the Engagement web app.
 
-> 📘
+#### Set up Huawei Mobile Services
+
+Follow the instructions in [Set up Huawei Mobile Services](https://documentation.bloomreach.com/engagement/docs/android-sdk-huawei#set-up-huawei-mobile-services) for the Android SDK.
+
+#### Implement HMS Message Service in your app
+
+Next, you must create and register a service that extends `HmsMessagingService`. The service should call `handleRemoteMessage` in the `onMessageReceived` method and `handleNewHmsToken` in the `onNewToken` method. The SDK's automatic tracking relies on your app providing this implementation.
+
+1. Create the service:
+   ```kotlin
+   import android.app.NotificationManager;  
+   import android.content.Context;  
+   import androidx.annotation.NonNull;  
+   import com.exponea.ExponeaModule;  
+   import com.huawei.hms.push.HmsMessageService;  
+   import com.huawei.hms.push.RemoteMessage;  
+
+   public class MessageService extends HmsMessageService {  
+
+       @Override  
+       public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {  
+           super.onMessageReceived(remoteMessage);  
+           ExponeaModule.Companion.handleRemoteMessage(  
+               getApplicationContext(),  
+               remoteMessage.getDataOfMap(),  
+               (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)
+           );  
+       }  
+    
+       @Override  
+       public void onNewToken(@NonNull String token) {  
+           super.onNewToken(token);  
+           ExponeaModule.Companion.handleNewHmsToken(  
+               getApplicationContext(),  
+               token
+           );  
+       }  
+   }
+   ```
+
+2. Register the service in `AndroidManifest.xml`:
+   ```xml
+   ...
+   <application>  
+     <service android:name=".MessageService" android:exported="false">  
+       <intent-filter> 
+         <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>  
+       </intent-filter> 
+     </service> 
+     <meta-data  android:name="push_kit_auto_init_enabled"  android:value="true"/>  
+   </application>
+   ...
+   ```
+
+> ❗️
 >
-> Follow the instructions in [Huawei Mobile Services](https://documentation.bloomreach.com/engagement/docs/android-sdk-huawei) in the native Android SDK documentation.
+> The methods `ExponeaModule.handleNewHmsToken` and `ExponeaModule.handleRemoteMessage` can be used before SDK initialization if a previous initialization was done. In such a case, each method will track events with the configuration of the last initialization. Consider initializing the SDK in `Application::onCreate` to make sure a fresh configuration is applied in case of an application update.
+
+#### Configure the Huawei Push Service integration in Engagement
+
+Follow the instructions in [Configure the Huawei Push Service integration in Engagement](https://documentation.bloomreach.com/engagement/docs/android-sdk-huawei#configure-the-huawei-push-service-integration-in-engagement) for the Android SDK.
 
 ### Request notification permission
 
