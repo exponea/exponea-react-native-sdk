@@ -44,3 +44,9 @@ The SDK is [available as open source on GitHub](https://github.com/exponea/expon
 - [Development](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-development)
 - [Release notes](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-release-notes)
    - [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update)
+
+## Frequently asked questions
+
+- [Mobile SDK tracking FAQ](https://support.bloomreach.com/hc/en-us/articles/18153058904733-Mobile-SDK-tracking-FAQ) at Bloomreach Support Help Center
+- [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at Bloomreach Support Help Center
+- [In-app messages FAQ](https://support.bloomreach.com/hc/en-us/articles/18152718785437-In-App-Messages-FAQ) at Bloomreach Support Help Center

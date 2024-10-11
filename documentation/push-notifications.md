@@ -14,6 +14,10 @@ Push notifications can also be silent, used only to update the app’s interface
 >
 > Refer to [Mobile push notifications](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) to learn how to create push notifications in the Engagement web app.
 
+> 📘
+>
+> Also see [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at Bloomreach Support Help Center.
+
 ## Integration
 
 The React Native SDK relies on the underlying native Android and iOS platforms to handle push notifications.
