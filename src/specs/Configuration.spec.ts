@@ -2,8 +2,8 @@ import Configuration, {
   PushTokenTrackingFrequency,
   PushNotificationImportance,
   HttpLoggingLevel,
-} from './Configuration';
-import EventType from './EventType';
+} from '../Configuration';
+import EventType from '../EventType';
 import {readFileSync} from 'fs';
 test('should construct basic configuration', () => {
   const configuration: Configuration = {
@@ -42,7 +42,7 @@ test('should construct full configuration', () => {
       },
     },
     flushMaxRetries: 10,
-    sessionTimeout: 20,
+    sessionTimeout: 60,
     automaticSessionTracking: true,
     pushTokenTrackingFrequency: PushTokenTrackingFrequency.DAILY,
     allowDefaultCustomerProperties: false,
@@ -60,6 +60,7 @@ test('should construct full configuration', () => {
       requirePushAuthorization: false,
       appGroup: 'mock-app-group',
     },
+    manualSessionAutoClose: true,
   };
 
   expect(JSON.stringify(configuration)).toBe(

@@ -51,7 +51,7 @@ class ConfigurationParserSpec: QuickSpec {
                     return
                 }
                 expect(sessionTracking.enabled).to(equal(true))
-                expect(sessionTracking.timeout).to(equal(20))
+                expect(sessionTracking.timeout).to(equal(60))
             }
             it("should parse default properties") {
                 guard let defaultProperties = try? parser.parseDefaultProperties() else {
@@ -74,6 +74,13 @@ class ConfigurationParserSpec: QuickSpec {
                 expect(pushNotifications.appGroup).to(equal("mock-app-group"))
                 expect(pushNotifications.requirePushAuthorization).to(equal(false))
                 expect(pushNotifications.delegate).to(beNil())
+            }
+            it("should parse manual session autoclose") {
+                guard let manualAutoClose = try? parser.parseManualSessionAutoClose() else {
+                    XCTFail("Unable to parse manual session autoclose")
+                    return
+                }
+                expect(manualAutoClose).to(equal(true))
             }
         }
         context("parsing minimal configuration") {
@@ -124,6 +131,13 @@ class ConfigurationParserSpec: QuickSpec {
                 expect(pushNotifications.appGroup).to(equal(""))
                 expect(pushNotifications.requirePushAuthorization).to(equal(true))
                 expect(pushNotifications.delegate).to(beNil())
+            }
+            it("should parse manual session autoclose") {
+                guard let manualAutoClose = try? parser.parseManualSessionAutoClose() else {
+                    XCTFail("Unable to parse manual session autoclose")
+                    return
+                }
+                expect(manualAutoClose).to(equal(true))
             }
         }
         context("invalid configuration") {

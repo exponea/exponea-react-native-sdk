@@ -57,7 +57,7 @@ internal class ConfigurationParserTest {
                     "object" to hashMapOf("key" to "value")
                 ),
                 maxTries = 10,
-                sessionTimeout = 20.0,
+                sessionTimeout = 60.0,
                 automaticSessionTracking = true,
                 tokenTrackFrequency = ExponeaConfiguration.TokenFrequency.DAILY,
                 automaticPushNotification = true,

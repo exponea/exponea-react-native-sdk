@@ -6,7 +6,11 @@ import TabNavigation from './screens/TabNavigation';
 import {Alert, Linking, NativeModules} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 import PreloadingScreen from './screens/PreloadingScreen';
-import {LogLevel} from 'react-native-exponea-sdk/lib/ExponeaType';
+import {
+  InAppMessage,
+  InAppMessageButton,
+  LogLevel,
+} from 'react-native-exponea-sdk/lib/ExponeaType';
 import * as RootNavigation from './util/RootNavigation';
 import {Screen} from './screens/Screens';
 
@@ -80,9 +84,39 @@ export default class App extends React.Component<{}, AppState> {
       }, 1000);
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    Exponea.setInAppMessageCallback(false, true, action => {
-      console.log('InApp action received - App.tsx');
+    Exponea.setInAppMessageCallback({
+      inAppMessageClickAction(
+        message: InAppMessage,
+        button: InAppMessageButton,
+      ): void {
+        console.log(
+          `InApp action ${button.url} received for message ${message.id}`,
+        );
+        Exponea.trackInAppMessageClick(message, button.text, button.url);
+      },
+      inAppMessageCloseAction(
+        message: InAppMessage,
+        button: InAppMessageButton | undefined,
+        interaction: boolean,
+      ): void {
+        console.log(
+          `InApp message ${message.id} closed by ${button?.text} with interaction: ${interaction}`,
+        );
+        Exponea.trackInAppMessageClose(message, button?.text, interaction);
+      },
+      inAppMessageError(
+        message: InAppMessage | undefined,
+        errorMessage: string,
+      ): void {
+        console.log(
+          `InApp error '${errorMessage}' occurred for message ${message?.id}`,
+        );
+      },
+      inAppMessageShown(message: InAppMessage): void {
+        console.log(`InApp message ${message?.id} has been shown`);
+      },
+      overrideDefaultBehavior: false,
+      trackActions: false,
     });
 
     Exponea.isConfigured().then(configured => {
@@ -166,6 +200,7 @@ export default class App extends React.Component<{}, AppState> {
         pushIconResourceName: 'push_icon',
         pushAccentColorRGBA: '161, 226, 200, 220',
       },
+      manualSessionAutoClose: true,
     };
     console.log(
       `Configuring Exponea SDK with ${JSON.stringify(configuration)}`,

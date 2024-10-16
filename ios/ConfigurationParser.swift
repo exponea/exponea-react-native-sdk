@@ -128,4 +128,8 @@ class ConfigurationParser {
     func parseInAppContentBlocksPlaceholders() throws -> [String] {
         return try dictionary.getOptionalSafely(property: "inAppContentBlockPlaceholdersAutoLoad") ?? []
     }
+
+    func parseManualSessionAutoClose() throws -> Bool {
+        return try dictionary.getOptionalSafely(property: "manualSessionAutoClose") ?? true
+    }
 }

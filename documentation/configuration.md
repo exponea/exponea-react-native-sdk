@@ -60,6 +60,7 @@ The following parameters are specified in an `Configuration` object. Refer to [s
   * The session is the actual time spent in the app. It starts when the app is launched and ends when the app goes into the background.
   * When the application goes into the background, the SDK doesn't track the end of the session right away but waits a bit for the user to come back before doing so. You can configure the timeout by setting this property.
   * Read more about [tracking sessions](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking#session).
+  * Default value: `60`
 
 * `pushTokenTrackingFrequency`
   * Indicates the frequency with which the SDK should track the push notification token to Engagement.
@@ -80,6 +81,10 @@ The following parameters are specified in an `Configuration` object. Refer to [s
 
 * `inAppContentBlockPlaceholdersAutoLoad`
   * Automatically load the contents of in-app content blocks assigned to these Placeholder IDs.
+
+* `manualSessionAutoClose`
+  * Determines whether the SDK automatically tracks `session_end` for sessions that remain open when `Exponea.trackSessionStart()` is called multiple times in manual session tracking mode.
+  * Default value: `true`
 
 * `android`
   * `AndroidConfiguration` object containing [Android-specific configuration parameters](#android-specific-configuration-parameters).

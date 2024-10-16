@@ -18,15 +18,47 @@ extension Exponea: InAppMessageActionDelegate {
         self.inAppTrackActions
     }
 
-    func inAppMessageAction(
-        with message: ExponeaSDK.InAppMessage,
+    func inAppMessageShown(message: ExponeaSDK.InAppMessage) {
+        onInAppAction(InAppMessageAction(
+            message: message,
+            button: nil,
+            interaction: nil,
+            errorMessage: nil,
+            type: .show
+        ))
+    }
+
+    func inAppMessageError(message: ExponeaSDK.InAppMessage?, errorMessage: String) {
+        onInAppAction(InAppMessageAction(
+            message: message,
+            button: nil,
+            interaction: nil,
+            errorMessage: errorMessage,
+            type: .error
+        ))
+    }
+
+    func inAppMessageClickAction(message: ExponeaSDK.InAppMessage, button: ExponeaSDK.InAppMessageButton) {
+        onInAppAction(InAppMessageAction(
+            message: message,
+            button: button,
+            interaction: nil,
+            errorMessage: nil,
+            type: .action
+        ))
+    }
+
+    func inAppMessageCloseAction(
+        message: ExponeaSDK.InAppMessage,
         button: ExponeaSDK.InAppMessageButton?,
         interaction: Bool
     ) {
         onInAppAction(InAppMessageAction(
             message: message,
             button: button,
-            interaction: interaction
+            interaction: interaction,
+            errorMessage: nil,
+            type: .close
         ))
     }
 
@@ -66,7 +98,16 @@ extension Exponea: InAppMessageActionDelegate {
 }
 
 struct InAppMessageAction: Codable {
-    let message: InAppMessage
+    let message: InAppMessage?
     let button: InAppMessageButton?
-    let interaction: Bool
+    let interaction: Bool?
+    let errorMessage: String?
+    let type: InAppMessageActionType
+}
+
+enum InAppMessageActionType: String, Codable {
+    case show = "SHOW"
+    case action = "ACTION"
+    case close = "CLOSE"
+    case error = "ERROR"
 }

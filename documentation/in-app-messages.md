@@ -27,7 +27,7 @@ The SDK automatically tracks `banner` events for in-app messages with the follow
 - `click`
   User clicked on action button inside in-app message. The event also contains the corresponding `text` and `link` properties.
 - `close`
-  User clicked on close button inside in-app message.
+  User clicked on close button inside in-app message or in-app message has been automatically closed by delay. The event also contains the corresponding `text` property if close button with label has been clicked.
 - `error`
   Displaying in-app message failed. The event contains an `error` property with an error message.
 
@@ -40,23 +40,46 @@ The SDK automatically tracks `banner` events for in-app messages with the follow
 
 ### Customize in-app message actions
 
-You can override the SDK's default behavior in response to an in-app message action (click button or close message) by setting up an `inAppMessageActionCallback` on the `Exponea` instance.
+You can override the SDK's default behavior in response to an in-app message action (click button or close message) by setting up an `InAppMessageCallback` instance on the `Exponea` instance.
 
 If the `overrideDefaultBehavior` parameter is `true`, the SDK will not perform the default in-app action (for example, resolving a deep link).
 
 If the `trackActions` parameter is `false`, the SDK will not track click and close in-app message events automatically. The SDK will hold the last `inAppMessageAction` and call the listener as soon as it's registered. We recommend setting up the listener as early as possible.
 
 ```typescript
-// If overrideDefaultBehavior is set to true, default in-app action will not be performed ( e.g. deep link )
-let overrideDefaultBehavior = false;
-// If trackActions is set to false, click and close in-app events will not be tracked automatically
-let trackActions = true;
-Exponea.setInAppMessageCallback(overrideDefaultBehavior, trackActions, (action) => {
-    console.log('InApp action received - App.tsx');
+Exponea.setInAppMessageCallback({
+  // If overrideDefaultBehavior is set to true, default in-app action will not be performed ( e.g. deep link )
+  overrideDefaultBehavior: false,
+  // If trackActions is set to false, click and close in-app events will not be tracked automatically
+  trackActions: true,
+  inAppMessageClickAction(message: InAppMessage, button: InAppMessageButton): void {
     // Here goes your code
-    // On in-app click, the button contains button text and button URL, and the interaction is true
-    // On in-app close by user interaction, the button is null and the interaction is true
-    // On in-app close by non-user interaction (i.e. timeout), the button is null and the interaction is false
+    // Method called when action button has been clicked by user.
+    // The button contains button text and button URL
+  },
+  inAppMessageCloseAction(message: InAppMessage, button: InAppMessageButton | undefined, interaction: boolean): void {
+    // Here goes your code
+    // Method called when in-app message has been closed.
+    // On in-app close by click on CANCEL button:
+    //  - the `button` is not null
+    //  - the `button` contains button text
+    //  - the `interaction` is true
+    // On in-app close with default interaction by user (close button, dismiss, etc...):
+    //  - the `button` is null
+    //  - the `interaction` is null
+    // On in-app close without interaction by user (in-app message timeout)
+    //  - the `button` is null
+    //  - the `interaction` is false
+  },
+  inAppMessageError(message: InAppMessage | undefined, errorMessage: string): void {
+    // Here goes your code
+    // Method called when any error occurs while showing in-app message.
+    // In-app message could be NULL if error is not related to in-app message.
+  },
+  inAppMessageShown(message: InAppMessage): void {
+    // Here goes your code
+    // Method called when in-app message is shown.
+  },
 });
 ```
 
@@ -73,9 +96,30 @@ Exponea.setInAppMessageCallback(false, false, (action) => {
         }
     }
 });
+
+Exponea.setInAppMessageCallback({
+  overrideDefaultBehavior: false,
+  trackActions: false,
+  inAppMessageClickAction(message: InAppMessage, button: InAppMessageButton): void {
+    if (<your-special-condition>) {
+      Exponea.trackInAppMessageClick(message, button.text, button.url);
+    }
+  },
+  inAppMessageCloseAction(message: InAppMessage, button: InAppMessageButton | undefined, interaction: boolean): void {
+    if (<your-special-condition>) {
+      Exponea.trackInAppMessageClose(message, button?.text, interaction);
+    }
+  },
+  inAppMessageError(message: InAppMessage | undefined, errorMessage: string): void {
+    // Here goes your code
+  },
+  inAppMessageShown(message: InAppMessage): void {
+    // Here goes your code
+  },
+});
 ```
 
-The method `trackInAppMessageClose` will track a 'close' event with the 'interaction' field's value `true`  by default. You may use the optional parameter `interaction` of this method to override this value.
+The method `trackInAppMessageClose` will track a 'close' event with the 'interaction' field's value.
 
 > The behaviour of `trackInAppMessageClick` and `trackInAppMessageClose` may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Read more in the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent).
 

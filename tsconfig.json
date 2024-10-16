@@ -69,7 +69,9 @@
   "exclude": [
     "example",
     "lib",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/specs",
+    "src/test_data"
   ],
   "include": [
     "src/*"

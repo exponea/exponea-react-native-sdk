@@ -9,6 +9,7 @@
 import Foundation
 import Quick
 import Nimble
+import enum ExponeaSDK.SegmentCategory
 
 @testable import Exponea
 
@@ -84,6 +85,54 @@ class ExponeaSegmentationSpec: QuickSpec {
                         }
                     )
                 }
+            }
+            it("should call segments getter with force") {
+                let data = TestUtil.loadFileAsJson(relativePath: "/src/test_data/get-segments-forced.json")
+                exponea.getSegments(
+                    params: data,
+                    resolve: { _ in },
+                    reject: { _, _, _ in }
+                )
+                expect(mockExponea.calls.count).to(equal(1))
+                let segmentCall = mockExponea.calls[0]
+                expect(segmentCall.name).to(equal("getSegments"))
+                expect(segmentCall.params.count).to(equal(2))
+                let category = segmentCall.params[0] as? SegmentCategory
+                let force = segmentCall.params[1] as? Bool
+                expect(category).to(equal(SegmentCategory.discovery()))
+                expect(force).to(equal(true))
+            }
+            it("should call segments getter without force") {
+                let data = TestUtil.loadFileAsJson(relativePath: "/src/test_data/get-segments-nonforced.json")
+                exponea.getSegments(
+                    params: data,
+                    resolve: { _ in },
+                    reject: { _, _, _ in }
+                )
+                expect(mockExponea.calls.count).to(equal(1))
+                let segmentCall = mockExponea.calls[0]
+                expect(segmentCall.name).to(equal("getSegments"))
+                expect(segmentCall.params.count).to(equal(2))
+                let category = segmentCall.params[0] as? SegmentCategory
+                let force = segmentCall.params[1] as? Bool
+                expect(category).to(equal(SegmentCategory.discovery()))
+                expect(force).to(equal(false))
+            }
+            it("should call segments getter without force param") {
+                let data = TestUtil.loadFileAsJson(relativePath: "/src/test_data/get-segments-minimal.json")
+                exponea.getSegments(
+                    params: data,
+                    resolve: { _ in },
+                    reject: { _, _, _ in }
+                )
+                expect(mockExponea.calls.count).to(equal(1))
+                let segmentCall = mockExponea.calls[0]
+                expect(segmentCall.name).to(equal("getSegments"))
+                expect(segmentCall.params.count).to(equal(2))
+                let category = segmentCall.params[0] as? SegmentCategory
+                let force = segmentCall.params[1] as? Bool
+                expect(category).to(equal(SegmentCategory.discovery()))
+                expect(force).to(equal(false))
             }
         }
     }

@@ -34,8 +34,10 @@
 		550CAAB72B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */; };
 		5597718C2A14E63E009EAB3D /* Exponea+InAppMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597718B2A14E63E009EAB3D /* Exponea+InAppMessage.swift */; };
 		55B0FEC729A78B9A00F8FB7C /* Exponea+AppInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */; };
+		55E107DD2CBE458900579519 /* InAppMessageTestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E107DC2CBE458900579519 /* InAppMessageTestData.swift */; };
+		55E107DF2CBE5D1100579519 /* Exponea+InAppMessagesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E107DE2CBE5D1100579519 /* Exponea+InAppMessagesSpec.swift */; };
 		55E88E5A2BDBEB4C008891EE /* Exponea+Segmentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E88E592BDBEB4C008891EE /* Exponea+Segmentation.swift */; };
-		55E88E5C2BDFCBFF008891EE /* Exponea+Segmentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E88E5B2BDFCBFF008891EE /* Exponea+Segmentation.swift */; };
+		55E88E5C2BDFCBFF008891EE /* Exponea+SegmentationSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E88E5B2BDFCBFF008891EE /* Exponea+SegmentationSpec.swift */; };
 		55F4BB3729A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */; };
 		55F4BB3929A8C3FB00CEDC7C /* RNAppInboxButtonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4BB3829A8C3FB00CEDC7C /* RNAppInboxButtonManager.m */; };
 		59BB353717B275A53BA59D39 /* libPods-Exponea.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2674FB7B62394ABB9AB92439 /* libPods-Exponea.a */; };
@@ -102,8 +104,10 @@
 		550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNInAppContentBlocksPlaceholderManager.m; sourceTree = "<group>"; };
 		5597718B2A14E63E009EAB3D /* Exponea+InAppMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+InAppMessage.swift"; sourceTree = "<group>"; };
 		55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+AppInbox.swift"; sourceTree = "<group>"; };
+		55E107DC2CBE458900579519 /* InAppMessageTestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppMessageTestData.swift; sourceTree = "<group>"; };
+		55E107DE2CBE5D1100579519 /* Exponea+InAppMessagesSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+InAppMessagesSpec.swift"; sourceTree = "<group>"; };
 		55E88E592BDBEB4C008891EE /* Exponea+Segmentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Segmentation.swift"; sourceTree = "<group>"; };
-		55E88E5B2BDFCBFF008891EE /* Exponea+Segmentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+Segmentation.swift"; sourceTree = "<group>"; };
+		55E88E5B2BDFCBFF008891EE /* Exponea+SegmentationSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+SegmentationSpec.swift"; sourceTree = "<group>"; };
 		55F4BB3629A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNAppInboxButtonManager.swift; sourceTree = "<group>"; };
 		55F4BB3829A8C3FB00CEDC7C /* RNAppInboxButtonManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNAppInboxButtonManager.m; sourceTree = "<group>"; };
 		A3D64EDD6AEB0DDA4D756D93 /* Pods-Exponea.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Exponea.debug.xcconfig"; path = "Target Support Files/Pods-Exponea/Pods-Exponea.debug.xcconfig"; sourceTree = "<group>"; };
@@ -147,7 +151,9 @@
 				054FD4C224D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift */,
 				0537094724D3423B001684E9 /* Exponea+AnonymizeSpec.swift */,
 				0537094924D401E3001684E9 /* Exponea+PushNotificationsSpec.swift */,
-				55E88E5B2BDFCBFF008891EE /* Exponea+Segmentation.swift */,
+				55E88E5B2BDFCBFF008891EE /* Exponea+SegmentationSpec.swift */,
+				55E107DC2CBE458900579519 /* InAppMessageTestData.swift */,
+				55E107DE2CBE5D1100579519 /* Exponea+InAppMessagesSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -399,13 +405,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				55E88E5C2BDFCBFF008891EE /* Exponea+Segmentation.swift in Sources */,
+				55E88E5C2BDFCBFF008891EE /* Exponea+SegmentationSpec.swift in Sources */,
+				55E107DD2CBE458900579519 /* InAppMessageTestData.swift in Sources */,
 				054FD4BF24D2DEA600BBE1D5 /* MockExponea.swift in Sources */,
 				0578A427249B7EB40049AE9D /* JsonDataParserSpec.swift in Sources */,
 				0578A41C249B53990049AE9D /* ConfigurationParserSpec.swift in Sources */,
 				0537094A24D401E3001684E9 /* Exponea+PushNotificationsSpec.swift in Sources */,
 				054FD4C324D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift in Sources */,
 				0578A429249B7F1C0049AE9D /* TestUtil.swift in Sources */,
+				55E107DF2CBE5D1100579519 /* Exponea+InAppMessagesSpec.swift in Sources */,
 				054FD4C124D2F4CC00BBE1D5 /* Exponea+TrackingSpec.swift in Sources */,
 				0537094824D3423B001684E9 /* Exponea+AnonymizeSpec.swift in Sources */,
 				054FD4BD24D2DE5200BBE1D5 /* ExponeaSpec.swift in Sources */,

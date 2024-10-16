@@ -6,7 +6,52 @@ categorySlug: integrations
 parentDocSlug: react-native-sdk-release-notes
 ---
 
-This guide will help you upgrade your Exponea SDK to the new version.
+This guide will help you upgrade your Exponea SDK to the latest major version.
+
+## Update from version 1.x.x to 2.x.x
+
+Updating Exponea SDK to version 2 or higher requires making some changes related to in-app messages callback implementations.
+
+The `Exponea.setInAppMessageCallback` API was changed and simplified, so you have to migrate your implementation of in-app message action and close handling. This migration requires to implement `InAppMessageCallback` interface.
+
+Your implementation may have been similar to the following example:
+
+```typescript
+Exponea.setInAppMessageCallback(false, true, (action) => {
+    if (action.button) {
+        // is click action
+        onMessageClick(message, button)
+    } else {
+        // is close action
+        onMessageClose(message, interaction)
+    }
+});
+```
+
+To update to version 2 of the SDK, you must implement the `InAppMessageCallback` interface and refactor your code as follows:
+
+```typescript
+Exponea.setInAppMessageCallback({
+    overrideDefaultBehavior: false,
+    trackActions: true,
+    inAppMessageClickAction(message: InAppMessage, button: InAppMessageButton): void {
+        console.log(`InApp action ${button.url} received for message ${message.id}`);
+        onMessageClick(message, button);
+    },
+    inAppMessageCloseAction(message: InAppMessage, button: InAppMessageButton | undefined, interaction: boolean): void {
+        console.log(`InApp message ${message.id} closed by ${button?.text} with interaction: ${interaction}`);
+        onMessageClose(message, interaction);
+    },
+    inAppMessageError(message: InAppMessage | undefined, errorMessage: string): void {
+        console.log(`InApp error '${errorMessage}' occurred for message ${message?.id}`);
+    },
+    inAppMessageShown(message: InAppMessage): void {
+        console.log(`InApp message ${message?.id} has been shown`);
+    },
+});
+```
+
+A benefit of the new behaviour is that the method `inAppMessageCloseAction` can be called with a non-null `button` parameter. This happens when a user clicks on the Cancel button and enables you to determine which button has been clicked by reading the button text.
 
 ## Update from version 0.x.x to 1.x.x
 

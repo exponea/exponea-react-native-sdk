@@ -10,10 +10,12 @@ import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.util.Logger
 import com.facebook.react.bridge.JavaOnlyMap
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableMap
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import io.mockk.verify
+import java.io.File
 import kotlin.test.assertNotNull
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -195,5 +197,32 @@ internal class ExponeaModuleTest {
         module.unregisterSegmentationDataCallback("non-existing-id", MockRejectingPromise {
             assertEquals(MockPromise.PromiseStatus.rejected, it.status)
         })
+    }
+
+    @Test
+    fun `should call segments getter with force`() {
+        val data = TestJsonParser.parse(File("../src/test_data/get-segments-forced.json").readText())
+        module.getSegments(data as ReadableMap, MockResolvingPromise {})
+        verify {
+            Exponea.getSegments("discovery", true, any())
+        }
+    }
+
+    @Test
+    fun `should call segments getter without force`() {
+        val data = TestJsonParser.parse(File("../src/test_data/get-segments-nonforced.json").readText())
+        module.getSegments(data as ReadableMap, MockResolvingPromise {})
+        verify {
+            Exponea.getSegments("discovery", false, any())
+        }
+    }
+
+    @Test
+    fun `should call segments getter without force param`() {
+        val data = TestJsonParser.parse(File("../src/test_data/get-segments-minimal.json").readText())
+        module.getSegments(data as ReadableMap, MockResolvingPromise {})
+        verify {
+            Exponea.getSegments("discovery", false, any())
+        }
     }
 }

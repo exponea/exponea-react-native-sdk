@@ -19,7 +19,7 @@ To use real-time segments in your app, you must register one or more customized 
 Each instance must define the following three items:
 
 1. An `exposingCategory` indicating your point of interest for segmentation:
-   * Possible values are `content`, `discovery`, or `merchandise`. You will get updates only for segmentation data assigned to the specified `exposingCategory`.
+   * Possible values are `content`, `discovery`, or `merchandising`. You will get updates only for segmentation data assigned to the specified `exposingCategory`.
 2. A boolean flag `includeFirstLoad` to force a fetch of segmentation data:
    * Setting this flag to `true` triggers a segmentation data fetch immediately.
    * The SDK will notify this callback instance with the new data even if the data has not changed from the last known state.
@@ -57,6 +57,19 @@ The SDK provides an API to get segmentation data directly. Invoke the `Exponea.g
 
 ```typescript
 const segments: Array<Segment> = await Exponea.getSegments('discovery');
+console.info('Segments: Got new segments: ' + segments);
+```
+
+Segments data received by `getSegments` method are primary loaded from valid cache. Cache is automatically fetched from server if:
+
+* cache is empty or was loaded for previous customer
+* cache data are older than 5 seconds
+* method is forced to fetch segments from server by developer
+
+If you want to force to fetch segmentations data from server, use `force` parameter with `true` value as argument:
+
+```typescript
+const segments: Array<Segment> = await Exponea.getSegments('discovery', true);
 console.info('Segments: Got new segments: ' + segments);
 ```
 
@@ -132,7 +145,7 @@ const data = new Observable((subscriber) => {
         (data) => { subscriber.next(data); },
     ));
     Exponea.registerSegmentationDataCallback(new SegmentationDataCallback(
-        'merchandise',
+        'merchandising',
         false,
         (data) => { subscriber.next(data); },
     ));

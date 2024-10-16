@@ -2,7 +2,6 @@ package com.exponea
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
@@ -38,7 +37,6 @@ internal class ExponeaModulePushTest {
         verify(exactly = 0) { eventEmmiter.emit(any(), any()) }
         module.onPushReceivedListenerSet(MockResolvingPromise {})
         verify { eventEmmiter.emit("pushReceived", """{"data":"value"}""") }
-        confirmVerified()
     }
 
     @Test
@@ -51,7 +49,6 @@ internal class ExponeaModulePushTest {
         verify(exactly = 1) { eventEmmiter.emit("pushReceived", """{"data":"value"}""") }
         module.onPushReceivedListenerSet(MockResolvingPromise {})
         verify(exactly = 2) { eventEmmiter.emit("pushReceived", """{"data":"value"}""") }
-        confirmVerified()
     }
 
     @Test
@@ -65,7 +62,6 @@ internal class ExponeaModulePushTest {
                 """{"action":"deeplink","url":"someUrl","additionalData":{"data":"value"}}"""
             )
         }
-        confirmVerified()
     }
 
     @Test
@@ -93,6 +89,5 @@ internal class ExponeaModulePushTest {
                 """{"action":"deeplink","url":"someUrl","additionalData":{"data":"value"}}"""
             )
         }
-        confirmVerified()
     }
 }

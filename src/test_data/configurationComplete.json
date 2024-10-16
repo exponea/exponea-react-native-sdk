@@ -23,7 +23,7 @@
     }
   },
   "flushMaxRetries": 10,
-  "sessionTimeout": 20,
+  "sessionTimeout": 60,
   "automaticSessionTracking": true,
   "pushTokenTrackingFrequency": "DAILY",
   "allowDefaultCustomerProperties": false,
@@ -40,5 +40,6 @@
   "ios": {
     "requirePushAuthorization": false,
     "appGroup": "mock-app-group"
-  }
+  },
+  "manualSessionAutoClose": true
 }

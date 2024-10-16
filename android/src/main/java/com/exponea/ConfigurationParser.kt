@@ -136,6 +136,11 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     ) ?: emptyList()
                     configuration.inAppContentBlockPlaceholdersAutoLoad = placeholderIds
                 }
+                "manualSessionAutoClose" -> {
+                    configuration.manualSessionAutoClose = map.getSafely(
+                        "manualSessionAutoClose", Boolean::class
+                    )
+                }
             }
         }
         return configuration

@@ -65,10 +65,10 @@ RCT_EXTERN_METHOD(trackDeliveredPushWithoutTrackingConsent:(NSDictionary *)param
 RCT_EXTERN_METHOD(trackClickedPush:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(trackClickedPushWithoutTrackingConsent:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(trackPaymentEvent:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(trackInAppMessageClick:(NSDictionary *)data resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(trackInAppMessageClickWithoutTrackingConsent:(NSDictionary *)data resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(trackInAppMessageClose:(NSDictionary *)message isUserInteraction:(BOOL)isUserInteraction resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(trackInAppMessageCloseWithoutTrackingConsent:(NSDictionary *)message isUserInteraction:(BOOL)isUserInteraction resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(trackInAppMessageClick:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(trackInAppMessageClickWithoutTrackingConsent:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(trackInAppMessageClose:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(trackInAppMessageCloseWithoutTrackingConsent:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(trackInAppContentBlockClick:(NSDictionary *)data resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(trackInAppContentBlockClickWithoutTrackingConsent:(NSDictionary *)data resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(trackInAppContentBlockClose:(NSDictionary *)data resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
@@ -85,6 +85,6 @@ RCT_EXTERN_METHOD(isExponeaPushNotification:(NSDictionary *)params resolve:(RCTP
 
 RCT_EXTERN_METHOD(registerSegmentationDataCallback:(NSString *)exposingCategory includeFirstLoad:(BOOL)includeFirstLoad resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(unregisterSegmentationDataCallback:(NSString *)callbackInstanceId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(getSegments:(NSString *)exposingCategory resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(getSegments:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 @end

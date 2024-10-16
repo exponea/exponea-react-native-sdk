@@ -65,10 +65,13 @@ internal fun Map<String, Any?>.toInAppMessageAction(): InAppMessageAction? {
     val message = source.getNullSafelyMap<Any>("message")
         ?.toInAppMessage()
         ?: return null
+    val type = InAppMessageActionType.valueOf(source.getRequired("type"))
     return InAppMessageAction(
         message = message,
         button = source.getNullSafelyMap<Any>("button")?.toInAppMessageButton(),
-        interaction = source.getRequired("interaction")
+        interaction = source.getNullSafely("interaction", Boolean::class),
+        errorMessage = source.getNullSafely("errorMessage", String::class),
+        type = type
     )
 }
 
@@ -89,7 +92,7 @@ internal fun Map<String, Any?>.toInAppMessage(): InAppMessage? {
         rawMessageType = source.getNullSafely("message_type"),
         rawFrequency = source.getRequired("frequency"),
         payload = source.getNullSafelyMap<Any>("payload")?.toInAppMessagePayload(),
-        variantId = source.getRequired("variant_id"),
+        variantId = source.getRequired<Double>("variant_id").toInt(),
         variantName = source.getRequired("variant_name"),
         trigger = source.getNullSafelyMap<Any>("trigger")?.toEventFilter(),
         dateFilter = dateFilter,

@@ -1,5 +1,12 @@
 import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
-import ExponeaType, {InAppMessageAction, OpenedPush, Segment, SegmentationDataCallback} from './ExponeaType';
+import ExponeaType, {
+  InAppMessage,
+  InAppMessageAction,
+  InAppMessageActionType,
+  OpenedPush,
+  Segment,
+  SegmentationDataCallback
+} from './ExponeaType';
 import ExponeaProject from './ExponeaProject';
 import EventType from './EventType';
 import {JsonObject} from './Json';
@@ -8,6 +15,9 @@ import {Recommendation, RecommendationOptions} from './Recommendation';
 import {AppInboxMessage} from './AppInboxMessage';
 import {AppInboxAction} from './AppInboxAction';
 import {SegmentationCallbackBridge, SegmentationDataWrapper} from "./SegmentationCallbackBridge";
+import {InAppMessageCallback} from "./InAppMessageCallback";
+import {InAppMessageActionDef} from "./InAppMessage";
+import exponeaProject from "./ExponeaProject";
 
 /*
 React native bridge doesn't like optional parameters, we have to implement it ourselves.
@@ -102,14 +112,12 @@ const Exponea: ExponeaType = {
   },
 
   setInAppMessageCallback(
-    overrideDefaultBehavior: boolean,
-    trackActions: boolean,
-    callback: (action: InAppMessageAction) => void,
+    callback: InAppMessageCallback
   ): void {
     inAppMessageCallback = callback;
     NativeModules.Exponea.onInAppMessageCallbackSet(
-      overrideDefaultBehavior,
-      trackActions,
+        inAppMessageCallback.overrideDefaultBehavior,
+        inAppMessageCallback.trackActions,
     );
   },
 
@@ -221,32 +229,43 @@ const Exponea: ExponeaType = {
     return NativeModules.Exponea.isExponeaPushNotification(params);
   },
 
-  trackInAppMessageClick(params: Record<string, string>): Promise<void> {
-    return NativeModules.Exponea.trackInAppMessageClick(params);
+  trackInAppMessageClick(
+      message: InAppMessage,
+      buttonText: string|null|undefined,
+      buttonUrl: string|null|undefined
+  ): Promise<void> {
+    return NativeModules.Exponea.trackInAppMessageClick(
+        InAppMessageActionDef.buildForClick(message, buttonText, buttonUrl)
+    )
   },
 
   trackInAppMessageClickWithoutTrackingConsent(
-    params: Record<string, string>,
+      message: InAppMessage,
+      buttonText: string|null|undefined,
+      buttonUrl: string|null|undefined
   ): Promise<void> {
     return NativeModules.Exponea.trackInAppMessageClickWithoutTrackingConsent(
-      params,
+        InAppMessageActionDef.buildForClick(message, buttonText, buttonUrl)
     );
   },
 
   trackInAppMessageClose(
-    params: Record<string, string>,
-    interaction = true
+      message: InAppMessage,
+      buttonText: string|null|undefined,
+      interaction: boolean
   ): Promise<void> {
-    return NativeModules.Exponea.trackInAppMessageClose(params, interaction);
+    return NativeModules.Exponea.trackInAppMessageClose(
+        InAppMessageActionDef.buildForClose(message, buttonText, interaction)
+    );
   },
 
   trackInAppMessageCloseWithoutTrackingConsent(
-    params: Record<string, string>,
-    interaction = true
+      message: InAppMessage,
+      buttonText: string|null|undefined,
+      interaction: boolean
   ): Promise<void> {
     return NativeModules.Exponea.trackInAppMessageCloseWithoutTrackingConsent(
-      params,
-      interaction
+        InAppMessageActionDef.buildForClose(message, buttonText, interaction)
     );
   },
 
@@ -336,14 +355,17 @@ const Exponea: ExponeaType = {
     });
   },
 
-  async getSegments(exposingCategory: string): Promise<Array<Segment>> {
-    return JSON.parse(await NativeModules.Exponea.getSegments(exposingCategory))
+  async getSegments(exposingCategory: string, force?: boolean): Promise<Array<Segment>> {
+    return JSON.parse(await NativeModules.Exponea.getSegments({
+      exposingCategory: exposingCategory,
+      force: force
+    }))
   },
 };
 
 let pushOpenedUserListener: ((openedPush: OpenedPush) => void) | null = null;
 let pushReceivedUserListener: ((data: JsonObject) => void) | null = null;
-let inAppMessageCallback: ((action: InAppMessageAction) => void) | null = null;
+let inAppMessageCallback: InAppMessageCallback | null = null;
 
 const eventEmitter = new NativeEventEmitter(NativeModules.Exponea);
 
@@ -357,8 +379,52 @@ eventEmitter.addListener('pushReceived', (data: string) => {
   pushReceivedUserListener && pushReceivedUserListener(JSON.parse(data));
 });
 
-eventEmitter.addListener('inAppAction', (data: string) => {
-  inAppMessageCallback && inAppMessageCallback(JSON.parse(data));
-});
+const handleInAppMessageAction = (data: string) => {
+  if (!inAppMessageCallback) {
+    return
+  }
+  const receivedAction = JSON.parse(data) as InAppMessageAction
+  switch (receivedAction.type) {
+    case InAppMessageActionType.SHOW:
+      if (!receivedAction.message) {
+        console.error("In-app callback invoked for shown message without data")
+        return;
+      }
+      inAppMessageCallback.inAppMessageShown(receivedAction.message)
+      break;
+    case InAppMessageActionType.CLOSE:
+      if (!receivedAction.message || receivedAction.interaction === undefined) {
+        console.error("In-app callback invoked for closed message without data")
+        return;
+      }
+      inAppMessageCallback.inAppMessageCloseAction(
+          receivedAction.message,
+          receivedAction.button,
+          receivedAction.interaction
+      )
+      break;
+    case InAppMessageActionType.ERROR:
+      if (!receivedAction.errorMessage) {
+        console.error("In-app callback invoked for error report without data")
+        return;
+      }
+      inAppMessageCallback.inAppMessageError(receivedAction.message, receivedAction.errorMessage)
+      break;
+    case InAppMessageActionType.ACTION:
+      if (!receivedAction.message || !receivedAction.button) {
+        console.error("In-app callback invoked for clicked action without data")
+        return;
+      }
+      inAppMessageCallback.inAppMessageClickAction(receivedAction.message, receivedAction.button)
+      break;
+    default:
+      console.error(`In-app callback invoked for unknown action ${receivedAction.message}`);
+  }
+}
+
+eventEmitter.addListener('inAppAction', handleInAppMessageAction);
 
 export default Exponea;
+
+// Internal functions, tests purpose
+(Exponea as any)["handleInAppMessageAction"] = handleInAppMessageAction

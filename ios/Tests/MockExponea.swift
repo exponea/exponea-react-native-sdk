@@ -135,7 +135,8 @@ class MockExponea: ExponeaType {
         inAppContentBlocksPlaceholders: [String]?,
         flushingSetup: Exponea.FlushingSetup,
         allowDefaultCustomerProperties: Bool?,
-        advancedAuthEnabled: Bool?
+        advancedAuthEnabled: Bool?,
+        manualSessionAutoClose: Bool
     ) {
         calls.append(
             Call(
@@ -146,7 +147,8 @@ class MockExponea: ExponeaType {
                     defaultProperties,
                     flushingSetup,
                     allowDefaultCustomerProperties,
-                    advancedAuthEnabled
+                    advancedAuthEnabled,
+                    manualSessionAutoClose
                 ]
             )
         )
@@ -160,7 +162,8 @@ class MockExponea: ExponeaType {
         defaultProperties: [String: JSONConvertible]?,
         inAppContentBlocksPlaceholders: [String]?,
         allowDefaultCustomerProperties: Bool?,
-        advancedAuthEnabled: Bool?
+        advancedAuthEnabled: Bool?,
+        manualSessionAutoClose: Bool
     ) {
         fatalError("Not implemented")
     }
@@ -174,7 +177,8 @@ class MockExponea: ExponeaType {
         defaultProperties: [String: JSONConvertible]?,
         inAppContentBlocksPlaceholders: [String]?,
         allowDefaultCustomerProperties: Bool?,
-        advancedAuthEnabled: Bool?
+        advancedAuthEnabled: Bool?,
+        manualSessionAutoClose: Bool
     ) {
         fatalError("Not implemented")
     }
@@ -265,8 +269,8 @@ class MockExponea: ExponeaType {
         calls.append(Call(name: "trackInAppMessageClick", params: [message, buttonText, buttonLink]))
     }
 
-    func trackInAppMessageClose(message: InAppMessage) {
-        calls.append(Call(name: "trackInAppMessageClose", params: [message]))
+    func trackInAppMessageClose(message: ExponeaSDK.InAppMessage, buttonText: String?, isUserInteraction: Bool?) {
+        calls.append(Call(name: "trackInAppMessageClose", params: [message, buttonText, isUserInteraction]))
     }
 
     func trackPushOpenedWithoutTrackingConsent(with userInfo: [AnyHashable: Any]) {
@@ -288,8 +292,15 @@ class MockExponea: ExponeaType {
         ))
     }
 
-    func trackInAppMessageCloseClickWithoutTrackingConsent(message: ExponeaSDK.InAppMessage) {
-        calls.append(Call(name: "trackInAppMessageCloseClickWithoutTrackingConsent", params: [message]))
+    func trackInAppMessageCloseClickWithoutTrackingConsent(
+        message: ExponeaSDK.InAppMessage,
+        buttonText: String?,
+        isUserInteraction: Bool?
+    ) {
+        calls.append(Call(
+            name: "trackInAppMessageCloseClickWithoutTrackingConsent",
+            params: [message, buttonText, isUserInteraction]
+        ))
     }
 
     func trackAppInboxOpened(message: ExponeaSDK.MessageItem) {
@@ -320,6 +331,12 @@ class MockExponea: ExponeaType {
     }
 
     func getAppInboxListViewController() -> UIViewController {
+        fatalError("Not implemented")
+    }
+
+    func getAppInboxListViewController(
+        onItemClicked: @escaping (ExponeaSDK.MessageItem, Int) -> Void
+    ) -> UIViewController {
         fatalError("Not implemented")
     }
 
@@ -356,23 +373,6 @@ class MockExponea: ExponeaType {
 
     func trackPushReceivedWithoutTrackingConsent(userInfo: [AnyHashable: Any]) {
         calls.append(Call(name: "trackPushReceivedWithoutTrackingConsent", params: [userInfo]))
-    }
-
-    func trackInAppMessageCloseClickWithoutTrackingConsent(
-        message: ExponeaSDK.InAppMessage,
-        isUserInteraction: Bool?
-    ) {
-        calls.append(Call(
-            name: "trackInAppMessageCloseClickWithoutTrackingConsent",
-            params: [message, isUserInteraction]
-        ))
-    }
-
-    func trackInAppMessageClose(
-        message: ExponeaSDK.InAppMessage,
-        isUserInteraction: Bool?
-    ) {
-        calls.append(Call(name: "trackInAppMessageClose", params: [message, isUserInteraction]))
     }
 
     func trackInAppContentBlockClick(
@@ -442,17 +442,24 @@ class MockExponea: ExponeaType {
     }
 
     func getSegments(
+        force: Bool,
         category: ExponeaSDK.SegmentCategory,
-        successCallback: @escaping ExponeaSDK.TypeBlock<[ExponeaSDK.SegmentDTO]>
+        result: @escaping ExponeaSDK.TypeBlock<[ExponeaSDK.SegmentDTO]>
     ) {
-        calls.append(Call(name: "getSegments", params: [category]))
-        successCallback([])
+        calls.append(Call(name: "getSegments", params: [category, force]))
+        result([])
     }
 }
 
 class TestDefaultInAppDelegate: InAppMessageActionDelegate {
     public let overrideDefaultBehavior = false
     public let trackActions = true
-
-    public func inAppMessageAction(with message: InAppMessage, button: InAppMessageButton?, interaction: Bool) {}
+    func inAppMessageShown(message: ExponeaSDK.InAppMessage) {}
+    func inAppMessageError(message: ExponeaSDK.InAppMessage?, errorMessage: String) {}
+    func inAppMessageClickAction(message: ExponeaSDK.InAppMessage, button: ExponeaSDK.InAppMessageButton) {}
+    func inAppMessageCloseAction(
+        message: ExponeaSDK.InAppMessage,
+        button: ExponeaSDK.InAppMessageButton?,
+        interaction: Bool
+    ) {}
 }

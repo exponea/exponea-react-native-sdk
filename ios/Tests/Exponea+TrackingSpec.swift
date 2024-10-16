@@ -9,6 +9,8 @@
 import Foundation
 import Quick
 import Nimble
+import struct ExponeaSDK.InAppMessage
+import struct ExponeaSDK.InAppMessageButton
 
 import protocol ExponeaSDK.JSONConvertible
 
@@ -540,10 +542,11 @@ class ExponeaTrackingSpec: QuickSpec {
                 mockExponea.isConfiguredValue = true
                 waitUntil { done in
                     exponea.trackInAppMessageClick(
-                        data: [
-                            "message": getInAppMessageAsDic(),
-                            "button": getInAppMessageActionAsDic()
-                        ],
+                        params: getInAppMessageActionAsDic(
+                            message: InAppMessageTestData.buildInAppMessage(),
+                            button: InAppMessageTestData.buildInAppMessageButton(),
+                            type: .action
+                        ),
                         resolve: { result in
                             expect(result).to(beNil())
                             guard mockExponea.calls.count == 2 else {
@@ -551,7 +554,15 @@ class ExponeaTrackingSpec: QuickSpec {
                                 return
                             }
                             expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackInAppMessageClick"))
+                            let trackCall = mockExponea.calls[1]
+                            expect(trackCall.name).to(equal("trackInAppMessageClick"))
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let buttonUrl = trackCall.params[2] as? String
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(buttonUrl).to(equal("https://example.com"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -562,16 +573,18 @@ class ExponeaTrackingSpec: QuickSpec {
             it("should not track click when Exponea is not configured") {
                 waitUntil { done in
                     exponea.trackInAppMessageClick(
-                        data: [
-                            "message": getInAppMessageAsDic(),
-                            "button": getInAppMessageActionAsDic()
-                        ],
+                        params: getInAppMessageActionAsDic(
+                            message: InAppMessageTestData.buildInAppMessage(),
+                            button: InAppMessageTestData.buildInAppMessageButton(),
+                            type: .action
+                        ),
                         resolve: { _ in },
                         reject: { errorCode, description, error in
                             expect(errorCode).to(equal("ExponeaSDK"))
                             expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                            expect(error?.localizedDescription).to(
+                                equal(ExponeaError.notConfigured.localizedDescription)
+                            )
                             done()
                         }
                     )
@@ -582,10 +595,11 @@ class ExponeaTrackingSpec: QuickSpec {
                 mockExponea.isConfiguredValue = true
                 waitUntil { done in
                     exponea.trackInAppMessageClickWithoutTrackingConsent(
-                        data: [
-                            "message": getInAppMessageAsDic(),
-                            "button": getInAppMessageActionAsDic()
-                        ],
+                        params: getInAppMessageActionAsDic(
+                            message: InAppMessageTestData.buildInAppMessage(),
+                            button: InAppMessageTestData.buildInAppMessageButton(),
+                            type: .action
+                        ),
                         resolve: { result in
                             expect(result).to(beNil())
                             guard mockExponea.calls.count == 2 else {
@@ -593,7 +607,15 @@ class ExponeaTrackingSpec: QuickSpec {
                                 return
                             }
                             expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackInAppMessageClickWithoutTrackingConsent"))
+                            let trackCall = mockExponea.calls[1]
+                            expect(trackCall.name).to(equal("trackInAppMessageClickWithoutTrackingConsent"))
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let buttonUrl = trackCall.params[2] as? String
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(buttonUrl).to(equal("https://example.com"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -604,16 +626,18 @@ class ExponeaTrackingSpec: QuickSpec {
             it("should not track click when Exponea is not configured - ignore consent") {
                 waitUntil { done in
                     exponea.trackInAppMessageClickWithoutTrackingConsent(
-                        data: [
-                            "message": getInAppMessageAsDic(),
-                            "button": getInAppMessageActionAsDic()
-                        ],
+                        params: getInAppMessageActionAsDic(
+                            message: InAppMessageTestData.buildInAppMessage(),
+                            button: InAppMessageTestData.buildInAppMessageButton(),
+                            type: .action
+                        ),
                         resolve: { _ in },
                         reject: { errorCode, description, error in
                             expect(errorCode).to(equal("ExponeaSDK"))
                             expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                            expect(error?.localizedDescription).to(
+                                equal(ExponeaError.notConfigured.localizedDescription)
+                            )
                             done()
                         }
                     )
@@ -624,8 +648,12 @@ class ExponeaTrackingSpec: QuickSpec {
                 mockExponea.isConfiguredValue = true
                 waitUntil { done in
                     exponea.trackInAppMessageClose(
-                        message: getInAppMessageAsDic(),
-                        isUserInteraction: true,
+                        params: getInAppMessageActionAsDic(
+                            message: InAppMessageTestData.buildInAppMessage(),
+                            button: InAppMessageTestData.buildInAppMessageButton(),
+                            interaction: true,
+                            type: .close
+                        ),
                         resolve: { result in
                             expect(result).to(beNil())
                             guard mockExponea.calls.count == 2 else {
@@ -633,7 +661,15 @@ class ExponeaTrackingSpec: QuickSpec {
                                 return
                             }
                             expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackInAppMessageClose"))
+                            let trackCall = mockExponea.calls[1]
+                            expect(trackCall.name).to(equal("trackInAppMessageClose"))
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let isInteraction = trackCall.params[2] as? Bool
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(isInteraction).to(equal(true))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -641,48 +677,43 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            func getInAppMessageAsDic() -> NSDictionary {
-                return [
-                    "id": "1",
-                    "name": "in-app name",
-                    "frequency": "always",
-                    "variant_id": 1,
-                    "variant_name": "Variant A",
-                    "trigger": [
-                        "event_type": "session_start",
-                        "filter": []
-                    ],
-                    "date_filter": [
-                        "enabled": false
-                    ],
-                    "load_priority": 10,
-                    "load_delay": 0,
-                    "close_timeout": 5000,
-                    "payload_html": "<html></html>",
-                    "is_html": true,
-                    "has_tracking_consent": true,
-                    "consent_category_tracking": "cat1"
-                ]
-            }
-
-            func getInAppMessageActionAsDic() -> NSDictionary {
-                return [
-                    "text": "action name",
-                    "url": "https://example.com"
-                ]
+            func getInAppMessageActionAsDic(
+                message: InAppMessage? = nil,
+                button: InAppMessageButton? = nil,
+                interaction: Bool? = nil,
+                errorMessage: String? = nil,
+                type: InAppMessageActionType
+            ) -> NSDictionary {
+                let action = InAppMessageAction(
+                    message: message,
+                    button: button,
+                    interaction: interaction,
+                    errorMessage: errorMessage,
+                    type: type
+                )
+                if let actionJson = try? JSONEncoder().encode(action),
+                   let actionAsDic = try? JSONSerialization.jsonObject(with: actionJson) as? NSDictionary {
+                    return actionAsDic
+                }
+                fatalError("Unable to build InAppMessageAction")
             }
 
             it("should not track close when Exponea is not configured") {
                 waitUntil { done in
                     exponea.trackInAppMessageClose(
-                        message: getInAppMessageAsDic(),
-                        isUserInteraction: true,
+                        params: getInAppMessageActionAsDic(
+                            message: InAppMessageTestData.buildInAppMessage(),
+                            button: InAppMessageTestData.buildInAppMessageButton(),
+                            interaction: true,
+                            type: .close
+                        ),
                         resolve: { _ in },
                         reject: { errorCode, description, error in
                             expect(errorCode).to(equal("ExponeaSDK"))
                             expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                            expect(error?.localizedDescription).to(
+                                equal(ExponeaError.notConfigured.localizedDescription)
+                            )
                             done()
                         }
                     )
@@ -693,8 +724,12 @@ class ExponeaTrackingSpec: QuickSpec {
                 mockExponea.isConfiguredValue = true
                 waitUntil { done in
                     exponea.trackInAppMessageCloseWithoutTrackingConsent(
-                        message: getInAppMessageAsDic(),
-                        isUserInteraction: true,
+                        params: getInAppMessageActionAsDic(
+                            message: InAppMessageTestData.buildInAppMessage(),
+                            button: InAppMessageTestData.buildInAppMessageButton(),
+                            interaction: true,
+                            type: .close
+                        ),
                         resolve: { result in
                             expect(result).to(beNil())
                             guard mockExponea.calls.count == 2 else {
@@ -702,9 +737,17 @@ class ExponeaTrackingSpec: QuickSpec {
                                 return
                             }
                             expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(
+                            let trackCall = mockExponea.calls[1]
+                            expect(trackCall.name).to(
                                 equal("trackInAppMessageCloseClickWithoutTrackingConsent")
                             )
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let isInteraction = trackCall.params[2] as? Bool
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(isInteraction).to(equal(true))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -715,8 +758,12 @@ class ExponeaTrackingSpec: QuickSpec {
             it("should not track close when Exponea is not configured - ignore consent") {
                 waitUntil { done in
                     exponea.trackInAppMessageCloseWithoutTrackingConsent(
-                        message: getInAppMessageAsDic(),
-                        isUserInteraction: true,
+                        params: getInAppMessageActionAsDic(
+                            message: InAppMessageTestData.buildInAppMessage(),
+                            button: InAppMessageTestData.buildInAppMessageButton(),
+                            interaction: true,
+                            type: .close
+                        ),
                         resolve: { _ in },
                         reject: { errorCode, description, error in
                             expect(errorCode).to(equal("ExponeaSDK"))

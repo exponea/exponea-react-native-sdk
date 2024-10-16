@@ -241,7 +241,7 @@ extension Exponea {
 
     @objc(trackInAppMessageClick:resolve:reject:)
     func trackInAppMessageClick(
-        data: NSDictionary,
+        params: NSDictionary,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
@@ -249,12 +249,9 @@ extension Exponea {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        guard let messageData: NSDictionary = try? data.getOptionalSafely(property: "message"),
-              let json = try? JSONSerialization.data(withJSONObject: messageData),
-              let inAppMessage = try? JSONDecoder().decode(InAppMessage.self, from: json),
-              let button: NSDictionary = try? data.getOptionalSafely(property: "button"),
-              let link: String = try? button.getOptionalSafely(property: "url")
-        else {
+        guard let json = try? JSONSerialization.data(withJSONObject: params),
+              let inAppMessageAction = try? JSONDecoder().decode(InAppMessageAction.self, from: json),
+              let inAppMessage = inAppMessageAction.message else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
             ))
@@ -262,15 +259,15 @@ extension Exponea {
         }
         Exponea.exponeaInstance.trackInAppMessageClick(
             message: inAppMessage,
-            buttonText: try? button.getOptionalSafely(property: "text"),
-            buttonLink: link
+            buttonText: inAppMessageAction.button?.text,
+            buttonLink: inAppMessageAction.button?.url
         )
         resolve(nil)
     }
 
     @objc(trackInAppMessageClickWithoutTrackingConsent:resolve:reject:)
     func trackInAppMessageClickWithoutTrackingConsent(
-        data: NSDictionary,
+        params: NSDictionary,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
@@ -278,12 +275,9 @@ extension Exponea {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        guard let messageData: NSDictionary = try? data.getOptionalSafely(property: "message"),
-              let json = try? JSONSerialization.data(withJSONObject: messageData),
-              let inAppMessage = try? JSONDecoder().decode(InAppMessage.self, from: json),
-              let button: NSDictionary = try? data.getOptionalSafely(property: "button"),
-              let link: String = try? button.getOptionalSafely(property: "url")
-        else {
+        guard let json = try? JSONSerialization.data(withJSONObject: params),
+              let inAppMessageAction = try? JSONDecoder().decode(InAppMessageAction.self, from: json),
+              let inAppMessage = inAppMessageAction.message else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
             ))
@@ -291,16 +285,15 @@ extension Exponea {
         }
         Exponea.exponeaInstance.trackInAppMessageClickWithoutTrackingConsent(
             message: inAppMessage,
-            buttonText: try? button.getOptionalSafely(property: "text"),
-            buttonLink: link
+            buttonText: inAppMessageAction.button?.text,
+            buttonLink: inAppMessageAction.button?.url
         )
         resolve(nil)
     }
 
-    @objc(trackInAppMessageClose:isUserInteraction:resolve:reject:)
+    @objc(trackInAppMessageClose:resolve:reject:)
     func trackInAppMessageClose(
-        message: NSDictionary,
-        isUserInteraction: Bool,
+        params: NSDictionary,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
@@ -308,8 +301,9 @@ extension Exponea {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        guard let json = try? JSONSerialization.data(withJSONObject: message),
-              let inAppMessage = try? JSONDecoder().decode(InAppMessage.self, from: json) else {
+        guard let json = try? JSONSerialization.data(withJSONObject: params),
+              let inAppMessageAction = try? JSONDecoder().decode(InAppMessageAction.self, from: json),
+              let inAppMessage = inAppMessageAction.message else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
             ))
@@ -317,15 +311,15 @@ extension Exponea {
         }
         Exponea.exponeaInstance.trackInAppMessageClose(
             message: inAppMessage,
-            isUserInteraction: isUserInteraction
+            buttonText: inAppMessageAction.button?.text,
+            isUserInteraction: inAppMessageAction.interaction
         )
         resolve(nil)
     }
 
-    @objc(trackInAppMessageCloseWithoutTrackingConsent:isUserInteraction:resolve:reject:)
+    @objc(trackInAppMessageCloseWithoutTrackingConsent:resolve:reject:)
     func trackInAppMessageCloseWithoutTrackingConsent(
-        message: NSDictionary,
-        isUserInteraction: Bool,
+        params: NSDictionary,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
@@ -333,8 +327,9 @@ extension Exponea {
             rejectPromise(reject, error: ExponeaError.notConfigured)
             return
         }
-        guard let json = try? JSONSerialization.data(withJSONObject: message),
-              let inAppMessage = try? JSONDecoder().decode(InAppMessage.self, from: json) else {
+        guard let json = try? JSONSerialization.data(withJSONObject: params),
+              let inAppMessageAction = try? JSONDecoder().decode(InAppMessageAction.self, from: json),
+              let inAppMessage = inAppMessageAction.message else {
             rejectPromise(reject, error: ExponeaError.generalError(
                 "Unable to parse InApp message from given data"
             ))
@@ -342,7 +337,8 @@ extension Exponea {
         }
         Exponea.exponeaInstance.trackInAppMessageCloseClickWithoutTrackingConsent(
             message: inAppMessage,
-            isUserInteraction: isUserInteraction
+            buttonText: inAppMessageAction.button?.text,
+            isUserInteraction: inAppMessageAction.interaction
         )
         resolve(nil)
     }

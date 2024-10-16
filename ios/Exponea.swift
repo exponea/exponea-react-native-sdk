@@ -90,7 +90,8 @@ class Exponea: RCTEventEmitter {
                 inAppContentBlocksPlaceholders: try parser.parseInAppContentBlocksPlaceholders(),
                 flushingSetup: try parser.parseFlushingSetup(),
                 allowDefaultCustomerProperties: try parser.parseAllowDefaultCustomerProperties(),
-                advancedAuthEnabled: try parser.parseAdvancedAuthEnabled()
+                advancedAuthEnabled: try parser.parseAdvancedAuthEnabled(),
+                manualSessionAutoClose: try parser.parseManualSessionAutoClose()
             )
             Exponea.exponeaInstance.pushNotificationsDelegate = self
             Exponea.exponeaInstance.inAppMessagesDelegate = self

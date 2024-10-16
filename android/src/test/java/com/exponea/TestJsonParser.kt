@@ -5,6 +5,7 @@ import com.facebook.react.bridge.JavaOnlyMap
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 
 object TestJsonParser {
     fun parse(jsonString: String): Any? {
@@ -52,5 +53,10 @@ object TestJsonParser {
             }
         }
         return array
+    }
+
+    fun minify(source: String): String {
+        val parsedSource = parseJsonNode(Gson().fromJson(source, JsonObject::class.java))
+        return Gson().toJson(parsedSource)
     }
 }

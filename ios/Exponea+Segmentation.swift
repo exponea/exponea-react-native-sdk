@@ -49,20 +49,29 @@ extension Exponea {
 
     @objc(getSegments:resolve:reject:)
     func getSegments(
-        exposingCategory: String,
+        params: NSDictionary,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        Exponea.exponeaInstance.getSegments(category: .init(type: exposingCategory, data: [])) { segments in
-            guard let data = try? JSONEncoder().encode(segments),
-                  let body = String(data: data, encoding: .utf8) else {
-                ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize segments data.")
-                self.rejectPromise(reject, error: ExponeaError.generalError(
-                    "Unable to serialize segments data."
-                ))
-                return
+        do {
+            let exposingCategory: String = try params.getRequiredSafely(property: "exposingCategory")
+            let force: Bool = try params.getOptionalSafely(property: "force") ?? false
+            Exponea.exponeaInstance.getSegments(
+                force: force,
+                category: .init(type: exposingCategory, data: [])
+            ) { segments in
+                guard let data = try? JSONEncoder().encode(segments),
+                      let body = String(data: data, encoding: .utf8) else {
+                    ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize segments data.")
+                    self.rejectPromise(reject, error: ExponeaError.generalError(
+                        "Unable to serialize segments data."
+                    ))
+                    return
+                }
+                resolve(body)
             }
-            resolve(body)
+        } catch {
+            rejectPromise(reject, error: error)
         }
     }
 

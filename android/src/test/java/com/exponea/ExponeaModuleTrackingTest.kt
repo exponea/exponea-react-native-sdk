@@ -3,6 +3,7 @@ package com.exponea
 import androidx.test.core.app.ApplicationProvider
 import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.CustomerIds
+import com.exponea.sdk.models.InAppMessage
 import com.exponea.sdk.models.NotificationAction
 import com.exponea.sdk.models.NotificationData
 import com.exponea.sdk.models.PropertiesList
@@ -14,6 +15,8 @@ import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
+import java.io.File
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -38,6 +41,14 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
+    fun `mock if init should working fine`() {
+        every { Exponea.isInitialized } returns false
+        assertFalse(Exponea.isInitialized)
+        every { Exponea.isInitialized } returns true
+        assertTrue(Exponea.isInitialized)
+    }
+
+    @Test
     fun `identify customer should reject when Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
         module.identifyCustomer(
@@ -52,18 +63,22 @@ internal class ExponeaModuleTrackingTest {
     @Test
     fun `identify customer should resolve and identify customer with correct data`() {
         every { Exponea.isInitialized } returns true
+        val customerIdsSlot = slot<CustomerIds>()
         module.identifyCustomer(
             JavaOnlyMap.of("id", "value"),
             JavaOnlyMap.of("email", "a@b.c"),
             MockResolvingPromise {
                 verify {
                     Exponea.identifyCustomer(
-                        CustomerIds().withId("id", "value"),
+                        capture(customerIdsSlot),
                         PropertiesList(hashMapOf("email" to "a@b.c"))
                     )
                 }
             }
         )
+        assertTrue(customerIdsSlot.isCaptured)
+        val customerIds = customerIdsSlot.captured
+        assertEquals(CustomerIds().withId("id", "value"), customerIds)
     }
 
     @Test
@@ -373,6 +388,224 @@ internal class ExponeaModuleTrackingTest {
         assertEquals("button", notificationAction.actionType)
         assertEquals("Clicked action", notificationAction.actionName)
         assertEquals("https://example.com", notificationAction.url)
+    }
+
+    @Test
+    fun `should track complete In-app message action`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String>()
+        val buttonLink = slot<String>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal.json").readText())
+        module.trackInAppMessageClick(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClick(
+                        capture(messageSlot),
+                        capture(buttonText),
+                        capture(buttonLink)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertFalse(buttonText.isNull)
+        assertEquals(buttonText.captured, "Click me!")
+        assertFalse(buttonLink.isNull)
+        assertEquals(buttonLink.captured, "https://example.com")
+    }
+
+    @Test
+    fun `should track complete In-app message action without consent`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String>()
+        val buttonLink = slot<String>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal.json").readText())
+        module.trackInAppMessageClickWithoutTrackingConsent(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClickWithoutTrackingConsent(
+                        capture(messageSlot),
+                        capture(buttonText),
+                        capture(buttonLink)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertFalse(buttonText.isNull)
+        assertEquals(buttonText.captured, "Click me!")
+        assertFalse(buttonLink.isNull)
+        assertEquals(buttonLink.captured, "https://example.com")
+    }
+
+    @Test
+    fun `should track In-app message action with nulls`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String?>()
+        val buttonLink = slot<String?>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls.json").readText())
+        module.trackInAppMessageClick(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClick(
+                        capture(messageSlot),
+                        captureNullable(buttonText),
+                        captureNullable(buttonLink)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertTrue(buttonText.isNull)
+        assertTrue(buttonLink.isNull)
+    }
+
+    @Test
+    fun `should track In-app message action with nulls without consent`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String?>()
+        val buttonLink = slot<String?>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls.json").readText())
+        module.trackInAppMessageClickWithoutTrackingConsent(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClickWithoutTrackingConsent(
+                        capture(messageSlot),
+                        captureNullable(buttonText),
+                        captureNullable(buttonLink)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertTrue(buttonText.isNull)
+        assertTrue(buttonLink.isNull)
+    }
+
+    @Test
+    fun `should track complete In-app message close`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String>()
+        val interaction = slot<Boolean>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete.json").readText())
+        module.trackInAppMessageClose(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClose(
+                        capture(messageSlot),
+                        capture(buttonText),
+                        capture(interaction)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertFalse(buttonText.isNull)
+        assertEquals(buttonText.captured, "Click me!")
+        assertFalse(interaction.isNull)
+        assertEquals(interaction.captured, true)
+    }
+
+    @Test
+    fun `should track complete In-app message close without consent`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String>()
+        val interaction = slot<Boolean>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete.json").readText())
+        module.trackInAppMessageCloseWithoutTrackingConsent(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageCloseWithoutTrackingConsent(
+                        capture(messageSlot),
+                        capture(buttonText),
+                        capture(interaction)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertFalse(buttonText.isNull)
+        assertEquals(buttonText.captured, "Click me!")
+        assertFalse(interaction.isNull)
+        assertEquals(interaction.captured, true)
+    }
+
+    @Test
+    fun `should track minimal In-app message close`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String?>()
+        val interaction = slot<Boolean>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal.json").readText())
+        module.trackInAppMessageClose(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClose(
+                        capture(messageSlot),
+                        captureNullable(buttonText),
+                        capture(interaction)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertTrue(buttonText.isNull)
+        assertFalse(interaction.isNull)
+        assertEquals(interaction.captured, false)
+    }
+
+    @Test
+    fun `should track minimal In-app message close without consent`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String?>()
+        val interaction = slot<Boolean>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal.json").readText())
+        module.trackInAppMessageCloseWithoutTrackingConsent(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageCloseWithoutTrackingConsent(
+                        capture(messageSlot),
+                        captureNullable(buttonText),
+                        capture(interaction)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertTrue(buttonText.isNull)
+        assertFalse(interaction.isNull)
+        assertEquals(interaction.captured, false)
     }
 
     private fun getPushNotificationActionAsMap(): ReadableMap {

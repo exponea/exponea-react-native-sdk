@@ -32,7 +32,9 @@ interface Configuration {
   /** Platform specific settings for iOS */
   ios?: IOSConfiguration;
   /** Automatically load content of In-app content blocks assigned to these Placeholder IDs */
-  inAppContentBlockPlaceholdersAutoLoad?: Array<string>
+  inAppContentBlockPlaceholdersAutoLoad?: Array<string>;
+  /** Determines whether the SDK automatically tracks session_end for sessions that remain open when trackSessionStart() is called multiple times in manual session tracking mode. */
+  manualSessionAutoClose?: boolean;
 }
 
 export interface AndroidConfiguration {

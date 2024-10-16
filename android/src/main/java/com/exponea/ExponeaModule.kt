@@ -44,7 +44,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         // We have to hold OpenedPush until ExponeaModule is initialized AND pushOpenedListener set in JS
         private var pendingOpenedPush: OpenedPush? = null
         // We have to hold received action data until inAppActionCallbackSet set in JS
-        private var pendingInAppAction: InAppMessageAction? = null
+        internal var pendingInAppAction: InAppMessageAction? = null
 
         fun openPush(push: OpenedPush) {
             if (currentInstance != null) {
@@ -421,7 +421,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         promise.resolve(null)
     }
 
-    private fun resetInAppCallbackToDefault() {
+    internal fun resetInAppCallbackToDefault() {
         Exponea.inAppMessageActionCallback = ReactNativeInAppActionListener(
             overrideDefaultBehavior = false, trackActions = true
         ) { inAppMessageAction ->
@@ -701,52 +701,54 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     @ReactMethod
     fun trackInAppMessageClick(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
         val data = params.toHashMapRecursively().toInAppMessageAction()
-        if (data == null) {
+        val inAppMessage = data?.message
+        if (data == null || inAppMessage == null) {
             promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
             return@catchAndReject
         }
-        Exponea.trackInAppMessageClick(data.message, data.button?.text, data.button?.url)
+        Exponea.trackInAppMessageClick(inAppMessage, data.button?.text, data.button?.url)
         promise.resolve(null)
     }
 
     @ReactMethod
     fun trackInAppMessageClickWithoutTrackingConsent(params: ReadableMap, promise: Promise) = catchAndReject(promise) {
         val data = params.toHashMapRecursively().toInAppMessageAction()
-        if (data == null) {
+        val inAppMessage = data?.message
+        if (data == null || inAppMessage == null) {
             promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
             return@catchAndReject
         }
-        Exponea.trackInAppMessageClickWithoutTrackingConsent(data.message, data.button?.text, data.button?.url)
+        Exponea.trackInAppMessageClickWithoutTrackingConsent(inAppMessage, data.button?.text, data.button?.url)
         promise.resolve(null)
     }
 
     @ReactMethod
     fun trackInAppMessageClose(
         params: ReadableMap,
-        isUserInteraction: Boolean,
         promise: Promise
     ) = catchAndReject(promise) {
-        val data = params.toHashMapRecursively().toInAppMessage()
-        if (data == null) {
+        val data = params.toHashMapRecursively().toInAppMessageAction()
+        val inAppMessage = data?.message
+        if (data == null || inAppMessage == null) {
             promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
             return@catchAndReject
         }
-        Exponea.trackInAppMessageClose(data, isUserInteraction)
+        Exponea.trackInAppMessageClose(inAppMessage, data.button?.text, data.interaction)
         promise.resolve(null)
     }
 
     @ReactMethod
     fun trackInAppMessageCloseWithoutTrackingConsent(
         params: ReadableMap,
-        isUserInteraction: Boolean,
         promise: Promise
     ) = catchAndReject(promise) {
-        val data = params.toHashMapRecursively().toInAppMessage()
-        if (data == null) {
+        val data = params.toHashMapRecursively().toInAppMessageAction()
+        val inAppMessage = data?.message
+        if (data == null || inAppMessage == null) {
             promise.reject(ExponeaDataException("InApp message data are invalid. See logs"))
             return@catchAndReject
         }
-        Exponea.trackInAppMessageCloseWithoutTrackingConsent(data, isUserInteraction)
+        Exponea.trackInAppMessageCloseWithoutTrackingConsent(inAppMessage, data.button?.text, data.interaction)
         promise.resolve(null)
     }
 
@@ -919,10 +921,13 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     @ReactMethod
     fun getSegments(
-        exposingCategory: String,
+        params: ReadableMap,
         promise: Promise
     ) = catchAndReject(promise) {
-        Exponea.getSegments(exposingCategory) {
+        val data = params.toHashMapRecursively()
+        val exposingCategory = data.getRequired<String>("exposingCategory")
+        val force = data.getNullSafely("force") ?: false
+        Exponea.getSegments(exposingCategory, force) {
             promise.resolve(Gson().toJson(it))
         }
     }

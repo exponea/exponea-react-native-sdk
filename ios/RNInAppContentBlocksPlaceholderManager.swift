@@ -203,4 +203,25 @@ class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackType {
             )
         }
     }
+
+    func onActionClickedSafari(
+        placeholderId: String,
+        contentBlock: ExponeaSDK.InAppContentBlockResponse,
+        action: ExponeaSDK.InAppContentBlockAction
+    ) {
+        notifyInAppContentBlockEvent(
+            eventType: "onActionClicked",
+            placeholderId: placeholderId,
+            contentBlock: contentBlock,
+            action: action,
+            errorMessage: nil
+        )
+        if !overrideDefaultBehavior {
+            currentOriginalBehavior?.onActionClickedSafari(
+                placeholderId: placeholderId,
+                contentBlock: contentBlock,
+                action: action
+            )
+        }
+    }
 }

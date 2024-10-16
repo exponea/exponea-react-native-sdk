@@ -25,6 +25,10 @@ struct TestUtil {
         return ""
     }
 
+    static func loadFileAsJson(relativePath: String) -> NSDictionary {
+        return parseJson(jsonString: loadFile(relativePath: relativePath))
+    }
+
     static func parseJson(jsonString: String) -> NSDictionary {
         guard let data = jsonString.data(using: .utf8),
               let dictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary else {

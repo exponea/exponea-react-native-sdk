@@ -7,6 +7,7 @@ import {Recommendation, RecommendationOptions} from './Recommendation';
 import AppInboxStyle from './AppInboxStyle';
 import {AppInboxMessage} from './AppInboxMessage';
 import {AppInboxAction} from './AppInboxAction';
+import {InAppMessageCallback} from "./InAppMessageCallback";
 
 interface ExponeaType {
   /** Configures Exponea SDK. Should only be called once. You need to configure ExponeaSDK before calling most methods */
@@ -100,9 +101,7 @@ interface ExponeaType {
   removePushReceivedListener(): void;
 
   setInAppMessageCallback(
-    overrideDefaultBehavior: boolean,
-    trackActions: boolean,
-    callback: (action: InAppMessageAction) => void,
+    callback: InAppMessageCallback,
   ): void;
 
   removeInAppMessageCallback(): void;
@@ -195,20 +194,28 @@ interface ExponeaType {
 
   isExponeaPushNotification(params: Record<string, string>): Promise<boolean>;
 
-  trackInAppMessageClick(params: Record<string, string>): Promise<void>;
+  trackInAppMessageClick(
+      message: InAppMessage,
+      buttonText: string|undefined,
+      buttonUrl: string|undefined
+  ): Promise<void>;
 
   trackInAppMessageClickWithoutTrackingConsent(
-    params: Record<string, string>,
+      message: InAppMessage,
+      buttonText: string|undefined,
+      buttonUrl: string|undefined
   ): Promise<void>;
 
   trackInAppMessageClose(
-    params: Record<string, string>, 
-    interaction: boolean
+      message: InAppMessage,
+      buttonText: string|undefined,
+      interaction: boolean
   ): Promise<void>;
 
   trackInAppMessageCloseWithoutTrackingConsent(
-    params: Record<string, string>,
-    interaction: boolean
+      message: InAppMessage,
+      buttonText: string|undefined,
+      interaction: boolean
   ): Promise<void>;
 
   trackInAppContentBlockClick(params: Record<string, string>): Promise<void>;
@@ -243,7 +250,7 @@ interface ExponeaType {
       callback: SegmentationDataCallback
   ): void;
 
-  getSegments(exposingCategory: string): Promise<Array<Segment>>;
+  getSegments(exposingCategory: string, force?: boolean): Promise<Array<Segment>>;
 }
 
 export enum FlushMode {
@@ -283,9 +290,18 @@ export enum PushAction {
 }
 
 export interface InAppMessageAction {
-  message: InAppMessage;
+  message?: InAppMessage;
   button?: InAppMessageButton;
-  interaction: boolean;
+  interaction?: boolean;
+  errorMessage?: string;
+  type: InAppMessageActionType
+}
+
+export enum InAppMessageActionType {
+  SHOW = 'SHOW',
+  ACTION = 'ACTION',
+  CLOSE = 'CLOSE',
+  ERROR = 'ERROR'
 }
 
 export interface InAppMessage {
