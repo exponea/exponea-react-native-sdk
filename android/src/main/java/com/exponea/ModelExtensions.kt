@@ -92,7 +92,7 @@ internal fun Map<String, Any?>.toInAppMessage(): InAppMessage? {
         rawMessageType = source.getNullSafely("message_type"),
         rawFrequency = source.getRequired("frequency"),
         payload = source.getNullSafelyMap<Any>("payload")?.toInAppMessagePayload(),
-        variantId = source.getRequired<Double>("variant_id").toInt(),
+        variantId = source.getRequired("variant_id"),
         variantName = source.getRequired("variant_name"),
         trigger = source.getNullSafelyMap<Any>("trigger")?.toEventFilter(),
         dateFilter = dateFilter,

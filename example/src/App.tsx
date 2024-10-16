@@ -102,7 +102,16 @@ export default class App extends React.Component<{}, AppState> {
         console.log(
           `InApp message ${message.id} closed by ${button?.text} with interaction: ${interaction}`,
         );
-        Exponea.trackInAppMessageClose(message, button?.text, interaction);
+        Exponea.trackInAppMessageClose(message, button?.text, interaction).then(
+          () => {
+            console.log('InApp message close track has been done successfully');
+          },
+          rejectReason => {
+            console.error(
+              `InApp message close track has been rejected with '${rejectReason}'`,
+            );
+          },
+        );
       },
       inAppMessageError(
         message: InAppMessage | undefined,

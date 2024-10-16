@@ -18,7 +18,11 @@ export class InAppMessageActionDef implements InAppMessageAction {
         buttonUrl: string | null | undefined
     ): InAppMessageActionDef {
         const result= new InAppMessageActionDef(InAppMessageActionType.ACTION);
-        result.message = message
+        result.message = { ...message }
+        // TODO: remove trigger-clear after native SDK could parse it
+        if (result.message.trigger) {
+            result.message.trigger["filter"] = []
+        }
         if (buttonText || buttonUrl) {
             result.button = {}
             if (buttonText) {
@@ -37,7 +41,11 @@ export class InAppMessageActionDef implements InAppMessageAction {
         interaction: boolean
     ): InAppMessageActionDef {
         const result= new InAppMessageActionDef(InAppMessageActionType.CLOSE);
-        result.message = message
+        result.message = { ...message }
+        // TODO: remove trigger-clear after native SDK could parse it
+        if (result.message.trigger) {
+            result.message.trigger["filter"] = []
+        }
         if (buttonText) {
             result.button = {
                 text: buttonText

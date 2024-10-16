@@ -555,6 +555,35 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
+    fun `should track In-app message close with double values`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String>()
+        val interaction = slot<Boolean>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-double-values.json").readText())
+        module.trackInAppMessageCloseWithoutTrackingConsent(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageCloseWithoutTrackingConsent(
+                        capture(messageSlot),
+                        capture(buttonText),
+                        capture(interaction)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(100, messageSlot.captured.variantId)
+        assertEquals(100, messageSlot.captured.dateFilter.fromDate)
+        assertEquals(100, messageSlot.captured.dateFilter.toDate)
+        assertEquals(100, messageSlot.captured.priority)
+        assertEquals(100L, messageSlot.captured.delay)
+        assertEquals(100L, messageSlot.captured.timeout)
+    }
+
+    @Test
     fun `should track minimal In-app message close`() {
         every { Exponea.isInitialized } returns true
         val messageSlot = slot<InAppMessage>()

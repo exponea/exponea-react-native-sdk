@@ -11,7 +11,7 @@ import {AppInboxAction} from "../AppInboxAction";
 import {InAppMessageCallback} from "../InAppMessageCallback";
 import {TestUtils} from "./TestUtils";
 import Exponea from "../index";
-import {InAppMessageActionDef} from "../InAppMessage";
+import {InAppMessageActionDef} from "../InAppMessageActionDef";
 
 TestUtils.mockExponeaNative()
 

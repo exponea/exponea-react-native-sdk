@@ -16,8 +16,8 @@ import {AppInboxMessage} from './AppInboxMessage';
 import {AppInboxAction} from './AppInboxAction';
 import {SegmentationCallbackBridge, SegmentationDataWrapper} from "./SegmentationCallbackBridge";
 import {InAppMessageCallback} from "./InAppMessageCallback";
-import {InAppMessageActionDef} from "./InAppMessage";
 import exponeaProject from "./ExponeaProject";
+import {InAppMessageActionDef} from "./InAppMessageActionDef";
 
 /*
 React native bridge doesn't like optional parameters, we have to implement it ourselves.
@@ -418,7 +418,7 @@ const handleInAppMessageAction = (data: string) => {
       inAppMessageCallback.inAppMessageClickAction(receivedAction.message, receivedAction.button)
       break;
     default:
-      console.error(`In-app callback invoked for unknown action ${receivedAction.message}`);
+      console.error(`In-app callback invoked for unknown action ${receivedAction.type}`);
   }
 }
 

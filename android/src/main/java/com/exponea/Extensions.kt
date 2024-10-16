@@ -26,14 +26,28 @@ internal inline fun <reified T : Any> Map<String, Any?>.getRequired(key: String)
 
 internal fun <T : Any> Map<String, Any?>.getSafely(key: String, type: KClass<T>): T {
     val value = this[key] ?: throw ExponeaModule.ExponeaDataException("Property '$key' cannot be null.")
+    return getValueAsType(value, type, key)
+}
+
+private fun <T : Any> getValueAsType(value: Any, type: KClass<T>, key: String): T {
     if (value::class == type) {
         @Suppress("UNCHECKED_CAST")
         return value as T
-    } else {
-        throw ExponeaModule.ExponeaDataException(
-            "Incorrect type for key '$key'. Expected ${type.simpleName} got ${value::class.simpleName}"
-        )
     }
+    if (kotlin.Number::class.java.isAssignableFrom(type.java)) {
+        @Suppress("UNCHECKED_CAST")
+        when (type) {
+            Int::class -> return (value as kotlin.Number).toInt() as T
+            Long::class -> return (value as kotlin.Number).toLong() as T
+            Double::class -> return (value as kotlin.Number).toDouble() as T
+            Float::class -> return (value as kotlin.Number).toFloat() as T
+            Short::class -> return (value as kotlin.Number).toShort() as T
+            Byte::class -> return (value as kotlin.Number).toByte() as T
+        }
+    }
+    throw ExponeaModule.ExponeaDataException(
+        "Incorrect type for key '$key'. Expected ${type.simpleName} got ${value::class.simpleName}"
+    )
 }
 
 internal fun ReadableMap.toHashMapRecursively(): Map<String, Any?> {
@@ -140,10 +154,7 @@ internal inline fun <reified T : Any> Map<String, Any?>.getNullSafely(key: Strin
 
 internal fun <T : Any> Map<String, Any?>.getNullSafely(key: String, type: KClass<T>, defaultValue: T? = null): T? {
     val value = this[key] ?: return defaultValue
-    @Suppress("UNCHECKED_CAST")
-    return (value as? T) ?: throw ExponeaModule.ExponeaDataException(
-        "Incorrect type for key '$key'. Expected ${type.simpleName} got ${value::class.simpleName}"
-    )
+    return getValueAsType(value, type, key)
 }
 
 internal fun Dynamic.asSize(): PlatformSize? {
