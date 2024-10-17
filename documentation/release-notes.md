@@ -8,9 +8,21 @@ parentDocSlug: react-native-sdk
 
 > 📘
 >
-> Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating from version 0.x.x to 1.x.x.
+> Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 2.0.0
+#### October 17, 2024
+* Added:
+  * Updates native iOS SDK to 3.0.0 and native Android SDK to 4.0.1.
+  * Improves the behavior of the Segmentation API’s getSegments method.
+  * Adds a manualSessionAutoClose configuration parameter to override automatic session end tracking for open sessions when sessionStart is called multiple times.
+  * Updates the default session timeout to 60 seconds.
+  * Adds the identification of Cancel button clicks in In-app message close events and inclusion of the button label in the tracked event.
+  * Adds React Native-specific message service implementation details to push notification documentation.
+  * Adds documentation improvements.
+
+
 ## Release Notes for 1.9.0
 #### September 10, 2024
 * Added:
