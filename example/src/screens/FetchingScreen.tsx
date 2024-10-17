@@ -26,7 +26,10 @@ export default function FetchingScreen(): React.ReactElement {
   };
   const fetchSegments = async () => {
     try {
-      const segments: Array<Segment> = await Exponea.getSegments('discovery');
+      const segments: Array<Segment> = await Exponea.getSegments(
+        'discovery',
+        true,
+      );
       Alert.alert('Received segments', JSON.stringify(segments, null, 2));
     } catch (error) {
       let errorMessage = '';

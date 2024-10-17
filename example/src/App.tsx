@@ -10,6 +10,7 @@ import {
   InAppMessage,
   InAppMessageButton,
   LogLevel,
+  SegmentationDataCallback,
 } from 'react-native-exponea-sdk/lib/ExponeaType';
 import * as RootNavigation from './util/RootNavigation';
 import {Screen} from './screens/Screens';
@@ -26,6 +27,42 @@ export default class App extends React.Component<{}, AppState> {
     preloaded: false,
     sdkConfigured: false,
   };
+
+  discoverySegmentationCallback = new SegmentationDataCallback(
+    'discovery',
+    false,
+    data => {
+      console.log(
+        `RN_Segments: New for category 'discovery' with IDs: ${JSON.stringify(
+          data,
+        )}`,
+      );
+    },
+  );
+
+  contentSegmentationCallback = new SegmentationDataCallback(
+    'content',
+    false,
+    data => {
+      console.log(
+        `RN_Segments: New for category 'content' with IDs: ${JSON.stringify(
+          data,
+        )}`,
+      );
+    },
+  );
+
+  merchandisingSegmentationCallback = new SegmentationDataCallback(
+    'merchandising',
+    false,
+    data => {
+      console.log(
+        `RN_Segments: New for category 'merchandising' with IDs: ${JSON.stringify(
+          data,
+        )}`,
+      );
+    },
+  );
 
   resolveDeeplinkDestination(url: string) {
     if (url.includes('flush')) {
@@ -131,6 +168,26 @@ export default class App extends React.Component<{}, AppState> {
     Exponea.isConfigured().then(configured => {
       this.setState({preloaded: true, sdkConfigured: configured});
     });
+    Exponea.registerSegmentationDataCallback(
+      this.discoverySegmentationCallback,
+    );
+    Exponea.registerSegmentationDataCallback(this.contentSegmentationCallback);
+    Exponea.registerSegmentationDataCallback(
+      this.merchandisingSegmentationCallback,
+    );
+  }
+
+  componentWillUnmount() {
+    Exponea.unregisterSegmentationDataCallback(
+      this.discoverySegmentationCallback,
+    );
+    Exponea.unregisterSegmentationDataCallback(
+      this.contentSegmentationCallback,
+    );
+    Exponea.unregisterSegmentationDataCallback(
+      this.merchandisingSegmentationCallback,
+    );
+    super.componentWillUnmount?.();
   }
 
   render(): React.ReactNode {

@@ -331,7 +331,7 @@ const Exponea: ExponeaType = {
       eventEmitter.addListener(bridge.getEventEmitterKey(), (data: string) => {
         const receivedData: SegmentationDataWrapper = JSON.parse(data)
         if (bridge.nativeCallbackId == receivedData.callbackId) {
-          callback.onNewData(JSON.parse(data));
+          callback.onNewData(receivedData.data);
         }
       })
     })
