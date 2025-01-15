@@ -60,22 +60,22 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    [Exponea handlePushNotificationToken: deviceToken];
+  [Exponea handlePushNotificationToken: deviceToken];
 }
 
 - (void)application:(UIApplication *)application
-        didReceiveRemoteNotification:(NSDictionary *)userInfo
-        fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+didReceiveRemoteNotification:(NSDictionary *)userInfo
+fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    [Exponea handlePushNotificationOpenedWithUserInfo:userInfo];
-    completionHandler(UIBackgroundFetchResultNewData);
+  [Exponea handlePushNotificationOpenedWithUserInfo:userInfo];
+  completionHandler(UIBackgroundFetchResultNewData);
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
-        didReceiveNotificationResponse:(UNNotificationResponse *)response
-        withCompletionHandler:(void (^)(void))completionHandler
+didReceiveNotificationResponse:(UNNotificationResponse *)response
+         withCompletionHandler:(void (^)(void))completionHandler
 {
-    [Exponea handlePushNotificationOpenedWithResponse: response];
-    completionHandler();
+  [Exponea handlePushNotificationOpenedWithResponse: response];
+  completionHandler();
 }
 @end

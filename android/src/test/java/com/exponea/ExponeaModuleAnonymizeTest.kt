@@ -5,9 +5,9 @@ import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.EventType
 import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.ExponeaProject
+import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyArray
 import com.facebook.react.bridge.JavaOnlyMap
-import com.facebook.react.bridge.ReactApplicationContext
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -31,7 +31,7 @@ internal class ExponeaModuleAnonymizeTest {
         val field = Exponea::class.java.getDeclaredField("configuration")
         field.isAccessible = true
         field.set(Exponea, ExponeaConfiguration())
-        module = ExponeaModule(ReactApplicationContext(ApplicationProvider.getApplicationContext()))
+        module = ExponeaModule(BridgeReactContext(ApplicationProvider.getApplicationContext()))
     }
 
     @After

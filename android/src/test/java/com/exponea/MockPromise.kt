@@ -33,39 +33,39 @@ open class MockPromise(val onResolved: (MockPromise) -> Unit, val onRejected: (M
         onRejected(this)
     }
 
-    override fun reject(errorName: String?, errorMessage: String?) {
+    override fun reject(errorName: String, errorMessage: String?) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorName: String?) {
+    override fun reject(errorName: String) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorName: String?, errorThrowable: Throwable?) {
+    override fun reject(errorName: String, errorThrowable: Throwable?) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorName: String?, errorMessage: String?, errorThrowable: Throwable?) {
+    override fun reject(errorName: String, errorMessage: String?, errorThrowable: Throwable?) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorThrowable: Throwable?) {
+    override fun reject(errorThrowable: Throwable) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorThrowable: Throwable?, errorMap: WritableMap?) {
+    override fun reject(errorThrowable: Throwable, errorMap: WritableMap) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorName: String?, errorMap: WritableMap) {
+    override fun reject(errorName: String, errorMap: WritableMap) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorName: String?, errorThrowable: Throwable?, errorMap: WritableMap?) {
+    override fun reject(errorName: String, errorThrowable: Throwable?, errorMap: WritableMap) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorName: String?, errorMessage: String?, errorMap: WritableMap) {
+    override fun reject(errorName: String, errorMessage: String?, errorMap: WritableMap) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 }

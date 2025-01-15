@@ -2,7 +2,7 @@
 
 React Native Exponea SDK allows your application to interact with the [Bloomreach Engagement](https://www.bloomreach.com/) Customer Data & Experience Platform. Engagement empowers B2C marketers to raise conversion rates, improve acquisition ROI, and maximize customer lifetime value.
 
-The SDK is implemented in Typescript as a wrapper around [native Android SDK](https://github.com/exponea/exponea-android-sdk) and [native iOS SDK](https://github.com/exponea/exponea-ios-sdk). It is compatible with React Native 0.69.0 - 0.74.5. Earlier versions may work but have not been tested.
+The SDK is implemented in Typescript as a wrapper around [native Android SDK](https://github.com/exponea/exponea-android-sdk) and [native iOS SDK](https://github.com/exponea/exponea-ios-sdk). It is compatible with React Native 0.69.0 - 0.76.6. Earlier versions may work but have not been tested.
 
 > Bloomreach Engagement was formerly known as Exponea. For backward compatibility, the Exponea name continues to be used in the React Native SDK.
 
@@ -19,7 +19,7 @@ Install the package using npm or yarn:
 * `$ cd ios`
 * `$ pod install`
 
-Minimal supported iOS version for Exponea SDK is 13.4, you may need to change iOS version on the first line of your `ios/Podfile` to `platform :ios, '13.4'`, or higher.
+Minimal supported iOS version for Exponea SDK is 15.1, you may need to change iOS version on the first line of your `ios/Podfile` to `platform :ios, '15.1'`, or higher.
 
 ### Android setup
 

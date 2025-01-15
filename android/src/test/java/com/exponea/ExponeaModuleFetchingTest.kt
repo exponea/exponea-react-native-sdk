@@ -8,9 +8,9 @@ import com.exponea.sdk.models.CustomerRecommendation
 import com.exponea.sdk.models.CustomerRecommendationOptions
 import com.exponea.sdk.models.FetchError
 import com.exponea.sdk.models.Result
+import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyArray
 import com.facebook.react.bridge.JavaOnlyMap
-import com.facebook.react.bridge.ReactApplicationContext
 import com.google.gson.Gson
 import com.google.gson.JsonPrimitive
 import io.mockk.every
@@ -31,7 +31,7 @@ internal class ExponeaModuleFetchingTest {
     @Before
     fun before() {
         mockkObject(Exponea)
-        module = ExponeaModule(ReactApplicationContext(ApplicationProvider.getApplicationContext()))
+        module = ExponeaModule(BridgeReactContext(ApplicationProvider.getApplicationContext()))
     }
 
     @After

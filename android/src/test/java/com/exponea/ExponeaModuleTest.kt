@@ -8,8 +8,8 @@ import com.exponea.sdk.Exponea
 import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.util.Logger
+import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyMap
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
 import io.mockk.every
 import io.mockk.mockkObject
@@ -35,15 +35,16 @@ internal class ExponeaModuleTest {
     @Before
     fun before() {
         mockkObject(Exponea)
-        module = ExponeaModule(ReactApplicationContext(ApplicationProvider.getApplicationContext()))
+        module = ExponeaModule(BridgeReactContext(ApplicationProvider.getApplicationContext()))
 
         // we need to create dummy package with meta data for android sdk telemetry
         val packageManager = module.reactContext.packageManager
         val shadowPackageManager = shadowOf(packageManager)
         val packageInfo = PackageInfo()
         packageInfo.packageName = "org.robolectric.default"
-        packageInfo.applicationInfo = ApplicationInfo()
-        packageInfo.applicationInfo.metaData = Bundle()
+        packageInfo.applicationInfo = ApplicationInfo().apply {
+            metaData = Bundle()
+        }
         shadowPackageManager.installPackage(packageInfo)
     }
 

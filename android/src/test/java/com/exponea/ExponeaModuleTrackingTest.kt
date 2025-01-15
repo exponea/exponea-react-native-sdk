@@ -7,8 +7,8 @@ import com.exponea.sdk.models.InAppMessage
 import com.exponea.sdk.models.NotificationAction
 import com.exponea.sdk.models.NotificationData
 import com.exponea.sdk.models.PropertiesList
+import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyMap
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
 import io.mockk.every
 import io.mockk.mockkObject
@@ -32,7 +32,7 @@ internal class ExponeaModuleTrackingTest {
     @Before
     fun before() {
         mockkObject(Exponea)
-        module = ExponeaModule(ReactApplicationContext(ApplicationProvider.getApplicationContext()))
+        module = ExponeaModule(BridgeReactContext(ApplicationProvider.getApplicationContext()))
     }
 
     @After

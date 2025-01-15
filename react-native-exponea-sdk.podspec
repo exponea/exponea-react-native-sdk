@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   # brief license entry:
   s.license      = "MIT License"
   s.authors      = { "Exponea" => "contact@exponea.com" }
-  s.platforms    = { :ios => "13.4" }
+  s.platforms    = { :ios => "15.1" }
   s.source       = { :git => "https://github.com/github_account/react-native-exponea-sdk.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,c,m,mm,swift}"
