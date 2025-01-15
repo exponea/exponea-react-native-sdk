@@ -9,7 +9,7 @@ import com.exponea.sdk.ExponeaExtras.Companion.ACTION_URL_CLICKED
 import com.exponea.sdk.ExponeaExtras.Companion.EXTRA_ACTION_INFO
 import com.exponea.sdk.ExponeaExtras.Companion.EXTRA_CUSTOM_DATA
 import com.exponea.sdk.models.NotificationAction
-import com.google.gson.Gson
+import com.exponea.sdk.util.ExponeaGson
 import java.lang.RuntimeException
 
 class PushReceiver : BroadcastReceiver() {
@@ -29,7 +29,7 @@ class PushReceiver : BroadcastReceiver() {
         val url = (intent.getSerializableExtra(EXTRA_ACTION_INFO) as? NotificationAction)?.url
         @Suppress("UNCHECKED_CAST")
         val pushData = intent.getSerializableExtra(EXTRA_CUSTOM_DATA) as Map<String, String>
-        val additionalData = Gson().fromJson(pushData["attributes"], Map::class.java)
+        val additionalData = ExponeaGson.instance.fromJson(pushData["attributes"], Map::class.java)
         ExponeaModule.openPush(OpenedPush(action, url, additionalData))
     }
 }

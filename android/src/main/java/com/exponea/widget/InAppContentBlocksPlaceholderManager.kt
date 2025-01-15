@@ -7,6 +7,7 @@ import com.exponea.sdk.models.InAppContentBlock
 import com.exponea.sdk.models.InAppContentBlockAction
 import com.exponea.sdk.models.InAppContentBlockCallback
 import com.exponea.sdk.models.InAppContentBlockPlaceholderConfiguration
+import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.Logger
 import com.exponea.sdk.view.InAppContentBlockPlaceholderView
 import com.facebook.react.bridge.Arguments
@@ -18,7 +19,6 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.Event
-import com.google.gson.Gson
 
 class InAppContentBlocksPlaceholderManager : SimpleViewManager<InAppContentBlocksPlaceholder>() {
 
@@ -95,8 +95,8 @@ class InAppContentBlocksPlaceholderManager : SimpleViewManager<InAppContentBlock
         val event = Arguments.createMap().apply {
             putString("eventType", eventType)
             putString("placeholderId", placeholderId)
-            putString("contentBlock", Gson().toJson(contentBlock))
-            putString("action", Gson().toJson(action))
+            putString("contentBlock", ExponeaGson.instance.toJson(contentBlock))
+            putString("action", ExponeaGson.instance.toJson(action))
             putString("errorMessage", errorMessage)
         }
         val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, viewId)

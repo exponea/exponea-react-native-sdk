@@ -2,8 +2,6 @@ package com.exponea
 
 import com.exponea.ExponeaModule.ExponeaDataException
 import com.exponea.sdk.models.CampaignData
-import com.exponea.sdk.models.CustomerRecommendation
-import com.exponea.sdk.models.CustomerRecommendationDeserializer
 import com.exponea.sdk.models.DateFilter
 import com.exponea.sdk.models.InAppContentBlock
 import com.exponea.sdk.models.InAppContentBlockAction
@@ -20,17 +18,11 @@ import com.exponea.sdk.models.PurchasedItem
 import com.exponea.sdk.models.eventfilter.EventFilter
 import com.exponea.sdk.models.eventfilter.EventFilterAttribute
 import com.exponea.sdk.models.eventfilter.EventFilterConstraint
-import com.exponea.sdk.models.eventfilter.EventFilterOperator
-import com.exponea.sdk.models.eventfilter.EventFilterOperatorDeserializer
-import com.exponea.sdk.models.eventfilter.EventFilterOperatorSerializer
 import com.exponea.sdk.models.eventfilter.EventPropertyFilter
 import com.exponea.sdk.models.eventfilter.PropertyAttribute
 import com.exponea.sdk.models.eventfilter.TimestampAttribute
+import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.GdprTracking
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonPrimitive
-import com.google.gson.JsonSerializer
-import com.google.gson.reflect.TypeToken
 
 internal fun Map<String, Any?>.toMessageItem(): MessageItem? {
     val id = this.getNullSafely("id", String::class)
@@ -178,7 +170,7 @@ internal fun Map<String, Any?>.toEventFilterAttribute(): EventFilterAttribute {
 }
 
 internal fun Map<String, Any?>.toEventFilterConstraint(): EventFilterConstraint {
-    return GSON.fromJson(GSON.toJson(this), EventFilterConstraint::class.java)
+    return ExponeaGson.instance.fromJson(ExponeaGson.instance.toJson(this), EventFilterConstraint::class.java)
 }
 
 internal fun Map<String, Any?>.toInAppMessagePayload(): InAppMessagePayload {
@@ -214,8 +206,8 @@ internal fun Map<String, Any?>.toInAppMessagePayloadButton(): InAppMessagePayloa
 
 internal fun Map<String, String>.toNotificationData(): NotificationData? {
     val source = this
-    val attributes: HashMap<String, Any> = GSON.fromJson(source["data"] ?: source["attributes"] ?: "{}")
-    val campaignMap: Map<String, String> = GSON.fromJson(source["url_params"] ?: "{}")
+    val attributes: HashMap<String, Any> = ExponeaGson.instance.fromJson(source["data"] ?: source["attributes"] ?: "{}")
+    val campaignMap: Map<String, String> = ExponeaGson.instance.fromJson(source["url_params"] ?: "{}")
     val consentCategoryTracking: String? = source["consent_category_tracking"]
     val hasTrackingConsent: Boolean = GdprTracking.hasTrackingConsent(source["has_tracking_consent"])
     val campaignData = campaignMap.toCampaignData()
@@ -262,31 +254,3 @@ internal fun Map<String, Any?>.toPurchasedItem(): PurchasedItem {
         receipt = source.getNullSafely("receipt")
     )
 }
-
-internal val GSON = GsonBuilder()
-    // NaN and Infinity are serialized as strings.
-    // Gson cannot serialize them, it can be setup to do it,
-    // but then Exponea servers fail to process the JSON afterwards.
-    // This way devs know there is something going on and find the issue
-    .registerTypeAdapter(object : TypeToken<Double>() {}.type, JsonSerializer<Double> { src, _, _ ->
-        if (src.isInfinite() || src.isNaN()) {
-            JsonPrimitive(src.toString())
-        } else {
-            JsonPrimitive(src)
-        }
-    })
-    .registerTypeAdapter(object : TypeToken<Float>() {}.type, JsonSerializer<Float> { src, _, _ ->
-        if (src.isInfinite() || src.isNaN()) {
-            JsonPrimitive(src.toString())
-        } else {
-            JsonPrimitive(src)
-        }
-    })
-    // customer recommendation
-    .registerTypeAdapter(CustomerRecommendation::class.java, CustomerRecommendationDeserializer())
-    // event filter
-    .registerTypeHierarchyAdapter(EventFilterOperator::class.java, EventFilterOperatorSerializer())
-    .registerTypeHierarchyAdapter(EventFilterOperator::class.java, EventFilterOperatorDeserializer())
-    .registerTypeAdapterFactory(EventFilterAttribute.typeAdapterFactory)
-    .registerTypeAdapterFactory(EventFilterConstraint.typeAdapterFactory)
-    .create()

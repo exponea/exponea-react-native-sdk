@@ -8,10 +8,10 @@ import com.exponea.sdk.models.CustomerRecommendation
 import com.exponea.sdk.models.CustomerRecommendationOptions
 import com.exponea.sdk.models.FetchError
 import com.exponea.sdk.models.Result
+import com.exponea.sdk.util.ExponeaGson
 import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyArray
 import com.facebook.react.bridge.JavaOnlyMap
-import com.google.gson.Gson
 import com.google.gson.JsonPrimitive
 import io.mockk.every
 import io.mockk.mockkObject
@@ -102,8 +102,8 @@ internal class ExponeaModuleFetchingTest {
         module.fetchConsents(
             MockResolvingPromise {
                 assertEquals(
-                    Gson().fromJson(expectedResponse, Object::class.java),
-                    Gson().fromJson(it.result as String, Object::class.java)
+                    ExponeaGson.instance.fromJson(expectedResponse, Object::class.java),
+                    ExponeaGson.instance.fromJson(it.result as String, Object::class.java)
                 )
             }
         )
@@ -223,8 +223,8 @@ internal class ExponeaModuleFetchingTest {
             JavaOnlyMap.of("id", "mock-id", "fillWithRandom", true),
             MockResolvingPromise {
                 assertEquals(
-                    Gson().fromJson(expectedResponse, Object::class.java),
-                    Gson().fromJson(it.result as String, Object::class.java)
+                    ExponeaGson.instance.fromJson(expectedResponse, Object::class.java),
+                    ExponeaGson.instance.fromJson(it.result as String, Object::class.java)
                 )
             }
         )

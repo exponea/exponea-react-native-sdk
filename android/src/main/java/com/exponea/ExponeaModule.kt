@@ -14,6 +14,7 @@ import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
 import com.exponea.sdk.models.Segment
 import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
+import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.Logger
 import com.exponea.style.AppInboxStyleParser
 import com.facebook.react.bridge.Promise
@@ -22,7 +23,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.google.gson.Gson
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 
@@ -171,7 +171,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     @ReactMethod
     fun getDefaultProperties(promise: Promise) = catchAndReject(promise) {
-        promise.resolve(Gson().toJson(Exponea.defaultProperties))
+        promise.resolve(ExponeaGson.instance.toJson(Exponea.defaultProperties))
     }
 
     @ReactMethod
@@ -276,7 +276,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
                         result.add(consentMap)
                     }
                     // React native android bridge doesn't support arrays yet, we have to serialize the response
-                    promise.resolve(Gson().toJson(result))
+                    promise.resolve(ExponeaGson.instance.toJson(result))
                 },
                 { promise.reject(ExponeaFetchException(it.results.message)) }
             )
@@ -310,7 +310,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
                         result.add(recommendationMap)
                     }
                     // React native android bridge doesn't support arrays yet, we have to serialize the response
-                    promise.resolve(Gson().toJson(result))
+                    promise.resolve(ExponeaGson.instance.toJson(result))
                 },
                 { promise.reject(ExponeaFetchException(it.results.message)) }
             )
@@ -368,7 +368,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     fun openPush(push: OpenedPush) {
         if (pushOpenedListenerSet) {
             reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                .emit("pushOpened", Gson().toJson(push))
+                .emit("pushOpened", ExponeaGson.instance.toJson(push))
         } else {
             pendingOpenedPush = push
         }
@@ -377,7 +377,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     fun pushNotificationReceived(data: Map<String, Any>) {
         if (pushReceivedListenerSet) {
             reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                .emit("pushReceived", Gson().toJson(data))
+                .emit("pushReceived", ExponeaGson.instance.toJson(data))
         } else {
             pendingReceivedPushData = data
         }
@@ -453,7 +453,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
                 }
                 val result = response.map { it.toMap() }
                 // React native android bridge doesn't support arrays yet, we have to serialize the response
-                promise.resolve(Gson().toJson(result))
+                promise.resolve(ExponeaGson.instance.toJson(result))
             }
         }
     }
@@ -468,7 +468,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
                     return@fetchAppInboxItem
                 }
                 // React native android bridge doesn't support arrays yet, we have to serialize the response
-                promise.resolve(Gson().toJson(messageItem.toMap()))
+                promise.resolve(ExponeaGson.instance.toJson(messageItem.toMap()))
             }
         }
     }
@@ -629,7 +629,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     internal fun sendInAppAction(data: InAppMessageAction) {
         reactContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit("inAppAction", Gson().toJson(data))
+            .emit("inAppAction", ExponeaGson.instance.toJson(data))
     }
 
     @ReactMethod
@@ -928,7 +928,7 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         val exposingCategory = data.getRequired<String>("exposingCategory")
         val force = data.getNullSafely("force") ?: false
         Exponea.getSegments(exposingCategory, force) {
-            promise.resolve(Gson().toJson(it))
+            promise.resolve(ExponeaGson.instance.toJson(it))
         }
     }
 
@@ -939,6 +939,6 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         )
         reactContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(callbackInstance.eventEmitterKey, Gson().toJson(dataMap))
+            .emit(callbackInstance.eventEmitterKey, ExponeaGson.instance.toJson(dataMap))
     }
 }

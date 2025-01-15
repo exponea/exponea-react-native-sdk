@@ -1,15 +1,15 @@
 package com.exponea
 
+import com.exponea.sdk.util.ExponeaGson
 import com.facebook.react.bridge.JavaOnlyArray
 import com.facebook.react.bridge.JavaOnlyMap
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 
 object TestJsonParser {
     fun parse(jsonString: String): Any? {
-        return parseJsonNode(Gson().fromJson(jsonString, Object::class.java))
+        return parseJsonNode(ExponeaGson.instance.fromJson(jsonString, Object::class.java))
     }
 
     private fun parseJsonNode(jsonNode: Any?): Any? {
@@ -56,7 +56,7 @@ object TestJsonParser {
     }
 
     fun minify(source: String): String {
-        val parsedSource = parseJsonNode(Gson().fromJson(source, JsonObject::class.java))
-        return Gson().toJson(parsedSource)
+        val parsedSource = parseJsonNode(ExponeaGson.instance.fromJson(source, JsonObject::class.java))
+        return ExponeaGson.instance.toJson(parsedSource)
     }
 }

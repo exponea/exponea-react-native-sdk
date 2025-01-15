@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import androidx.core.graphics.drawable.DrawableCompat
 import com.exponea.sdk.models.MessageItem
+import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.Logger
 import com.facebook.react.bridge.Dynamic
 import com.facebook.react.bridge.ReadableArray
@@ -66,7 +67,7 @@ internal fun ReadableMap.toMapStringString(): Map<String, String> {
     return map.mapValues {
         when {
             it.value is String -> it.value
-            else -> GSON.toJson(it.value)
+            else -> ExponeaGson.instance.toJson(it.value)
         } as String
     }
 }
