@@ -40,9 +40,38 @@
   return true;
 }
 
+- (BOOL)isUrlSupported:(NSURL *)url
+{
+  if (url.path == nil) {
+    return false;
+  }
+  Boolean passed = false;
+  if ([url.scheme  isEqual: @"exponea"]) {
+    passed = true;
+  } else if ([url.scheme  isEqual: @"https"]) {
+    NSArray *validUniversalPaths = @[
+      @"/exponea/track.html",
+      @"/exponea/flush.html",
+      @"/exponea/fetch.html",
+      @"/exponea/inappcb.html",
+      @"/exponea/anonymize.html",
+    ];
+    NSString *path = url.path;
+    for (NSString* validPath in validUniversalPaths) {
+      if ([path containsString: validPath]) {
+        passed = true;
+      }
+    }
+  }
+  return passed;
+}
+
 - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
  restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
+  if (![self isUrlSupported: userActivity.webpageURL]) {
+    return false;
+  }
   [Exponea continueUserActivity: userActivity];
   return [RCTLinkingManager
           application:application
@@ -52,6 +81,9 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
+  if (![self isUrlSupported: url]) {
+    return false;
+  }
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 

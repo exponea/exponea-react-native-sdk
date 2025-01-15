@@ -3,5 +3,5 @@
 #import <ExponeaRNAppDelegate.h>
 
 @interface AppDelegate : RCTAppDelegate<UNUserNotificationCenterDelegate>
-
+- (BOOL)isUrlSupported:(NSURL *)url;
 @end
