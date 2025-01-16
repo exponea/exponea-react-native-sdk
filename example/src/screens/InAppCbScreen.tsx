@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useCallback } from 'react';
 import {FlatList, Image, Platform, StyleSheet, Text, View} from 'react-native';
 import InAppContentBlocksPlaceholder from 'react-native-exponea-sdk/lib/InAppContentBlocksPlaceholder';
 import icon1 from '../img/ic_dialog_map.png';
@@ -57,6 +57,49 @@ export default function InAppCbScreen(): React.ReactElement {
     return result;
   }
   const productsArray = generateProducts();
+  const renderItem = useCallback(({item} : {item:ProductsViewModel}) => {
+    if (item.showAd) {
+      return (
+        <InAppContentBlocksPlaceholder
+          style={{
+            width: '100%',
+          }}
+          placeholderId={'example_list'}
+        />
+      );
+    } else {
+      return (
+        <View
+          style={{
+            flexDirection: 'row',
+            borderTopWidth: 0.5,
+            borderTopColor: '#222',
+            paddingTop: 8,
+            paddingBottom: 8,
+          }}>
+          <Image
+            style={{
+              tintColor: '#000',
+              width: 28,
+              height: 28,
+              marginRight: 8,
+            }}
+            source={{uri: item.icon}}
+          />
+          <View>
+            <Text>{item.title}</Text>
+            <Text
+              style={{
+                paddingRight: 24,
+                textAlign: 'justify',
+              }}>
+              {item.description}
+            </Text>
+          </View>
+        </View>
+      );
+    }
+  }, []);
   return (
     <View style={styles.container}>
       <Text>Placeholder: example_top</Text>
@@ -75,50 +118,13 @@ export default function InAppCbScreen(): React.ReactElement {
       />
       <Text>Products (Placeholder: example_list)</Text>
       <FlatList
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={5}
+        updateCellsBatchingPeriod={200}
+        initialNumToRender={1}
+        windowSize={3}
         data={productsArray}
-        renderItem={item => {
-          if (item.item.showAd) {
-            return (
-              <InAppContentBlocksPlaceholder
-                style={{
-                  width: '100%',
-                }}
-                placeholderId={'example_list'}
-              />
-            );
-          } else {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  borderTopWidth: 0.5,
-                  borderTopColor: '#222',
-                  paddingTop: 8,
-                  paddingBottom: 8,
-                }}>
-                <Image
-                  style={{
-                    tintColor: '#000',
-                    width: 28,
-                    height: 28,
-                    marginRight: 8,
-                  }}
-                  source={{uri: item.item.icon}}
-                />
-                <View>
-                  <Text>{item.item.title}</Text>
-                  <Text
-                    style={{
-                      paddingRight: 24,
-                      textAlign: 'justify',
-                    }}>
-                    {item.item.description}
-                  </Text>
-                </View>
-              </View>
-            );
-          }
-        }}
+        renderItem={renderItem}
       />
     </View>
   );
