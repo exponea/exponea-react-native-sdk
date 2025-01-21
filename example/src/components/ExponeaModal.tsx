@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import KeyboardSpacer from '../util/KeyboardSpacer';
 
 interface ExponeaModalProps {
   visible: boolean;
@@ -30,7 +29,6 @@ export default function ExponeaModal(
           <View style={styles.contentContainer}>{props.children}</View>
         </View>
       </View>
-      {Platform.OS === 'ios' ? <KeyboardSpacer /> : null}
     </Modal>
   );
 }
