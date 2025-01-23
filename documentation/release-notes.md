@@ -11,6 +11,14 @@ parentDocSlug: react-native-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 2.1.0
+#### January 23, 2025
+* Added:
+  * Adds support for React Native 0.76.6.
+  * Increases the minimum supported Android API level to 24.
+  * Increases the minimum supported iOS SDK version to 15.1.
+
+
 ## Release Notes for 2.0.0
 #### October 17, 2024
 * Added:
