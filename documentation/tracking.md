@@ -205,6 +205,119 @@ Exponea.trackSessionStart()
 Exponea.trackSessionEnd()
 ```
 
+## Push notifications
+
+If developers [integrate push notification functionality](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#integration) in their app, the SDK automatically tracks push notifications by default.
+
+On Android, you can disable automatic push notification tracking by setting the Boolean value of the `automaticPushNotification` property to `false` in the SDK's [Android-specific configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration#android-specific-configuration-parameters). It is then up to the developer to manually track push notifications.
+
+> ❗️
+>
+> The React Native SDK currently does not support disabling automatic push notification tracking on iOS.
+
+> ❗️
+>
+> The behavior of push notification tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [consent documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
+
+### Track token manually
+
+Use either the `trackPushToken()` (Firebase) or `trackHmsPushToken` (Huawei) method to manually track the token for receiving push notifications. The token is assigned to the currently logged-in customer (with the `identifyCustomer` method).
+
+Invoking this method will track a push token immediately regardless of the value of the `tokenTrackFrequency` [configuration parameter](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
+
+Each time the app becomes active, the SDK calls `verifyPushStatusAndTrackPushToken` and tracks the token.
+
+#### Arguments
+
+| Name                 | Type    | Description |
+| ---------------------| ------- | ----------- |
+| token **(required)** | String  | String containing the push notification token. |
+
+#### Example 
+
+Firebase:
+
+```typescript
+Exponea.trackPushToken("value-of-push-token")
+```
+
+Huawei:
+
+```typescript
+Exponea.trackHmsPushToken("value-of-push-token")
+```
+
+> ❗️
+>
+> Remember to invoke [anonymize](#anonymize) whenever the user signs out to ensure the push notification token is removed from the user's customer profile. Failing to do this may cause multiple customer profiles share the same token, resulting in duplicate push notifications.
+
+### Track push notification delivery manually
+
+Use the `trackDeliveredPush()` method to manually track push notification delivery.
+
+#### Arguments
+
+| Name      | Type                   | Description |
+| ----------| ---------------------- | ----------- |
+| params    | Record<string, string> | Notification data. |
+
+> ❗️
+>
+> The notification data type is determined by the React Native library used for retrieving and handling push notifications (Firebase, Expo, Signal, etc...).
+
+#### Example
+
+```typescript
+const notificationData: Record<string, string> = {
+      "platform": "android",
+      "subject": "subject",
+      "type": "push",
+      "url_params": JSON.stringify({
+        "utm_campaign": "Campaign name",
+        "utm_medium": "mobile_push_notification",
+        "utm_content": "en",
+        ...
+      }),
+      ...
+    };
+Exponea.trackDeliveredPush(notificationData)
+```
+
+### Track push notification click manually
+
+Use the `trackClickedPush()` method to manually track push notification clicks.
+
+#### Arguments
+
+| Name      | Type                   | Description |
+| ----------| ---------------------- | ----------- |
+| params    | Record<string, string> | Notification data. |
+
+> ❗️
+>
+> The notification data type is determined by the React Native library used for retrieving and handling push notifications (Firebase, Expo, Signal, etc...).
+
+#### Example
+
+```typescript
+const notificationData: Record<string, string> = {
+      "platform": "android",
+      "subject": "subject",
+      "type": "push",
+      "actionType": "button",
+      "actionName": "Click here",
+      "url": "https://example.com",
+      "url_params": JSON.stringify({
+        "utm_campaign": "Campaign name",
+        "utm_medium": "mobile_push_notification",
+        "utm_content": "en",
+        ...
+      }),
+      ...
+    };
+Exponea.trackClickedPush(notificationData)
+```
+
 ## Default properties
 
 You can [configure](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) default properties to be tracked with every event. Note that the value of a default property will be overwritten if the tracking event has a property with the same key.
