@@ -176,7 +176,11 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
 
     @ReactMethod
     fun setDefaultProperties(defaultProperties: ReadableMap, promise: Promise) = catchAndReject(promise) {
-        Exponea.defaultProperties = defaultProperties.toHashMap()
+        val defProps = kotlin.collections.HashMap<String, Any>()
+        defaultProperties.toHashMap().forEach { (key, value) ->
+            value?.let { defProps[key] = it }
+        }
+        Exponea.defaultProperties = defProps
         promise.resolve(null)
     }
 
