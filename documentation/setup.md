@@ -14,7 +14,7 @@ The SDK is compatible with React Native 0.69.0 - 0.76.6. Earlier versions may wo
 
 > ❗️
 >
-> Please note that projects using Expo Managed Workflow must switch to Bare Workflow to be able to use the Exponea React Native SDK.
+> Please note that the installation instructions assume your app uses "bare workflow". For Expo-based apps using "managed workflow", refer to [Expo managed apps](#expo-managed-apps) below.
 
 > 📘
 >
@@ -111,6 +111,278 @@ async function configureExponea(configuration: Configuration) {
 ### Done!
 
 At this point, the SDK is active and should now be tracking sessions in your app.
+
+## Expo managed apps
+
+To install Exponea React Native SDK in an Expo managed app, please follow these steps.
+
+### Install package
+
+In your project's root folder, install the `react-native-exponea-sdk` package using either yarn or npm:
+
+```shell yarn
+yarn add react-native-exponea-sdk
+```
+
+```shell npm
+npm install react-native-exponea-sdk --save
+```
+
+Optionally, you can specify version constraints as `react-native-exponea-sdk@<version>` (for example, `react-native-exponea-sdk@^1.8.0)`). Refer to [Ranges](https://github.com/npm/node-semver#versions) in the npm semver documentation for details.
+
+### Create Expo config plugin
+
+You need to create an [Expo config plugin](https://docs.expo.dev/config-plugins/plugins-and-mods/) that implements the required modifications at native level, including:
+
+- [iOS setup](#ios-setup)
+- [Android setup](#android-setup)
+- [Android push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android)
+- [iOS push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios)
+
+Below is an example Expo config plugin that you can use as a starting point:
+
+```typescript
+/* eslint-disable @typescript-eslint/no-var-requires */
+const {
+  withPlugins,
+  withAppBuildGradle,
+  withAndroidManifest,
+  withAppDelegate,
+  withDangerousMod,
+} = require("@expo/config-plugins");
+const { writeFileSync, mkdirSync } = require("fs");
+
+// Update android/app/build.gradle
+function withExponeaBuildGradle(config) {
+  return withAppBuildGradle(config, async (cfg) => {
+    const { modResults } = cfg;
+    const { contents } = modResults;
+    const lines = contents.split("\n");
+    const configIndex = lines.findIndex((line) => /defaultConfig {/.test(line));
+    const dependenciesIndex = lines.findIndex((line) =>
+      /dependencies {/.test(line)
+    );
+
+    modResults.contents = [
+      ...lines.slice(0, configIndex + 1),
+      "        multiDexEnabled true",
+      ...lines.slice(configIndex + 1, dependenciesIndex + 1),
+      `    implementation("com.google.firebase:firebase-messaging:24.0.0")`,
+      ...lines.slice(dependenciesIndex + 1),
+    ].join("\n");
+
+    return cfg;
+  });
+}
+
+// Update android/app/src/main/AndroidManifest.xml
+function withExponeaAndroidManifest(config) {
+  return withAndroidManifest(config, async (cfg) => {
+    if (!cfg.modResults.manifest.application[0].service)
+      cfg.modResults.manifest.application[0].service = [];
+    cfg.modResults.manifest.application[0].service.push({
+      $: {
+        "android:name": ".MessageService",
+        "android:exported": "false",
+      },
+      "intent-filter": [
+        {
+          action: {
+            $: {
+              "android:name": "com.google.firebase.MESSAGING_EVENT",
+            },
+          },
+        },
+      ],
+    });
+    return cfg;
+  });
+}
+
+// Update ios/MyApp/AppDelegate.mm
+function withExponeaAppDelegate(config) {
+  return withAppDelegate(config, (cfg) => {
+    const { modResults } = cfg;
+    const { contents } = modResults;
+    const lines = contents.split("\n");
+
+    const importIndex = lines.findIndex((line) =>
+      /^#import "AppDelegate.h"/.test(line)
+    );
+    const didFinishLaunchingIndex = lines.findIndex((line) =>
+      /return \[super application:application didFinishLaunchingWithOptions:launchOptions\]/.test(
+        line
+      )
+    );
+    const continueUserActivityIndex = lines.findIndex((line) =>
+      /return \[super application:application continueUserActivity:userActivity restorationHandler:restorationHandler\]/.test(
+        line
+      )
+    );
+    const didRegisterForRemoteNotificationsWithDeviceTokenIndex =
+      lines.findIndex((line) =>
+        /return \[super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken\]/.test(
+          line
+        )
+      );
+    const didReceiveRemoteNotificationIndex = lines.findIndex((line) =>
+      /return \[super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler\]/.test(
+        line
+      )
+    );
+    const endIndex = lines.findIndex((line) => /@end/.test(line));
+
+    modResults.contents = [
+      ...lines.slice(0, importIndex),
+      `#import <ExponeaRNAppDelegate.h>
+#import <UserNotifications/UserNotifications.h>`,
+      ...lines.slice(importIndex, didFinishLaunchingIndex),
+      `  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  center.delegate = self;`,
+      ...lines.slice(didFinishLaunchingIndex, continueUserActivityIndex),
+      `  [Exponea continueUserActivity: userActivity];`,
+      ...lines.slice(
+        continueUserActivityIndex,
+        didRegisterForRemoteNotificationsWithDeviceTokenIndex
+      ),
+      `  [Exponea handlePushNotificationToken: deviceToken];`,
+      ...lines.slice(
+        didRegisterForRemoteNotificationsWithDeviceTokenIndex,
+        didReceiveRemoteNotificationIndex
+      ),
+      `  [Exponea handlePushNotificationOpenedWithUserInfo:userInfo];`,
+      ...lines.slice(didReceiveRemoteNotificationIndex, endIndex),
+      `- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+    didReceiveNotificationResponse:(UNNotificationResponse *)response
+    withCompletionHandler:(void (^)(void))completionHandler
+{
+  [Exponea handlePushNotificationOpenedWithResponse: response];
+  completionHandler();
+}`,
+      ...lines.slice(endIndex),
+    ].join("\n");
+
+    return cfg;
+  });
+}
+
+// Add the file MessageService.java
+function withExponeaAndroidMessageService(config) {
+  return withDangerousMod(config, [
+    "android",
+    (cfg) => {
+      const androidProjRoot = cfg.modRequest.platformProjectRoot;
+      const packageName = cfg.android.package;
+      const pathToDir = packageName.replaceAll(".", "/");
+      mkdirSync(`${androidProjRoot}/app/src/main/java/${pathToDir}`, {
+        recursive: true,
+      });
+      writeFileSync(
+        `${androidProjRoot}/app/src/main/java/${pathToDir}/MessageService.java`,
+        `package ${packageName};
+
+import android.app.NotificationManager;
+import android.content.Context;
+import androidx.annotation.NonNull;
+import com.exponea.ExponeaModule;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
+
+public class MessageService extends FirebaseMessagingService {
+
+    @Override
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
+        ExponeaModule.Companion.handleRemoteMessage(
+                getApplicationContext(),
+                remoteMessage.getData(),
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+    }
+
+    @Override
+    public void onNewToken(@NonNull String token) {
+        super.onNewToken(token);
+        ExponeaModule.Companion.handleNewToken(
+                getApplicationContext(),
+                token);
+    }
+}
+`
+      );
+      return cfg;
+    },
+  ]);
+}
+
+// Replace AppDelegate.h
+function withExponeaIosAppDelegateH(config) {
+  return withDangerousMod(config, [
+    "ios",
+    (cfg) => {
+      const iosProjRoot = cfg.modRequest.platformProjectRoot;
+      const projectName = cfg.name;
+      writeFileSync(
+        `${iosProjRoot}/${projectName}/AppDelegate.h`,
+        `#import <RCTAppDelegate.h>
+#import <UIKit/UIKit.h>
+#import <Expo/Expo.h>
+#import <UserNotifications/UNUserNotificationCenter.h>
+
+@interface AppDelegate : EXAppDelegateWrapper <UNUserNotificationCenterDelegate>
+
+@end
+`
+      );
+      return cfg;
+    },
+  ]);
+}
+
+function withExponea(config) {
+  return withPlugins(config, [
+    withExponeaBuildGradle,
+    withExponeaAndroidManifest,
+    withExponeaAppDelegate,
+    withExponeaAndroidMessageService,
+    withExponeaIosAppDelegateH,
+  ]);
+}
+
+module.exports = withExponea;
+```
+
+> 🚧
+>
+> The example plugin has been tested with Expo 50. The native files are modified using find/replace logic; using a different Expo version might require some tweaking.
+
+> 🚧
+>
+> Please note that [iOS rich push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios#rich-push-notifications) require additional native setup that is not part of the example plugin but can be achieved in a similar way.
+
+Place the plugin file in your project (for example, at `plugins/exponea/index.js`) and add it to `plugins` in your project app config in `app.json`.
+
+Also in your project app config, add the required configuration for [Android push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android) and [iOS push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios).
+
+```json
+{
+    "ios": {
+      "entitlements": {
+        "aps-environment": "development",
+        "com.apple.security.application-groups": ["<your-app-group-id>"]
+      },
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"]
+      }
+    },
+    "android": {
+      "package": "<your-package.id>",
+      "googleServicesFile": "<path-to-your-google-services.json>"
+    },
+   "plugins": ["./plugins/exponea/index.js"]
+}
+```
+
+To verify that the plugin works correctly, run [prebuild](https://docs.expo.dev/guides/adopting-prebuild/#prebuild) and inspect the resulting `ios` and `android` folders for the expected modifications. If the result is satisfactory, delete the `ios` and `android` folders. The normal build process will run this prebuild step automatically for every build.
 
 ## Other SDK configuration
 
