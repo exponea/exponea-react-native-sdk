@@ -13,10 +13,6 @@ export class SegmentationCallbackBridge {
     assignNativeCallbackId(callbackId: string) {
         this.nativeCallbackId = callbackId
     }
-
-    getEventEmitterKey(): string {
-        return "newSegments"
-    }
 }
 
 export interface SegmentationDataWrapper {

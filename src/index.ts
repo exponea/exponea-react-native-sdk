@@ -1,4 +1,9 @@
-import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
+import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
+import { AppInboxAction } from './AppInboxAction';
+import { AppInboxMessage } from './AppInboxMessage';
+import Consent from './Consent';
+import EventType from './EventType';
+import ExponeaProject from './ExponeaProject';
 import ExponeaType, {
   InAppMessage,
   InAppMessageAction,
@@ -7,17 +12,11 @@ import ExponeaType, {
   Segment,
   SegmentationDataCallback
 } from './ExponeaType';
-import ExponeaProject from './ExponeaProject';
-import EventType from './EventType';
-import {JsonObject} from './Json';
-import Consent from './Consent';
-import {Recommendation, RecommendationOptions} from './Recommendation';
-import {AppInboxMessage} from './AppInboxMessage';
-import {AppInboxAction} from './AppInboxAction';
-import {SegmentationCallbackBridge, SegmentationDataWrapper} from "./SegmentationCallbackBridge";
-import {InAppMessageCallback} from "./InAppMessageCallback";
-import exponeaProject from "./ExponeaProject";
-import {InAppMessageActionDef} from "./InAppMessageActionDef";
+import { InAppMessageActionDef } from "./InAppMessageActionDef";
+import { InAppMessageCallback } from "./InAppMessageCallback";
+import { JsonObject } from './Json';
+import { Recommendation, RecommendationOptions } from './Recommendation';
+import { SegmentationCallbackBridge, SegmentationDataWrapper } from "./SegmentationCallbackBridge";
 
 /*
 React native bridge doesn't like optional parameters, we have to implement it ourselves.
@@ -320,28 +319,21 @@ const Exponea: ExponeaType = {
   registerSegmentationDataCallback(
       callback: SegmentationDataCallback
   ): void {
-    const bridge = new SegmentationCallbackBridge(callback)
+    const bridgeToRegister = new SegmentationCallbackBridge(callback)
     const promise: Promise<string> = NativeModules.Exponea.registerSegmentationDataCallback(
         callback.exposingCategory,
         callback.includeFirstLoad
     );
     promise.then(callbackId => {
-      bridge.assignNativeCallbackId(callbackId);
-      segmentationCallbackBridges.push(bridge);
-      eventEmitter.addListener(bridge.getEventEmitterKey(), (data: string) => {
-        const receivedData: SegmentationDataWrapper = JSON.parse(data)
-        if (bridge.nativeCallbackId == receivedData.callbackId) {
-          callback.onNewData(receivedData.data);
-        }
-      })
+      bridgeToRegister.assignNativeCallbackId(callbackId);
+      segmentationCallbackBridges.push(bridgeToRegister);
     })
   },
 
   unregisterSegmentationDataCallback(
       callback: SegmentationDataCallback
   ): void {
-    const assignedBridgeIndex = segmentationCallbackBridges
-        .findIndex(item => item.callback === callback);
+    const assignedBridgeIndex = segmentationCallbackBridges.findIndex(item => item.callback === callback);
     if (assignedBridgeIndex < 0) {
       return;
     }
@@ -351,7 +343,6 @@ const Exponea: ExponeaType = {
     );
     promise.then(value => {
       segmentationCallbackBridges.splice(assignedBridgeIndex, 1);
-      eventEmitter.removeAllListeners(assignedBridge.getEventEmitterKey());
     });
   },
 
@@ -378,6 +369,17 @@ eventEmitter.addListener('pushOpened', (pushOpened: string) => {
 eventEmitter.addListener('pushReceived', (data: string) => {
   pushReceivedUserListener && pushReceivedUserListener(JSON.parse(data));
 });
+
+const handleSegmentationsUpdate = (data: string) => {
+  const receivedData: SegmentationDataWrapper = JSON.parse(data)
+  segmentationCallbackBridges.forEach(bridge => {
+    if (bridge.nativeCallbackId == receivedData.callbackId) {
+      bridge.callback.onNewData(receivedData.data);
+    }
+  });
+}
+
+eventEmitter.addListener('newSegments', handleSegmentationsUpdate)
 
 const handleInAppMessageAction = (data: string) => {
   if (!inAppMessageCallback) {
