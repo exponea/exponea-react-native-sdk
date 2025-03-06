@@ -116,7 +116,7 @@ Next, you must create and register a service that extends `FirebaseMessagingServ
 
 #### Configure the Firebase Cloud Messaging integration in Engagement
 
-Follow the instructions in [Configure the Firebase Cloud Messaging integration in Engagement](https://documentation.bloomreach.com/sandbox/docs/android-sdk-firebase#configure-the-firebase-cloud-messaging-integration-in-engagement) for the Android SDK.
+Follow the instructions in [Configure the Firebase Cloud Messaging integration in Engagement](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase#configure-the-firebase-cloud-messaging-integration-in-engagement) for the Android SDK.
 
 ### Huawei integration
 

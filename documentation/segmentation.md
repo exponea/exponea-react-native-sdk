@@ -92,7 +92,7 @@ When a segmentation data reload is triggered, the process waits 5 seconds before
 
 > ❗️
 >
-> It is required to [set the flush mode](https://documentation.bloomreach.com/engagement/docs/android-sdk-data-flushing#flushing-modes) to `FlushMode.IMMEDIATE` to get accurate results. The process of segment calculation needs all tracked events to be uploaded to server to calculate results effectively.
+> It is required to [set the flush mode](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-data-flushing#flushing-modes) to `FlushMode.IMMEDIATE` to get accurate results. The process of segment calculation needs all tracked events to be uploaded to server to calculate results effectively.
 
 ### Callback behavior
 
@@ -164,7 +164,7 @@ data.subscribe((segments) => {
 
 > 👍 Enable Verbose Logging
 >
-> The SDK logs a lot of useful information related to segmentation data updates on the `INFO` level. You can [set the logger level](https://documentation.bloomreach.com/sandbox/docs/react-native-sdk-setup#log-level) using `Exponea.setLogLevel` before initializing the SDK. If you face unexpected behavior and `INFO` log messages are not sufficient, set the log level to `VERBOSE` to got more detailed information.
+> The SDK logs a lot of useful information related to segmentation data updates on the `INFO` level. You can [set the logger level](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#log-level) using `Exponea.setLogLevel` before initializing the SDK. If you face unexpected behavior and `INFO` log messages are not sufficient, set the log level to `VERBOSE` to got more detailed information.
 
 > 👍
 >
