@@ -353,13 +353,13 @@ module.exports = withExponea;
 
 > 🚧
 >
-> The example plugin has been tested with Expo 50. The native files are modified using find/replace logic; using a different Expo version might require some tweaking.
+> The example config plugin has been tested with Expo 50. The native files are modified using find/replace logic; using a different Expo version might require some tweaking.
 
 > 🚧
 >
-> Please note that [iOS rich push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios#rich-push-notifications) require additional native setup that is not part of the example plugin but can be achieved in a similar way.
+> Please note that [iOS rich push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios#rich-push-notifications) require additional setup that is not part of this example config plugin but can be achieved in a similar way. For implementation, check [iOS rich push notifications for Expo managed apps](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios#rich-push-notifications-for-expo-managed-apps)
 
-Place the plugin file in your project (for example, at `plugins/exponea/index.js`) and add it to `plugins` in your project app config in `app.json`.
+Place the plugin file in your project (for example, at `plugins/exponea/index.js`) and add it to `plugins` section of your project app config `app.json`.
 
 Also in your project app config, add the required configuration for [Android push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android) and [iOS push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios).
 

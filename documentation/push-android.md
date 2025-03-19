@@ -18,6 +18,10 @@ The React Native SDK relies on the [native Android SDK](https://documentation.bl
 >
 > The behaviour of push notification delivery and click tracking may be affected by the tracking consent feature, which, if enabled, requires explicit consent for tracking. Refer to the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
 
+> ❗️
+>
+> Please note that the integration instructions assume your app uses "bare workflow". For Expo-based apps using "managed workflow", refer to [Expo managed apps](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#expo-managed-apps) for Android push notifications integration.
+
 ## Integration
 
 Exponea Android SDK supports the following integrations:

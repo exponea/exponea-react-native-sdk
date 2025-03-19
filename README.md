@@ -12,8 +12,6 @@ Install the package using npm or yarn:
 * `$ yarn add react-native-exponea-sdk`
 * `$ npm install react-native-exponea-sdk --save`
 
-> For projects using Expo, you'll need to switch to *Bare Workflow* using `expo eject`.
-
 ### iOS setup
 
 * `$ cd ios`
