@@ -6,7 +6,7 @@ categorySlug: integrations
 parentDocSlug: react-native-sdk-push-notifications
 ---
 
-The React Native SDK relies on the [native Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk) to handle push notifications on Android. This guide provides shortened instructions for Android within the context of the React Native SDK and refers to the [push notifications documentation for the Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk-push-notification) for details.
+The React Native SDK relies on the [native Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk) to handle push notifications on Android. This guide provides shortened instructions for Android within the context of the React Native SDK and refers to the [push notifications documentation for the Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk-push-notifications) for details.
 
 > 👍
 >
@@ -31,7 +31,7 @@ Exponea Android SDK supports the following integrations:
 
 ### Standard (Firebase) integration
 
-To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
+To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
 
 1. Set up a Firebase project.
 2. Implement Firebase messaging in your app.
@@ -124,7 +124,7 @@ Follow the instructions in [Configure the Firebase Cloud Messaging integration i
 
 ### Huawei integration
 
-To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/android-push-notifications) from the Engagement platform and receive them in your app on Huawei devices, you must:
+To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/android-sdk-push-notifications) from the Engagement platform and receive them in your app on Huawei devices, you must:
 
 1. Set up Huawei Mobile Services (HMS)
 2. Implement HMS in your app.
@@ -218,7 +218,7 @@ The behavior of this callback is as follows:
 
 ### Enable deep linking
 
-You can use `Exponea.setPushOpenedListener()` to define a [listener that will respond to push notification interactions(https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#respond-to-push-notification-interactions). To enable deep linking, you must make some changes to `AndroidManifest` in `android/src/main`.
+You can use `Exponea.setPushOpenedListener()` to define a [listener that will respond to push notification interactions](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#respond-to-push-notification-interactions). To enable deep linking, you must make some changes to `AndroidManifest` in `android/src/main`.
 
 #### Set activity to single task launch mode
 
