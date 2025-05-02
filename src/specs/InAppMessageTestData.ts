@@ -73,7 +73,8 @@ export class InAppMessageTestData {
             close_timeout: timeout,
             payload: payload,
             payload_html: payloadHtml,
-            is_html: type == 'freeform'
+            is_html: type == 'freeform',
+            is_rich_text: false
         }
     }
 }

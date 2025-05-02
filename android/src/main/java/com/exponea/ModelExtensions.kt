@@ -94,7 +94,8 @@ internal fun Map<String, Any?>.toInAppMessage(): InAppMessage? {
         payloadHtml = source.getNullSafely("payload_html"),
         isHtml = source.getNullSafely("is_html"),
         rawHasTrackingConsent = source.getNullSafely("has_tracking_consent"),
-        consentCategoryTracking = source.getNullSafely("consent_category_tracking")
+        consentCategoryTracking = source.getNullSafely("consent_category_tracking"),
+        isRichText = source.getNullSafely("is_rich_text")
     )
 }
 
@@ -114,9 +115,8 @@ internal fun Map<String, Any?>.toInAppContentBlock(): InAppContentBlock? {
     )
 }
 
-internal fun Map<String, Any?>.toInAppContentBlockAction(): InAppContentBlockAction? {
+internal fun Map<String, Any?>.toInAppContentBlockAction(): InAppContentBlockAction {
     val source = this
-    val dateFilter = source.getNullSafelyMap<Any>("date_filter")?.toDateFilter() ?: return null
     return InAppContentBlockAction(
         type = source.getRequired("type"),
         name = source.getNullSafely("name"),
@@ -186,25 +186,26 @@ internal fun Map<String, Any?>.toInAppMessagePayload(): InAppMessagePayload {
         buttons = source
             .getNullSafelyArray<Map<String, Any?>>("buttons")?.map { it.toInAppMessagePayloadButton() },
         backgroundColor = source.getNullSafely("background_color"),
-        closeButtonColor = source.getNullSafely("close_button_color"),
-        rawTextPosition = source.getNullSafely("text_position"),
+        closeButtonIconColor = source.getNullSafely("close_button_color"),
+        closeButtonBackgroundColor = source.getNullSafely("close_button_background_color"),
+        textPosition = source.getNullSafely("text_position"),
         isTextOverImage = source.getNullSafely("text_over_image"),
-        rawMessagePosition = source.getNullSafely("message_position")
+        messagePosition = source.getNullSafely("message_position")
     )
 }
 
 internal fun Map<String, Any?>.toInAppMessagePayloadButton(): InAppMessagePayloadButton {
     val source = this
     return InAppMessagePayloadButton(
-        rawButtonType = source.getNullSafely("button_type"),
-        buttonText = source.getNullSafely("button_text"),
-        buttonLink = source.getNullSafely("button_link"),
-        buttonBackgroundColor = source.getNullSafely("button_background_color"),
-        buttonTextColor = source.getNullSafely("button_text_color")
+        rawType = source.getNullSafely("button_type"),
+        text = source.getNullSafely("button_text"),
+        link = source.getNullSafely("button_link"),
+        backgroundColor = source.getNullSafely("button_background_color"),
+        textColor = source.getNullSafely("button_text_color")
     )
 }
 
-internal fun Map<String, String>.toNotificationData(): NotificationData? {
+internal fun Map<String, String>.toNotificationData(): NotificationData {
     val source = this
     val attributes: HashMap<String, Any> = ExponeaGson.instance.fromJson(source["data"] ?: source["attributes"] ?: "{}")
     val campaignMap: Map<String, String> = ExponeaGson.instance.fromJson(source["url_params"] ?: "{}")

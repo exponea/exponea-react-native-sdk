@@ -245,7 +245,10 @@ class DimensChangedEvent(
     viewTag: Int,
     private val event: WritableMap
 ) : Event<DimensChangedEvent>(surfaceId, viewTag) {
-    override fun getEventName(): String = "dimensChanged"
+    companion object {
+        const val EVENT_NAME = "dimensChanged"
+    }
+    override fun getEventName(): String = EVENT_NAME
     override fun getEventData(): WritableMap = event
 }
 

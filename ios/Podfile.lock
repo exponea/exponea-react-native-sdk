@@ -2,7 +2,7 @@ PODS:
   - AnyCodable-FlightSchool (0.4.0)
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (3.0.0):
+  - ExponeaSDK (3.4.0):
     - SwiftSoup (= 2.6.1)
   - fast_float (6.1.4)
   - FBLazyVector (0.78.0)
@@ -1492,7 +1492,7 @@ DEPENDENCIES:
   - AnyCodable-FlightSchool (= 0.4.0)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - ExponeaSDK (= 3.0.0)
+  - ExponeaSDK (= 3.4.0)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
@@ -1522,7 +1522,6 @@ DEPENDENCIES:
   - React-idlecallbacksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/idlecallbacks`)
   - React-ImageManager (from `../node_modules/react-native/ReactCommon/react/renderer/imagemanager/platform/ios`)
   - React-jsc (from `../node_modules/react-native/ReactCommon/jsc`)
-  - React-jsc/Fabric (from `../node_modules/react-native/ReactCommon/jsc`)
   - React-jserrorhandler (from `../node_modules/react-native/ReactCommon/jserrorhandler`)
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
@@ -1704,7 +1703,7 @@ SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
-  ExponeaSDK: 2185c1c33f63fce24a036e71162562a2ab3a6743
+  ExponeaSDK: e449b40530120f2204702092beb9a7b0d45dafb4
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 6fe148afcef2e3213e484758e3459609d40d57f5
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
@@ -1746,10 +1745,10 @@ SPEC CHECKSUMS:
   React-performancetimeline: bc2e48198ec814d578ac8401f65d78a574358203
   React-RCTActionSheet: 592674cf61142497e0e820688f5a696e41bf16dd
   React-RCTAnimation: 8fbb8dba757b49c78f4db403133ab6399a4ce952
-  React-RCTAppDelegate: 3b2dd4cb39cd85e187df73a970f6527aa1841ad4
+  React-RCTAppDelegate: 703fb330447d76c86d7f6cb083950132572e77b4
   React-RCTBlob: fcbf608880c8ee349d25bd5e0d14879bd90f74af
-  React-RCTFabric: d689bb99b1acfef5dc89726f37aa7fafc1d46673
-  React-RCTFBReactNativeSpec: 2db8674019318921109b0eb697039c1b69e39ce7
+  React-RCTFabric: 31ab69209397d01988b10dbed752dd7914abb52c
+  React-RCTFBReactNativeSpec: 57d2f59f4335603add8ad0eab8d010156c60512e
   React-RCTImage: ccac9969940f170503857733f9a5f63578e106e1
   React-RCTLinking: d82427bbf18415a3732105383dff119131cadd90
   React-RCTNetwork: 12ad4d0fbde939e00251ca5ca890da2e6825cc3c
@@ -1770,8 +1769,8 @@ SPEC CHECKSUMS:
   ReactCommon: 398ba0acfaaceec1ed1d6791d94d7646fb1e030f
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   SwiftSoup: 5dd2c1b06afc964f30d99894af6ede22ede627aa
-  Yoga: afd04ff05ebe0121a00c468a8a3c8080221cb14c
+  Yoga: 9b7fb56e7b08cde60e2153344fa6afbd88e5d99f
 
-PODFILE CHECKSUM: 27672eb059235c8d3f7493a06ef0e31882f75e73
+PODFILE CHECKSUM: 68b3a87172f31cb10ce6ad2dab63a9da7588ecf6
 
 COCOAPODS: 1.15.2

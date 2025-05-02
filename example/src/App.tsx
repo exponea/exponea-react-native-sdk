@@ -2,7 +2,7 @@ import 'react-native-gesture-handler'; // This needs to be first import accordin
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import AuthScreen from './screens/AuthScreen';
-import TabNavigation from './screens/TabNavigation';
+import DashboardScreen from './screens/TabNavigation';
 import {Alert, Linking, NativeModules} from 'react-native';
 import Exponea from 'react-native-exponea-sdk';
 import PreloadingScreen from './screens/PreloadingScreen';
@@ -197,7 +197,7 @@ export default class App extends React.Component<{}, AppState> {
     return (
       <NavigationContainer ref={RootNavigation.navigationRef}>
         {this.state.sdkConfigured ? (
-          <TabNavigation />
+          <DashboardScreen />
         ) : (
           <AuthScreen onStart={this.onStart.bind(this)} />
         )}

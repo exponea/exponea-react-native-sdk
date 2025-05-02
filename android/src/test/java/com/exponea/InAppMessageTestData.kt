@@ -47,21 +47,21 @@ class InAppMessageTestData {
                     bodyTextColor = "#000000",
                     bodyTextSize = "14px",
                     backgroundColor = "#ffffff",
-                    closeButtonColor = "#ffffff",
+                    closeButtonIconColor = "#ffffff",
                     buttons = arrayListOf(
                         InAppMessagePayloadButton(
-                            rawButtonType = "deep-link",
-                            buttonText = "Action",
-                            buttonLink = "https://someaddress.com",
-                            buttonTextColor = "#ffffff",
-                            buttonBackgroundColor = "#f44cac"
+                            rawType = "deep-link",
+                            text = "Action",
+                            link = "https://someaddress.com",
+                            textColor = "#ffffff",
+                            backgroundColor = "#f44cac"
                         ),
                         InAppMessagePayloadButton(
-                            rawButtonType = "cancel",
-                            buttonText = "Cancel",
-                            buttonLink = null,
-                            buttonTextColor = "#ffffff",
-                            buttonBackgroundColor = "#f44cac"
+                            rawType = "cancel",
+                            text = "Cancel",
+                            link = null,
+                            textColor = "#ffffff",
+                            backgroundColor = "#f44cac"
                         )
                     )
                 )
@@ -82,7 +82,8 @@ class InAppMessageTestData {
                 payloadHtml = payloadHtml,
                 isHtml = type == InAppMessageType.FREEFORM,
                 consentCategoryTracking = null,
-                rawHasTrackingConsent = null
+                rawHasTrackingConsent = null,
+                isRichText = false
             )
         }
 

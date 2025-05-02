@@ -5,30 +5,30 @@
     "message_type": "modal",
     "frequency": "unknown",
     "payload": {
-      "image_url": "https://i.ytimg.com/vi/t4nM1FoUqYs/maxresdefault.jpg",
       "title": "filip.vozar@exponea.com",
+      "body_text": "This is an example of your in-app message body text.",
+      "image_url": "https://i.ytimg.com/vi/t4nM1FoUqYs/maxresdefault.jpg",
       "title_text_color": "#000000",
       "title_text_size": "22px",
-      "body_text": "This is an example of your in-app message body text.",
       "body_text_color": "#000000",
       "body_text_size": "14px",
+      "background_color": "#ffffff",
+      "close_button_color": "#ffffff",
       "buttons": [
         {
-          "button_type": "deep-link",
           "button_text": "Action",
+          "button_type": "deep-link",
           "button_link": "https://someaddress.com",
-          "button_background_color": "#f44cac",
-          "button_text_color": "#ffffff"
+          "button_text_color": "#ffffff",
+          "button_background_color": "#f44cac"
         },
         {
-          "button_type": "cancel",
           "button_text": "Cancel",
-          "button_background_color": "#f44cac",
-          "button_text_color": "#ffffff"
+          "button_type": "cancel",
+          "button_text_color": "#ffffff",
+          "button_background_color": "#f44cac"
         }
-      ],
-      "background_color": "#ffffff",
-      "close_button_color": "#ffffff"
+      ]
     },
     "variant_id": 0,
     "variant_name": "Variant A",
@@ -39,7 +39,8 @@
     "date_filter": {
       "enabled": false
     },
-    "is_html": false
+    "is_html": false,
+    "is_rich_text": false
   },
   "interaction": false,
   "type": "CLOSE"

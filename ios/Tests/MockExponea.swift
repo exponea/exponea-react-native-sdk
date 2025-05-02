@@ -449,6 +449,14 @@ class MockExponea: ExponeaType {
         calls.append(Call(name: "getSegments", params: [category, force]))
         result([])
     }
+
+    func stopIntegration() {
+        calls.append(Call(name: "stopIntegration", params: []))
+    }
+
+    func clearLocalCustomerData(appGroup: String) {
+        calls.append(Call(name: "clearLocalCustomerData", params: [appGroup]))
+    }
 }
 
 class TestDefaultInAppDelegate: InAppMessageActionDelegate {

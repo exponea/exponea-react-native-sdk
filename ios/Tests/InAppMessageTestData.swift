@@ -83,7 +83,7 @@ struct InAppMessageTestData {
             name: "Test serving in-app message",
             rawMessageType: type.rawValue,
             rawFrequency: frequency ?? "unknown",
-            payload: payload,
+            oldPayload: payload,
             variantId: 0,
             variantName: "Variant A",
             trigger: trigger ?? EventFilter(eventType: "session_start", filter: []),
@@ -94,7 +94,8 @@ struct InAppMessageTestData {
             payloadHtml: payloadHtml,
             isHtml: type == .freeform,
             hasTrackingConsent: nil,
-            consentCategoryTracking: nil
+            consentCategoryTracking: nil,
+            isRichText: false
         )
     }
 

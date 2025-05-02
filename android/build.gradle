@@ -124,7 +124,7 @@ dependencies {
         // noinspection GradleDynamicVersion
         implementation 'com.facebook.react:react-native:+'
     }
-    implementation 'com.exponea.sdk:sdk:4.0.1'
+    implementation 'com.exponea.sdk:sdk:4.3.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

@@ -321,6 +321,7 @@ export interface InAppMessage {
   is_html?: boolean;
   has_tracking_consent?: boolean;
   consent_category_tracking?: string;
+  is_rich_text?: boolean;
 }
 
 export interface InAppMessageButton {

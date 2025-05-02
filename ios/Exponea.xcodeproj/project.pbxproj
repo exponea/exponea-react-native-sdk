@@ -32,6 +32,13 @@
 		05FD3772248FDE7F0078847C /* Exponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD3771248FDE7F0078847C /* Exponea.swift */; };
 		550CAAB52B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550CAAB42B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift */; };
 		550CAAB72B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */; };
+		558858DF2D59EAAE000C998F /* RNContentBlockCarouselViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 558858DE2D59EAAE000C998F /* RNContentBlockCarouselViewManager.m */; };
+		558858E12D59FB13000C998F /* RNContentBlockCarouselViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558858E02D59FB13000C998F /* RNContentBlockCarouselViewManager.swift */; };
+		558858E62D5B26EF000C998F /* ContentBlockCarouselEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558858E52D5B26EF000C998F /* ContentBlockCarouselEvent.swift */; };
+		558858E92D5B2725000C998F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558858E82D5B2725000C998F /* Extensions.swift */; };
+		558858EC2D5B2767000C998F /* CarouselInAppContentBlockViewProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558858EB2D5B2767000C998F /* CarouselInAppContentBlockViewProxy.swift */; };
+		558858EF2D5B278E000C998F /* RNCarouselInAppContentBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558858EE2D5B278E000C998F /* RNCarouselInAppContentBlockView.swift */; };
+		558858F22D5B2A28000C998F /* BridgedContentBlockSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558858F12D5B2A28000C998F /* BridgedContentBlockSelector.swift */; };
 		5597718C2A14E63E009EAB3D /* Exponea+InAppMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597718B2A14E63E009EAB3D /* Exponea+InAppMessage.swift */; };
 		55B0FEC729A78B9A00F8FB7C /* Exponea+AppInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */; };
 		55E107DD2CBE458900579519 /* InAppMessageTestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E107DC2CBE458900579519 /* InAppMessageTestData.swift */; };
@@ -102,6 +109,13 @@
 		457286D35E942ABACDFC8210 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		550CAAB42B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNInAppContentBlocksPlaceholderManager.swift; sourceTree = "<group>"; };
 		550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNInAppContentBlocksPlaceholderManager.m; sourceTree = "<group>"; };
+		558858DE2D59EAAE000C998F /* RNContentBlockCarouselViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNContentBlockCarouselViewManager.m; sourceTree = "<group>"; };
+		558858E02D59FB13000C998F /* RNContentBlockCarouselViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNContentBlockCarouselViewManager.swift; sourceTree = "<group>"; };
+		558858E52D5B26EF000C998F /* ContentBlockCarouselEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentBlockCarouselEvent.swift; sourceTree = "<group>"; };
+		558858E82D5B2725000C998F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		558858EB2D5B2767000C998F /* CarouselInAppContentBlockViewProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselInAppContentBlockViewProxy.swift; sourceTree = "<group>"; };
+		558858EE2D5B278E000C998F /* RNCarouselInAppContentBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNCarouselInAppContentBlockView.swift; sourceTree = "<group>"; };
+		558858F12D5B2A28000C998F /* BridgedContentBlockSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgedContentBlockSelector.swift; sourceTree = "<group>"; };
 		5597718B2A14E63E009EAB3D /* Exponea+InAppMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+InAppMessage.swift"; sourceTree = "<group>"; };
 		55B0FEC629A78B9A00F8FB7C /* Exponea+AppInbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+AppInbox.swift"; sourceTree = "<group>"; };
 		55E107DC2CBE458900579519 /* InAppMessageTestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppMessageTestData.swift; sourceTree = "<group>"; };
@@ -200,6 +214,13 @@
 				05C69B8D249CF511008A4D9D /* ExponeaError.swift */,
 				0578A41D249B6C7E0049AE9D /* ExponeaDataError.swift */,
 				05E660E2249A4C2F0033B199 /* ConfigurationParser.swift */,
+				558858DE2D59EAAE000C998F /* RNContentBlockCarouselViewManager.m */,
+				558858E02D59FB13000C998F /* RNContentBlockCarouselViewManager.swift */,
+				558858E52D5B26EF000C998F /* ContentBlockCarouselEvent.swift */,
+				558858E82D5B2725000C998F /* Extensions.swift */,
+				558858EB2D5B2767000C998F /* CarouselInAppContentBlockViewProxy.swift */,
+				558858EE2D5B278E000C998F /* RNCarouselInAppContentBlockView.swift */,
+				558858F12D5B2A28000C998F /* BridgedContentBlockSelector.swift */,
 				05C542D12490E4D40095903D /* .swiftlint.yml */,
 				05FD376D248FDE5A0078847C /* Exponea.m */,
 				05FD3770248FDE7E0078847C /* Exponea-Bridging-Header.h */,
@@ -436,18 +457,25 @@
 				CC619AC4265CCD7B00296FA3 /* ExponeaRNAppDelegate.m in Sources */,
 				05FD376F248FDE5A0078847C /* Exponea.m in Sources */,
 				052DAEA724A225F600A7A0A5 /* Exponea+Fetching.swift in Sources */,
+				558858E62D5B26EF000C998F /* ContentBlockCarouselEvent.swift in Sources */,
+				558858DF2D59EAAE000C998F /* RNContentBlockCarouselViewManager.m in Sources */,
 				05E660E3249A4C2F0033B199 /* ConfigurationParser.swift in Sources */,
 				550CAAB72B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m in Sources */,
 				05C69B8E249CF511008A4D9D /* ExponeaError.swift in Sources */,
+				558858E12D59FB13000C998F /* RNContentBlockCarouselViewManager.swift in Sources */,
 				05E6DA4824A4DEBC004EE0F9 /* Exponea+PushNotifications.swift in Sources */,
+				558858EC2D5B2767000C998F /* CarouselInAppContentBlockViewProxy.swift in Sources */,
 				55F4BB3929A8C3FB00CEDC7C /* RNAppInboxButtonManager.m in Sources */,
 				0578A421249B70310049AE9D /* NSDictionary+getSafely.swift in Sources */,
 				55E88E5A2BDBEB4C008891EE /* Exponea+Segmentation.swift in Sources */,
+				558858F22D5B2A28000C998F /* BridgedContentBlockSelector.swift in Sources */,
 				0544CE6425A7119200DCF863 /* Exponea+Linking.swift in Sources */,
 				5597718C2A14E63E009EAB3D /* Exponea+InAppMessage.swift in Sources */,
 				0578A422249B70360049AE9D /* ExponeaDataError.swift in Sources */,
 				0578A425249B7DB10049AE9D /* JsonDataParser.swift in Sources */,
+				558858EF2D5B278E000C998F /* RNCarouselInAppContentBlockView.swift in Sources */,
 				55B0FEC729A78B9A00F8FB7C /* Exponea+AppInbox.swift in Sources */,
+				558858E92D5B2725000C998F /* Extensions.swift in Sources */,
 				052DAEA524A225C400A7A0A5 /* Exponea+Tracking.swift in Sources */,
 				55F4BB3729A8C3EC00CEDC7C /* RNAppInboxButtonManager.swift in Sources */,
 				052DAEA924A2465400A7A0A5 /* Exponea+Anonymize.swift in Sources */,

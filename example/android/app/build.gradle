@@ -128,7 +128,7 @@ dependencies {
     gmsImplementation 'com.google.firebase:firebase-messaging:23.0.0'
     hmsImplementation 'com.huawei.agconnect:agconnect-core:1.5.2.300'
     hmsImplementation 'com.huawei.hms:push:6.3.0.302'
-    implementation 'com.exponea.sdk:sdk:4.0.1'
+    implementation 'com.exponea.sdk:sdk:4.3.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'

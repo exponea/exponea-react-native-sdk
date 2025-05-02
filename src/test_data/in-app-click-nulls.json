@@ -39,7 +39,8 @@
     "date_filter": {
       "enabled": false
     },
-    "is_html": false
+    "is_html": false,
+    "is_rich_text": false
   },
   "type": "ACTION"
 }

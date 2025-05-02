@@ -6,6 +6,7 @@ import icon1 from '../img/ic_dialog_map.png';
 import icon2 from '../img/ic_media_route.png';
 import icon3 from '../img/ic_menu_search.png';
 import icon4 from '../img/ic_star.png';
+import ContentBlockCarouselView from 'react-native-exponea-sdk/lib/ContentBlockCarouselView';
 
 interface ProductsViewModel {
   icon: string;
@@ -15,6 +16,7 @@ interface ProductsViewModel {
 }
 
 export default function InAppCbScreen(): React.ReactElement {
+    const [carouselStatus, setCarouselStatus] = React.useState({index: -1, count: 0, name: ''});
   const [] = React.useState(false);
   const platformSpecificPlaceholderId =
     Platform.OS === 'ios' ? 'ph_x_example_iOS' : 'ph_x_example_Android';
@@ -102,6 +104,45 @@ export default function InAppCbScreen(): React.ReactElement {
   }, []);
   return (
     <View style={styles.container}>
+    <Text>Default Carousel: example_carousel</Text>
+          <ContentBlockCarouselView
+            style={{
+              width: '100%',
+            }}
+            placeholderId={'example_carousel'}
+            onMessageShown={(_placeholderId, cb, index, count) => {
+              setCarouselStatus({
+                name: cb.name,
+                index: index,
+                count: count
+              })
+            }}
+            onMessagesChanged={(count, cbs) => {
+              if (cbs.length == 0) {
+                setCarouselStatus({
+                  name: '',
+                  index: -1,
+                  count: count
+                })
+              }
+            }}
+            onNoMessageFound={(placeholderId) => {
+              console.log(`Carousel ${placeholderId} is empty`);
+            }}
+            onError={(placeholderId, cb, errorMessage) => {
+              console.log(`Carousel ${placeholderId} error: ${errorMessage}`);
+            }}
+            onCloseClicked={(placeholderId, cb) => {
+              console.log(`MESSAGE CLOSE CLICKED`)
+              console.log(`Message ${typeof cb} has been closed in carousel ${placeholderId}`);
+            }}
+            onActionClicked={(placeholderId, cb, action) => {
+              console.log(`Action ${action.name} has been clicked in carousel ${placeholderId}`);
+            }}
+            overrideDefaultBehavior={false}
+            trackActions={true}
+          />
+          <Text>Showing {carouselStatus.name} as {carouselStatus.index + 1} of {carouselStatus.count}</Text>
       <Text>Placeholder: example_top</Text>
       <InAppContentBlocksPlaceholder
         style={{

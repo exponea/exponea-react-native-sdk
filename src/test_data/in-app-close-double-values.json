@@ -44,7 +44,8 @@
     "load_priority": 100.0,
     "load_delay": 100.0,
     "close_timeout": 100.0,
-    "is_html": false
+    "is_html": false,
+    "is_rich_text": false
   },
   "button": {
     "text": "Click me!"

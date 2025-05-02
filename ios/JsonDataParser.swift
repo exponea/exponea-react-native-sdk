@@ -43,4 +43,9 @@ struct JsonDataParser {
         }
         throw ExponeaDataError.invalidType(for: "value in data '\(type(of: value))'")
     }
+
+    static func toJson(value: Encodable) throws -> String? {
+        let data = try JSONEncoder().encode(value)
+        return String(data: data, encoding: .utf8)
+    }
 }

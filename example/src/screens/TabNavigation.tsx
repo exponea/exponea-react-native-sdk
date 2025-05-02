@@ -18,7 +18,7 @@ import {Screen} from './Screens';
 
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigation(): React.ReactElement {
+export default function DashboardScreen(): React.ReactElement {
   return (
     <Tab.Navigator screenOptions={{tabBarActiveTintColor: 'black'}} detachInactiveScreens={false}>
       <Tab.Screen

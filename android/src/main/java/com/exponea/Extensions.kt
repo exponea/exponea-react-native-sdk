@@ -15,6 +15,7 @@ import com.facebook.react.bridge.ReadableType
 import com.facebook.react.bridge.ReadableType.Array
 import com.facebook.react.bridge.ReadableType.Null
 import com.facebook.react.bridge.ReadableType.Number
+import com.facebook.react.common.MapBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.Date
@@ -505,3 +506,8 @@ internal fun Int.asColorString(): String {
 fun currentTimeSeconds() = Date().time / 1000.0
 
 internal inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, object : TypeToken<T>() {}.type)
+
+internal fun mapOfPhasedRegistrationNames(bubbleEventName: String) = MapBuilder.of(
+    "phasedRegistrationNames",
+    MapBuilder.of("bubbled", bubbleEventName)
+)
