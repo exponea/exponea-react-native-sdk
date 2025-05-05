@@ -391,7 +391,7 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track complete In-app message action`() {
+    fun `should track complete In-app message action - nonrich`() {
         every { Exponea.isInitialized } returns true
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
@@ -419,7 +419,35 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track complete In-app message action without consent`() {
+    fun `should track complete In-app message action - richstyled`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String>()
+        val buttonLink = slot<String>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal-richstyle.json").readText())
+        module.trackInAppMessageClick(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClick(
+                        capture(messageSlot),
+                        capture(buttonText),
+                        capture(buttonLink)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage(isRichstyle = true))
+        assertFalse(buttonText.isNull)
+        assertEquals(buttonText.captured, "Click me!")
+        assertFalse(buttonLink.isNull)
+        assertEquals(buttonLink.captured, "https://example.com")
+    }
+
+    @Test
+    fun `should track complete In-app message action without consent - nonrich`() {
         every { Exponea.isInitialized } returns true
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
@@ -447,7 +475,35 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track In-app message action with nulls`() {
+    fun `should track complete In-app message action without consent - richstyled`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String>()
+        val buttonLink = slot<String>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal-richstyle.json").readText())
+        module.trackInAppMessageClickWithoutTrackingConsent(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClickWithoutTrackingConsent(
+                        capture(messageSlot),
+                        capture(buttonText),
+                        capture(buttonLink)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage(isRichstyle = true))
+        assertFalse(buttonText.isNull)
+        assertEquals(buttonText.captured, "Click me!")
+        assertFalse(buttonLink.isNull)
+        assertEquals(buttonLink.captured, "https://example.com")
+    }
+
+    @Test
+    fun `should track In-app message action with nulls - nonrich`() {
         every { Exponea.isInitialized } returns true
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
@@ -473,7 +529,33 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track In-app message action with nulls without consent`() {
+    fun `should track In-app message action with nulls - richstyled`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String?>()
+        val buttonLink = slot<String?>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls-richstyle.json").readText())
+        module.trackInAppMessageClick(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClick(
+                        capture(messageSlot),
+                        captureNullable(buttonText),
+                        captureNullable(buttonLink)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage(isRichstyle = true))
+        assertTrue(buttonText.isNull)
+        assertTrue(buttonLink.isNull)
+    }
+
+    @Test
+    fun `should track In-app message action with nulls without consent - nonrich`() {
         every { Exponea.isInitialized } returns true
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
@@ -499,7 +581,33 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track complete In-app message close`() {
+    fun `should track In-app message action with nulls without consent - richstyled`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String?>()
+        val buttonLink = slot<String?>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls-richstyle.json").readText())
+        module.trackInAppMessageClickWithoutTrackingConsent(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClickWithoutTrackingConsent(
+                        capture(messageSlot),
+                        captureNullable(buttonText),
+                        captureNullable(buttonLink)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage(isRichstyle = true))
+        assertTrue(buttonText.isNull)
+        assertTrue(buttonLink.isNull)
+    }
+
+    @Test
+    fun `should track complete In-app message close - nonrich`() {
         every { Exponea.isInitialized } returns true
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
@@ -527,7 +635,35 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track complete In-app message close without consent`() {
+    fun `should track complete In-app message close - richstyled`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String>()
+        val interaction = slot<Boolean>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete-richstyle.json").readText())
+        module.trackInAppMessageClose(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClose(
+                        capture(messageSlot),
+                        capture(buttonText),
+                        capture(interaction)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage(isRichstyle = true))
+        assertFalse(buttonText.isNull)
+        assertEquals(buttonText.captured, "Click me!")
+        assertFalse(interaction.isNull)
+        assertEquals(interaction.captured, true)
+    }
+
+    @Test
+    fun `should track complete In-app message close without consent - nonrich`() {
         every { Exponea.isInitialized } returns true
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
@@ -548,6 +684,34 @@ internal class ExponeaModuleTrackingTest {
         assertTrue(messageSlot.isCaptured)
         assertFalse(messageSlot.isNull)
         assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertFalse(buttonText.isNull)
+        assertEquals(buttonText.captured, "Click me!")
+        assertFalse(interaction.isNull)
+        assertEquals(interaction.captured, true)
+    }
+
+    @Test
+    fun `should track complete In-app message close without consent - richstyled`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String>()
+        val interaction = slot<Boolean>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete-richstyle.json").readText())
+        module.trackInAppMessageCloseWithoutTrackingConsent(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageCloseWithoutTrackingConsent(
+                        capture(messageSlot),
+                        capture(buttonText),
+                        capture(interaction)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage(isRichstyle = true))
         assertFalse(buttonText.isNull)
         assertEquals(buttonText.captured, "Click me!")
         assertFalse(interaction.isNull)
@@ -584,7 +748,7 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track minimal In-app message close`() {
+    fun `should track minimal In-app message close - nonrich`() {
         every { Exponea.isInitialized } returns true
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
@@ -611,7 +775,34 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `should track minimal In-app message close without consent`() {
+    fun `should track minimal In-app message close - richstyled`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String?>()
+        val interaction = slot<Boolean>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal-richstyle.json").readText())
+        module.trackInAppMessageClose(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageClose(
+                        capture(messageSlot),
+                        captureNullable(buttonText),
+                        capture(interaction)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage(isRichstyle = true))
+        assertTrue(buttonText.isNull)
+        assertFalse(interaction.isNull)
+        assertEquals(interaction.captured, false)
+    }
+
+    @Test
+    fun `should track minimal In-app message close without consent - nonrich`() {
         every { Exponea.isInitialized } returns true
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
@@ -632,6 +823,33 @@ internal class ExponeaModuleTrackingTest {
         assertTrue(messageSlot.isCaptured)
         assertFalse(messageSlot.isNull)
         assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage())
+        assertTrue(buttonText.isNull)
+        assertFalse(interaction.isNull)
+        assertEquals(interaction.captured, false)
+    }
+
+    @Test
+    fun `should track minimal In-app message close without consent - richstyled`() {
+        every { Exponea.isInitialized } returns true
+        val messageSlot = slot<InAppMessage>()
+        val buttonText = slot<String?>()
+        val interaction = slot<Boolean>()
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal-richstyle.json").readText())
+        module.trackInAppMessageCloseWithoutTrackingConsent(
+            params = data as ReadableMap,
+            promise = MockResolvingPromise {
+                verify {
+                    Exponea.trackInAppMessageCloseWithoutTrackingConsent(
+                        capture(messageSlot),
+                        captureNullable(buttonText),
+                        capture(interaction)
+                    )
+                }
+            }
+        )
+        assertTrue(messageSlot.isCaptured)
+        assertFalse(messageSlot.isNull)
+        assertEquals(messageSlot.captured, InAppMessageTestData.buildInAppMessage(isRichstyle = true))
         assertTrue(buttonText.isNull)
         assertFalse(interaction.isNull)
         assertEquals(interaction.captured, false)

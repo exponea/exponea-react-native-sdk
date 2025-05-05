@@ -18,62 +18,62 @@ TestUtils.mockExponeaNative()
 export class MockExponea implements ExponeaType {
     lastArgumentsJson = '';
     configure(configuration: Configuration): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([configuration]);
+        this.lastArgumentsJson = JSON.stringify([configuration], withoutNulls);
         return Promise.resolve();
     }
 
     isConfigured(): Promise<boolean> {
-        this.lastArgumentsJson = JSON.stringify([]);
+        this.lastArgumentsJson = JSON.stringify([], withoutNulls);
         return Promise.resolve(true);
     }
 
     getCustomerCookie(): Promise<string> {
-        this.lastArgumentsJson = JSON.stringify([]);
+        this.lastArgumentsJson = JSON.stringify([], withoutNulls);
         return Promise.resolve('mock-customer-cookie');
     }
 
     checkPushSetup(): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([]);
+        this.lastArgumentsJson = JSON.stringify([], withoutNulls);
         return Promise.resolve();
     }
 
     getFlushMode(): Promise<FlushMode> {
-        this.lastArgumentsJson = JSON.stringify([]);
+        this.lastArgumentsJson = JSON.stringify([], withoutNulls);
         return Promise.resolve(FlushMode.PERIOD);
     }
 
     setFlushMode(flushingMode: FlushMode): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([flushingMode]);
+        this.lastArgumentsJson = JSON.stringify([flushingMode], withoutNulls);
         return Promise.resolve();
     }
 
     getFlushPeriod(): Promise<number> {
-        this.lastArgumentsJson = JSON.stringify([]);
+        this.lastArgumentsJson = JSON.stringify([], withoutNulls);
         return Promise.resolve(123);
     }
 
     setFlushPeriod(period: number): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([period]);
+        this.lastArgumentsJson = JSON.stringify([period], withoutNulls);
         return Promise.resolve();
     }
 
     getLogLevel(): Promise<LogLevel> {
-        this.lastArgumentsJson = JSON.stringify([]);
+        this.lastArgumentsJson = JSON.stringify([], withoutNulls);
         return Promise.resolve(LogLevel.INFO);
     }
 
     setLogLevel(loggerLevel: LogLevel): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([loggerLevel]);
+        this.lastArgumentsJson = JSON.stringify([loggerLevel], withoutNulls);
         return Promise.resolve();
     }
 
     getDefaultProperties(): Promise<JsonObject> {
-        this.lastArgumentsJson = JSON.stringify([]);
+        this.lastArgumentsJson = JSON.stringify([], withoutNulls);
         return Promise.resolve({});
     }
 
     setDefaultProperties(properties: JsonObject): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([properties]);
+        this.lastArgumentsJson = JSON.stringify([properties], withoutNulls);
         return Promise.resolve();
     }
 
@@ -81,7 +81,7 @@ export class MockExponea implements ExponeaType {
         exponeaProject?: ExponeaProject,
         projectMapping?: {[key in EventType]?: Array<ExponeaProject>},
     ): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([exponeaProject, projectMapping]);
+        this.lastArgumentsJson = JSON.stringify([exponeaProject, projectMapping], withoutNulls);
         return Promise.resolve();
     }
 
@@ -89,12 +89,12 @@ export class MockExponea implements ExponeaType {
         customerIds: Record<string, string>,
         properties: JsonObject,
     ): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([customerIds, properties]);
+        this.lastArgumentsJson = JSON.stringify([customerIds, properties], withoutNulls);
         return Promise.resolve();
     }
 
     flushData(): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([]);
+        this.lastArgumentsJson = JSON.stringify([], withoutNulls);
         return Promise.resolve();
     }
 
@@ -103,22 +103,22 @@ export class MockExponea implements ExponeaType {
         properties: JsonObject,
         timestamp?: number,
     ): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([eventName, properties, timestamp]);
+        this.lastArgumentsJson = JSON.stringify([eventName, properties, timestamp], withoutNulls);
         return Promise.resolve();
     }
 
     trackSessionStart(timestamp?: number): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([timestamp]);
+        this.lastArgumentsJson = JSON.stringify([timestamp], withoutNulls);
         return Promise.resolve();
     }
 
     trackSessionEnd(timestamp?: number): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([timestamp]);
+        this.lastArgumentsJson = JSON.stringify([timestamp], withoutNulls);
         return Promise.resolve();
     }
 
     fetchConsents(): Promise<Array<Consent>> {
-        this.lastArgumentsJson = JSON.stringify([]);
+        this.lastArgumentsJson = JSON.stringify([], withoutNulls);
         return Promise.resolve([
             {
                 id: 'mock-consent-id',
@@ -142,7 +142,7 @@ export class MockExponea implements ExponeaType {
     fetchRecommendations(
         options: RecommendationOptions,
     ): Promise<Array<Recommendation>> {
-        this.lastArgumentsJson = JSON.stringify([options]);
+        this.lastArgumentsJson = JSON.stringify([options], withoutNulls);
         return Promise.resolve([
             {
                 engineName: 'mock-engine-name',
@@ -173,7 +173,7 @@ export class MockExponea implements ExponeaType {
     }
 
     setAppInboxProvider(withStyle: AppInboxStyle): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify([withStyle]);
+        this.lastArgumentsJson = JSON.stringify([withStyle], withoutNulls);
         return Promise.resolve();
     }
 
@@ -280,7 +280,7 @@ export class MockExponea implements ExponeaType {
         buttonText: string|undefined,
         buttonUrl: string|undefined
     ): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify(InAppMessageActionDef.buildForClick(message, buttonText, buttonUrl));
+        this.lastArgumentsJson = JSON.stringify(InAppMessageActionDef.buildForClick(message, buttonText, buttonUrl), withoutNulls);
         return Promise.resolve()
     }
 
@@ -289,7 +289,7 @@ export class MockExponea implements ExponeaType {
         buttonText: string|null|undefined,
         buttonUrl: string|null|undefined
     ): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify(InAppMessageActionDef.buildForClick(message, buttonText, buttonUrl));
+        this.lastArgumentsJson = JSON.stringify(InAppMessageActionDef.buildForClick(message, buttonText, buttonUrl), withoutNulls);
         return Promise.resolve();
     }
 
@@ -298,7 +298,7 @@ export class MockExponea implements ExponeaType {
         buttonText: string|null|undefined,
         interaction: boolean
     ): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify(InAppMessageActionDef.buildForClose(message, buttonText, interaction));
+        this.lastArgumentsJson = JSON.stringify(InAppMessageActionDef.buildForClose(message, buttonText, interaction), withoutNulls);
         return Promise.resolve();
     }
 
@@ -307,7 +307,7 @@ export class MockExponea implements ExponeaType {
         buttonText: string|null|undefined,
         interaction: boolean
     ): Promise<void> {
-        this.lastArgumentsJson = JSON.stringify(InAppMessageActionDef.buildForClose(message, buttonText, interaction));
+        this.lastArgumentsJson = JSON.stringify(InAppMessageActionDef.buildForClose(message, buttonText, interaction), withoutNulls);
         return Promise.resolve();
     }
 
@@ -352,7 +352,7 @@ export class MockExponea implements ExponeaType {
     }
 
     getSegments(exposingCategory: string, force?: boolean): Promise<Array<Segment>> {
-        this.lastArgumentsJson = JSON.stringify({exposingCategory, force});
+        this.lastArgumentsJson = JSON.stringify({exposingCategory, force}, withoutNulls);
         return Promise.resolve([]);
     }
 
@@ -360,14 +360,14 @@ export class MockExponea implements ExponeaType {
         this.lastArgumentsJson = JSON.stringify({
             exposingCategory: callback.exposingCategory,
             includeFirstLoad: callback.includeFirstLoad
-        })
+        }, withoutNulls)
     }
 
     unregisterSegmentationDataCallback(callback: SegmentationDataCallback): void {
         this.lastArgumentsJson = JSON.stringify({
             exposingCategory: callback.exposingCategory,
             includeFirstLoad: callback.includeFirstLoad
-        })
+        }, withoutNulls)
     }
 
     simulateEmit(eventName: string, eventData: string) {
@@ -380,3 +380,7 @@ export class MockExponea implements ExponeaType {
         }
     }
 }
+function withoutNulls(this: any, key: string, value: any) {
+    if (value !== null) return value
+}
+

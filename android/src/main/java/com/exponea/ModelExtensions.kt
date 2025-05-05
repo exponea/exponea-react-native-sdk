@@ -1,28 +1,20 @@
 package com.exponea
 
-import com.exponea.ExponeaModule.ExponeaDataException
 import com.exponea.sdk.models.CampaignData
 import com.exponea.sdk.models.DateFilter
 import com.exponea.sdk.models.InAppContentBlock
 import com.exponea.sdk.models.InAppContentBlockAction
 import com.exponea.sdk.models.InAppMessage
 import com.exponea.sdk.models.InAppMessageButton
-import com.exponea.sdk.models.InAppMessagePayload
-import com.exponea.sdk.models.InAppMessagePayloadButton
 import com.exponea.sdk.models.MessageItem
 import com.exponea.sdk.models.MessageItemAction
 import com.exponea.sdk.models.MessageItemAction.Type
 import com.exponea.sdk.models.NotificationAction
 import com.exponea.sdk.models.NotificationData
 import com.exponea.sdk.models.PurchasedItem
-import com.exponea.sdk.models.eventfilter.EventFilter
-import com.exponea.sdk.models.eventfilter.EventFilterAttribute
-import com.exponea.sdk.models.eventfilter.EventFilterConstraint
-import com.exponea.sdk.models.eventfilter.EventPropertyFilter
-import com.exponea.sdk.models.eventfilter.PropertyAttribute
-import com.exponea.sdk.models.eventfilter.TimestampAttribute
 import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.GdprTracking
+import com.exponea.sdk.util.Logger
 
 internal fun Map<String, Any?>.toMessageItem(): MessageItem? {
     val id = this.getNullSafely("id", String::class)
@@ -76,27 +68,12 @@ internal fun Map<String, Any?>.toInAppMessageButton(): InAppMessageButton {
 }
 
 internal fun Map<String, Any?>.toInAppMessage(): InAppMessage? {
-    val source = this
-    val dateFilter = source.getNullSafelyMap<Any>("date_filter")?.toDateFilter() ?: return null
-    return InAppMessage(
-        id = source.getRequired("id"),
-        name = source.getRequired("name"),
-        rawMessageType = source.getNullSafely("message_type"),
-        rawFrequency = source.getRequired("frequency"),
-        payload = source.getNullSafelyMap<Any>("payload")?.toInAppMessagePayload(),
-        variantId = source.getRequired("variant_id"),
-        variantName = source.getRequired("variant_name"),
-        trigger = source.getNullSafelyMap<Any>("trigger")?.toEventFilter(),
-        dateFilter = dateFilter,
-        priority = source.getNullSafely("load_priority"),
-        delay = source.getNullSafely("load_delay"),
-        timeout = source.getNullSafely("close_timeout"),
-        payloadHtml = source.getNullSafely("payload_html"),
-        isHtml = source.getNullSafely("is_html"),
-        rawHasTrackingConsent = source.getNullSafely("has_tracking_consent"),
-        consentCategoryTracking = source.getNullSafely("consent_category_tracking"),
-        isRichText = source.getNullSafely("is_rich_text")
-    )
+    try {
+        return ExponeaGson.instance.fromJson(ExponeaGson.instance.toJson(this), InAppMessage::class.java)
+    } catch (e: Exception) {
+        Logger.e(this, "Unable to parse InAppMessage", e)
+        return null
+    }
 }
 
 internal fun Map<String, Any?>.toInAppContentBlock(): InAppContentBlock? {
@@ -130,78 +107,6 @@ internal fun Map<String, Any?>.toDateFilter(): DateFilter {
         enabled = source.getRequired("enabled"),
         fromDate = source.getNullSafely("from_date"),
         toDate = source.getNullSafely("to_date")
-    )
-}
-
-internal fun Map<String, Any?>.toEventFilter(): EventFilter {
-    val source = this
-    EventFilter
-    return EventFilter(
-        eventType = source.getRequired("event_type"),
-        filter = source
-            .getNullSafelyArray<Map<String, Any?>>("filter")
-            ?.mapNotNull { it.toEventPropertyFilter() }
-            ?: emptyList()
-    )
-}
-
-internal fun Map<String, Any?>.toEventPropertyFilter(): EventPropertyFilter? {
-    val source = this
-    val attribute = source.getNullSafelyMap<Any>("attribute")?.toEventFilterAttribute() ?: return null
-    val constraint = source.getNullSafelyMap<Any>("constraint")?.toEventFilterConstraint() ?: return null
-    return EventPropertyFilter(
-        attribute = attribute,
-        constraint = constraint
-    )
-}
-
-internal fun Map<String, Any?>.toEventFilterAttribute(): EventFilterAttribute {
-    val source = this
-    val type: String = source.getRequired("type")
-    return when (type) {
-        "timestamp" -> TimestampAttribute()
-        "property" -> PropertyAttribute(property = source.getRequired("property"))
-        else -> {
-            throw ExponeaDataException(
-                "Required property 'type' not supported"
-            )
-        }
-    }
-}
-
-internal fun Map<String, Any?>.toEventFilterConstraint(): EventFilterConstraint {
-    return ExponeaGson.instance.fromJson(ExponeaGson.instance.toJson(this), EventFilterConstraint::class.java)
-}
-
-internal fun Map<String, Any?>.toInAppMessagePayload(): InAppMessagePayload {
-    val source = this
-    return InAppMessagePayload(
-        imageUrl = source.getNullSafely("image_url"),
-        title = source.getNullSafely("title"),
-        titleTextColor = source.getNullSafely("title_text_color"),
-        titleTextSize = source.getNullSafely("title_text_size"),
-        bodyText = source.getNullSafely("body_text"),
-        bodyTextColor = source.getNullSafely("body_text_color"),
-        bodyTextSize = source.getNullSafely("body_text_size"),
-        buttons = source
-            .getNullSafelyArray<Map<String, Any?>>("buttons")?.map { it.toInAppMessagePayloadButton() },
-        backgroundColor = source.getNullSafely("background_color"),
-        closeButtonIconColor = source.getNullSafely("close_button_color"),
-        closeButtonBackgroundColor = source.getNullSafely("close_button_background_color"),
-        textPosition = source.getNullSafely("text_position"),
-        isTextOverImage = source.getNullSafely("text_over_image"),
-        messagePosition = source.getNullSafely("message_position")
-    )
-}
-
-internal fun Map<String, Any?>.toInAppMessagePayloadButton(): InAppMessagePayloadButton {
-    val source = this
-    return InAppMessagePayloadButton(
-        rawType = source.getNullSafely("button_type"),
-        text = source.getNullSafely("button_text"),
-        link = source.getNullSafely("button_link"),
-        backgroundColor = source.getNullSafely("button_background_color"),
-        textColor = source.getNullSafely("button_text_color")
     )
 }
 

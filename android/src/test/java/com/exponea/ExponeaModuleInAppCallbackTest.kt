@@ -36,7 +36,7 @@ internal class ExponeaModuleInAppCallbackTest {
     }
 
     @Test
-    fun `should notify listener when in app message is shown`() {
+    fun `should notify listener when in app message is shown - nonrich`() {
         ExponeaModule.pendingInAppAction = InAppMessageAction(
             message = InAppMessageTestData.buildInAppMessage(),
             type = InAppMessageActionType.SHOW
@@ -58,7 +58,7 @@ internal class ExponeaModuleInAppCallbackTest {
     }
 
     @Test
-    fun `should notify listener when in app message is clicked`() {
+    fun `should notify listener when in app message is clicked - nonrich`() {
         ExponeaModule.pendingInAppAction = InAppMessageAction(
             message = InAppMessageTestData.buildInAppMessage(),
             button = InAppMessageTestData.buildInAppMessageButton(),
@@ -82,7 +82,7 @@ internal class ExponeaModuleInAppCallbackTest {
     }
 
     @Test
-    fun `should notify listener when in app message is closed`() {
+    fun `should notify listener when in app message is closed - nonrich`() {
         ExponeaModule.pendingInAppAction = InAppMessageAction(
             message = InAppMessageTestData.buildInAppMessage(),
             button = InAppMessageTestData.buildInAppMessageButton(url = null),
@@ -108,7 +108,7 @@ internal class ExponeaModuleInAppCallbackTest {
     }
 
     @Test
-    fun `should notify listener when in app message is closed without button`() {
+    fun `should notify listener when in app message is closed without button - nonrich`() {
         ExponeaModule.pendingInAppAction = InAppMessageAction(
             message = InAppMessageTestData.buildInAppMessage(),
             button = null,
@@ -134,7 +134,7 @@ internal class ExponeaModuleInAppCallbackTest {
     }
 
     @Test
-    fun `should notify listener when in app message process faced error`() {
+    fun `should notify listener when in app message process faced error - nonrich`() {
         val expectedErrorMessage = "Something goes wrong"
         ExponeaModule.pendingInAppAction = InAppMessageAction(
             errorMessage = expectedErrorMessage,
@@ -158,7 +158,7 @@ internal class ExponeaModuleInAppCallbackTest {
     }
 
     @Test
-    fun `should notify listener when in app message faced error`() {
+    fun `should notify listener when in app message faced error - nonrich`() {
         val expectedErrorMessage = "Something goes wrong"
         ExponeaModule.pendingInAppAction = InAppMessageAction(
             message = InAppMessageTestData.buildInAppMessage(),
@@ -176,6 +176,129 @@ internal class ExponeaModuleInAppCallbackTest {
         verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
         Exponea.inAppMessageActionCallback.inAppMessageError(
             message = InAppMessageTestData.buildInAppMessage(),
+            errorMessage = expectedErrorMessage,
+            ApplicationProvider.getApplicationContext()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+    }
+
+    @Test
+    fun `should notify listener when in app message is shown - richstyled`() {
+        ExponeaModule.pendingInAppAction = InAppMessageAction(
+            message = InAppMessageTestData.buildInAppMessage(isRichstyle = true),
+            type = InAppMessageActionType.SHOW
+        )
+        module.onInAppMessageCallbackSet(
+            overrideDefaultBehavior = true,
+            trackActions = false,
+            MockResolvingPromise {}
+        )
+        val expectedInAppActionData = TestJsonParser.minify(
+            File("../src/test_data/in-app-shown-richstyle.json").readText()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+        Exponea.inAppMessageActionCallback.inAppMessageShown(
+            InAppMessageTestData.buildInAppMessage(isRichstyle = true),
+            ApplicationProvider.getApplicationContext()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+    }
+
+    @Test
+    fun `should notify listener when in app message is clicked - richstyled`() {
+        ExponeaModule.pendingInAppAction = InAppMessageAction(
+            message = InAppMessageTestData.buildInAppMessage(isRichstyle = true),
+            button = InAppMessageTestData.buildInAppMessageButton(),
+            type = InAppMessageActionType.ACTION
+        )
+        module.onInAppMessageCallbackSet(
+            overrideDefaultBehavior = true,
+            trackActions = false,
+            MockResolvingPromise {}
+        )
+        val expectedInAppActionData = TestJsonParser.minify(
+            File("../src/test_data/in-app-click-minimal-richstyle.json").readText()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+        Exponea.inAppMessageActionCallback.inAppMessageClickAction(
+            InAppMessageTestData.buildInAppMessage(isRichstyle = true),
+            InAppMessageTestData.buildInAppMessageButton(),
+            ApplicationProvider.getApplicationContext()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+    }
+
+    @Test
+    fun `should notify listener when in app message is closed - richstyled`() {
+        ExponeaModule.pendingInAppAction = InAppMessageAction(
+            message = InAppMessageTestData.buildInAppMessage(isRichstyle = true),
+            button = InAppMessageTestData.buildInAppMessageButton(url = null),
+            interaction = true,
+            type = InAppMessageActionType.CLOSE
+        )
+        module.onInAppMessageCallbackSet(
+            overrideDefaultBehavior = true,
+            trackActions = false,
+            MockResolvingPromise {}
+        )
+        val expectedInAppActionData = TestJsonParser.minify(
+            File("../src/test_data/in-app-close-complete-richstyle.json").readText()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+        Exponea.inAppMessageActionCallback.inAppMessageCloseAction(
+            InAppMessageTestData.buildInAppMessage(isRichstyle = true),
+            InAppMessageTestData.buildInAppMessageButton(url = null),
+            interaction = true,
+            ApplicationProvider.getApplicationContext()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+    }
+
+    @Test
+    fun `should notify listener when in app message is closed without button - richstyled`() {
+        ExponeaModule.pendingInAppAction = InAppMessageAction(
+            message = InAppMessageTestData.buildInAppMessage(isRichstyle = true),
+            button = null,
+            interaction = false,
+            type = InAppMessageActionType.CLOSE
+        )
+        module.onInAppMessageCallbackSet(
+            overrideDefaultBehavior = true,
+            trackActions = false,
+            MockResolvingPromise {}
+        )
+        val expectedInAppActionData = TestJsonParser.minify(
+            File("../src/test_data/in-app-close-minimal-richstyle.json").readText()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+        Exponea.inAppMessageActionCallback.inAppMessageCloseAction(
+            InAppMessageTestData.buildInAppMessage(isRichstyle = true),
+            button = null,
+            interaction = true,
+            ApplicationProvider.getApplicationContext()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+    }
+
+    @Test
+    fun `should notify listener when in app message faced error - richstyled`() {
+        val expectedErrorMessage = "Something goes wrong"
+        ExponeaModule.pendingInAppAction = InAppMessageAction(
+            message = InAppMessageTestData.buildInAppMessage(isRichstyle = true),
+            errorMessage = expectedErrorMessage,
+            type = InAppMessageActionType.ERROR
+        )
+        module.onInAppMessageCallbackSet(
+            overrideDefaultBehavior = true,
+            trackActions = false,
+            MockResolvingPromise {}
+        )
+        val expectedInAppActionData = TestJsonParser.minify(
+            File("../src/test_data/in-app-error-complete-richstyle.json").readText()
+        )
+        verify { eventEmmiter.emit("inAppAction", expectedInAppActionData) }
+        Exponea.inAppMessageActionCallback.inAppMessageError(
+            message = InAppMessageTestData.buildInAppMessage(isRichstyle = true),
             errorMessage = expectedErrorMessage,
             ApplicationProvider.getApplicationContext()
         )
