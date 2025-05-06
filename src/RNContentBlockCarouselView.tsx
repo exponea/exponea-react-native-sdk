@@ -15,7 +15,7 @@ export interface ContentBlockCarouselEvent {
 
 export interface ContentBlockDataRequestEvent {
     requestType: string;
-    data: InAppContentBlock[];
+    data: string[];
 }
 
 export interface ContentBlockCarouselInitProps {

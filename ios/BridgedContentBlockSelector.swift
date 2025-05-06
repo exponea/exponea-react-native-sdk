@@ -28,7 +28,8 @@ class BridgedContentBlockSelector {
         filterRequestFn(input)
         let responseData = filterResponse?.retrieveFirstOrNull(timeout: responseTimeout) ?? input
         filterResponse = nil
-        return responseData
+        let filteredResponseData = retrieveMatchingById(input, responseData)
+        return filteredResponseData
     }
 
     func sortContentBlocks(_ input: [InAppContentBlockResponse]) -> [InAppContentBlockResponse] {
@@ -39,7 +40,8 @@ class BridgedContentBlockSelector {
         sortRequestFn(input)
         let responseData = sortResponse?.retrieveFirstOrNull(timeout: responseTimeout) ?? input
         sortResponse = nil
-        return responseData
+        let sortedResponseData = retrieveMatchingById(input, responseData)
+        return sortedResponseData
     }
 
     func onContentFilterResponse(_ responseData: [InAppContentBlockResponse]) {
@@ -48,5 +50,19 @@ class BridgedContentBlockSelector {
 
     func onContentSortResponse(_ responseData: [InAppContentBlockResponse]) {
         sortResponse?.send(responseData)
+    }
+
+    private func retrieveMatchingById(
+        _ source: [InAppContentBlockResponse],
+        _ truth: [InAppContentBlockResponse]
+    ) -> [InAppContentBlockResponse] {
+        let idsToMatch = truth.map { $0.id }
+        return source
+            .filter { eachInSource in
+                return idsToMatch.contains(eachInSource.id)
+            }
+            .sorted {
+                idsToMatch.firstIndex(of: $0.id) ?? -1 < idsToMatch.firstIndex(of: $1.id) ?? -1
+            }
     }
 }

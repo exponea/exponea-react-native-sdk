@@ -93,20 +93,25 @@ export default function ContentBlockCarouselView(
     }
     function _onContentBlockDataRequestEvent(event: NativeSyntheticEvent<ContentBlockDataRequestEvent>) {
         const nativeEvent: ContentBlockDataRequestEvent = event.nativeEvent
-        let response: InAppContentBlock[] = nativeEvent.data
+        let response: InAppContentBlock[] = nativeEvent.data.map((each) => {
+            return JSON.parse(each)
+        })
         switch(nativeEvent.requestType) {
             case 'filter':
-                response = (filterContentBlocksFn && filterContentBlocksFn(nativeEvent.data)) ?? nativeEvent.data
+                response = (filterContentBlocksFn && filterContentBlocksFn(response)) ?? response
                 break;
             case 'sort':
-                response = (sortContentBlocksFn && sortContentBlocksFn(nativeEvent.data)) ?? nativeEvent.data
+                response = (sortContentBlocksFn && sortContentBlocksFn(response)) ?? response
                 break;
         }
+        const normalisedResponse = response.map((each) => {
+            return JSON.stringify(each)
+        })
         const viewId = findNodeHandle(ref.current);
         UIManager.dispatchViewManagerCommand(
             viewId,
             nativeEvent.requestType + 'Response',
-            [response]
+            [normalisedResponse]
         )
     }
     function _mergeViewStyle(): StyleProp<ViewStyle> {

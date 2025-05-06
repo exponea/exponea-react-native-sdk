@@ -141,6 +141,20 @@ export default function InAppCbScreen(): React.ReactElement {
             }}
             overrideDefaultBehavior={false}
             trackActions={true}
+            filterContentBlocks={(source) => {
+              console.log(`Before custom CBs filtering ${source.length}`)
+              let filtered = source.filter((item) => {
+                return item.name?.toLowerCase().indexOf('discarded') < 0
+              })
+              console.log(`After custom CBs filtering = ${filtered.length}`)
+              return filtered
+            }}
+            sortContentBlocks={(source) => {
+              console.log(`Before custom CBs sorting ${JSON.stringify(source)}`)
+              let sorted = source.reverse()
+              console.log(`After custom CBs sorting ${JSON.stringify(sorted)}`)
+              return sorted
+            }}
           />
           <Text>Showing {carouselStatus.name} as {carouselStatus.index + 1} of {carouselStatus.count}</Text>
       <Text>Placeholder: example_top</Text>
