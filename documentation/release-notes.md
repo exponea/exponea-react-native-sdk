@@ -11,6 +11,20 @@ parentDocSlug: react-native-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 2.2.0
+#### May 06, 2025
+* Added:
+  * Describes the SDK integration and Rich Push Notifications configuration for Expo managed application.
+  * Adds support for React Native 0.78.2.
+  * Adds support for multiple In-App Content Blocks in the same placeholder through ContentBlockCarouselView. The SDK will loop through the content blocks one at a time in order of the configured Priority.
+  * Adds rich styling support for native in-app messages.
+  * Updates native iOS SDK to 3.4.0 and native Android SDK to 4.4.0.
+  * Adds documentation improvements.
+* Fixed:
+  * Fixes segmentations listener registration on RN side.
+  * Fixes and updates some links in documentation.
+
+
 ## Release Notes for 2.1.0
 #### January 23, 2025
 * Added:
