@@ -94,7 +94,7 @@ The app provides several screens, accessible using the bottom navigation, to tes
   > [AnonymizeModal.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/AnonymizeModal.tsx)
 
 - The **Config** screen enables you to configure default properties to track with any event. The `Default properties` button opens a modal that lists the current default properties and enables you to enter new ones.
-  > [ConfigScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/ConfigScreen.tsx)
+  > [TrackingScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/TrackingScreen.tsx)
   > [DefaultPropertiesModal.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/DefaultPropertiesModal.tsx)
 
 - The **In-App Content Blocks** screens displays in-app content blocks. Use placeholder IDs `example_top`, `ph_x_example_iOS`, and `example_list` in your in-app content block settings.
