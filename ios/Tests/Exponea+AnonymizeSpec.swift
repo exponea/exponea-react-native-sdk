@@ -35,9 +35,8 @@ class ExponeaAnonymizeSpec: QuickSpec {
                     projectMappingDictionary: [:],
                     resolve: { result in
                         expect(result).to(beNil())
-                        expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                        expect(mockExponea.calls[1].name).to(equal("anonymize"))
-                        expect(mockExponea.calls[1].params.count).to(equal(0))
+                        expect(mockExponea.calls[0].name).to(equal("anonymize"))
+                        expect(mockExponea.calls[0].params.count).to(equal(0))
                         done()
                     },
                     reject: { _, _, _ in }
@@ -59,16 +58,15 @@ class ExponeaAnonymizeSpec: QuickSpec {
                     projectMappingDictionary: [:],
                     resolve: { result in
                         expect(result).to(beNil())
-                        expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                        expect(mockExponea.calls[1].name).to(equal("configuration:get"))
-                        expect(mockExponea.calls[2].name).to(equal("anonymize"))
-                        expect(mockExponea.calls[2].params[0] as? ExponeaProject)
+                        expect(mockExponea.calls[0].name).to(equal("configuration:get"))
+                        expect(mockExponea.calls[1].name).to(equal("anonymize"))
+                        expect(mockExponea.calls[1].params[0] as? ExponeaProject)
                             .to(equal(ExponeaProject(
                                 baseUrl: "mock-url",
                                 projectToken: "mock-project-token",
                                 authorization: .token("mock-auth-token")
                             )))
-                        expect(mockExponea.calls[2].params[1]).to(beNil())
+                        expect(mockExponea.calls[1].params[1]).to(beNil())
                         done()
                     },
                     reject: { _, _, _ in }
@@ -98,17 +96,16 @@ class ExponeaAnonymizeSpec: QuickSpec {
                     ],
                     resolve: { result in
                         expect(result).to(beNil())
-                        expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
+                        expect(mockExponea.calls[0].name).to(equal("configuration:get"))
                         expect(mockExponea.calls[1].name).to(equal("configuration:get"))
-                        expect(mockExponea.calls[2].name).to(equal("configuration:get"))
-                        expect(mockExponea.calls[3].name).to(equal("anonymize"))
-                        expect(mockExponea.calls[3].params[0] as? ExponeaProject)
+                        expect(mockExponea.calls[2].name).to(equal("anonymize"))
+                        expect(mockExponea.calls[2].params[0] as? ExponeaProject)
                             .to(equal(ExponeaProject(
                                 baseUrl: "mock-url",
                                 projectToken: "mock-project-token",
                                 authorization: .token("mock-auth-token")
                             )))
-                        expect(mockExponea.calls[3].params[1] as? [EventType: [ExponeaProject]])
+                        expect(mockExponea.calls[2].params[1] as? [EventType: [ExponeaProject]])
                             .to(equal([
                                 EventType.install: [
                                     ExponeaProject(
@@ -126,19 +123,18 @@ class ExponeaAnonymizeSpec: QuickSpec {
 
         }
 
-        it("should not anonymize when Exponea is not configured") {
+        it("should plan anonymize when Exponea is not configured") {
             waitUntil { done in
                 exponea.anonymize(
                     exponeaProjectDictionary: [:],
                     projectMappingDictionary: [:],
-                    resolve: { _ in },
-                    reject: { errorCode, description, error in
-                        expect(errorCode).to(equal("ExponeaSDK"))
-                        expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                        expect(error?.localizedDescription)
-                            .to(equal(ExponeaError.notConfigured.localizedDescription))
+                    resolve: { result in
+                        expect(result).to(beNil())
+                        expect(mockExponea.calls[0].name).to(equal("anonymize"))
+                        expect(mockExponea.calls[0].params.count).to(equal(0))
                         done()
-                    }
+                    },
+                    reject: { _, _, _ in }
                 )
             }
         }

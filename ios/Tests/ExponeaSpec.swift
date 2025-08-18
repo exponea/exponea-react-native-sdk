@@ -131,8 +131,7 @@ class ExponeaSpec: QuickSpec {
                     exponea.checkPushSetup(
                         resolve: { result in
                             expect(result).to(beNil())
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("checkPushSetup:set"))
+                            expect(mockExponea.calls[0].name).to(equal("checkPushSetup:set"))
                             expect(mockExponea.checkPushSetupValue).to(beTrue())
                             done()
                         },
@@ -141,18 +140,17 @@ class ExponeaSpec: QuickSpec {
                 }
             }
 
-            it("should not set checkPushSetupValue after Exponea is configured") {
+            it("should set checkPushSetupValue after Exponea is configured") {
                 mockExponea.isConfiguredValue = true
                 waitUntil { done in
                     exponea.checkPushSetup(
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.alreadyConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.alreadyConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            expect(mockExponea.calls[0].name).to(equal("checkPushSetup:set"))
+                            expect(mockExponea.checkPushSetupValue).to(beTrue())
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -312,9 +310,8 @@ class ExponeaSpec: QuickSpec {
                             properties: ["key": "value", "int": 1],
                             resolve: { result in
                                 expect(result).to(beNil())
-                                expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                                expect(mockExponea.calls[1].name).to(equal("defaultProperties:set"))
-                                expect(mockExponea.calls[1].params[0] as? NSDictionary).to(
+                                expect(mockExponea.calls[0].name).to(equal("defaultProperties:set"))
+                                expect(mockExponea.calls[0].params[0] as? NSDictionary).to(
                                     equal(["key": "value", "int": 1])
                                 )
                                 done()
@@ -324,18 +321,19 @@ class ExponeaSpec: QuickSpec {
                     }
                 }
 
-                it("should reject promise if Exponea is not configured") {
+                it("should set promise if Exponea is not configured") {
                     waitUntil { done in
                         exponea.setDefaultProperties(
                             properties: ["key": "value", "int": 1],
-                            resolve: { _ in },
-                            reject: { errorCode, description, error in
-                                expect(errorCode).to(equal("ExponeaSDK"))
-                                expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                                expect(error?.localizedDescription)
-                                    .to(equal(ExponeaError.notConfigured.localizedDescription))
+                            resolve: { result in
+                                expect(result).to(beNil())
+                                expect(mockExponea.calls[0].name).to(equal("defaultProperties:set"))
+                                expect(mockExponea.calls[0].params[0] as? NSDictionary).to(
+                                    equal(["key": "value", "int": 1])
+                                )
                                 done()
-                            }
+                            },
+                            reject: { _, _, _ in  }
                         )
                     }
                 }

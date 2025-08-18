@@ -40,10 +40,11 @@ internal class ExponeaModuleAnonymizeTest {
     }
 
     @Test
-    fun `anonymize should reject when Exponea SDK is not configured`() {
+    fun `anonymize should be invoked after init of Exponea SDK`() {
         every { Exponea.isInitialized } returns false
-        module.anonymize(JavaOnlyMap.of(), JavaOnlyMap.of(), MockRejectingPromise {
-            assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
+        every { Exponea.anonymize() } just Runs
+        module.anonymize(JavaOnlyMap.of(), JavaOnlyMap.of(), MockResolvingPromise {
+            verify { Exponea.anonymize() }
         })
     }
 

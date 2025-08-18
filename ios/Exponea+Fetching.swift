@@ -51,10 +51,6 @@ public struct AllRecommendationData: RecommendationUserData {
 extension Exponea {
     @objc(fetchConsents:reject:)
     func fetchConsents(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         Exponea.exponeaInstance.fetchConsents { result in
             switch result {
             case .success(let response):
@@ -89,10 +85,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             let options = RecommendationOptions(
                 id: try optionsDictionary.getRequiredSafely(property: "id"),

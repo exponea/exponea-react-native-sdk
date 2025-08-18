@@ -189,26 +189,22 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         customerIdsMap: ReadableMap,
         propertiesMap: ReadableMap,
         promise: Promise
-    ) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            val customerIds = CustomerIds()
-            customerIdsMap.toHashMap().forEach {
-                if (it.value is String) customerIds.withId(it.key, it.value as String)
-            }
-            @Suppress("UNCHECKED_CAST")
-            val properties = PropertiesList(
-                propertiesMap.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
-            )
-            Exponea.identifyCustomer(customerIds, properties)
-            promise.resolve(null)
+    ) = catchAndReject(promise) {
+        val customerIds = CustomerIds()
+        customerIdsMap.toHashMap().forEach {
+            if (it.value is String) customerIds.withId(it.key, it.value as String)
         }
+        @Suppress("UNCHECKED_CAST")
+        val properties = PropertiesList(
+            propertiesMap.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
+        )
+        Exponea.identifyCustomer(customerIds, properties)
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun flushData(promise: Promise) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            Exponea.flushData { promise.resolve(null) }
-        }
+    fun flushData(promise: Promise) = catchAndReject(promise) {
+        Exponea.flushData { promise.resolve(null) }
     }
 
     @ReactMethod
@@ -217,108 +213,98 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         params: ReadableMap,
         timestamp: ReadableMap,
         promise: Promise
-    ) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            @Suppress("UNCHECKED_CAST")
-            val propertiesList = PropertiesList(
-                params.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
-            )
-            var unwrappedTimestamp: Double? = null
-            if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
-                unwrappedTimestamp = timestamp.getDouble("timestamp")
-            }
-            Exponea.trackEvent(propertiesList, unwrappedTimestamp, eventName)
-            promise.resolve(null)
+    ) = catchAndReject(promise) {
+        @Suppress("UNCHECKED_CAST")
+        val propertiesList = PropertiesList(
+            params.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
+        )
+        var unwrappedTimestamp: Double? = null
+        if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
+            unwrappedTimestamp = timestamp.getDouble("timestamp")
         }
+        Exponea.trackEvent(propertiesList, unwrappedTimestamp, eventName)
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun trackSessionStart(timestamp: ReadableMap, promise: Promise) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
-                Exponea.trackSessionStart(timestamp.getDouble("timestamp"))
-            } else {
-                Exponea.trackSessionStart()
-            }
-            promise.resolve(null)
+    fun trackSessionStart(timestamp: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
+            Exponea.trackSessionStart(timestamp.getDouble("timestamp"))
+        } else {
+            Exponea.trackSessionStart()
         }
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun trackSessionEnd(timestamp: ReadableMap, promise: Promise) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
-                Exponea.trackSessionEnd(timestamp.getDouble("timestamp"))
-            } else {
-                Exponea.trackSessionEnd()
-            }
-            promise.resolve(null)
+    fun trackSessionEnd(timestamp: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        if (timestamp.hasKey("timestamp") && !timestamp.isNull("timestamp")) {
+            Exponea.trackSessionEnd(timestamp.getDouble("timestamp"))
+        } else {
+            Exponea.trackSessionEnd()
         }
+        promise.resolve(null)
     }
 
     @ReactMethod
-    fun fetchConsents(promise: Promise) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            Exponea.getConsents(
-                { response ->
-                    val result = arrayListOf<Map<String, Any>>()
-                    response.results.forEach { consent ->
-                        val consentMap = hashMapOf<String, Any>()
-                        consentMap["id"] = consent.id
-                        consentMap["legitimateInterest"] = consent.legitimateInterest
+    fun fetchConsents(promise: Promise) = catchAndReject(promise) {
+        Exponea.getConsents(
+            { response ->
+                val result = arrayListOf<Map<String, Any>>()
+                response.results.forEach { consent ->
+                    val consentMap = hashMapOf<String, Any>()
+                    consentMap["id"] = consent.id
+                    consentMap["legitimateInterest"] = consent.legitimateInterest
 
-                        val sourcesMap = hashMapOf<String, Any>()
-                        sourcesMap["createdFromCRM"] = consent.sources.createdFromCRM
-                        sourcesMap["imported"] = consent.sources.imported
-                        sourcesMap["privateAPI"] = consent.sources.privateAPI
-                        sourcesMap["publicAPI"] = consent.sources.publicAPI
-                        sourcesMap["trackedFromScenario"] = consent.sources.trackedFromScenario
+                    val sourcesMap = hashMapOf<String, Any>()
+                    sourcesMap["createdFromCRM"] = consent.sources.createdFromCRM
+                    sourcesMap["imported"] = consent.sources.imported
+                    sourcesMap["privateAPI"] = consent.sources.privateAPI
+                    sourcesMap["publicAPI"] = consent.sources.publicAPI
+                    sourcesMap["trackedFromScenario"] = consent.sources.trackedFromScenario
 
-                        consentMap["sources"] = sourcesMap
-                        consentMap["translations"] = consent.translations
+                    consentMap["sources"] = sourcesMap
+                    consentMap["translations"] = consent.translations
 
-                        result.add(consentMap)
-                    }
-                    // React native android bridge doesn't support arrays yet, we have to serialize the response
-                    promise.resolve(ExponeaGson.instance.toJson(result))
-                },
-                { promise.reject(ExponeaFetchException(it.results.message)) }
-            )
-        }
+                    result.add(consentMap)
+                }
+                // React native android bridge doesn't support arrays yet, we have to serialize the response
+                promise.resolve(ExponeaGson.instance.toJson(result))
+            },
+            { promise.reject(ExponeaFetchException(it.results.message)) }
+        )
     }
 
     @ReactMethod
-    fun fetchRecommendations(optionsReadableMap: ReadableMap, promise: Promise) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            val optionsMap = optionsReadableMap.toHashMapRecursively()
-            @Suppress("UNCHECKED_CAST")
-            val options = CustomerRecommendationOptions(
-                optionsMap.getSafely("id", String::class),
-                optionsMap.getSafely("fillWithRandom", Boolean::class),
-                if (optionsMap.containsKey("size")) optionsMap.getSafely("size", Double::class).toInt() else 10,
-                optionsMap["items"] as? Map<String, String>,
-                if (optionsMap.containsKey("noTrack")) optionsMap.getSafely("noTrack", Boolean::class) else null,
-                optionsMap["catalogAttributesWhitelist"] as? List<String>
-            )
-            Exponea.fetchRecommendation(
-                options,
-                { response ->
-                    val result = arrayListOf<Map<String, Any>>()
-                    response.results.forEach { recommendation ->
-                        val recommendationMap = hashMapOf<String, Any>()
-                        recommendationMap["engineName"] = recommendation.engineName
-                        recommendationMap["itemId"] = recommendation.itemId
-                        recommendationMap["recommendationId"] = recommendation.recommendationId
-                        recommendationMap["recommendationVariantId"] = recommendation.recommendationVariantId ?: ""
-                        recommendationMap["data"] = recommendation.data
-                        result.add(recommendationMap)
-                    }
-                    // React native android bridge doesn't support arrays yet, we have to serialize the response
-                    promise.resolve(ExponeaGson.instance.toJson(result))
-                },
-                { promise.reject(ExponeaFetchException(it.results.message)) }
-            )
-        }
+    fun fetchRecommendations(optionsReadableMap: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val optionsMap = optionsReadableMap.toHashMapRecursively()
+        @Suppress("UNCHECKED_CAST")
+        val options = CustomerRecommendationOptions(
+            optionsMap.getSafely("id", String::class),
+            optionsMap.getSafely("fillWithRandom", Boolean::class),
+            if (optionsMap.containsKey("size")) optionsMap.getSafely("size", Double::class).toInt() else 10,
+            optionsMap["items"] as? Map<String, String>,
+            if (optionsMap.containsKey("noTrack")) optionsMap.getSafely("noTrack", Boolean::class) else null,
+            optionsMap["catalogAttributesWhitelist"] as? List<String>
+        )
+        Exponea.fetchRecommendation(
+            options,
+            { response ->
+                val result = arrayListOf<Map<String, Any>>()
+                response.results.forEach { recommendation ->
+                    val recommendationMap = hashMapOf<String, Any>()
+                    recommendationMap["engineName"] = recommendation.engineName
+                    recommendationMap["itemId"] = recommendation.itemId
+                    recommendationMap["recommendationId"] = recommendation.recommendationId
+                    recommendationMap["recommendationVariantId"] = recommendation.recommendationVariantId ?: ""
+                    recommendationMap["data"] = recommendation.data
+                    result.add(recommendationMap)
+                }
+                // React native android bridge doesn't support arrays yet, we have to serialize the response
+                promise.resolve(ExponeaGson.instance.toJson(result))
+            },
+            { promise.reject(ExponeaFetchException(it.results.message)) }
+        )
     }
 
     @ReactMethod
@@ -326,33 +312,31 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         projectReadableMap: ReadableMap,
         mappingReadableMap: ReadableMap,
         promise: Promise
-    ) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            var exponeaProject: ExponeaProject? = null
-            if (projectReadableMap.hasKey("exponeaProject") && !projectReadableMap.isNull("exponeaProject")) {
-                exponeaProject = ConfigurationParser.parseExponeaProject(
-                    projectReadableMap.getMap("exponeaProject")!!.toHashMapRecursively(),
-                    configuration.baseURL
-                )
-            }
-            var projectMapping: Map<EventType, List<ExponeaProject>>? = null
-            if (mappingReadableMap.hasKey("projectMapping") && !mappingReadableMap.isNull("projectMapping")) {
-                projectMapping = ConfigurationParser.parseProjectMapping(
-                    mappingReadableMap.getMap("projectMapping")!!.toHashMapRecursively(),
-                    configuration.baseURL
-                )
-            }
-            if (exponeaProject != null && projectMapping != null) {
-                Exponea.anonymize(exponeaProject, projectMapping)
-            } else if (exponeaProject != null) {
-                Exponea.anonymize(exponeaProject)
-            } else if (projectMapping != null) {
-                Exponea.anonymize(projectRouteMap = projectMapping)
-            } else {
-                Exponea.anonymize()
-            }
-            promise.resolve(null)
+    ) = catchAndReject(promise) {
+        var exponeaProject: ExponeaProject? = null
+        if (projectReadableMap.hasKey("exponeaProject") && !projectReadableMap.isNull("exponeaProject")) {
+            exponeaProject = ConfigurationParser.parseExponeaProject(
+                projectReadableMap.getMap("exponeaProject")!!.toHashMapRecursively(),
+                configuration.baseURL
+            )
         }
+        var projectMapping: Map<EventType, List<ExponeaProject>>? = null
+        if (mappingReadableMap.hasKey("projectMapping") && !mappingReadableMap.isNull("projectMapping")) {
+            projectMapping = ConfigurationParser.parseProjectMapping(
+                mappingReadableMap.getMap("projectMapping")!!.toHashMapRecursively(),
+                configuration.baseURL
+            )
+        }
+        if (exponeaProject != null && projectMapping != null) {
+            Exponea.anonymize(exponeaProject, projectMapping)
+        } else if (exponeaProject != null) {
+            Exponea.anonymize(exponeaProject)
+        } else if (projectMapping != null) {
+            Exponea.anonymize(projectRouteMap = projectMapping)
+        } else {
+            Exponea.anonymize()
+        }
+        promise.resolve(null)
     }
 
     @ReactMethod
@@ -447,53 +431,47 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     }
 
     @ReactMethod
-    fun fetchAppInbox(promise: Promise) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            Exponea.fetchAppInbox { response ->
-                if (response == null) {
-                    promise.reject(ExponeaFetchException("AppInbox load failed. See logs"))
-                    @Suppress("LABEL_NAME_CLASH")
-                    return@fetchAppInbox
-                }
-                val result = response.map { it.toMap() }
-                // React native android bridge doesn't support arrays yet, we have to serialize the response
-                promise.resolve(ExponeaGson.instance.toJson(result))
+    fun fetchAppInbox(promise: Promise) = catchAndReject(promise) {
+        Exponea.fetchAppInbox { response ->
+            if (response == null) {
+                promise.reject(ExponeaFetchException("AppInbox load failed. See logs"))
+                @Suppress("LABEL_NAME_CLASH")
+                return@fetchAppInbox
             }
+            val result = response.map { it.toMap() }
+            // React native android bridge doesn't support arrays yet, we have to serialize the response
+            promise.resolve(ExponeaGson.instance.toJson(result))
         }
     }
 
     @ReactMethod
-    fun fetchAppInboxItem(messageId: String, promise: Promise) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            Exponea.fetchAppInboxItem(messageId = messageId) { messageItem ->
-                if (messageItem == null) {
-                    promise.reject(ExponeaFetchException("AppInbox message not found. See logs"))
-                    @Suppress("LABEL_NAME_CLASH")
-                    return@fetchAppInboxItem
-                }
-                // React native android bridge doesn't support arrays yet, we have to serialize the response
-                promise.resolve(ExponeaGson.instance.toJson(messageItem.toMap()))
+    fun fetchAppInboxItem(messageId: String, promise: Promise) = catchAndReject(promise) {
+        Exponea.fetchAppInboxItem(messageId = messageId) { messageItem ->
+            if (messageItem == null) {
+                promise.reject(ExponeaFetchException("AppInbox message not found. See logs"))
+                @Suppress("LABEL_NAME_CLASH")
+                return@fetchAppInboxItem
             }
+            // React native android bridge doesn't support arrays yet, we have to serialize the response
+            promise.resolve(ExponeaGson.instance.toJson(messageItem.toMap()))
         }
     }
 
     @ReactMethod
-    fun markAppInboxAsRead(messageData: ReadableMap, promise: Promise) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            val message = messageData.toHashMapRecursively().toMessageItem()
-            if (message == null) {
+    fun markAppInboxAsRead(messageData: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val message = messageData.toHashMapRecursively().toMessageItem()
+        if (message == null) {
+            promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
                 promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                return@catchAndReject
+                return@fetchAppInboxItem
             }
-            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
-                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
-                if (nativeMessage == null) {
-                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                    return@fetchAppInboxItem
-                }
-                Exponea.markAppInboxAsRead(nativeMessage) { markedAsRead ->
-                    promise.resolve(markedAsRead)
-                }
+            Exponea.markAppInboxAsRead(nativeMessage) { markedAsRead ->
+                promise.resolve(markedAsRead)
             }
         }
     }
@@ -503,47 +481,43 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         actionData: ReadableMap,
         messageData: ReadableMap,
         promise: Promise
-    ) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            val action = actionData.toHashMapRecursively().toMessageItemAction()
-            if (action == null) {
-                promise.reject(ExponeaDataException("AppInbox action data are invalid. See logs"))
-                return@catchAndReject
-            }
-            val message = messageData.toHashMapRecursively().toMessageItem()
-            if (message == null) {
+    ) = catchAndReject(promise) {
+        val action = actionData.toHashMapRecursively().toMessageItemAction()
+        if (action == null) {
+            promise.reject(ExponeaDataException("AppInbox action data are invalid. See logs"))
+            return@catchAndReject
+        }
+        val message = messageData.toHashMapRecursively().toMessageItem()
+        if (message == null) {
+            promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
                 promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                return@catchAndReject
+                return@fetchAppInboxItem
             }
-            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
-                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
-                if (nativeMessage == null) {
-                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                    return@fetchAppInboxItem
-                }
-                Exponea.trackAppInboxClick(action, nativeMessage)
-                promise.resolve(null)
-            }
+            Exponea.trackAppInboxClick(action, nativeMessage)
+            promise.resolve(null)
         }
     }
 
     @ReactMethod
-    fun trackAppInboxOpened(messageData: ReadableMap, promise: Promise) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            val message = messageData.toHashMapRecursively().toMessageItem()
-            if (message == null) {
+    fun trackAppInboxOpened(messageData: ReadableMap, promise: Promise) = catchAndReject(promise) {
+        val message = messageData.toHashMapRecursively().toMessageItem()
+        if (message == null) {
+            promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
                 promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                return@catchAndReject
+                return@fetchAppInboxItem
             }
-            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
-                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
-                if (nativeMessage == null) {
-                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                    return@fetchAppInboxItem
-                }
-                Exponea.trackAppInboxOpened(nativeMessage)
-                promise.resolve(null)
-            }
+            Exponea.trackAppInboxOpened(nativeMessage)
+            promise.resolve(null)
         }
     }
 
@@ -552,27 +526,25 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
         actionData: ReadableMap,
         messageData: ReadableMap,
         promise: Promise
-    ) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            val action = actionData.toHashMapRecursively().toMessageItemAction()
-            if (action == null) {
-                promise.reject(ExponeaDataException("AppInbox action data are invalid. See logs"))
-                return@catchAndReject
-            }
-            val message = messageData.toHashMapRecursively().toMessageItem()
-            if (message == null) {
+    ) = catchAndReject(promise) {
+        val action = actionData.toHashMapRecursively().toMessageItemAction()
+        if (action == null) {
+            promise.reject(ExponeaDataException("AppInbox action data are invalid. See logs"))
+            return@catchAndReject
+        }
+        val message = messageData.toHashMapRecursively().toMessageItem()
+        if (message == null) {
+            promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
                 promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                return@catchAndReject
+                return@fetchAppInboxItem
             }
-            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
-                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
-                if (nativeMessage == null) {
-                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                    return@fetchAppInboxItem
-                }
-                Exponea.trackAppInboxClickWithoutTrackingConsent(action, nativeMessage)
-                promise.resolve(null)
-            }
+            Exponea.trackAppInboxClickWithoutTrackingConsent(action, nativeMessage)
+            promise.resolve(null)
         }
     }
 
@@ -580,22 +552,20 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
     fun trackAppInboxOpenedWithoutTrackingConsent(
         messageData: ReadableMap,
         promise: Promise
-    ) = requireInitialized(promise) {
-        catchAndReject(promise) {
-            val message = messageData.toHashMapRecursively().toMessageItem()
-            if (message == null) {
+    ) = catchAndReject(promise) {
+        val message = messageData.toHashMapRecursively().toMessageItem()
+        if (message == null) {
+            promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
+            return@catchAndReject
+        }
+        Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
+            // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
+            if (nativeMessage == null) {
                 promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                return@catchAndReject
+                return@fetchAppInboxItem
             }
-            Exponea.fetchAppInboxItem(messageId = message.id) { nativeMessage ->
-                // we need to fetch native MessageItem; method needs syncToken and customerIds to be fetched
-                if (nativeMessage == null) {
-                    promise.reject(ExponeaDataException("AppInbox message data are invalid. See logs"))
-                    return@fetchAppInboxItem
-                }
-                Exponea.trackAppInboxOpenedWithoutTrackingConsent(nativeMessage)
-                promise.resolve(null)
-            }
+            Exponea.trackAppInboxOpenedWithoutTrackingConsent(nativeMessage)
+            promise.resolve(null)
         }
     }
 

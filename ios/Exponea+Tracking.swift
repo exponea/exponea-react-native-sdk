@@ -17,10 +17,6 @@ extension Exponea {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             Exponea.exponeaInstance.identifyCustomer(
                 customerIds: try JsonDataParser.parse(dictionary: customerIds).mapValues {
@@ -41,10 +37,6 @@ extension Exponea {
 
     @objc(flushData:reject:)
     func flushData(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         Exponea.exponeaInstance.flushData()
         resolve(nil)
     }
@@ -57,10 +49,6 @@ extension Exponea {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             Exponea.exponeaInstance.trackEvent(
                 properties: try JsonDataParser.parse(dictionary: properties),
@@ -75,10 +63,6 @@ extension Exponea {
 
     @objc(trackSessionStart:resolve:reject:)
     func trackSessionStart(timestamp: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard timestamp.object(forKey: "timestamp") == nil else {
             rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "Setting session start timestamp"))
             return
@@ -89,10 +73,6 @@ extension Exponea {
 
     @objc(trackSessionEnd:resolve:reject:)
     func trackSessionEnd(timestamp: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard timestamp.object(forKey: "timestamp") == nil else {
             rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "Setting session end timestamp"))
             return
@@ -107,10 +87,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         Exponea.exponeaInstance.trackPushToken(token)
         resolve(nil)
     }
@@ -130,10 +106,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             let source = try JsonDataParser.parse(dictionary: params)
             let jsonSource = JSONValue.convert(source)
@@ -153,10 +125,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             let source = try JsonDataParser.parse(dictionary: params)
             let jsonSource = JSONValue.convert(source)
@@ -176,10 +144,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             let source = try JsonDataParser.parse(dictionary: params)
             let jsonSource = JSONValue.convert(source)
@@ -199,10 +163,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             let source = try JsonDataParser.parse(dictionary: params)
             let jsonSource = JSONValue.convert(source)
@@ -222,10 +182,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             let source = try JsonDataParser.parse(dictionary: params)
             let jsonSource = JSONValue.convert(source)
@@ -245,10 +201,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let json = try? JSONSerialization.data(withJSONObject: params),
               let inAppMessageAction = try? JSONDecoder().decode(InAppMessageAction.self, from: json),
               let inAppMessage = inAppMessageAction.message else {
@@ -271,10 +223,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let json = try? JSONSerialization.data(withJSONObject: params),
               let inAppMessageAction = try? JSONDecoder().decode(InAppMessageAction.self, from: json),
               let inAppMessage = inAppMessageAction.message else {
@@ -297,10 +245,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let json = try? JSONSerialization.data(withJSONObject: params),
               let inAppMessageAction = try? JSONDecoder().decode(InAppMessageAction.self, from: json),
               let inAppMessage = inAppMessageAction.message else {
@@ -323,10 +267,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let json = try? JSONSerialization.data(withJSONObject: params),
               let inAppMessageAction = try? JSONDecoder().decode(InAppMessageAction.self, from: json),
               let inAppMessage = inAppMessageAction.message else {
@@ -364,10 +304,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let actionData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockAction"),
               let inAppContentBlockAction = try? parseInAppContentBlockAction(data: actionData),
@@ -397,10 +333,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let actionData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockAction"),
               let inAppContentBlockAction = try? parseInAppContentBlockAction(data: actionData),
@@ -430,10 +362,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
@@ -460,10 +388,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
@@ -490,10 +414,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
@@ -520,10 +440,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
@@ -550,10 +466,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),
@@ -582,10 +494,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let placeholderId: String = try? data.getOptionalSafely(property: "placeholderId"),
               let responseData: NSDictionary = try? data.getOptionalSafely(property: "inAppContentBlockResponse"),
               let responseJson = try? JSONSerialization.data(withJSONObject: responseData),

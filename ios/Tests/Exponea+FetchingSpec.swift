@@ -107,9 +107,8 @@ class ExponeaFetchingSpec: QuickSpec {
                         },
                         reject: { _, _, _ in }
                     )
-                    expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                    expect(mockExponea.calls[1].name).to(equal("fetchConsents"))
-                    let callback = mockExponea.calls[1].params[0] as? (Result<ConsentsResponse>) -> Void
+                    expect(mockExponea.calls[0].name).to(equal("fetchConsents"))
+                    let callback = mockExponea.calls[0].params[0] as? (Result<ConsentsResponse>) -> Void
 
                     let jsonDecoder = JSONDecoder()
                     jsonDecoder.dateDecodingStrategy = .secondsSince1970
@@ -134,24 +133,17 @@ class ExponeaFetchingSpec: QuickSpec {
                             done()
                         }
                     )
-                    let callback = mockExponea.calls[1].params[0] as? (Result<ConsentsResponse>) -> Void
+                    let callback = mockExponea.calls[0].params[0] as? (Result<ConsentsResponse>) -> Void
                     callback?(Result<ConsentsResponse>.failure(ExponeaError.fetchError(description: "something")))
                 }
             }
 
-            it("should not fetch consents when Exponea is not configured") {
-                waitUntil { done in
-                    exponea.fetchConsents(
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
-                            done()
-                        }
-                    )
-                }
+            it("should invoke fetch consents when Exponea is not configured - afterInit") {
+                exponea.fetchConsents(
+                    resolve: { _ in },
+                    reject: { _, _, _ in }
+                )
+                expect(mockExponea.calls[0].name).to(equal("fetchConsents"))
             }
         }
 
@@ -171,9 +163,8 @@ class ExponeaFetchingSpec: QuickSpec {
                         },
                         reject: { _, _, _ in }
                     )
-                    expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                    expect(mockExponea.calls[1].name).to(equal("fetchRecommendation"))
-                    let callback = mockExponea.calls[1].params[1]
+                    expect(mockExponea.calls[0].name).to(equal("fetchRecommendation"))
+                    let callback = mockExponea.calls[0].params[1]
                         as? (Result<RecommendationResponse<AllRecommendationData>>) -> Void
 
                     let jsonDecoder = JSONDecoder()
@@ -219,26 +210,19 @@ class ExponeaFetchingSpec: QuickSpec {
                             done()
                         }
                     )
-                    let callback = mockExponea.calls[1].params[1]
+                    let callback = mockExponea.calls[0].params[1]
                         as? (Result<RecommendationResponse<AllRecommendationData>>) -> Void
                     callback?(Result.failure(ExponeaError.fetchError(description: "something")))
                 }
             }
 
-            it("should not fetch recommendations when Exponea is not configured") {
-                waitUntil { done in
-                    exponea.fetchRecommendations(
-                        optionsDictionary: [:],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
-                            done()
-                        }
-                    )
-                }
+            it("should invoke fetch recommendations when Exponea is not configured - afterInit") {
+                exponea.fetchRecommendations(
+                    optionsDictionary: ["id": "mock-id", "fillWithRandom": false],
+                    resolve: { _ in },
+                    reject: { _, _, _ in }
+                )
+                expect(mockExponea.calls[0].name).to(equal("fetchRecommendation"))
             }
         }
     }

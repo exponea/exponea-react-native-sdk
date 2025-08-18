@@ -37,17 +37,16 @@ class ExponeaTrackingSpec: QuickSpec {
                         timestamp: ["timestamp": 12345],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackEvent"))
-                            let params = mockExponea.calls[1].params[0] as? [String: JSONConvertible]
+                            expect(mockExponea.calls[0].name).to(equal("trackEvent"))
+                            let params = mockExponea.calls[0].params[0] as? [String: JSONConvertible]
                             expect(params?["key"] as? String).to(equal("value"))
                             expect(params?["otherKey"] as? Bool).to(equal(true))
-                            expect(mockExponea.calls[1].params[1] as? Double).to(equal(12345))
-                            expect(mockExponea.calls[1].params[2] as? String).to(equal("mock-event"))
+                            expect(mockExponea.calls[0].params[1] as? Double).to(equal(12345))
+                            expect(mockExponea.calls[0].params[2] as? String).to(equal("mock-event"))
                             done()
                         },
                         reject: { _, _, _ in }
@@ -64,17 +63,16 @@ class ExponeaTrackingSpec: QuickSpec {
                         timestamp: [:],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackEvent"))
-                            let params = mockExponea.calls[1].params[0] as? [String: JSONConvertible]
+                            expect(mockExponea.calls[0].name).to(equal("trackEvent"))
+                            let params = mockExponea.calls[0].params[0] as? [String: JSONConvertible]
                             expect(params?["key"] as? String).to(equal("value"))
                             expect(params?["otherKey"] as? Bool).to(equal(false))
-                            expect(mockExponea.calls[1].params[1]).to(beNil())
-                            expect(mockExponea.calls[1].params[2] as? String).to(equal("mock-event"))
+                            expect(mockExponea.calls[0].params[1]).to(beNil())
+                            expect(mockExponea.calls[0].params[2] as? String).to(equal("mock-event"))
                             done()
                         },
                         reject: { _, _, _ in }
@@ -82,20 +80,27 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track event when Exponea is not configured") {
+            it("should invoke track event when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackEvent(
                         eventType: "mock-event",
                         properties: ["key": "value", "otherKey": false],
                         timestamp: [:],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackEvent"))
+                            let params = mockExponea.calls[0].params[0] as? [String: JSONConvertible]
+                            expect(params?["key"] as? String).to(equal("value"))
+                            expect(params?["otherKey"] as? Bool).to(equal(false))
+                            expect(mockExponea.calls[0].params[1]).to(beNil())
+                            expect(mockExponea.calls[0].params[2] as? String).to(equal("mock-event"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in }
                     )
                 }
             }
@@ -110,15 +115,14 @@ class ExponeaTrackingSpec: QuickSpec {
                         properties: ["key": "value", "otherKey": false],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("identifyCustomer"))
-                            let ids = mockExponea.calls[1].params[0] as? [String: JSONConvertible]
+                            expect(mockExponea.calls[0].name).to(equal("identifyCustomer"))
+                            let ids = mockExponea.calls[0].params[0] as? [String: JSONConvertible]
                             expect(ids?["id"] as? String).to(equal("some_id"))
-                            let params = mockExponea.calls[1].params[1] as? [String: JSONConvertible]
+                            let params = mockExponea.calls[0].params[1] as? [String: JSONConvertible]
                             expect(params?["key"] as? String).to(equal("value"))
                             expect(params?["otherKey"] as? Bool).to(equal(false))
                             done()
@@ -128,19 +132,26 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not identify customer when exponea is not configured") {
+            it("should invoke identify customer when exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.identifyCustomer(
                         customerIds: ["id": "some_id"],
                         properties: ["key": "value", "otherKey": false],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("identifyCustomer"))
+                            let ids = mockExponea.calls[0].params[0] as? [String: JSONConvertible]
+                            expect(ids?["id"] as? String).to(equal("some_id"))
+                            let params = mockExponea.calls[0].params[1] as? [String: JSONConvertible]
+                            expect(params?["key"] as? String).to(equal("value"))
+                            expect(params?["otherKey"] as? Bool).to(equal(false))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in }
                     )
                 }
             }
@@ -172,12 +183,11 @@ class ExponeaTrackingSpec: QuickSpec {
                     exponea.flushData(
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("flushData"))
+                            expect(mockExponea.calls[0].name).to(equal("flushData"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -185,17 +195,19 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not flush data when Exponea is not configured") {
+            it("should invoke flush data when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.flushData(
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("flushData"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -209,12 +221,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         timestamp: [:],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackSessionStart"))
+                            expect(mockExponea.calls[0].name).to(equal("trackSessionStart"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -241,18 +252,20 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track session start when Exponea is not configured") {
+            it("should invoke track session start when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackSessionStart(
                         timestamp: [:],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackSessionStart"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -264,12 +277,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         timestamp: [:],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackSessionEnd"))
+                            expect(mockExponea.calls[0].name).to(equal("trackSessionEnd"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -296,18 +308,20 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track session end when Exponea is not configured") {
+            it("should invoke track session end when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackSessionEnd(
                         timestamp: [:],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackSessionEnd"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -321,12 +335,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         token: "mock-push-token",
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackPushToken"))
+                            expect(mockExponea.calls[0].name).to(equal("trackPushToken"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -334,18 +347,20 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track push token when Exponea is not configured") {
+            it("should invoke track push token when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackPushToken(
                         token: "mock-push-token",
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackPushToken"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -359,12 +374,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         params: [:],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackPushReceived"))
+                            expect(mockExponea.calls[0].name).to(equal("trackPushReceived"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -372,18 +386,20 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track when Exponea is not configured") {
+            it("should invoke track when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackDeliveredPush(
                         params: [:],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackPushReceived"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -395,12 +411,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         params: [:],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackPushReceivedWithoutTrackingConsent"))
+                            expect(mockExponea.calls[0].name).to(equal("trackPushReceivedWithoutTrackingConsent"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -408,18 +423,20 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track when Exponea is not configured - ignore consent") {
+            it("should invoke track when Exponea is not configured - ignore consent - afterInit") {
                 waitUntil { done in
                     exponea.trackDeliveredPushWithoutTrackingConsent(
                         params: [:],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackPushReceivedWithoutTrackingConsent"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -433,12 +450,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         params: [:],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackPushOpened"))
+                            expect(mockExponea.calls[0].name).to(equal("trackPushOpened"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -446,18 +462,20 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track when Exponea is not configured") {
+            it("should invoke track when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackClickedPush(
                         params: [:],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackPushOpened"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -469,12 +487,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         params: [:],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackPushOpenedWithoutTrackingConsent"))
+                            expect(mockExponea.calls[0].name).to(equal("trackPushOpenedWithoutTrackingConsent"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -482,18 +499,20 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track when Exponea is not configured - ignore consent") {
+            it("should invoke track when Exponea is not configured - ignore consent - afterInit") {
                 waitUntil { done in
                     exponea.trackClickedPushWithoutTrackingConsent(
                         params: [:],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackPushOpenedWithoutTrackingConsent"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -507,12 +526,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         params: [:],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackPayment"))
+                            expect(mockExponea.calls[0].name).to(equal("trackPayment"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -520,18 +538,20 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track when Exponea is not configured") {
+            it("should invoke track when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackPaymentEvent(
                         params: [:],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackPayment"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -549,12 +569,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ),
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            let trackCall = mockExponea.calls[1]
+                            let trackCall = mockExponea.calls[0]
                             expect(trackCall.name).to(equal("trackInAppMessageClick"))
                             expect(trackCall.params.count).to(equal(3))
                             let message = trackCall.params[0] as? InAppMessage
@@ -570,7 +589,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track click when Exponea is not configured - nonrich") {
+            it("should invoke track click when Exponea is not configured - nonrich - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppMessageClick(
                         params: getInAppMessageActionAsDic(
@@ -578,15 +597,24 @@ class ExponeaTrackingSpec: QuickSpec {
                             button: InAppMessageTestData.buildInAppMessageButton(),
                             type: .action
                         ),
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription).to(
-                                equal(ExponeaError.notConfigured.localizedDescription)
-                            )
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            let trackCall = mockExponea.calls[0]
+                            expect(trackCall.name).to(equal("trackInAppMessageClick"))
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let buttonUrl = trackCall.params[2] as? String
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(buttonUrl).to(equal("https://example.com"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -602,12 +630,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ),
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            let trackCall = mockExponea.calls[1]
+                            let trackCall = mockExponea.calls[0]
                             expect(trackCall.name).to(equal("trackInAppMessageClickWithoutTrackingConsent"))
                             expect(trackCall.params.count).to(equal(3))
                             let message = trackCall.params[0] as? InAppMessage
@@ -623,7 +650,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track click when Exponea is not configured - ignore consent - nonrich") {
+            it("should invoke track click when Exponea is not configured - ignore consent - nonrich - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppMessageClickWithoutTrackingConsent(
                         params: getInAppMessageActionAsDic(
@@ -631,15 +658,24 @@ class ExponeaTrackingSpec: QuickSpec {
                             button: InAppMessageTestData.buildInAppMessageButton(),
                             type: .action
                         ),
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription).to(
-                                equal(ExponeaError.notConfigured.localizedDescription)
-                            )
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            let trackCall = mockExponea.calls[0]
+                            expect(trackCall.name).to(equal("trackInAppMessageClickWithoutTrackingConsent"))
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let buttonUrl = trackCall.params[2] as? String
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(buttonUrl).to(equal("https://example.com"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -656,12 +692,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ),
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            let trackCall = mockExponea.calls[1]
+                            let trackCall = mockExponea.calls[0]
                             expect(trackCall.name).to(equal("trackInAppMessageClose"))
                             expect(trackCall.params.count).to(equal(3))
                             let message = trackCall.params[0] as? InAppMessage
@@ -677,7 +712,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track close when Exponea is not configured - nonrich") {
+            it("should invoke track close when Exponea is not configured - nonrich - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppMessageClose(
                         params: getInAppMessageActionAsDic(
@@ -686,15 +721,24 @@ class ExponeaTrackingSpec: QuickSpec {
                             interaction: true,
                             type: .close
                         ),
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription).to(
-                                equal(ExponeaError.notConfigured.localizedDescription)
-                            )
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            let trackCall = mockExponea.calls[0]
+                            expect(trackCall.name).to(equal("trackInAppMessageClose"))
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let isInteraction = trackCall.params[2] as? Bool
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(isInteraction).to(equal(true))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -711,12 +755,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ),
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            let trackCall = mockExponea.calls[1]
+                            let trackCall = mockExponea.calls[0]
                             expect(trackCall.name).to(
                                 equal("trackInAppMessageCloseClickWithoutTrackingConsent")
                             )
@@ -734,7 +777,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track close when Exponea is not configured - ignore consent - nonrich") {
+            it("should invoke track close when Exponea is not configured - ignore consent - nonrich - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppMessageCloseWithoutTrackingConsent(
                         params: getInAppMessageActionAsDic(
@@ -743,14 +786,26 @@ class ExponeaTrackingSpec: QuickSpec {
                             interaction: true,
                             type: .close
                         ),
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            let trackCall = mockExponea.calls[0]
+                            expect(trackCall.name).to(
+                                equal("trackInAppMessageCloseClickWithoutTrackingConsent")
+                            )
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let isInteraction = trackCall.params[2] as? Bool
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(isInteraction).to(equal(true))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -765,12 +820,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ),
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            let trackCall = mockExponea.calls[1]
+                            let trackCall = mockExponea.calls[0]
                             expect(trackCall.name).to(equal("trackInAppMessageClick"))
                             expect(trackCall.params.count).to(equal(3))
                             let message = trackCall.params[0] as? InAppMessage
@@ -786,7 +840,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track click when Exponea is not configured - richstyle") {
+            it("should invoke track click when Exponea is not configured - richstyle - afterInit") {
                 waitUntil(timeout: 10) { done in
                     exponea.trackInAppMessageClick(
                         params: getInAppMessageActionAsDic(
@@ -794,15 +848,24 @@ class ExponeaTrackingSpec: QuickSpec {
                             button: InAppMessageTestData.buildInAppMessageButton(),
                             type: .action
                         ),
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription).to(
-                                equal(ExponeaError.notConfigured.localizedDescription)
-                            )
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            let trackCall = mockExponea.calls[0]
+                            expect(trackCall.name).to(equal("trackInAppMessageClick"))
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let buttonUrl = trackCall.params[2] as? String
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(buttonUrl).to(equal("https://example.com"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -818,12 +881,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ),
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            let trackCall = mockExponea.calls[1]
+                            let trackCall = mockExponea.calls[0]
                             expect(trackCall.name).to(equal("trackInAppMessageClickWithoutTrackingConsent"))
                             expect(trackCall.params.count).to(equal(3))
                             let message = trackCall.params[0] as? InAppMessage
@@ -839,7 +901,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track click when Exponea is not configured - ignore consent - richstyle") {
+            it("should invoke track click when Exponea is not configured - ignore consent - richstyle - afterInit") {
                 waitUntil(timeout: 10) { done in
                     exponea.trackInAppMessageClickWithoutTrackingConsent(
                         params: getInAppMessageActionAsDic(
@@ -847,15 +909,24 @@ class ExponeaTrackingSpec: QuickSpec {
                             button: InAppMessageTestData.buildInAppMessageButton(),
                             type: .action
                         ),
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription).to(
-                                equal(ExponeaError.notConfigured.localizedDescription)
-                            )
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            let trackCall = mockExponea.calls[0]
+                            expect(trackCall.name).to(equal("trackInAppMessageClickWithoutTrackingConsent"))
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let buttonUrl = trackCall.params[2] as? String
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(buttonUrl).to(equal("https://example.com"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -872,12 +943,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ),
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            let trackCall = mockExponea.calls[1]
+                            let trackCall = mockExponea.calls[0]
                             expect(trackCall.name).to(equal("trackInAppMessageClose"))
                             expect(trackCall.params.count).to(equal(3))
                             let message = trackCall.params[0] as? InAppMessage
@@ -893,7 +963,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track close when Exponea is not configured - richstyle") {
+            it("should invoke track close when Exponea is not configured - richstyle - afterInit") {
                 waitUntil(timeout: 10) { done in
                     exponea.trackInAppMessageClose(
                         params: getInAppMessageActionAsDic(
@@ -902,15 +972,24 @@ class ExponeaTrackingSpec: QuickSpec {
                             interaction: true,
                             type: .close
                         ),
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription).to(
-                                equal(ExponeaError.notConfigured.localizedDescription)
-                            )
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            let trackCall = mockExponea.calls[0]
+                            expect(trackCall.name).to(equal("trackInAppMessageClose"))
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let isInteraction = trackCall.params[2] as? Bool
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(isInteraction).to(equal(true))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -927,12 +1006,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ),
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            let trackCall = mockExponea.calls[1]
+                            let trackCall = mockExponea.calls[0]
                             expect(trackCall.name).to(
                                 equal("trackInAppMessageCloseClickWithoutTrackingConsent")
                             )
@@ -950,7 +1028,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track close when Exponea is not configured - ignore consent - richstyle") {
+            it("should invoke track close when Exponea is not configured - ignore consent - richstyle - afterInit") {
                 waitUntil(timeout: 10) { done in
                     exponea.trackInAppMessageCloseWithoutTrackingConsent(
                         params: getInAppMessageActionAsDic(
@@ -959,14 +1037,26 @@ class ExponeaTrackingSpec: QuickSpec {
                             interaction: true,
                             type: .close
                         ),
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            let trackCall = mockExponea.calls[0]
+                            expect(trackCall.name).to(
+                                equal("trackInAppMessageCloseClickWithoutTrackingConsent")
+                            )
+                            expect(trackCall.params.count).to(equal(3))
+                            let message = trackCall.params[0] as? InAppMessage
+                            let buttonText = trackCall.params[1] as? String
+                            let isInteraction = trackCall.params[2] as? Bool
+                            expect(message?.id).to(equal("5dd86f44511946ea55132f29"))
+                            expect(buttonText).to(equal("Click me!"))
+                            expect(isInteraction).to(equal(true))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -1032,12 +1122,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackInAppContentBlockClick"))
+                            expect(mockExponea.calls[0].name).to(equal("trackInAppContentBlockClick"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -1045,7 +1134,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track click when Exponea is not configured") {
+            it("should invoke track click when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppContentBlockClick(
                         data: [
@@ -1053,14 +1142,16 @@ class ExponeaTrackingSpec: QuickSpec {
                             "inAppContentBlockAction": getContentBlockActionAsDic(),
                             "inAppContentBlockResponse": getContentBlockMessageAsDic()
                         ],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackInAppContentBlockClick"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -1076,12 +1167,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(
+                            expect(mockExponea.calls[0].name).to(
                                 equal("trackInAppContentBlockClickWithoutTrackingConsent")
                             )
                             done()
@@ -1091,7 +1181,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track click when Exponea is not configured - ignore consent") {
+            it("should invoke track click when Exponea is not configured - ignore consent - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppContentBlockClickWithoutTrackingConsent(
                         data: [
@@ -1099,14 +1189,18 @@ class ExponeaTrackingSpec: QuickSpec {
                             "inAppContentBlockAction": getContentBlockActionAsDic(),
                             "inAppContentBlockResponse": getContentBlockMessageAsDic()
                         ],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(
+                                equal("trackInAppContentBlockClickWithoutTrackingConsent")
+                            )
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -1121,12 +1215,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackInAppContentBlockClose"))
+                            expect(mockExponea.calls[0].name).to(equal("trackInAppContentBlockClose"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -1134,21 +1227,23 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track close when Exponea is not configured") {
+            it("should invoke track close when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppContentBlockClose(
                         data: [
                             "placeholderId": "placeholder1",
                             "inAppContentBlockResponse": getContentBlockMessageAsDic()
                         ],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackInAppContentBlockClose"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -1163,12 +1258,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(
+                            expect(mockExponea.calls[0].name).to(
                                 equal("trackInAppContentBlockCloseWithoutTrackingConsent")
                             )
                             done()
@@ -1178,21 +1272,25 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track close when Exponea is not configured - ignore consent") {
+            it("should invoke track close when Exponea is not configured - ignore consent - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppContentBlockCloseWithoutTrackingConsent(
                         data: [
                             "placeholderId": "placeholder1",
                             "inAppContentBlockResponse": getContentBlockMessageAsDic()
                         ],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(
+                                equal("trackInAppContentBlockCloseWithoutTrackingConsent")
+                            )
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -1207,12 +1305,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackInAppContentBlockShown"))
+                            expect(mockExponea.calls[0].name).to(equal("trackInAppContentBlockShown"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -1220,21 +1317,23 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track show when Exponea is not configured") {
+            it("should invoke track show when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppContentBlockShown(
                         data: [
                             "placeholderId": "placeholder1",
                             "inAppContentBlockResponse": getContentBlockMessageAsDic()
                         ],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackInAppContentBlockShown"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -1249,12 +1348,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(
+                            expect(mockExponea.calls[0].name).to(
                                 equal("trackInAppContentBlockShownWithoutTrackingConsent")
                             )
                             done()
@@ -1264,21 +1362,25 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track show when Exponea is not configured - ignore consent") {
+            it("should invoke track show when Exponea is not configured - ignore consent - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppContentBlockShownWithoutTrackingConsent(
                         data: [
                             "placeholderId": "placeholder1",
                             "inAppContentBlockResponse": getContentBlockMessageAsDic()
                         ],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(
+                                equal("trackInAppContentBlockShownWithoutTrackingConsent")
+                            )
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -1294,12 +1396,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("trackInAppContentBlockError"))
+                            expect(mockExponea.calls[0].name).to(equal("trackInAppContentBlockError"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -1307,7 +1408,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track error when Exponea is not configured") {
+            it("should invoke track error when Exponea is not configured - afterInit") {
                 waitUntil { done in
                     exponea.trackInAppContentBlockError(
                         data: [
@@ -1315,14 +1416,16 @@ class ExponeaTrackingSpec: QuickSpec {
                             "inAppContentBlockResponse": getContentBlockMessageAsDic(),
                             "errorMessage": "Something wrong"
                         ],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(equal("trackInAppContentBlockError"))
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }
@@ -1338,12 +1441,11 @@ class ExponeaTrackingSpec: QuickSpec {
                         ],
                         resolve: { result in
                             expect(result).to(beNil())
-                            guard mockExponea.calls.count == 2 else {
-                                expect(mockExponea.calls.count).to(equal(2))
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(
+                            expect(mockExponea.calls[0].name).to(
                                 equal("trackInAppContentBlockErrorWithoutTrackingConsent")
                             )
                             done()
@@ -1353,7 +1455,7 @@ class ExponeaTrackingSpec: QuickSpec {
                 }
             }
 
-            it("should not track error when Exponea is not configured - ignore consent") {
+            it("should invoke track error when Exponea is not configured - ignore consent") {
                 waitUntil { done in
                     exponea.trackInAppContentBlockErrorWithoutTrackingConsent(
                         data: [
@@ -1361,14 +1463,18 @@ class ExponeaTrackingSpec: QuickSpec {
                             "inAppContentBlockResponse": getContentBlockMessageAsDic(),
                             "errorMessage": "Something wrong"
                         ],
-                        resolve: { _ in },
-                        reject: { errorCode, description, error in
-                            expect(errorCode).to(equal("ExponeaSDK"))
-                            expect(description).to(equal(ExponeaError.notConfigured.localizedDescription))
-                            expect(error?.localizedDescription)
-                                .to(equal(ExponeaError.notConfigured.localizedDescription))
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            guard mockExponea.calls.count == 1 else {
+                                expect(mockExponea.calls.count).to(equal(1))
+                                return
+                            }
+                            expect(mockExponea.calls[0].name).to(
+                                equal("trackInAppContentBlockErrorWithoutTrackingConsent")
+                            )
                             done()
-                        }
+                        },
+                        reject: { _, _, _ in  }
                     )
                 }
             }

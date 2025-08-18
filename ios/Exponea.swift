@@ -117,10 +117,6 @@ class Exponea: RCTEventEmitter {
 
     @objc(checkPushSetup:reject:)
     func checkPushSetup(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard !Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.alreadyConfigured)
-            return
-        }
         Exponea.exponeaInstance.checkPushSetup = true
         resolve(nil)
     }
@@ -239,10 +235,6 @@ class Exponea: RCTEventEmitter {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             let parsedProperties = try JsonDataParser.parse(dictionary: properties)
             Exponea.exponeaInstance.defaultProperties = parsedProperties
@@ -319,10 +311,6 @@ class Exponea: RCTEventEmitter {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         guard let data = params as? [AnyHashable: Any] else {
             rejectPromise(reject, error: ExponeaError.notAvailableForPlatform(name: "Invalid data"))
             return

@@ -17,10 +17,6 @@ extension Exponea {
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             var exponeaProject: ExponeaProject?
             var projectMapping: [EventType: [ExponeaProject]]?

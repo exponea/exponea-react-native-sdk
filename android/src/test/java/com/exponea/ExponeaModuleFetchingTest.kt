@@ -13,10 +13,14 @@ import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyArray
 import com.facebook.react.bridge.JavaOnlyMap
 import com.google.gson.JsonPrimitive
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockkObject
+import io.mockk.runs
 import io.mockk.slot
 import io.mockk.unmockkAll
+import io.mockk.verify
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -40,11 +44,12 @@ internal class ExponeaModuleFetchingTest {
     }
 
     @Test
-    fun `fetch consents should reject when Exponea not initialized`() {
+    fun `fetch consents should not reject when Exponea not initialized`() {
         every { Exponea.isInitialized } returns false
+        every { Exponea.getConsents(any(), any()) } just runs
         module.fetchConsents(
-            MockRejectingPromise {
-                assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
+            MockResolvingPromise {
+                verify { Exponea.getConsents(any(), any()) }
             }
         )
     }
@@ -110,12 +115,20 @@ internal class ExponeaModuleFetchingTest {
     }
 
     @Test
-    fun `fetch recommendations should reject when Exponea is not initialized`() {
+    fun `fetch recommendations should not reject when Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
+        every { Exponea.fetchRecommendation(any(), any(), any()) } just Runs
         module.fetchRecommendations(
-            JavaOnlyMap.of(),
-            MockRejectingPromise {
-                assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
+            JavaOnlyMap.of(
+                "id", "mock-id",
+                "fillWithRandom", false,
+                "size", 100,
+                "items", JavaOnlyMap.of("item1", "value1", "item2", "value2"),
+                "noTrack", true,
+                "catalogAttributesWhitelist", JavaOnlyArray.of("item3", "item4")
+            ),
+            MockResolvingPromise {
+                verify { Exponea.fetchRecommendation(any(), any(), any()) }
             }
         )
     }

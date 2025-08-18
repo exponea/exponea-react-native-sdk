@@ -19,10 +19,6 @@ extension Exponea {
     }
     @objc(fetchAppInbox:reject:)
     func fetchAppInbox(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         Exponea.exponeaInstance.fetchAppInbox { result in
             switch result {
             case .success(let response):
@@ -54,10 +50,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         Exponea.exponeaInstance.fetchAppInboxItem(messageId) { result in
             switch result {
             case .success(let message):
@@ -86,10 +78,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             guard let messageId: String = try message.getRequiredSafely(property: "id") else {
                 rejectPromise(
@@ -121,10 +109,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             guard let messageId: String = try message.getRequiredSafely(property: "id") else {
                 rejectPromise(
@@ -163,10 +147,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             guard let messageId: String = try message.getRequiredSafely(property: "id") else {
                 rejectPromise(
@@ -197,10 +177,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             guard let messageId: String = try message.getRequiredSafely(property: "id") else {
                 rejectPromise(
@@ -239,10 +215,6 @@ extension Exponea {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        guard Exponea.exponeaInstance.isConfigured else {
-            rejectPromise(reject, error: ExponeaError.notConfigured)
-            return
-        }
         do {
             guard let messageId: String = try message.getRequiredSafely(property: "id") else {
                 rejectPromise(

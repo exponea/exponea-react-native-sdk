@@ -10,7 +10,9 @@ import com.exponea.sdk.models.PropertiesList
 import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyMap
 import com.facebook.react.bridge.ReadableMap
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.unmockkAll
@@ -49,13 +51,14 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `identify customer should reject when Exponea is not initialized`() {
+    fun `identify customer should run even if Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
+        every { Exponea.identifyCustomer(any(), any()) } just Runs
         module.identifyCustomer(
             JavaOnlyMap.of("id", "value"),
             JavaOnlyMap.of("email", "a@b.c"),
-            MockRejectingPromise {
-                assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
+            MockResolvingPromise {
+                verify { Exponea.identifyCustomer(any(), any()) }
             }
         )
     }
@@ -102,14 +105,15 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `track event should reject when Exponea is not initialized`() {
+    fun `track event should run even if Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
+        every { Exponea.trackEvent(any(), any(), any()) } just Runs
         module.trackEvent(
             "event_name",
             JavaOnlyMap.of("string", "asd", "number", 123, "boolean", false),
             JavaOnlyMap.of(),
-            MockRejectingPromise {
-                assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
+            MockResolvingPromise {
+                verify { Exponea.trackEvent(any(), any(), any()) }
             }
         )
     }
@@ -172,12 +176,13 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `track session start should reject when Exponea is not initialized`() {
+    fun `track session start should run even if Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
+        every { Exponea.trackSessionStart(any()) } just Runs
         module.trackSessionStart(
             JavaOnlyMap.of(),
-            MockRejectingPromise {
-                assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
+            MockResolvingPromise {
+                verify { Exponea.trackSessionStart(any()) }
             }
         )
     }
@@ -216,12 +221,13 @@ internal class ExponeaModuleTrackingTest {
     }
 
     @Test
-    fun `track session end should reject when Exponea is not initialized`() {
+    fun `track session end should run even if Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
+        every { Exponea.trackSessionEnd(any()) } just Runs
         module.trackSessionEnd(
             JavaOnlyMap.of(),
-            MockRejectingPromise {
-                assertEquals(ExponeaModule.ExponeaNotInitializedException::class, it.errorThrowable!!::class)
+            MockResolvingPromise {
+                verify { Exponea.trackSessionEnd(any()) }
             }
         )
     }
