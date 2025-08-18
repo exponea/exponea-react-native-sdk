@@ -446,11 +446,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                 XCTFail("Expected String body")
                 return
             }
-            let normalizedBody = body.replacingOccurrences(
-                of: "button_format\":[]",
-                with: "button_font_format\":[\"bold\"]"
-            )
-            expect(TestUtil.parseJson(jsonString: normalizedBody)).to(equal(expectedInAppActionBody))
+            expect(TestUtil.parseJson(jsonString: body)).to(equal(expectedInAppActionBody))
         }
     }
 }

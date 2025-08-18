@@ -134,16 +134,6 @@ struct InAppMessageTestData {
                   ]
                 }
             """.utf8))
-            if var nonNilPayload = richPayload {
-                nonNilPayload.titleFontData = nil
-                nonNilPayload.bodyFontData = nil
-                nonNilPayload.buttons = nonNilPayload.buttons.map({ each in
-                    var copy = each
-                    copy.fontData = nil
-                    return copy
-                })
-                richPayload = nonNilPayload
-            }
         } else {
             oldPayload = InAppMessagePayload(
                 imageUrl: imageUrl ?? "https://i.ytimg.com/vi/t4nM1FoUqYs/maxresdefault.jpg",
