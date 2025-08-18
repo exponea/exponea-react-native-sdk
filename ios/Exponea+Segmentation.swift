@@ -25,6 +25,7 @@ extension Exponea {
         }
         SegmentationManager.shared.addCallback(callbackData: callback.nativeCallback)
         segmentationDataCallbacks.append(callback)
+        startObserving(for: .segmentsUpdate())
         resolve(callback.instanceId)
     }
 
@@ -44,6 +45,9 @@ extension Exponea {
         }
         SegmentationManager.shared.removeCallback(callbackData: segmentationCallbackToRemove.nativeCallback)
         segmentationDataCallbacks.removeAll { $0.instanceId == callbackInstanceId }
+        if segmentationDataCallbacks.isEmpty {
+            stopObserving(for: .segmentsUpdate())
+        }
         resolve(nil)
     }
 
@@ -79,25 +83,15 @@ extension Exponea {
         _ callbackInstance: ReactNativeSegmentationDataCallback,
         _ segments: [SegmentDTO]
     ) {
-        let dataMap = SegmentationDataWrapper.init(
+        sendEvent(withData: SegmentationDataWrapper.init(
             callbackId: callbackInstance.instanceId,
             data: segments
-        )
-        guard let data = try? JSONEncoder().encode(dataMap),
-              let body = String(data: data, encoding: .utf8) else {
-            ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize segments data.")
-            return
-        }
-        sendEvent(
-            withName: callbackInstance.eventEmitterKey,
-            body: body
-        )
+        ))
     }
 }
 
 class ReactNativeSegmentationDataCallback {
     let instanceId = UUID().uuidString
-    let eventEmitterKey = "newSegments"
 
     let exposingCategory: SegmentCategory
     let includeFirstLoad: Bool

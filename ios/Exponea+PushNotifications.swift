@@ -15,76 +15,44 @@ extension Exponea: PushNotificationManagerDelegate {
         value: String?,
         extraData: [AnyHashable: Any]?
     ) {
-        let openedPush = OpenedPush(
+        sendEvent(withData: OpenedPush(
             action: PushAction.from(actionType: action),
             url: value,
             additionalData: extraData
-        )
-        if pushOpenedListenerSet {
-            sendOpenedPush(openedPush)
-        } else {
-            pendingOpenedPush = openedPush
-        }
+        ))
     }
 
     func silentPushNotificationReceived(extraData: [AnyHashable: Any]?) {
         guard let extraData = extraData else { return }
-        if pushReceivedListenerSet {
-            sendReceivedPushData(extraData)
-        } else {
-            pendingReceivedPushData = extraData
-        }
+        sendEvent(withData: extraData as ReceivedPush)
     }
 
     func sendOpenedPush(_ openedPush: OpenedPush) {
-        let payload: [String: Any?] = [
-            "action": openedPush.action.rawValue,
-            "url": openedPush.url,
-            "additionalData": openedPush.additionalData
-        ]
-        guard let data = try? JSONSerialization.data(withJSONObject: payload),
-              let body = String(data: data, encoding: .utf8) else {
-            ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize opened push.")
-            return
-        }
-        sendEvent(withName: "pushOpened", body: body)
+        sendEvent(withData: openedPush)
     }
 
     @objc(onPushOpenedListenerSet)
     func onPushOpenedListenerSet() {
-        pushOpenedListenerSet = true
-        if let pending = pendingOpenedPush {
-            sendOpenedPush(pending)
-            pendingOpenedPush = nil
-        }
+        startObserving(for: .pushClick())
     }
 
     @objc(onPushOpenedListenerRemove)
     func onPushOpenedListenerRemove() {
-        pushOpenedListenerSet = false
+        stopObserving(for: .pushClick())
     }
 
     func sendReceivedPushData(_ pushData: [AnyHashable: Any]) {
-        guard let data = try? JSONSerialization.data(withJSONObject: pushData),
-              let body = String(data: data, encoding: .utf8) else {
-            ExponeaSDK.Exponea.logger.log(.error, message: "Unable to serialize received push data.")
-            return
-        }
-        sendEvent(withName: "pushReceived", body: body)
+        sendEvent(withData: pushData as ReceivedPush)
     }
 
     @objc(onPushReceivedListenerSet)
     func onPushReceivedListenerSet() {
-        pushReceivedListenerSet = true
-        if let pendingData = pendingReceivedPushData {
-            sendReceivedPushData(pendingData)
-            pendingReceivedPushData = nil
-        }
+        startObserving(for: .pushReceived())
     }
 
     @objc(onPushReceivedListenerRemove)
     func onPushReceivedListenerRemove() {
-        pushReceivedListenerSet = false
+        stopObserving(for: .pushReceived())
     }
 
     @objc(requestPushAuthorization:reject:)
@@ -139,3 +107,5 @@ struct OpenedPush {
     let url: String?
     let additionalData: [AnyHashable: Any]?
 }
+
+internal typealias ReceivedPush = [AnyHashable: Any]

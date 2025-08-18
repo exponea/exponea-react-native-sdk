@@ -22,7 +22,6 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     }
 }
 
-// swiftlint:disable type_body_length
 @objc(Exponea)
 class Exponea: RCTEventEmitter {
     override init() {
@@ -33,37 +32,18 @@ class Exponea: RCTEventEmitter {
         return false
     }
 
-    @objc(supportedEvents)
-    override func supportedEvents() -> [String] {
-        return ["pushOpened", "pushReceived", "inAppAction", "newSegments"]
-    }
-
-    override func sendEvent(withName name: String!, body: Any) {
-        if let sendEventOverride = sendEventOverride {
-            sendEventOverride(name, body)
-        } else {
-            super.sendEvent(withName: name, body: body)
-        }
-    }
-
     // to be changed in unit tests
     static var exponeaInstance: ExponeaType = ExponeaSDK.Exponea.shared
 
-    // to be changed in unit tests
+    // to be changed in unit tests for event emmiter tests
     var sendEventOverride: ((String, Any) -> Void)?
 
     let errorCode = "ExponeaSDK"
     let defaultFlushPeriod = 5 * 60 // 5 minutes
 
-    // We have to hold OpenedPush until pushOpenedListener set in JS
-    var pendingOpenedPush: OpenedPush?
-    var pushOpenedListenerSet = false
-    // We have to hold received push data until pushReceivedListener set in JS
-    var pendingReceivedPushData: [AnyHashable: Any]?
-    var pushReceivedListenerSet = false
-    // We have to hold received action data until inAppActionCallbackSet set in JS
-    var pendingInAppAction: InAppMessageAction?
-    var inAppActionCallbackSet = false
+    // We have to hold events until listener is set in JS
+    @Atomic var pendingEventData: Set<InternalEvent> = []
+    @Atomic var activeEventTypes: Set<InternalEvent> = []
 
     var inAppOverrideDefaultBehavior: Bool = false
     var inAppTrackActions: Bool = true
@@ -318,4 +298,3 @@ class Exponea: RCTEventEmitter {
         resolve(ExponeaSDK.Exponea.isExponeaNotification(userInfo: data))
     }
 }
-// swiftlint:enable type_body_length

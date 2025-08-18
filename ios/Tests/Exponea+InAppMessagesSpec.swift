@@ -33,13 +33,13 @@ class ExponeaInAppMessageSpec: QuickSpec {
         context("InApp callback") {
             it("should notify listener when in app message shown is pending - nonrich") {
                 waitUntil { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: nil,
                         interaction: nil,
                         errorMessage: nil,
                         type: .show
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-shown.json"
@@ -58,7 +58,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: nil,
                         interaction: nil,
@@ -69,13 +69,13 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message click is pending - nonrich") {
                 waitUntil { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: InAppMessageTestData.buildInAppMessageButton(),
                         interaction: nil,
                         errorMessage: nil,
                         type: .action
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-click-minimal.json"
@@ -94,7 +94,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: InAppMessageTestData.buildInAppMessageButton(),
                         interaction: nil,
@@ -105,7 +105,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message closed by user is pending - nonrich") {
                 waitUntil { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: InAppMessageTestData.buildInAppMessageButton(
                             url: nil
@@ -113,7 +113,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         interaction: true,
                         errorMessage: nil,
                         type: .close
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-close-complete.json"
@@ -132,7 +132,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: InAppMessageTestData.buildInAppMessageButton(
                             url: nil
@@ -145,13 +145,13 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message closed without button is pending - nonrich") {
                 waitUntil { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: nil,
                         interaction: false,
                         errorMessage: nil,
                         type: .close
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-close-minimal.json"
@@ -170,7 +170,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: nil,
                         interaction: false,
@@ -181,13 +181,13 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message process faced error is pending") {
                 waitUntil { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: nil,
                         button: nil,
                         interaction: nil,
                         errorMessage: "Something goes wrong",
                         type: .error
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-error-minimal.json"
@@ -206,7 +206,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: nil,
                         button: nil,
                         interaction: nil,
@@ -217,13 +217,13 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message faced error is pending - nonrich") {
                 waitUntil { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: nil,
                         interaction: nil,
                         errorMessage: "Something goes wrong",
                         type: .error
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-error-complete.json"
@@ -242,7 +242,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(),
                         button: nil,
                         interaction: nil,
@@ -253,13 +253,13 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message shown is pending - richstyle") {
                 waitUntil(timeout: 10) { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: nil,
                         interaction: nil,
                         errorMessage: nil,
                         type: .show
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-shown-richstyle.json"
@@ -278,7 +278,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: nil,
                         interaction: nil,
@@ -289,13 +289,13 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message click is pending - richstyle") {
                 waitUntil(timeout: 10) { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: InAppMessageTestData.buildInAppMessageButton(),
                         interaction: nil,
                         errorMessage: nil,
                         type: .action
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-click-minimal-richstyle.json"
@@ -314,7 +314,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: InAppMessageTestData.buildInAppMessageButton(),
                         interaction: nil,
@@ -325,7 +325,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message closed by user is pending - richstyle") {
                 waitUntil(timeout: 10) { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: InAppMessageTestData.buildInAppMessageButton(
                             url: nil
@@ -333,7 +333,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         interaction: true,
                         errorMessage: nil,
                         type: .close
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-close-complete-richstyle.json"
@@ -352,7 +352,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: InAppMessageTestData.buildInAppMessageButton(
                             url: nil
@@ -365,13 +365,13 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message closed without button is pending - richstyle") {
                 waitUntil(timeout: 10) { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: nil,
                         interaction: false,
                         errorMessage: nil,
                         type: .close
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-close-minimal-richstyle.json"
@@ -390,7 +390,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: nil,
                         interaction: false,
@@ -401,13 +401,13 @@ class ExponeaInAppMessageSpec: QuickSpec {
             }
             it("should notify listener when in app message faced error is pending - richstyle") {
                 waitUntil(timeout: 10) { done in
-                    exponea.pendingInAppAction = InAppMessageAction(
+                    exponea.pendingEventData.update(with: .inappAction(InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: nil,
                         interaction: nil,
                         errorMessage: "Something goes wrong",
                         type: .error
-                    )
+                    )))
                     exponea.sendEventOverride = { name, body in
                         validateInAppAction(name, body, TestUtil.loadFileAsJson(
                             relativePath: "/src/test_data/in-app-error-complete-richstyle.json"
@@ -426,7 +426,7 @@ class ExponeaInAppMessageSpec: QuickSpec {
                         done()
                     }
                     exponea.onInAppMessageCallbackSet(overrideDefaultBehavior: false, trackActions: true)
-                    exponea.onInAppAction(InAppMessageAction(
+                    exponea.sendEvent(withData: InAppMessageAction(
                         message: InAppMessageTestData.buildInAppMessage(isRichText: true),
                         button: nil,
                         interaction: nil,

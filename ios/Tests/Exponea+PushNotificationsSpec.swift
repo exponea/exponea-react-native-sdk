@@ -25,7 +25,7 @@ class ExponeaPushNotificationsSpec: QuickSpec {
         it("should hold of opened push until listener is set") {
             waitUntil { done in
                 exponea.pushNotificationOpened(with: .openApp, value: nil, extraData: ["key": "value"])
-                expect(exponea.pendingOpenedPush).notTo(beNil())
+                expect(exponea.pendingEventData).notTo(beEmpty())
                 exponea.sendEventOverride = { name, body in
                     expect(name).to(equal("pushOpened"))
                     guard let body = body as? String else {
@@ -56,14 +56,14 @@ class ExponeaPushNotificationsSpec: QuickSpec {
                 }
                 exponea.onPushOpenedListenerSet()
                 exponea.pushNotificationOpened(with: .openApp, value: nil, extraData: ["key": "value"])
-                expect(exponea.pendingOpenedPush).to(beNil())
+                expect(exponea.pendingEventData).to(beEmpty())
             }
         }
 
         it("should hold of received push until listener is set") {
             waitUntil { done in
                 exponea.silentPushNotificationReceived(extraData: ["key": "value"])
-                expect(exponea.pendingReceivedPushData).notTo(beNil())
+                expect(exponea.pendingEventData).notTo(beEmpty())
                 exponea.sendEventOverride = { name, body in
                     expect(name).to(equal("pushReceived"))
                     guard let body = body as? String else {
@@ -94,7 +94,7 @@ class ExponeaPushNotificationsSpec: QuickSpec {
                 }
                 exponea.onPushReceivedListenerSet()
                 exponea.silentPushNotificationReceived(extraData: ["key": "value"])
-                expect(exponea.pendingReceivedPushData).to(beNil())
+                expect(exponea.pendingEventData).to(beEmpty())
             }
         }
     }

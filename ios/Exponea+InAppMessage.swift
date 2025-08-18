@@ -19,7 +19,7 @@ extension Exponea: InAppMessageActionDelegate {
     }
 
     func inAppMessageShown(message: ExponeaSDK.InAppMessage) {
-        onInAppAction(InAppMessageAction(
+        sendEvent(withData: InAppMessageAction(
             message: message,
             button: nil,
             interaction: nil,
@@ -29,7 +29,7 @@ extension Exponea: InAppMessageActionDelegate {
     }
 
     func inAppMessageError(message: ExponeaSDK.InAppMessage?, errorMessage: String) {
-        onInAppAction(InAppMessageAction(
+        sendEvent(withData: InAppMessageAction(
             message: message,
             button: nil,
             interaction: nil,
@@ -39,7 +39,7 @@ extension Exponea: InAppMessageActionDelegate {
     }
 
     func inAppMessageClickAction(message: ExponeaSDK.InAppMessage, button: ExponeaSDK.InAppMessageButton) {
-        onInAppAction(InAppMessageAction(
+        sendEvent(withData: InAppMessageAction(
             message: message,
             button: button,
             interaction: nil,
@@ -53,7 +53,7 @@ extension Exponea: InAppMessageActionDelegate {
         button: ExponeaSDK.InAppMessageButton?,
         interaction: Bool
     ) {
-        onInAppAction(InAppMessageAction(
+        sendEvent(withData: InAppMessageAction(
             message: message,
             button: button,
             interaction: interaction,
@@ -69,31 +69,15 @@ extension Exponea: InAppMessageActionDelegate {
     ) {
         inAppOverrideDefaultBehavior = overrideDefaultBehavior
         inAppTrackActions = trackActions
-        inAppActionCallbackSet = true
-        if let pending = pendingInAppAction {
-            onInAppAction(pending)
-            pendingInAppAction = nil
-        }
+        startObserving(for: .inappAction())
     }
 
     @objc(onInAppMessageCallbackRemove)
     func onInAppMessageCallbackRemove() {
-        inAppActionCallbackSet = false
+        stopObserving(for: .inappAction())
         // Resets to default behavior
         inAppOverrideDefaultBehavior = false
         inAppTrackActions = true
-    }
-
-    func onInAppAction(_ action: InAppMessageAction) {
-        if inAppActionCallbackSet {
-            guard let data = try? JSONEncoder().encode(action),
-                  let body = String(data: data, encoding: .utf8) else {
-                return
-            }
-            sendEvent(withName: "inAppAction", body: body)
-        } else {
-            pendingInAppAction = action
-        }
     }
 }
 

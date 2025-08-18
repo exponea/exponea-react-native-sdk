@@ -32,6 +32,8 @@
 		05FD3772248FDE7F0078847C /* Exponea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FD3771248FDE7F0078847C /* Exponea.swift */; };
 		550CAAB52B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550CAAB42B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift */; };
 		550CAAB72B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */; };
+		550D4E042E4C6ED500DE85F6 /* Exponea+InternalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 550D4E032E4C6ED500DE85F6 /* Exponea+InternalEvent.swift */; };
+		556A69192E4CD0D400F43276 /* InternalEventSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556A69182E4CD0D400F43276 /* InternalEventSpec.swift */; };
 		558858DF2D59EAAE000C998F /* RNContentBlockCarouselViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 558858DE2D59EAAE000C998F /* RNContentBlockCarouselViewManager.m */; };
 		558858E12D59FB13000C998F /* RNContentBlockCarouselViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558858E02D59FB13000C998F /* RNContentBlockCarouselViewManager.swift */; };
 		558858E62D5B26EF000C998F /* ContentBlockCarouselEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558858E52D5B26EF000C998F /* ContentBlockCarouselEvent.swift */; };
@@ -109,6 +111,8 @@
 		457286D35E942ABACDFC8210 /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		550CAAB42B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNInAppContentBlocksPlaceholderManager.swift; sourceTree = "<group>"; };
 		550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNInAppContentBlocksPlaceholderManager.m; sourceTree = "<group>"; };
+		550D4E032E4C6ED500DE85F6 /* Exponea+InternalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Exponea+InternalEvent.swift"; sourceTree = "<group>"; };
+		556A69182E4CD0D400F43276 /* InternalEventSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalEventSpec.swift; sourceTree = "<group>"; };
 		558858DE2D59EAAE000C998F /* RNContentBlockCarouselViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNContentBlockCarouselViewManager.m; sourceTree = "<group>"; };
 		558858E02D59FB13000C998F /* RNContentBlockCarouselViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNContentBlockCarouselViewManager.swift; sourceTree = "<group>"; };
 		558858E52D5B26EF000C998F /* ContentBlockCarouselEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentBlockCarouselEvent.swift; sourceTree = "<group>"; };
@@ -168,6 +172,7 @@
 				55E88E5B2BDFCBFF008891EE /* Exponea+SegmentationSpec.swift */,
 				55E107DC2CBE458900579519 /* InAppMessageTestData.swift */,
 				55E107DE2CBE5D1100579519 /* Exponea+InAppMessagesSpec.swift */,
+				556A69182E4CD0D400F43276 /* InternalEventSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -194,6 +199,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				550D4E032E4C6ED500DE85F6 /* Exponea+InternalEvent.swift */,
 				55E88E592BDBEB4C008891EE /* Exponea+Segmentation.swift */,
 				550CAAB62B0CE88F0080288F /* RNInAppContentBlocksPlaceholderManager.m */,
 				550CAAB42B0CE7330080288F /* RNInAppContentBlocksPlaceholderManager.swift */,
@@ -440,6 +446,7 @@
 				0578A427249B7EB40049AE9D /* JsonDataParserSpec.swift in Sources */,
 				0578A41C249B53990049AE9D /* ConfigurationParserSpec.swift in Sources */,
 				0537094A24D401E3001684E9 /* Exponea+PushNotificationsSpec.swift in Sources */,
+				556A69192E4CD0D400F43276 /* InternalEventSpec.swift in Sources */,
 				054FD4C324D2FD4600BBE1D5 /* Exponea+FetchingSpec.swift in Sources */,
 				0578A429249B7F1C0049AE9D /* TestUtil.swift in Sources */,
 				55E107DF2CBE5D1100579519 /* Exponea+InAppMessagesSpec.swift in Sources */,
@@ -453,6 +460,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				550D4E042E4C6ED500DE85F6 /* Exponea+InternalEvent.swift in Sources */,
 				05FD3772248FDE7F0078847C /* Exponea.swift in Sources */,
 				CC619AC4265CCD7B00296FA3 /* ExponeaRNAppDelegate.m in Sources */,
 				05FD376F248FDE5A0078847C /* Exponea.m in Sources */,
