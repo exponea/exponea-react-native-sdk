@@ -22,6 +22,7 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     }
 }
 
+// swiftlint:disable type_body_length
 @objc(Exponea)
 class Exponea: RCTEventEmitter {
     override init() {
@@ -297,4 +298,45 @@ class Exponea: RCTEventEmitter {
         }
         resolve(ExponeaSDK.Exponea.isExponeaNotification(userInfo: data))
     }
+
+    @objc(stopIntegration:reject:)
+    func stopIntegration(
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        guard Exponea.exponeaInstance.isConfigured else {
+            rejectPromise(
+                reject,
+                error: ExponeaError.generalError("This functionality is unavailable without initialization of SDK")
+            )
+            return
+        }
+        Exponea.exponeaInstance.stopIntegration()
+        resolve(nil)
+    }
+
+    @objc(clearLocalCustomerData:resolve:reject:)
+    func clearLocalCustomerData(
+        params: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            guard !Exponea.exponeaInstance.isConfigured else {
+                rejectPromise(
+                    reject,
+                    error: ExponeaError.generalError("The functionality is unavailable due to running Integration")
+                )
+                return
+            }
+            let appGroup: String = try params.getOptionalSafely(
+                property: "appGroup"
+            ) ?? Constants.General.userDefaultsSuite
+            Exponea.exponeaInstance.clearLocalCustomerData(appGroup: appGroup)
+            resolve(nil)
+        } catch {
+            rejectPromise(reject, error: error)
+        }
+    }
 }
+// swiftlint:enable type_body_length

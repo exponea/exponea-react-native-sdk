@@ -13,12 +13,16 @@ import {
   SegmentationDataCallback,
 } from 'react-native-exponea-sdk/lib/ExponeaType';
 import * as RootNavigation from './util/RootNavigation';
-import {Screen} from './screens/Screens';
+import {Screen as DeeplinkFlow} from './screens/Screens';
 
 interface AppState {
   preloaded: boolean;
   sdkConfigured: boolean;
 }
+
+export const AppStateContext = React.createContext<{ validateSdkState: () => void }>({
+  validateSdkState: () => {},
+});
 
 export interface CustomerTokenStorage {}
 
@@ -27,6 +31,12 @@ export default class App extends React.Component<{}, AppState> {
     preloaded: false,
     sdkConfigured: false,
   };
+
+  reloadSdkState = () => {
+    Exponea.isConfigured().then(configured => {
+      this.setState({sdkConfigured: configured});
+    });
+  }
 
   discoverySegmentationCallback = new SegmentationDataCallback(
     'discovery',
@@ -66,24 +76,46 @@ export default class App extends React.Component<{}, AppState> {
 
   resolveDeeplinkDestination(url: string) {
     if (url.includes('flush')) {
-      return Screen.Flushing;
+      return DeeplinkFlow.Flushing;
     }
     if (url.includes('track')) {
-      return Screen.Tracking;
+      return DeeplinkFlow.Tracking;
     }
     if (url.includes('fetch')) {
-      return Screen.Fetching;
+      return DeeplinkFlow.Fetching;
     }
     if (url.includes('anonymize')) {
-      return Screen.Anonymize;
+      return DeeplinkFlow.Anonymize;
     }
     if (url.includes('inappcb')) {
-      return Screen.InAppCB;
+      return DeeplinkFlow.InAppCB;
+    }
+    if (url.includes('stopAndContinue')) {
+      return DeeplinkFlow.StopAndContinue;
+    }
+    if (url.includes('stopAndRestart')) {
+      return DeeplinkFlow.StopAndRestart;
     }
     return null;
   }
 
   componentDidMount(): void {
+    const handleDeeplinkDestination = (target: DeeplinkFlow) => {
+      switch (target) {
+        case DeeplinkFlow.StopAndContinue:
+          Exponea.stopIntegration()
+          RootNavigation.navigate(DeeplinkFlow.Fetching);
+          break;
+        case DeeplinkFlow.StopAndRestart:
+          Exponea.stopIntegration()
+          this.setState({sdkConfigured: false});
+          break;
+        default:
+          RootNavigation.navigate(target);
+          break;
+      }
+    }
+
     const openLink = (url: string | null) => {
       if (url != null) {
         setTimeout(() => {
@@ -91,7 +123,7 @@ export default class App extends React.Component<{}, AppState> {
           Alert.alert('Link received', `Url: ${url}`);
           const screenToOpen = this.resolveDeeplinkDestination(url);
           if (screenToOpen != null) {
-            RootNavigation.navigate(screenToOpen);
+            handleDeeplinkDestination(screenToOpen);
           }
         }, 1000);
       }
@@ -121,15 +153,36 @@ export default class App extends React.Component<{}, AppState> {
       }, 1000);
     });
 
+    const messageIsForGdpr = (message: InAppMessage) : Boolean => {
+      // apply your detection for GDPR related In-app
+      // our example app is triggering GDPR In-app by custom event tracking so we used it for detection
+      // you may implement detection against message title, ID, payload, etc.
+      if (!message.trigger) return false;
+      if (message.trigger["event_type"] !== "event_name") return false;
+      const triggerFilter = message.trigger["filter"] as any[]
+      return triggerFilter?.[0]?.constraint?.operands?.[0]?.value === "gdpr";
+    }
+
     Exponea.setInAppMessageCallback({
       inAppMessageClickAction(
         message: InAppMessage,
         button: InAppMessageButton,
       ): void {
-        console.log(
-          `InApp action ${button.url} received for message ${message.id}`,
-        );
+        console.log(`InApp action ${button.url} received for message ${message.id}`);
         Exponea.trackInAppMessageClick(message, button.text, button.url);
+        if (messageIsForGdpr(message)) {
+          switch (button.url) {
+            case "https://bloomreach.com/tracking/allow":
+              Exponea.trackEvent('gdpr', {status: "allowed"});
+              break;
+            case "https://bloomreach.com/tracking/deny":
+              console.log(`Stopping SDK`);
+              Exponea.stopIntegration();
+              break;
+          }
+        } else if (!!button.url) {
+          Linking.openURL(button.url)
+        }
       },
       inAppMessageCloseAction(
         message: InAppMessage,
@@ -149,6 +202,11 @@ export default class App extends React.Component<{}, AppState> {
             );
           },
         );
+        if (messageIsForGdpr(message) && interaction) {
+          // regardless from `button` nullability, parameter `interaction` tells that user closed message
+          console.log(`Stopping SDK`)
+          Exponea.stopIntegration()
+        }
       },
       inAppMessageError(
         message: InAppMessage | undefined,
@@ -159,9 +217,16 @@ export default class App extends React.Component<{}, AppState> {
         );
       },
       inAppMessageShown(message: InAppMessage): void {
-        console.log(`InApp message ${message?.id} has been shown`);
+        console.log(`InApp message ${message?.name} has been shown`);
+        if (message.name.includes("StopSDK")) {
+          console.log(`InApp message ${message?.name} will stop SDK`);
+          setTimeout(() => {
+            console.log(`Stopping SDK`)
+            Exponea.stopIntegration()
+          }, 4000)
+        }
       },
-      overrideDefaultBehavior: false,
+      overrideDefaultBehavior: true,
       trackActions: false,
     });
 
@@ -195,13 +260,15 @@ export default class App extends React.Component<{}, AppState> {
       return <PreloadingScreen />;
     }
     return (
-      <NavigationContainer ref={RootNavigation.navigationRef}>
-        {this.state.sdkConfigured ? (
-          <DashboardScreen />
-        ) : (
-          <AuthScreen onStart={this.onStart.bind(this)} />
-        )}
-      </NavigationContainer>
+      <AppStateContext.Provider value={{ validateSdkState: this.reloadSdkState }}>
+        <NavigationContainer ref={RootNavigation.navigationRef}>
+          {this.state.sdkConfigured ? (
+            <DashboardScreen />
+          ) : (
+            <AuthScreen onStart={this.onStart.bind(this)} />
+          )}
+        </NavigationContainer>
+      </AppStateContext.Provider>
     );
   }
 

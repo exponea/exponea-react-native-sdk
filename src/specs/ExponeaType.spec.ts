@@ -282,4 +282,14 @@ describe('parameter serialization and typings', () => {
     `.replace(/\s/g, ''),
     );
   });
+
+  test('clearLocalCustomerData-noAppGroup', () => {
+    mockExponea.clearLocalCustomerData();
+    expect(mockExponea.lastArgumentsJson).toBe('{}');
+  });
+
+  test('clearLocalCustomerData-appGroup', () => {
+    mockExponea.clearLocalCustomerData("mock-appGroup");
+    expect(mockExponea.lastArgumentsJson).toBe('{"appGroup":"mock-appGroup"}');
+  });
 });

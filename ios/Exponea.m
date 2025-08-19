@@ -87,4 +87,7 @@ RCT_EXTERN_METHOD(registerSegmentationDataCallback:(NSString *)exposingCategory 
 RCT_EXTERN_METHOD(unregisterSegmentationDataCallback:(NSString *)callbackInstanceId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(getSegments:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(stopIntegration:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(clearLocalCustomerData:(NSDictionary *)params resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end

@@ -67,6 +67,18 @@ android {
 
 Now that you have installed the SDK in your project, you must import, configure, and initialize the SDK in your application code.
 
+> ❗️ Protect the privacy of your customers
+>
+> Make sure you have obtained and stored tracking consent from your customer before initializing Exponea React Native SDK.
+>
+> To ensure you're not tracking events without the customer's consent, you can use `Exponea.clearLocalCustomerData(appGroup)` when a customer opts out from tracking (this applies to new users or returning customers who have previously opted out). This will bring the SDK to a state as if it was never initialized. This option also prevents reusing existing cookies for returning customers.
+>
+> Refer to [Clear local customer data](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking#clear-local-customer-data) for details.
+>
+> If the customer denies tracking consent after Exponea React Native SDK is initialized, you can use `Exponea.stopIntegration()` to stop SDK integration and remove all locally stored data.
+>
+> Refer to [Stop SDK integration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking#stop-sdk-integration) for details.
+
 The required configuration parameters are `projectToken`, `authorizationToken`, and `baseUrl`. You can find these in the Bloomreach Engagement webapp under `Project settings` > `Access management` > `API`.
 
 > 📘

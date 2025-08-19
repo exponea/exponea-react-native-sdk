@@ -251,6 +251,10 @@ interface ExponeaType {
   ): void;
 
   getSegments(exposingCategory: string, force?: boolean): Promise<Array<Segment>>;
+
+  stopIntegration(): Promise<void>;
+
+  clearLocalCustomerData(appGroup?: string): Promise<void>;
 }
 
 export enum FlushMode {

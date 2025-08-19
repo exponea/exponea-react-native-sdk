@@ -4,4 +4,6 @@ export enum Screen {
   Flushing = 'Flushing',
   Anonymize = 'Anonymize',
   InAppCB = 'In-app CB',
+  StopAndContinue = 'Stop&Continue',
+  StopAndRestart = 'Stop&Restart',
 }

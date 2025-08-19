@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Image, Dimensions} from 'react-native';
+import Exponea from 'react-native-exponea-sdk';
 import ExponeaButton from '../components/ExponeaButton';
 import ExponeaInput from '../components/ExponeaInput';
 import logo from '../img/logo.png';
@@ -59,6 +60,21 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
         title="Start"
         onPress={() => {
           props.onStart(projectToken, authorization, advancedAuthKey, baseUrl);
+        }}
+      />
+      <ExponeaButton
+        title="Clear local data"
+        onPress={() => {
+          Exponea.clearLocalCustomerData("group.com.exponea.ExponeaSDK-Example2").then(
+            () => {
+              console.log('SDK data has been cleared');
+            },
+            rejectReason => {
+              console.error(
+                `SDK data clear has been rejected: '${rejectReason}'`,
+              );
+            },
+          );
         }}
       />
     </View>

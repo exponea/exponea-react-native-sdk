@@ -379,6 +379,15 @@ export class MockExponea implements ExponeaType {
                 fail("Unsupported emit event: " + eventName);
         }
     }
+
+    stopIntegration(): Promise<void> {
+        return Promise.resolve();
+    }
+
+    clearLocalCustomerData(appGroup?: string): Promise<void> {
+        this.lastArgumentsJson = JSON.stringify({appGroup: appGroup}, withoutNulls)
+        return Promise.resolve();
+    }
 }
 function withoutNulls(this: any, key: string, value: any) {
     if (value !== null) return value

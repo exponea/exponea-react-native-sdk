@@ -11,7 +11,9 @@ import com.exponea.sdk.util.Logger
 import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyMap
 import com.facebook.react.bridge.ReadableMap
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import io.mockk.verify
@@ -225,5 +227,39 @@ internal class ExponeaModuleTest {
         verify {
             Exponea.getSegments("discovery", false, any())
         }
+    }
+
+    @Test
+    fun `should allow to stopIntegration for initialized Exponea SDK`() {
+        every { Exponea.isInitialized } returns true
+        every { Exponea.stopIntegration() } just Runs
+        module.stopIntegration(MockResolvingPromise {
+            verify { Exponea.isInitialized }
+            verify { Exponea.stopIntegration() }
+        })
+        every { Exponea.isInitialized } returns false
+        module.stopIntegration(MockRejectingPromise {
+            assertEquals(
+                "This functionality is unavailable without initialization of SDK",
+                it.errorThrowable?.localizedMessage
+            )
+        })
+    }
+
+    @Test
+    fun `should allow to clearLocalCustomerData for non-initialized Exponea SDK`() {
+        every { Exponea.isInitialized } returns true
+        every { Exponea.clearLocalCustomerData() } just Runs
+        module.clearLocalCustomerData(JavaOnlyMap(), MockRejectingPromise {
+            assertEquals(
+                "The functionality is unavailable due to running Integration",
+                it.errorThrowable?.localizedMessage
+            )
+        })
+        every { Exponea.isInitialized } returns false
+        module.clearLocalCustomerData(JavaOnlyMap(), MockResolvingPromise {
+            verify { Exponea.isInitialized }
+            verify { Exponea.clearLocalCustomerData() }
+        })
     }
 }

@@ -352,6 +352,14 @@ const Exponea: ExponeaType = {
       force: force
     }))
   },
+
+  async stopIntegration(): Promise<void> {
+    return NativeModules.Exponea.stopIntegration()
+  },
+
+  async clearLocalCustomerData(appGroup?: string): Promise<void> {
+    return NativeModules.Exponea.clearLocalCustomerData({appGroup: appGroup})
+  },
 };
 
 let pushOpenedUserListener: ((openedPush: OpenedPush) => void) | null = null;

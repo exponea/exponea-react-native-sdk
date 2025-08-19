@@ -915,4 +915,33 @@ class ExponeaModule(val reactContext: ReactApplicationContext) : ReactContextBas
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(callbackInstance.eventEmitterKey, ExponeaGson.instance.toJson(dataMap))
     }
+
+    @ReactMethod
+    fun stopIntegration(
+        promise: Promise
+    ) = catchAndReject(promise) {
+        if (!Exponea.isInitialized) {
+            promise.reject(ExponeaInvalidUsageException(
+                "This functionality is unavailable without initialization of SDK"
+            ))
+            return@catchAndReject
+        }
+        Exponea.stopIntegration()
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun clearLocalCustomerData(
+        params: ReadableMap,
+        promise: Promise
+    ) = catchAndReject(promise) {
+        if (Exponea.isInitialized) {
+            promise.reject(ExponeaInvalidUsageException(
+                "The functionality is unavailable due to running Integration"
+            ))
+            return@catchAndReject
+        }
+        Exponea.clearLocalCustomerData()
+        promise.resolve(null)
+    }
 }

@@ -339,5 +339,111 @@ class ExponeaSpec: QuickSpec {
                 }
             }
         }
+
+        context("stop Integration feature") {
+            it("should invoke stopIntegration when Exponea is initialized") {
+                mockExponea.isConfiguredValue = true
+                waitUntil { done in
+                    exponea.stopIntegration(
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
+                            expect(mockExponea.calls[1].name).to(equal("stopIntegration"))
+                            done()
+                        },
+                        reject: { _, _, _ in }
+                    )
+                }
+            }
+
+            it("should not invoke stopIntegration when Exponea is not initialized") {
+                mockExponea.isConfiguredValue = false
+                waitUntil { done in
+                    exponea.stopIntegration(
+                        resolve: { _ in },
+                        reject: { errorCode, description, error in
+                            expect(errorCode).to(equal("ExponeaSDK"))
+                            expect(description).to(
+                                equal("Error: This functionality is unavailable without initialization of SDK")
+                            )
+                            expect(error?.localizedDescription).to(
+                                equal("Error: This functionality is unavailable without initialization of SDK")
+                            )
+                            done()
+                        }
+                    )
+                }
+            }
+
+            it("should not invoke clearLocalCustomerData when Exponea is initialized") {
+                mockExponea.isConfiguredValue = true
+                waitUntil { done in
+                    exponea.clearLocalCustomerData(
+                        params: [:],
+                        resolve: { _ in },
+                        reject: { errorCode, description, error in
+                            expect(errorCode).to(equal("ExponeaSDK"))
+                            expect(description).to(
+                                equal("Error: The functionality is unavailable due to running Integration")
+                            )
+                            expect(error?.localizedDescription).to(
+                                equal("Error: The functionality is unavailable due to running Integration")
+                            )
+                            done()
+                        }
+                    )
+                }
+            }
+
+            it("should invoke clearLocalCustomerData when Exponea is not initialized") {
+                mockExponea.isConfiguredValue = false
+                waitUntil { done in
+                    exponea.clearLocalCustomerData(
+                        params: [:],
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
+                            expect(mockExponea.calls[1].name).to(equal("clearLocalCustomerData"))
+                            done()
+                        },
+                        reject: { _, _, _ in  }
+                    )
+                }
+            }
+
+            it("should invoke clearLocalCustomerData with defined appGroup") {
+                mockExponea.isConfiguredValue = false
+                waitUntil { done in
+                    exponea.clearLocalCustomerData(
+                        params: ["appGroup": "mock-appGroup"],
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
+                            expect(mockExponea.calls[1].name).to(equal("clearLocalCustomerData"))
+                            expect(mockExponea.calls[1].params[0] as? String).to(equal("mock-appGroup"))
+                            done()
+                        },
+                        reject: { _, _, _ in  }
+                    )
+                }
+            }
+
+            it("should invoke clearLocalCustomerData with default appGroup") {
+                mockExponea.isConfiguredValue = false
+                waitUntil { done in
+                    exponea.clearLocalCustomerData(
+                        params: [:],
+                        resolve: { result in
+                            expect(result).to(beNil())
+                            expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
+                            expect(mockExponea.calls[1].name).to(equal("clearLocalCustomerData"))
+                            expect(mockExponea.calls[1].params[0] as? String).to(equal("ExponeaSDK"))
+                            done()
+                        },
+                        reject: { _, _, _ in  }
+                    )
+                }
+            }
+        }
     }
 }
