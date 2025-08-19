@@ -123,7 +123,6 @@ Although you can use `identifyCustomer` with a [soft ID](https://documentation.b
 >
 > If a customer profile is anonymized or deleted in the Bloomreach Engagement web app, initializing the SDK again in the app can cause the profile to be reidentified or recreated from locally cached data. Always clear local data appropriately to prevent unintended profile recreation.
 
-
 #### Arguments
 
 | Name                       | Type                   | Description |

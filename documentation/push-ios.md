@@ -54,7 +54,7 @@ In Xcode, select your application target, and on the `Signing & Capabilities` ta
 >
 > An Apple developer account with a paid membership is required to add the `Push Notifications` capability.
 
-![Add the `Push Notifications` capability](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/Documentation/images/ios-capabilities.png)
+![Add the `Push Notifications` capability](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/ios-capabilities.png)
 
 ### Step 2: Implement application delegate methods
 
