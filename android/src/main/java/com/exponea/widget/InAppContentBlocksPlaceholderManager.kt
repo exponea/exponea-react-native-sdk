@@ -62,7 +62,8 @@ class InAppContentBlocksPlaceholderManager : SimpleViewManager<InAppContentBlock
     }
 
     override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any>? {
-        val map = super.getExportedCustomBubblingEventTypeConstants() ?: MapBuilder.builder<String, Any>().build()
+        val map = (super.getExportedCustomBubblingEventTypeConstants() ?: MapBuilder.builder<String, Any>().build())
+            .toMutableMap()
         map.put("dimensChanged", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onDimensChanged")))
         map.put(
             "inAppContentBlockEvent",

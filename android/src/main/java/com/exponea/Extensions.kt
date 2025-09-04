@@ -177,7 +177,10 @@ internal fun Dynamic.asSize(): PlatformSize? {
     }
 }
 
-private fun sizeValue(source: String): Float {
+private fun sizeValue(source: String?): Float {
+    if (source == null) {
+        return 0F
+    }
     val parsed = source.filter { it.isDigit() || it == '.' }.toFloatOrNull()
     if (parsed == null) {
         Logger.e(source, "Unable to read float value from $source")
@@ -212,8 +215,9 @@ private fun sizeTypeString(unit: Int): String {
     }
 }
 
-private fun sizeType(source: String): Int {
+private fun sizeType(source: String?): Int {
     return when {
+        source == null -> TypedValue.COMPLEX_UNIT_PX
         source.endsWith("px", true) -> TypedValue.COMPLEX_UNIT_PX
         source.endsWith("in", true) -> TypedValue.COMPLEX_UNIT_IN
         source.endsWith("mm", true) -> TypedValue.COMPLEX_UNIT_MM

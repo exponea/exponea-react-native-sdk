@@ -37,11 +37,22 @@ post_install do |pi|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.1'
       end
     end
-
-    # We need to make one crude patch to RCT-Folly - set `__IPHONE_10_0` to our iOS target + 1
-    # https://github.com/facebook/flipper/issues/834 - 84 comments and still going...
-   #`sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/RCT-Folly/folly/portability/Time.h`
-   #`sed -i -e  $'s/__IPHONE_10_0/__IPHONE_14_0/' Pods/Flipper-Folly/Time.h`
+    pi.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_NO_CONFIG=1'
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_USE_LIBCPP=1'
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_HAS_COROUTINES=0'
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'DFOLLY_CFG_NO_COROUTINES=1'
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_HAVE_CLOCK_GETTIME=1'
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'NDEBUG=1'
+      end
+    end
+    Dir.glob("Pods/RCT-Folly/folly/Portability.h").each do |file|
+      text = File.read(file)
+      new_contents = text.gsub('#define FOLLY_HAS_COROUTINES 1', '#define FOLLY_HAS_COROUTINES 0')
+      File.open(file, "w") { |file| file.puts new_contents }
+    end
 
    # fixes error: Signing for "React-Core-AccessibilityResources" requires a development team.
    # from https://github.com/CocoaPods/CocoaPods/issues/11402#issuecomment-1201464693
@@ -55,7 +66,7 @@ post_install do |pi|
    # fix to override RN path in scripts
    pi.pods_project.targets.each do |target|
        target.shell_script_build_phases.each do |phase|
-         if phase.name.include?('[RN]Check')
+         if phase.name.include?('[RN]Check') || phase.name.include?('[CP-User] [Hermes] Replace Hermes')
            phase.shell_script = phase.shell_script.gsub('$REACT_NATIVE_PATH', reactNativeAbsolutePath)
            puts "[Podfile] REACT_NATIVE_PATH for '#{target.name}::#{phase.name}' has been overriden with #{reactNativeAbsolutePath}"
          end

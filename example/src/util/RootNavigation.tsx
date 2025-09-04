@@ -5,6 +5,6 @@ export const navigationRef = createNavigationContainerRef();
 
 export function navigate(name: Screen) {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(name as never, undefined as never);
+    navigationRef.navigate(name as never);
   }
 }

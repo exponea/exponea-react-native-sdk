@@ -140,7 +140,8 @@ class ContentBlockCarouselViewManager : SimpleViewManager<ContentBlockCarouselVi
     }
 
     override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any> {
-        val map = super.getExportedCustomBubblingEventTypeConstants() ?: MapBuilder.builder<String, Any>().build()
+        val map = (super.getExportedCustomBubblingEventTypeConstants() ?: MapBuilder.builder<String, Any>().build())
+            .toMutableMap()
         map[DimensChangedEvent.EVENT_NAME] = mapOfPhasedRegistrationNames("onDimensChanged")
         map[RnContentBlockCarouselEvent.EVENT_NAME] = mapOfPhasedRegistrationNames("onContentBlockEvent")
         map[RnContentBlockCarouselDataRequestEvent.EVENT_NAME] = mapOfPhasedRegistrationNames(

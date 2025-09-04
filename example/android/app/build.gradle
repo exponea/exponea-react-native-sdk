@@ -33,7 +33,7 @@ react {
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
-    // nodeExecutableAndArgs = ["node"]
+    nodeExecutableAndArgs = [findNodeExecutable()]
     //
     //   The command to run when bundling. By default is 'bundle'
     // bundleCommand = "ram-bundle"
@@ -141,3 +141,21 @@ dependencies {
         implementation jscFlavor
     }
 }
+
+def findNodeExecutable() {
+    def nodePath = "node"
+    try {
+        def proc = ["bash", "-c", "command -v node"].execute()
+        proc.waitFor()
+        if (proc.exitValue() == 0) {
+            def out = proc.in.text.trim()
+            if (out) {
+                nodePath = out
+            }
+        }
+    } catch (Exception e) {
+        println("Unable to find path to node: " + e)
+    }
+    return nodePath
+}
+

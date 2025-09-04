@@ -27,12 +27,14 @@
 			<key>UNNotificationExtensionCategory</key>
 			<string>EXPONEA_ACTIONABLE</string>
 			<key>UNNotificationExtensionInitialContentSizeRatio</key>
-			<real>1</real>
+			<real>1.0</real>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.usernotifications.content-extension</string>
 		<key>NSExtensionPrincipalClass</key>
 		<string>ExampleNotificationContent.NotificationViewController</string>
 	</dict>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 </dict>
 </plist>
