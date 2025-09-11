@@ -1,7 +1,7 @@
 {
   "name": "react-native-exponea-sdk",
   "title": "React Native Exponea Sdk",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "React native SDK for Exponea integration",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

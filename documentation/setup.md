@@ -10,7 +10,7 @@ parentDocSlug: react-native-sdk
 
 The Exponea React Native SDK can be installed in your app using [yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/). [CocoaPods](https://cocoapods.org/) is required to set up the iOS app.
 
-The SDK is compatible with React Native 0.77.0 - 0.81.1. Earlier versions may work but have not been tested.
+The SDK is compatible with React Native 0.77.0 - 0.81.3. Earlier versions may work but have not been tested.
 
 > ❗️
 >

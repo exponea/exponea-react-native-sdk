@@ -89,8 +89,8 @@ android {
         applicationId "com.exponea.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 24
-        versionName "2.2.0"
+        versionCode 25
+        versionName "2.3.0"
     }
     signingConfigs {
         debug {

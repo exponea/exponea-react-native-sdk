@@ -11,6 +11,22 @@ parentDocSlug: react-native-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 2.3.0
+#### September 11, 2025
+* Added:
+  * Adds support for React Native from 0.77.0 to 0.81.3
+  * Improves documentation notes about using identifyCustomer with soft ID and local cache
+  * Adds a new stopIntegration method for improved SDK integration management and clears all locally stored data
+  * Postpones all SDK method invocations until SDK has been fully initialized
+  * Upgrades native SDKs to iOS 3.6.0 and Android 4.5.0
+  * Brings AppDelegate implementation in Swift to support Expo 53 build process
+* Fixed:
+  * Fixes documentation notes about minSdkVersion to 24 to match current Android configuration
+  * Sends internal events only when listener and communication are active to prevent errors during native-to-React communication
+  * Changes PushReceiver broadcast receiver to internal visibility to fix vulnerability issued as CWE-926
+  * Fixes minor issues in example-app.md due to broken links
+
+
 ## Release Notes for 2.2.0
 #### May 06, 2025
 * Added:

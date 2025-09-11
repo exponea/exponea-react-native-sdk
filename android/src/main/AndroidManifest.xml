@@ -12,6 +12,6 @@
             </intent-filter>
         </receiver>
         <meta-data android:name="ExponeaReactNativeSDK" android:value="true" />
-        <meta-data android:name="ExponeaReactNativeSDKVersion" android:value="2.2.0"/>
+        <meta-data android:name="ExponeaReactNativeSDKVersion" android:value="2.3.0"/>
     </application>
 </manifest>
