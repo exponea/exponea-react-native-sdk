@@ -11,6 +11,14 @@ parentDocSlug: react-native-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 2.4.0
+#### September 30, 2025
+* Added:
+  * Updates native iOS SDK to version 3.7.0.
+* Fixed:
+  * Fixes Xcode 26 build issues related to 'performAndWait' method.
+
+
 ## Release Notes for 2.3.0
 #### September 11, 2025
 * Added:
