@@ -132,4 +132,8 @@ class ConfigurationParser {
     func parseManualSessionAutoClose() throws -> Bool {
         return try dictionary.getOptionalSafely(property: "manualSessionAutoClose") ?? true
     }
+
+    func parseApplicationId() throws -> String? {
+        try dictionary.getOptionalSafely(property: "applicationId")
+    }
 }

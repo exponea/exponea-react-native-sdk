@@ -72,11 +72,19 @@ class Exponea: RCTEventEmitter {
                 flushingSetup: try parser.parseFlushingSetup(),
                 allowDefaultCustomerProperties: try parser.parseAllowDefaultCustomerProperties(),
                 advancedAuthEnabled: try parser.parseAdvancedAuthEnabled(),
-                manualSessionAutoClose: try parser.parseManualSessionAutoClose()
+                manualSessionAutoClose: try parser.parseManualSessionAutoClose(),
+                applicationID: try parser.parseApplicationId()
             )
-            Exponea.exponeaInstance.pushNotificationsDelegate = self
-            Exponea.exponeaInstance.inAppMessagesDelegate = self
-            resolve(nil)
+
+            /// This was made so that if something is wrong,
+            /// the promise is returned with error and mSDK does not continue
+            if !Exponea.exponeaInstance.isConfigured {
+                rejectPromise(reject, error: ExponeaError.configurationError)
+            } else {
+                Exponea.exponeaInstance.pushNotificationsDelegate = self
+                Exponea.exponeaInstance.inAppMessagesDelegate = self
+                resolve(nil)
+            }
         } catch {
             rejectPromise(reject, error: error)
         }

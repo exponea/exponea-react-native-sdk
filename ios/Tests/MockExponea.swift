@@ -136,8 +136,10 @@ class MockExponea: ExponeaType {
         flushingSetup: Exponea.FlushingSetup,
         allowDefaultCustomerProperties: Bool?,
         advancedAuthEnabled: Bool?,
-        manualSessionAutoClose: Bool
+        manualSessionAutoClose: Bool,
+        applicationID: String?
     ) {
+        isConfigured = true
         calls.append(
             Call(
                 name: "configure",
@@ -148,7 +150,8 @@ class MockExponea: ExponeaType {
                     flushingSetup,
                     allowDefaultCustomerProperties,
                     advancedAuthEnabled,
-                    manualSessionAutoClose
+                    manualSessionAutoClose,
+                    applicationID
                 ]
             )
         )
@@ -163,7 +166,8 @@ class MockExponea: ExponeaType {
         inAppContentBlocksPlaceholders: [String]?,
         allowDefaultCustomerProperties: Bool?,
         advancedAuthEnabled: Bool?,
-        manualSessionAutoClose: Bool
+        manualSessionAutoClose: Bool,
+        applicationID: String?
     ) {
         fatalError("Not implemented")
     }
@@ -178,7 +182,8 @@ class MockExponea: ExponeaType {
         inAppContentBlocksPlaceholders: [String]?,
         allowDefaultCustomerProperties: Bool?,
         advancedAuthEnabled: Bool?,
-        manualSessionAutoClose: Bool
+        manualSessionAutoClose: Bool,
+        applicationID: String?
     ) {
         fatalError("Not implemented")
     }
@@ -216,11 +221,15 @@ class MockExponea: ExponeaType {
     }
 
     func trackPushToken(_ token: Data) {
-        calls.append(Call(name: "trackPushToken", params: [token]))
+        calls.append(Call(name: "notification_state", params: [token]))
     }
 
     func trackPushToken(_ token: String?) {
-        calls.append(Call(name: "trackPushToken", params: [token]))
+        calls.append(Call(name: "notification_state", params: [token]))
+    }
+
+    func trackCurrentPushNotificationToken() {
+        fatalError("Not implemented")
     }
 
     func handlePushNotificationToken(deviceToken: Data) {

@@ -12,6 +12,7 @@ enum ExponeaError: LocalizedError {
     case notConfigured
     case alreadyConfigured
     case flushModeNotPeriodic
+    case configurationError
     case notAvailableForPlatform(name: String)
     case fetchError(description: String)
     case generalError(_ message: String)
@@ -30,6 +31,8 @@ enum ExponeaError: LocalizedError {
             return "Data fetching failed: \(description)"
         case .generalError(let message):
             return "Error: \(message)"
+        case .configurationError:
+            return "Exponea SDK is not configured. Check logs for details."
         }
     }
 }

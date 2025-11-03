@@ -339,7 +339,7 @@ class ExponeaTrackingSpec: QuickSpec {
                                 expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("trackPushToken"))
+                            expect(mockExponea.calls[0].name).to(equal("notification_state"))
                             done()
                         },
                         reject: { _, _, _ in  }
@@ -357,7 +357,7 @@ class ExponeaTrackingSpec: QuickSpec {
                                 expect(mockExponea.calls.count).to(equal(1))
                                 return
                             }
-                            expect(mockExponea.calls[0].name).to(equal("trackPushToken"))
+                            expect(mockExponea.calls[0].name).to(equal("notification_state"))
                             done()
                         },
                         reject: { _, _, _ in  }

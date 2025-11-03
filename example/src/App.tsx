@@ -277,6 +277,7 @@ export default class App extends React.Component<{}, AppState> {
     authorization: string,
     advancedAuthKey: string,
     baseUrl: string,
+    applicationId: string,
   ): void {
     Exponea.setLogLevel(LogLevel.VERBOSE);
     Exponea.checkPushSetup();
@@ -334,6 +335,7 @@ export default class App extends React.Component<{}, AppState> {
         pushAccentColorRGBA: '161, 226, 200, 220',
       },
       manualSessionAutoClose: true,
+      applicationId: applicationId,
     };
     console.log(
       `Configuring Exponea SDK with ${JSON.stringify(configuration)}`,

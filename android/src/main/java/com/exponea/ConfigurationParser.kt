@@ -141,6 +141,9 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                         "manualSessionAutoClose", Boolean::class
                     )
                 }
+                "applicationId" -> {
+                    configuration.applicationId = map.getSafely("applicationId", String::class)
+                }
             }
         }
         return configuration

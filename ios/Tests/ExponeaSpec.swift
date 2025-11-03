@@ -47,8 +47,10 @@ class ExponeaSpec: QuickSpec {
                         resolve: { result in
                             expect(result).to(beNil())
                             expect(mockExponea.calls[0].name).to(equal("isConfigured:get"))
-                            expect(mockExponea.calls[1].name).to(equal("configure"))
-                            expect(mockExponea.calls[2].name).to(equal("pushNotificationsDelegate:set"))
+                            expect(mockExponea.calls[1].name).to(equal("isConfigured:set"))
+                            expect(mockExponea.calls[2].name).to(equal("configure"))
+                            expect(mockExponea.calls[3].name).to(equal("isConfigured:get"))
+                            expect(mockExponea.calls[4].name).to(equal("pushNotificationsDelegate:set"))
                             done()
                         },
                         reject: { _, _, _ in }

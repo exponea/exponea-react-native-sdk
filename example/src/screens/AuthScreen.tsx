@@ -11,6 +11,7 @@ interface AuthScreenProps {
     authorization: string,
     advancedAuthKey: string,
     baseUrl: string,
+    applicationId: string,
   ) => void;
 }
 
@@ -19,6 +20,7 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
   const [authorization, setAuthorization] = React.useState('');
   const [advancedAuthKey, setAdvancedAuthKey] = React.useState('');
   const [baseUrl, setBaseUrl] = React.useState('');
+  const [applicationId, setApplicationId] = React.useState('');
   const buttonDisabled =
     projectToken === '' || authorization === '' || baseUrl === '';
   return (
@@ -55,11 +57,16 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
         placeholder="Base URL"
         onChangeText={text => setBaseUrl(text)}
       />
+      <ExponeaInput
+        value={applicationId}
+        placeholder="Application ID"
+        onChangeText={text => setApplicationId(text)}
+      />
       <ExponeaButton
         disabled={buttonDisabled}
         title="Start"
         onPress={() => {
-          props.onStart(projectToken, authorization, advancedAuthKey, baseUrl);
+          props.onStart(projectToken, authorization, advancedAuthKey, baseUrl, applicationId);
         }}
       />
       <ExponeaButton

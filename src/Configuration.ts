@@ -35,6 +35,8 @@ interface Configuration {
   inAppContentBlockPlaceholdersAutoLoad?: Array<string>;
   /** Determines whether the SDK automatically tracks session_end for sessions that remain open when trackSessionStart() is called multiple times in manual session tracking mode. */
   manualSessionAutoClose?: boolean;
+  /** Application identifier for the SDK. Defaults to 'default-application'. Must be lowercase alphanumeric with optional dots/hyphens between segments (max 50 characters, pattern: ^[a-z0-9]+(?:[-.][a-z0-9]+)*$) */
+  applicationId?: string;
 }
 
 export interface AndroidConfiguration {

@@ -102,6 +102,22 @@ Exponea.configure({
 }).catch(error => console.log(error))
 ```
 
+Configure application ID:
+
+**Multiple mobile apps:** If your Engagement project supports multiple mobile apps, specify the `applicationId` in your configuration. This helps distinguish between different apps in your project.
+
+```typescript
+Exponea.configure({
+    ...,
+    applicationId: '<Your application id>',
+    ...
+}).catch(error => console.log(error))
+```
+
+Make sure your `applicationId` value matches exactly what you've defined in your Engagement project settings.
+
+**Single mobile app:** If your Engagement project supports only one app, you can skip the `applicationId` configuration. The SDK will automatically use the default value "default-application".
+
 ### Configure the SDK only once
 
 React Native application code can be reloaded without restarting the native application itself. This speeds up the development process, but it also means that native code usually continues to run as if nothing happened. You should configure the SDK only once. When developing with hot reload enabled, you should check `Exponea.isConfigured()` before configuring the SDK.
