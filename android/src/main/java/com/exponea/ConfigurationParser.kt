@@ -142,7 +142,11 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     )
                 }
                 "applicationId" -> {
-                    configuration.applicationId = map.getSafely("applicationId", String::class)
+                    map.getSafely("applicationId", String::class).let {
+                        if (it.isNotEmpty()) {
+                            configuration.applicationId = it
+                        }
+                    }
                 }
             }
         }
