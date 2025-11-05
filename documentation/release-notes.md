@@ -11,6 +11,15 @@ parentDocSlug: react-native-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 2.5.0
+#### November 05, 2025
+* Added:
+  * Adds support for React Native 0.81.4 and newer versions.
+  * Replaces age with timestamp for tracked events.
+* Fixed:
+  * Upgrades dependencies, including brace library, to address security vulnerability.
+
+
 ## Release Notes for 2.4.0
 #### September 30, 2025
 * Added:
