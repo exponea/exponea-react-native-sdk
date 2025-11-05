@@ -17,6 +17,7 @@ parentDocSlug: react-native-sdk
   * Adds support for React Native 0.81.4 and newer versions.
   * Replaces age with timestamp for tracked events.
 * Fixed:
+  * Fixes vulnerability for HTTP response header manipulation.
   * Upgrades dependencies, including brace library, to address security vulnerability.
 
 
