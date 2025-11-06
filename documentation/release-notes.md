@@ -14,6 +14,7 @@ parentDocSlug: react-native-sdk
 ## Release Notes for 2.5.0
 #### November 05, 2025
 * Added:
+  * Adopts the Multiple Mobile Apps/Devices feature.
   * Adds support for React Native 0.81.4 and newer versions.
   * Replaces age with timestamp for tracked events.
 * Fixed:
