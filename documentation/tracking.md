@@ -13,6 +13,7 @@ By default, the SDK tracks certain events automatically, including:
 * Installation (after app installation and after invoking [anonymize](#anonymize))
 * User session start and end
 * Banner event for showing an in-app message or content block
+* `notification_state` event for push notification token tracking (SDK versions 2.5.0 and higher). [Learn more](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
 
 Additionally, you can track any custom event relevant to your business.
 
@@ -218,6 +219,22 @@ To disable automatic session tracking, set `automaticSessionTracking` to `false`
 
 Use the `trackSessionStart()` and `trackSessionEnd()` methods to track sessions manually.
 
+#### How tokens are removed during anonymization
+
+The SDK removes push notification tokens differently depending on the version:
+
+**SDK versions below 2.5.0:**
+
+- Assigns an empty string to the `google_push_notification_id`, `huawei_push_notification_id`, or `apple_push_notification_id` customer property.
+
+**SDK versions 2.5.0 and higher:**
+
+- Tracks a `notification_state` event with `valid = false` and `description = Invalidated`
+
+> 📘 Note
+>
+> Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
+
 #### Examples
 
 ```typescript
@@ -236,7 +253,7 @@ On Android, you can disable automatic push notification tracking by setting the 
 
 > ❗️
 >
-> The React Native SDK currently does not support disabling automatic push notification tracking on iOS.
+> The React Native SDK currently doesn't support disabling automatic push notification tracking on iOS.
 
 > ❗️
 >
@@ -249,6 +266,10 @@ Use either the `trackPushToken()` (Firebase) or `trackHmsPushToken` (Huawei) met
 Invoking this method will track a push token immediately regardless of the value of the `tokenTrackFrequency` [configuration parameter](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
 
 Each time the app becomes active, the SDK calls `verifyPushStatusAndTrackPushToken` and tracks the token.
+
+> 📘 Note
+>
+> SDK versions 2.5.0 and higher use event-based token tracking. Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
 
 #### Arguments
 

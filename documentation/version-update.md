@@ -8,6 +8,23 @@ parentDocSlug: react-native-sdk-release-notes
 
 This guide will help you upgrade your Exponea SDK to the latest major version.
 
+## Update to version 2.5.0 or higher
+
+SDK versions 2.5.0 and higher support multiple mobile applications within a single Bloomreach Engagement project.
+
+This update introduces two major changes:
+
+### 1. **Application ID configuration**
+
+Each mobile application integrated with the SDK can now have its own unique `applicationId`. This identifier distinguishes between different applications within the same project.
+
+**When to configure Application ID:**
+
+- **Multiple mobile apps:** You must specify a unique `applicationId` for each app in the SDK configuration. The value must match the Application ID configured in Bloomreach Engagement under **Project Settings > Campaigns > Channels > Push Notifications.**
+- **Single mobile app:** If you use only one mobile application, you don't need to set `applicationId`. The SDK uses the default value `default-application` automatically.
+
+Learn more about [SDK configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) and [Configure Application ID](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#configure-application-id).
+
 ## Update from version 1.x.x to 2.x.x
 
 Updating Exponea SDK to version 2 or higher requires making some changes related to in-app messages callback implementations.

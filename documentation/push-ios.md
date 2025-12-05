@@ -14,6 +14,10 @@ The React Native SDK relies on the native iOS SDK to handle push notifications o
 >
 > To enable the setup check, call `Exponea.checkPushSetup()` **before** [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
 
+> ❗️Important
+>
+> SDK versions 2.5.0 and higher use event-based token tracking to support multiple mobile applications per project. Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
+
 > ❗️
 >
 > The behaviour of push notification delivery and click tracking may be affected by the tracking consent feature, which, if enabled, requires explicit consent for tracking. Refer to the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.

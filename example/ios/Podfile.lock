@@ -2,7 +2,7 @@ PODS:
   - AnyCodable-FlightSchool (0.4.0)
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
-  - ExponeaSDK (3.8.2):
+  - ExponeaSDK (3.9.0):
     - SwiftSoup (< 3.0, >= 2.7.6)
   - ExponeaSDK-Notifications (3.8.2)
   - fast_float (8.0.0)
@@ -1753,9 +1753,9 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-exponea-sdk (2.4.0):
+  - react-native-exponea-sdk (2.5.0):
     - AnyCodable-FlightSchool (= 0.4.0)
-    - ExponeaSDK (= 3.8.2)
+    - ExponeaSDK (= 3.9.0)
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -2843,7 +2843,7 @@ SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
-  ExponeaSDK: 3e86ebc24e43ca924ac696158ed1ebd2511125eb
+  ExponeaSDK: f607fb735dc8bb7deee6d27a9c184d2c4c106e8e
   ExponeaSDK-Notifications: 2b76ba03c0de266f27d6418c555f3a9ddb5c67e4
   fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
   FBLazyVector: 941bef1c8eeabd9fe1f501e30a5220beee913886
@@ -2884,7 +2884,7 @@ SPEC CHECKSUMS:
   React-logger: 1767babce2d28c3251039ce05556714a2c8c6ded
   React-Mapbuffer: 33f678ee25b6c0ee2b01b1ecec08e3e02424cefe
   React-microtasksnativemodule: 44b44a4d3cd6ffb85d928abf741acdc26722de2e
-  react-native-exponea-sdk: d2d0a5414b6944edb5ae6ddb6f6a3a54ad7fab5c
+  react-native-exponea-sdk: 0078eda91b6f323799732a35e32aeaf8c0ad65a8
   react-native-safe-area-context: 18dabcdcf353d3222f05e1c461c15666c7826185
   React-NativeModulesApple: b5d18bc109c45c9a1c6b71664991b5cc3adc4e48
   React-oscompat: 93b5535ea7f7dff46aaee4f78309a70979bdde9d
