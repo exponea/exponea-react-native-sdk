@@ -27,7 +27,7 @@
 			<key>UNNotificationExtensionCategory</key>
 			<string>EXPONEA_ACTIONABLE</string>
 			<key>UNNotificationExtensionInitialContentSizeRatio</key>
-			<real>1.0</real>
+			<real>1</real>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.usernotifications.content-extension</string>

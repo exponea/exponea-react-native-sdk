@@ -779,7 +779,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UVDCL7YSZS;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -792,10 +792,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.ExponeaSDK-Example2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.exponea.sdk.example;
 				PRODUCT_NAME = "Exponea RN";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea iOS SDK Example App";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example App";
 				SWIFT_OBJC_BRIDGING_HEADER = "example-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -814,7 +814,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UVDCL7YSZS;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
 				INFOPLIST_FILE = example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -826,10 +826,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.ExponeaSDK-Example2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.exponea.sdk.example;
 				PRODUCT_NAME = "Exponea RN";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea iOS SDK Example App";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example App";
 				SWIFT_OBJC_BRIDGING_HEADER = "example-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -852,12 +852,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UVDCL7YSZS;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExampleNotificationService/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ExampleNotificationService;
+				INFOPLIST_KEY_CFBundleDisplayName = exampleNotificationService;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -869,10 +869,10 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.ExponeaSDK-Example2.ExampleNotificationService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.sdk.example.notification-service";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea iOS SDK Example App Notification Service";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example Notification Service";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -899,12 +899,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UVDCL7YSZS;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExampleNotificationService/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ExampleNotificationService;
+				INFOPLIST_KEY_CFBundleDisplayName = exampleNotificationService;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -915,10 +915,10 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.ExponeaSDK-Example2.ExampleNotificationService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.sdk.example.notification-service";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea iOS SDK Example App Notification Service";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example Notification Service";
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -943,12 +943,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UVDCL7YSZS;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExampleNotificationContent/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ExampleNotificationContent;
+				INFOPLIST_KEY_CFBundleDisplayName = exponeaNotificationContent;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -960,10 +960,10 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.ExponeaSDK-Example2.ExampleNotificationContent";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.sdk.example.notification-content";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea iOS SDK Example App Notification Content";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example Notification Content";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -990,12 +990,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = UVDCL7YSZS;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExampleNotificationContent/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ExampleNotificationContent;
+				INFOPLIST_KEY_CFBundleDisplayName = exponeaNotificationContent;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1006,10 +1006,10 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.ExponeaSDK-Example2.ExampleNotificationContent";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.sdk.example.notification-content";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea iOS SDK Example App Notification Content";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example Notification Content";
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
