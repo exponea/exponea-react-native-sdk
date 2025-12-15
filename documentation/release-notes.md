@@ -11,6 +11,15 @@ parentDocSlug: react-native-sdk
 > Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 2.6.0
+#### December 15, 2025
+* Added:
+  * Adds documentation for [major push notification updates](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-to-version-230-or-higher), including notification state event as a new token tracking method, Application ID configuration, and migration requirements for the Multiple mobile apps feature.
+  * Updates native Android SDK to version 4.8.0.
+  * Updates native iOS SDK to version 3.9.0.
+  * Updates Example App's application and bundle ID and Firebase Cloud Messaging (FCM)/Huawei Mobile Services (HMS) integration configuration.
+
+
 ## Release Notes for 2.5.0
 #### November 05, 2025
 * Added:
