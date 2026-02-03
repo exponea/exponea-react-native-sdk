@@ -34,7 +34,13 @@ class BridgedContentBlockSelector {
 
     func sortContentBlocks(_ input: [InAppContentBlockResponse]) -> [InAppContentBlockResponse] {
         guard let sortRequestFn else {
-            return input
+            // Default sorting: priority descending, then name ascending
+            return input.sorted { first, second in
+                if first.loadPriority != second.loadPriority {
+                    return first.loadPriority ?? 0 > second.loadPriority ?? 0
+                }
+                return first.name < second.name
+            }
         }
         sortResponse = PassthroughSubject<[InAppContentBlockResponse], Never>()
         sortRequestFn(input)
