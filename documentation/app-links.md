@@ -1,5 +1,5 @@
 ---
-title: Links
+title: Links for React Native SDK
 excerpt: Track Android App Links and iOS Universal Links in your app using the React Native SDK
 slug: react-native-sdk-links
 categorySlug: integrations

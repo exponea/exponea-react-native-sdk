@@ -1,5 +1,5 @@
 ---
-title: Push notifications
+title: Push notifications for React Native SDK
 excerpt: Enable push notifications in your app using the React Native SDK
 slug: react-native-sdk-push-notifications
 categorySlug: integrations
@@ -24,8 +24,8 @@ The React Native SDK relies on the underlying native Android and iOS platforms t
 
 The following pages describe the steps for each platform to add the minimum push notification functionality (receive alert notifications) to your app.
 
-- [Android push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android)
-- [iOS push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios)
+- [Android push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android)
+- [iOS push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios)
 
 ## Customization
 
@@ -65,7 +65,7 @@ We recommend registering the listener as soon as possible to ensure proper appli
 
 > ❗️
 >
-> To support deep links, additional set up steps are required. Refer to the documentation for the respective native platforms ([Android](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android), [iOS](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios)). Alternatively, use the `Open app` action instead and add your payload to `Additional data`.
+> To support deep links, additional set up steps are required. Refer to the documentation for the respective native platforms ([Android push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android), [iOS push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios)). Alternatively, use the `Open app` action instead and add your payload to `Additional data`.
 
 ### Respond to received push notifications
 
@@ -170,7 +170,7 @@ Exponea.requestPushAuthorization()
     .catch(error => console.log(`Authorization error: ${error}`));
 ```
 
-The frequency of `notification_state` event tracking depends on the `pushTokenTrackingFrequency` configuration property. [See SDK configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
+The frequency of `notification_state` event tracking depends on the `pushTokenTrackingFrequency` configuration property. [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
 
 ### notification_state event properties
 
@@ -185,7 +185,7 @@ The frequency of `notification_state` event tracking depends on the `pushTokenTr
 
 > 📘 Note
 >
-> If you don't specify an `application_id` in your SDK configuration, the default value `default-application` is used. [See SDK configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
+> If you don't specify an `application_id` in your SDK configuration, the default value `default-application` is used. [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
 
 ### Understanding token states
 
@@ -194,14 +194,14 @@ The combination of `valid` and `description` properties indicates the token's cu
 | Valid | Description         | When this occurs                                                                                                                                             |
 |-------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `false` | `Invalidated`         | New token received \(old token becomes invalid\) or `Exponea.anonymize()` called                                                                     |
-| `false` | `Permission denied`   | [requirePushAuthorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) is `true` and user denied notification permission |
+| `false` | `Permission denied`   | `requirePushAuthorization` in [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) is `true` and user denied notification permission |
 | `true`  | `Permission granted`  | Valid token tracked successfully \(all other cases\)                                                                                                         |
 
 ### Configuring Application ID
 
 > 📘 Note
 >
-> See this section to configure `application_id`. [Configure Application ID](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#configure-application-id).
+> See this section to configure `application_id`. [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#configure-application-id).
 
 > ❗️Important
 >

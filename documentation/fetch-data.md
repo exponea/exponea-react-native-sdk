@@ -1,5 +1,5 @@
 ---
-title: Fetch data
+title: Fetch data for React Native SDK
 excerpt: Fetch data from Bloomreach Engagement using the React Native SDK
 slug: react-native-sdk-fetch-data
 categorySlug: integrations

@@ -1,5 +1,5 @@
 ---
-title: iOS push notifications
+title: iOS push notifications for React Native SDK
 excerpt: Enable push notifications on iOS using the React Native SDK
 slug: react-native-sdk-push-ios
 categorySlug: integrations
@@ -12,15 +12,15 @@ The React Native SDK relies on the native iOS SDK to handle push notifications o
 >
 > The SDK provides a push setup self-check feature to help developers successfully set up push notifications. The self-check will try to track the push token, request the Engagement backend to send a silent push to the device, and check if the app is ready to open push notifications.
 >
-> To enable the setup check, call `Exponea.checkPushSetup()` **before** [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
+> To enable the setup check, call `Exponea.checkPushSetup()` **before** [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
 
 > ❗️Important
 >
-> SDK versions 2.5.0 and higher use event-based token tracking to support multiple mobile applications per project. Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
+> SDK versions 2.5.0 and higher use event-based token tracking to support multiple mobile applications per project. Learn more about [Push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
 
 > ❗️
 >
-> The behaviour of push notification delivery and click tracking may be affected by the tracking consent feature, which, if enabled, requires explicit consent for tracking. Refer to the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
+> The behaviour of push notification delivery and click tracking may be affected by the tracking consent feature, which, if enabled, requires explicit consent for tracking. Refer to the [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
 
 ## Prerequisites
 
@@ -35,7 +35,7 @@ To be able to send push notifications to iOS devices from Engagement, you must:
 
 > ❗️
 >
-> Please note that the integration instructions assume your app uses "bare workflow". For Expo-based apps using "managed workflow", refer to [Expo managed apps](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#expo-managed-apps) for iOS push notifications integration.
+> Please note that the integration instructions assume your app uses "bare workflow". For Expo-based apps using "managed workflow", refer to [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#expo-managed-apps) for iOS push notifications integration.
 
 ## Integration
 

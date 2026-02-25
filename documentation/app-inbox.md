@@ -1,5 +1,5 @@
 ---
-title: App Inbox
+title: App Inbox for React Native SDK
 excerpt: Add a message inbox to your app using the React Native SDK
 slug: react-native-sdk-app-inbox
 categorySlug: integrations
@@ -37,7 +37,7 @@ That's all that's required to integrate the App Inbox. Optionally, you can [cust
 
 > 📘
 >
-> See [TrackingScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/TrackingScreen.tsx) in the [example app](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) for a reference implementation.
+> See [TrackingScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/TrackingScreen.tsx) in the [Example app for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) for a reference implementation.
 
 ## Default App Inbox behavior
 
@@ -67,7 +67,7 @@ The SDK fetches and displays the App Inbox automatically as follows:
 
 > ❗️
 >
-> The behavior of `trackAppInboxOpened` and `trackAppInboxClick` may be affected by the tracking consent feature, which in enabled mode considers the requirement of explicit consent for tracking. Refer to [Consent](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
+> The behavior of `trackAppInboxOpened` and `trackAppInboxClick` may be affected by the tracking consent feature, which in enabled mode considers the requirement of explicit consent for tracking. Refer to [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
 
 ## Customize App Inbox
 
@@ -195,7 +195,7 @@ Supported text weight formats:
 
 > 👍
 >
-> You may register your own styling at any time - before [SDK initialization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk) or later in some of your screens. Every action in scope of the App Inbox uses currently registered styles. We recommend to register your styles configuration right before you initialize the SDK.
+> You may register your own styling at any time - before [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk) or later in some of your screens. Every action in scope of the App Inbox uses currently registered styles. We recommend to register your styles configuration right before you initialize the SDK.
 
 #### Android style rules
 
@@ -327,7 +327,7 @@ The SDK tracks App Inbox events automatically by default. In case of a [custom i
 
 Use the `Exponea.trackAppInboxOpened(MessageItem)` method to track the opening of App Inbox messages.
 
-The behavior of `trackAppInboxOpened` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Refer to [Tracking consent](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
+The behavior of `trackAppInboxOpened` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Refer to [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
 
 If you want to ignore tracking consent, use `Exponea.trackAppInboxOpenedWithoutTrackingConsent` instead. This method will track the event regardless of consent.
 
@@ -335,6 +335,6 @@ If you want to ignore tracking consent, use `Exponea.trackAppInboxOpenedWithoutT
 
 Use the `Exponea.trackAppInboxClick(MessageItemAction, MessageItem)` method to track action invocations in App Inbox messages.
 
-The behavior of `trackAppInboxClick` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Refer to [Tracking consent](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
+The behavior of `trackAppInboxClick` may be affected by the tracking consent feature, which, when enabled, requires explicit consent for tracking. Refer to [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
 
 If you want to ignore tracking consent, use `Exponea.trackAppInboxClickWithoutTrackingConsent` instead. This method will track the event regardless of consent.

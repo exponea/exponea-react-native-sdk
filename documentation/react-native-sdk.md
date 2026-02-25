@@ -15,7 +15,7 @@ The Exponea React Native SDK allows you to integrate your React Native-based mob
 
 The React Native SDK is implemented in Typescript as a wrapper around the native [Android](https://documentation.bloomreach.com/engagement/docs/android-sdk) and [iOS](https://documentation.bloomreach.com/engagement/docs/ios-sdk) SDKs.
 
-The SDK is [available as open source on GitHub](https://github.com/exponea/exponea-react-native-sdk) for maximum transparency and includes an [example app](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) you can use as a reference implementation.
+The SDK is [available as open source on GitHub](https://github.com/exponea/exponea-react-native-sdk) for maximum transparency and includes an [Example app for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) you can use as a reference implementation.
 
 > ❗️
 > 
@@ -23,27 +23,27 @@ The SDK is [available as open source on GitHub](https://github.com/exponea/expon
 
 ## Get started
 
-- [Initial SDK setup](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup)
-  - [Configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration)
-  - [Authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization)
-  - [Data flushing](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-data-flushing)
-- [Basic concepts](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-basic-concepts)
-- [Tracking](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking)
-  - [Tracking consent](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent)
-- [Links](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-links)
-- [Push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications)
-  - [Android push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android)
-  - [iOS push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios)
-- [Fetch data](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-fetch-data)
-- [In-app personalization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-personalization)
-  - [In-app messages](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-messages)
-  - [In-app content blocks](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-content-blocks)
-- [App Inbox](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-app-inbox)
-- [Segmentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-segmentation)
-- [Example app](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app)
-- [Development](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-development)
-- [Release notes](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-release-notes)
-   - [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update)
+- [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup)
+  - [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration)
+  - [Authorization for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization)
+  - [Data flushing for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-data-flushing)
+- [Basic concepts for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-basic-concepts)
+- [Tracking for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking)
+  - [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent)
+- [Links for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-links)
+- [Push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications)
+  - [Android push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android)
+  - [iOS push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios)
+- [Fetch data for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-fetch-data)
+- [In-app personalization for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-personalization)
+  - [In-app messages for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-messages)
+  - [In-app content blocks for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-content-blocks)
+- [App Inbox for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-app-inbox)
+- [Segmentation for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-segmentation)
+- [Example app for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app)
+- [Development for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-development)
+- [Release notes for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-release-notes)
+   - [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update)
 
 ## Frequently asked questions
 

@@ -1,5 +1,5 @@
 ---
-title: Tracking
+title: Tracking for React Native SDK
 excerpt: Track customers and events using the React Native SDK
 slug: react-native-sdk-tracking
 categorySlug: integrations

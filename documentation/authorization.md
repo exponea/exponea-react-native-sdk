@@ -1,5 +1,5 @@
 ---
-title: Authorization
+title: Authorization for React Native SDK
 excerpt: Full authorization reference for the React Native SDK
 slug: react-native-sdk-authorization
 categorySlug: integrations

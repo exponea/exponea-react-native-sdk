@@ -1,12 +1,12 @@
 ---
-title: In-app content blocks
+title: In-app content blocks for React Native SDK
 excerpt: Display native in-app content blocks based on definitions set up in Engagement using the React Native SDK
 slug: react-native-sdk-in-app-content-blocks
 categorySlug: integrations
 parentDocSlug: react-native-sdk-in-app-personalization
 ---
 
-In-app content blocks provide a way to display campaigns within your mobile applications that seamlessly blend with the overall app design. Unlike [in-app messages](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-messages) that appear as overlays or pop-ups demanding immediate attention, in-app content blocks display inline with the app's existing content.
+In-app content blocks provide a way to display campaigns within your mobile applications that seamlessly blend with the overall app design. Unlike [In-app messages for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-messages) that appear as overlays or pop-ups demanding immediate attention, in-app content blocks display inline with the app's existing content.
 
 You can strategically position placeholders for in-app content blocks within your app. You can customize the behavior and presentation to meet your specific requirements.
 
@@ -39,7 +39,7 @@ After the SDK [initializes](https://documentation.bloomreach.com/engagement/docs
 
 > 📘
 >
-> Refer to [InAppCbScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/InAppCbScreen.tsx) in the [example app](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) for a reference implementation.
+> Refer to [InAppCbScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/InAppCbScreen.tsx) in the [Example app for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) for a reference implementation.
 
 > 👍
 >
@@ -68,7 +68,7 @@ Add a carousel view with the specified `placeholderId` to your layout:
 
 > 📘
 >
-> Refer to [CarouselScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/CarouselScreen.tsx) in the [example app](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) for a reference implementation.
+> Refer to [CarouselScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/CarouselScreen.tsx) in the [Example app for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) for a reference implementation.
 
 > 👍
 >
@@ -90,7 +90,7 @@ The SDK automatically tracks `banner` events for in-app content blocks with the 
 
 > ❗️
 >
-> The behavior of in-app content block tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [consent documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) documentation for details.
+> The behavior of in-app content block tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) documentation for details.
 
 ## Customization
 
@@ -205,7 +205,7 @@ You can implement additional filtration and sorting by registering your own `fil
 This section provides helpful pointers for troubleshooting in-app content blocks issues.
 
 > 👍 Enable verbose logging
-> The SDK logs a lot of information in verbose mode while loading in-app content blocks. When troubleshooting in-app content block issues, first ensure to [set the SDK's log level](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#log-level) to `VERBOSE`.
+> The SDK logs a lot of information in verbose mode while loading in-app content blocks. When troubleshooting in-app content block issues, first ensure to set the SDK's log level (see [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#log-level)) to `VERBOSE`.
 
 ### In-app content block not displayed
 

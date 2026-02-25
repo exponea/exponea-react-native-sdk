@@ -1,5 +1,5 @@
 ---
-title: Configuration
+title: Configuration for React Native SDK
 excerpt: Full configuration reference for the React Native SDK
 slug: react-native-sdk-configuration
 categorySlug: integrations

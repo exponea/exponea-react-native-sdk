@@ -1,5 +1,5 @@
 ---
-title: Initial SDK setup
+title: Initial setup for React Native SDK
 excerpt: Install and configure the React Native SDK
 slug: react-native-sdk-setup
 categorySlug: integrations

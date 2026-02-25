@@ -1,5 +1,5 @@
 ---
-title: Basic concepts
+title: Basic concepts for React Native SDK
 excerpt: Basic concepts of the React Native SDK and some troubleshooting tips.
 slug: react-native-sdk-basic-concepts
 categorySlug: integrations

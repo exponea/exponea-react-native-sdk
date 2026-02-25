@@ -1,5 +1,5 @@
 ---
-title: In-app messages
+title: In-app messages for React Native SDK
 excerpt: Display native in-app messages based on definitions set up in Engagement using the React Native SDK
 slug: react-native-sdk-in-app-messages
 categorySlug: integrations
@@ -8,7 +8,7 @@ parentDocSlug: react-native-sdk-in-app-personalization
 
 The SDK enables you to display native in-app messages in your app based on definitions set up in Engagement. 
 
-In-app messages work out of the box once the [SDK is installed and configured](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup) in your app; no development work is required. However, you can customize the behavior to meet your specific requirements.
+In-app messages work out of the box once the [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup) in your app; no development work is required. However, you can customize the behavior to meet your specific requirements.
 
 > 📘
 >
@@ -33,7 +33,7 @@ The SDK automatically tracks `banner` events for in-app messages with the follow
 
 > ❗️
 >
-> The behavior of in-app message tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [consent documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) documentation for details.
+> The behavior of in-app message tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) documentation for details.
 
 
 ## Customization
@@ -121,14 +121,14 @@ Exponea.setInAppMessageCallback({
 
 The method `trackInAppMessageClose` will track a 'close' event with the 'interaction' field's value.
 
-> The behaviour of `trackInAppMessageClick` and `trackInAppMessageClose` may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Read more in the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent).
+> The behaviour of `trackInAppMessageClick` and `trackInAppMessageClose` may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Read more in the [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent).
 
 ## Troubleshooting
 
 This section provides helpful pointers for troubleshooting in-app message issues.
 
 > 👍 Set Verbose Log Level
-> The SDK logs a lot of information in at `VERBOSE` level while loading in-app messages. When troubleshooting in-app message issues, ensure to [set the SDK's log level](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#log-level) at least to `VERBOSE`.
+> The SDK logs a lot of information in at `VERBOSE` level while loading in-app messages. When troubleshooting in-app message issues, ensure to set the SDK's log level (see [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#log-level)) at least to `VERBOSE`.
 
 ### In-app message not displayed
 
@@ -149,7 +149,7 @@ When troubleshooting why an in-app message did not display on your device, alway
 
 > ❗️
 >
-> Invoking `Plugin.anonymize` triggers fetching in-app messages immediately but `Exponea.identifyCustomer` needs to be flushed to the backend successfully first. This is because the backend must know the customer so it can assign the in-app messages with matching audience. If you have set [flush mode](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-data-flushing#flushing-modes) to anything other then `FlushMode.immediate`, you must call `Exponea.flushData()` to finalize the `identifyCustomer` process and trigger an in-app messages fetch.
+> Invoking `Plugin.anonymize` triggers fetching in-app messages immediately but `Exponea.identifyCustomer` needs to be flushed to the backend successfully first. This is because the backend must know the customer so it can assign the in-app messages with matching audience. If you have set [Data flushing for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-data-flushing#flushing-modes) to anything other then `FlushMode.immediate`, you must call `Exponea.flushData()` to finalize the `identifyCustomer` process and trigger an in-app messages fetch.
 
 #### Troubleshoot in-app message display issues
 

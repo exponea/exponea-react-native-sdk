@@ -1,5 +1,5 @@
 ---
-title: Android push notifications
+title: Android push notifications for React Native SDK
 excerpt: Enable push notifications on Android using the React Native SDK
 slug: react-native-sdk-push-android
 categorySlug: integrations
@@ -12,18 +12,18 @@ The React Native SDK relies on the [native Android SDK](https://documentation.bl
 >
 > The SDK provides a push setup self-check feature to help developers successfully set up push notifications. The self-check will try to track the push token, request the Engagement backend to send a silent push to the device, and check if the app is ready to open push notifications.
 >
-> To enable the setup check, call `Exponea.checkPushSetup()` **before** [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
+> To enable the setup check, call `Exponea.checkPushSetup()` **before** [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
 > ❗️Important
 >
-> SDK versions 2.5.0 and higher use event-based token tracking to support multiple mobile applications per project. Learn more about [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
+> SDK versions 2.5.0 and higher use event-based token tracking to support multiple mobile applications per project. Learn more about [Push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
 
 > ❗️
 >
-> The behaviour of push notification delivery and click tracking may be affected by the tracking consent feature, which, if enabled, requires explicit consent for tracking. Refer to the [tracking consent documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
+> The behaviour of push notification delivery and click tracking may be affected by the tracking consent feature, which, if enabled, requires explicit consent for tracking. Refer to the [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) for details.
 
 > ❗️
 >
-> Please note that the integration instructions assume your app uses "bare workflow". For Expo-based apps using "managed workflow", refer to [Expo managed apps](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#expo-managed-apps) for Android push notifications integration.
+> Please note that the integration instructions assume your app uses "bare workflow". For Expo-based apps using "managed workflow", refer to [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#expo-managed-apps) for Android push notifications integration.
 
 ## Integration
 
@@ -34,7 +34,7 @@ Exponea Android SDK supports the following integrations:
 
 ### Standard (Firebase) integration
 
-To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
+To be able to send [Push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
 
 1. Set up a Firebase project.
 2. Implement Firebase messaging in your app.
@@ -221,7 +221,7 @@ The behavior of this callback is as follows:
 
 ### Enable deep linking
 
-You can use `Exponea.setPushOpenedListener()` to define a [listener that will respond to push notification interactions](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#respond-to-push-notification-interactions). To enable deep linking, you must make some changes to `AndroidManifest` in `android/src/main`.
+You can use `Exponea.setPushOpenedListener()` to define a [Push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#respond-to-push-notification-interactions). To enable deep linking, you must make some changes to `AndroidManifest` in `android/src/main`.
 
 #### Set activity to single task launch mode
 

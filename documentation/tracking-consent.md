@@ -1,5 +1,5 @@
 ---
-title: Tracking consent
+title: Tracking consent for React Native SDK
 excerpt: Manage tracking consent using the React Native SDK.
 slug: react-native-sdk-tracking-consent
 categorySlug: integrations

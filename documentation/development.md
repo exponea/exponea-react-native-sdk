@@ -1,14 +1,14 @@
 ---
-title: SDK development
+title: Development for React Native SDK
 excerpt: Work with the React Native SDK source code.
 slug: react-native-sdk-development
 categorySlug: integrations
 parentDocSlug: react-native-sdk
 ---
 
-# SDK development guide
+# Development for React Native SDK
 
-The project consists of TypeScript code in the `/src` folder, a native Android module implementation in `/android`, and a native iOS module in `/ios`. To see SDK functionality in action, we provide an [example application](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) you can find in `/example`.
+The project consists of TypeScript code in the `/src` folder, a native Android module implementation in `/android`, and a native iOS module in `/ios`. To see SDK functionality in action, we provide an [Example app for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) you can find in `/example`.
 
 ## TypeScript
 
