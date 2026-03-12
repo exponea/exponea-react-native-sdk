@@ -67,6 +67,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
     fun parse(context: Context? = null): ExponeaConfiguration {
         val map = readableMap.toHashMapRecursively()
         requireProjectAndAuthorization(map)
+        configuration.requirePushAuthorization = true
         map.forEach { entry ->
             when (entry.key) {
                 "projectToken" ->
@@ -111,6 +112,9 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                         )
                     }
                 }
+                "requirePushAuthorization" ->
+                    configuration.requirePushAuthorization =
+                        map.getNullSafely("requirePushAuthorization", Boolean::class, true) ?: true
                 "allowDefaultCustomerProperties" -> {
                     configuration.allowDefaultCustomerProperties = map.getSafely(
                             "allowDefaultCustomerProperties",
@@ -156,6 +160,9 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
     private fun parseAndroidConfig(map: Map<String, Any?>, context: Context?) {
         map.forEach { entry ->
             when (entry.key) {
+                "requirePushAuthorization" ->
+                    configuration.requirePushAuthorization =
+                        map.getNullSafely("requirePushAuthorization", Boolean::class, true) ?: true
                 "automaticPushNotifications" ->
                     configuration.automaticPushNotification =
                         map.getSafely("automaticPushNotifications", Boolean::class)

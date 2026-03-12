@@ -28,7 +28,8 @@ internal class ConfigurationParserTest {
         assertEquals(
             ExponeaConfiguration(
                 projectToken = "mock-project-token",
-                authorization = "Token mock-authorization-token"
+                authorization = "Token mock-authorization-token",
+                requirePushAuthorization = true
             ),
             ConfigurationParser(data as ReadableMap).parse()
         )
@@ -60,6 +61,7 @@ internal class ConfigurationParserTest {
                 sessionTimeout = 60.0,
                 automaticSessionTracking = true,
                 tokenTrackFrequency = ExponeaConfiguration.TokenFrequency.DAILY,
+                requirePushAuthorization = false,
                 automaticPushNotification = true,
                 pushIcon = 12345,
                 pushAccentColor = 123,
@@ -110,6 +112,7 @@ internal class ConfigurationParserTest {
                 projectToken = "mock-project-token",
                 authorization = "Token mock-authorization-token",
                 baseURL = "http://mock-base-url.xxx",
+                requirePushAuthorization = true,
                 pushAccentColor = 123
             ),
             ConfigurationParser(data as ReadableMap).parse()
@@ -152,5 +155,28 @@ internal class ConfigurationParserTest {
             "android", JavaOnlyMap.of("pushIconResourceName", "my_icon"))
         val config = ConfigurationParser(data as ReadableMap).parse(ApplicationProvider.getApplicationContext())
         assertNull(config.pushIcon)
+    }
+
+    @Test
+    fun `should parse requirePushAuthorization from root level`() {
+        val data = JavaOnlyMap.of(
+            "projectToken", "mock-project-token",
+            "authorizationToken", "mock-authorization-token",
+            "requirePushAuthorization", false
+        )
+        val config = ConfigurationParser(data as ReadableMap).parse()
+        assertEquals(false, config.requirePushAuthorization)
+    }
+
+    @Test
+    fun `should parse requirePushAuthorization from android block and override root`() {
+        val data = JavaOnlyMap.of(
+            "projectToken", "mock-project-token",
+            "authorizationToken", "mock-authorization-token",
+            "requirePushAuthorization", true,
+            "android", JavaOnlyMap.of("requirePushAuthorization", false)
+        )
+        val config = ConfigurationParser(data as ReadableMap).parse()
+        assertEquals(false, config.requirePushAuthorization)
     }
 }

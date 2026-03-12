@@ -66,7 +66,16 @@ internal class ExponeaModuleTest {
             JavaOnlyMap.of("projectToken", "mock", "authorizationToken", "mock"),
             MockResolvingPromise { }
         )
-        verify { Exponea.init(any(), ExponeaConfiguration(projectToken = "mock", authorization = "Token mock")) }
+        verify {
+            Exponea.init(
+                any(),
+                ExponeaConfiguration(
+                    projectToken = "mock",
+                    authorization = "Token mock",
+                    requirePushAuthorization = true
+                )
+            )
+        }
     }
 
     @Test

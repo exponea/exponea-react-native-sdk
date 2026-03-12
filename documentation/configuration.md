@@ -70,6 +70,11 @@ The following parameters are specified in an `Configuration` object. Refer to [s
     * `EVERY_LAUNCH` - always tracks push token
     * `DAILY` - tracks push token once per day
 
+* `requirePushAuthorization`
+  * When `true`, the SDK only tracks the push token if the user has granted notification permission; otherwise the `notification_state` event is tracked with `valid = false` and a description such as "Permission denied". When `false`, the token is tracked regardless of permission (e.g. for silent push).
+  * Applied on both iOS and Android. Can be set at root level (same value for both platforms) or overridden per platform via `ios.requirePushAuthorization` or `android.requirePushAuthorization`.
+  * Default value: `true`
+
 * `flushMaxRetries`
   * Controls how many times the SDK should attempt to flush an event before aborting. Useful for example in case the API is down or some other temporary error happens.
   * The SDK will consider the data to be flushed if this number is exceeded and delete the data from the queue.
@@ -109,6 +114,10 @@ The following parameters are specified in an `Configuration` object. Refer to [s
 ### Android-specific configuration parameters
 
 The following parameters are specified in an `AndroidConfiguration` object. Refer to [src/Configuration.ts](https://github.com/exponea/exponea-react-native-sdk/blob/main/src/Configuration.ts) for the complete interface definition.
+
+* `requirePushAuthorization`
+  * Same as the root-level parameter. When set in `android`, it overrides the root value for Android only. Affects `notification_state` event behavior (e.g. "Permission denied" when user has not granted notification permission).
+  * Default value: `true`
 
 * `automaticPushNotifications`
   * By default, the SDK will set up a Firebase service and try to process push notifications sent from the Engagement platform automatically. You can opt out by setting this to `false`.
@@ -156,10 +165,7 @@ The following parameters are specified in an `AndroidConfiguration` object. Refe
 The following parameters are specified in an `IOSConfiguration` object. Refer to [src/Configuration.ts](https://github.com/exponea/exponea-react-native-sdk/blob/main/src/Configuration.ts) for the complete interface definition.
 
 * `requirePushAuthorization`
-  * The SDK can check push notification authorization status ([Apple documentation](https://developer.apple.com/documentation/usernotifications/unnotificationsettings/1648391-authorizationstatus)) and only track the push token if the user is authorized to receive push notifications.
-  * When disabled, the SDK will automatically register for push notifications on app start and track the token to Engagement so your app can receive silent push notifications.
-  * When enabled, the SDK will automatically register for push notifications if the app is authorized to show push notifications to the user.
-  * Unless you're only using silent notifications, keep the default value `true`.
+  * Same as the root-level parameter. When set in `ios`, it overrides the root value for iOS only (same precedence as on Android). The SDK checks push notification authorization status ([Apple documentation](https://developer.apple.com/documentation/usernotifications/unnotificationsettings/1648391-authorizationstatus)) and only tracks the push token if the user is authorized. When disabled, the SDK registers for push on app start and tracks the token (e.g. for silent push). Unless you're only using silent notifications, keep the default value `true`.
 
 * `appGroup`
   * App group used for communication between the main app and notification extensions. This is a required field for rich push notification setup.

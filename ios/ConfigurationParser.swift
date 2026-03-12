@@ -78,9 +78,13 @@ class ConfigurationParser {
             }
         }
         var requirePushAuthorization = true
-        if let iosDictionary: NSDictionary = try? dictionary.getOptionalSafely(property: "ios") {
-            requirePushAuthorization = try iosDictionary.getOptionalSafely(property: "requirePushAuthorization") ?? true
+        if let iosDictionary: NSDictionary = try? dictionary.getOptionalSafely(property: "ios"),
+           let iosValue: Bool = try? iosDictionary.getOptionalSafely(property: "requirePushAuthorization") {
+            requirePushAuthorization = iosValue
+        } else if let rootValue: Bool = try? dictionary.getOptionalSafely(property: "requirePushAuthorization") {
+            requirePushAuthorization = rootValue
         }
+        // else keep default true
         if let frequency = frequency {
             return ExponeaSDK.Exponea.PushNotificationTracking.enabled(
                 appGroup: appGroup,

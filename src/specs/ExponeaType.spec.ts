@@ -61,6 +61,7 @@ describe('parameter serialization and typings', () => {
         pushChannelId: 'mock-push-channel-id',
         pushNotificationImportance: PushNotificationImportance.HIGH,
         httpLoggingLevel: HttpLoggingLevel.BODY,
+        requirePushAuthorization: false,
       },
       ios: {
         requirePushAuthorization: false,

@@ -23,6 +23,11 @@ interface Configuration {
   automaticSessionTracking?: boolean;
   /** Defines how often should the SDK track push notification token to Exponea */
   pushTokenTrackingFrequency?: PushTokenTrackingFrequency;
+  /**
+   * If true, push token is only tracked when the user has granted notification permission; otherwise empty token / permission denied is reported in notification_state.
+   * Applied on both iOS and Android when set at root level. Can be overridden per platform via ios.requirePushAuthorization or android.requirePushAuthorization.
+   */
+  requirePushAuthorization?: boolean;
   /** Flag to apply `defaultProperties` list to `identifyCustomer` tracking event. */
   allowDefaultCustomerProperties?: boolean;
   /** If true, Customer Token authentication is used */
@@ -40,6 +45,9 @@ interface Configuration {
 }
 
 export interface AndroidConfiguration {
+  /** If true, push token is only tracked when the user has granted notification permission. Affects notification_state event. Default true. */
+  requirePushAuthorization?: boolean;
+  /** If true, push notifications are automatically tracked */
   automaticPushNotifications?: boolean;
   /** Android resource id of the icon to be used for push notifications */
   pushIcon?: number;
