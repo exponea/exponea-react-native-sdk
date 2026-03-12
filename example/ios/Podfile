@@ -14,6 +14,8 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+ENV['RCT_USE_RN_DEP'] = '1'
+
 target 'example' do
   config = use_native_modules!
 

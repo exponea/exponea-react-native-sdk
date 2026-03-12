@@ -34,7 +34,7 @@ export default function CarouselScreen(): React.ReactElement {
           })
         }}
         onMessagesChanged={(count, cbs) => {
-          if (cbs.length == 0) {
+          if (cbs.length === 0) {
             setCarouselStatus({
               name: '',
               index: -1,

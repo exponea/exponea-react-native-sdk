@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React-Core"
-  s.dependency "ExponeaSDK", "3.9.0"
+  s.dependency "ExponeaSDK", "3.11.0"
   s.dependency "AnyCodable-FlightSchool", "0.4.0"
 
   # Don't install the dependencies when we run `pod install` in the old architecture.
@@ -34,7 +34,11 @@ Pod::Spec.new do |s|
       "CLANG_CXX_LANGUAGE_STANDARD" => "c++20"
     }
     s.dependency "React-Codegen"
-    s.dependency "RCT-Folly"
+    if ENV['RCT_USE_RN_DEP'] == '1' then
+      s.dependency "ReactNativeDependencies"
+    else
+      s.dependency "RCT-Folly"
+    end
     s.dependency "RCTRequired"
     s.dependency "RCTTypeSafety"
     s.dependency "ReactCommon/turbomodule/core"

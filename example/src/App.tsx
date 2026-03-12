@@ -158,8 +158,8 @@ export default class App extends React.Component<{}, AppState> {
       // our example app is triggering GDPR In-app by custom event tracking so we used it for detection
       // you may implement detection against message title, ID, payload, etc.
       if (!message.trigger) return false;
-      if (message.trigger["event_type"] !== "event_name") return false;
-      const triggerFilter = message.trigger["filter"] as any[]
+      if (message.trigger.event_type !== "event_name") return false;
+      const triggerFilter = message.trigger.filter as any[]
       return triggerFilter?.[0]?.constraint?.operands?.[0]?.value === "gdpr";
     }
 
@@ -180,7 +180,7 @@ export default class App extends React.Component<{}, AppState> {
               Exponea.stopIntegration();
               break;
           }
-        } else if (!!button.url) {
+        } else if (button.url) {
           Linking.openURL(button.url)
         }
       },
