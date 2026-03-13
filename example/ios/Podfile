@@ -43,9 +43,9 @@ end
 
 
 target 'ExampleNotificationService' do
-  pod "ExponeaSDK-Notifications", "3.8.2"
+  pod "ExponeaSDK-Notifications", "3.11.0"
 end
 
 target 'ExampleNotificationContent' do
-  pod "ExponeaSDK-Notifications", "3.8.2"
+  pod "ExponeaSDK-Notifications", "3.11.0"
 end

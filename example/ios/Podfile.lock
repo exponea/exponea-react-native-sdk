@@ -1,8 +1,8 @@
 PODS:
   - AnyCodable-FlightSchool (0.4.0)
-  - ExponeaSDK (3.9.0):
+  - ExponeaSDK (3.11.0):
     - SwiftSoup (< 3.0, >= 2.7.6)
-  - ExponeaSDK-Notifications (3.8.2)
+  - ExponeaSDK-Notifications (3.11.0)
   - FBLazyVector (0.81.6)
   - hermes-engine (0.81.6):
     - hermes-engine/Pre-built (= 0.81.6)
@@ -1213,7 +1213,7 @@ PODS:
     - ReactNativeDependencies
   - react-native-exponea-sdk (2.6.0):
     - AnyCodable-FlightSchool (= 0.4.0)
-    - ExponeaSDK (= 3.9.0)
+    - ExponeaSDK (= 3.11.0)
     - RCTRequired
     - RCTTypeSafety
     - React-Codegen
@@ -1836,7 +1836,7 @@ PODS:
   - Yoga (0.0.0)
 
 DEPENDENCIES:
-  - ExponeaSDK-Notifications (= 3.8.2)
+  - ExponeaSDK-Notifications (= 3.11.0)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2071,8 +2071,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
-  ExponeaSDK: f607fb735dc8bb7deee6d27a9c184d2c4c106e8e
-  ExponeaSDK-Notifications: 2b76ba03c0de266f27d6418c555f3a9ddb5c67e4
+  ExponeaSDK: 2359dca71396a77855f809abd2d639e2f6d67ff6
+  ExponeaSDK-Notifications: 6e4abe1e40400e19f628ab54646381e6ed0b4a31
   FBLazyVector: 812782f0506ba4c4a1b9f4b793e6de1bfdfc4c25
   hermes-engine: 7219f6e751ad6ec7f3d7ec121830ee34dae40749
   RCTDeprecation: d4ef510f229cea15314176aee5e3ba10064a8496
@@ -2108,7 +2108,7 @@ SPEC CHECKSUMS:
   React-logger: 35c2c0787fedeb39c87652a3e44cb2be0affc2dd
   React-Mapbuffer: 31b6162a2460d662fe2cd785fdd65e0c47242c22
   React-microtasksnativemodule: 80dcee1f69d1c150c507d23b89bd68f7c25a1e9a
-  react-native-exponea-sdk: 7cc6ea34650dec31729a8133eaf2820e7fb85721
+  react-native-exponea-sdk: 8ce6a38fc24fea30ea4d8e51d3a60dc5316b65ec
   react-native-safe-area-context: 91ed475a46335dfad9297dea204f638731b3fbe4
   React-NativeModulesApple: 255202a69e8516b0ccf467ea7aaba8a6994eeb4e
   React-oscompat: d5e3366fbd6c7150e17c1bda85eab583a6fa9fce
@@ -2149,6 +2149,6 @@ SPEC CHECKSUMS:
   SwiftSoup: 9ec2526c76ebc3fe5d3157c82b40b45a27eeb82d
   Yoga: 3196a843cc5f4bc433f1a41cf17cdf804a01a529
 
-PODFILE CHECKSUM: 42f02bb14322a0db1878bb409d15ce7690ea995a
+PODFILE CHECKSUM: f0bdcfe583629cdf882fb18ee5da6b7ff9c2bf90
 
 COCOAPODS: 1.16.2
