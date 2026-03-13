@@ -24,7 +24,7 @@
           <category android:name="android.intent.category.BROWSABLE" />
             <data
                 android:scheme="https"
-                android:host="old.panaxeo.com"
+                android:host="mobile-sdk-example-apps.web.app"
                 android:pathPattern="/exponea/track.html" />
         </intent-filter>
         <intent-filter android:autoVerify="true">
@@ -33,7 +33,7 @@
           <category android:name="android.intent.category.BROWSABLE" />
             <data
                 android:scheme="https"
-                android:host="old.panaxeo.com"
+                android:host="mobile-sdk-example-apps.web.app"
                 android:pathPattern="/exponea/flush.html" />
         </intent-filter>
         <intent-filter android:autoVerify="true">
@@ -42,7 +42,7 @@
           <category android:name="android.intent.category.BROWSABLE" />
             <data
                 android:scheme="https"
-                android:host="old.panaxeo.com"
+                android:host="mobile-sdk-example-apps.web.app"
                 android:pathPattern="/exponea/fetch.html" />
         </intent-filter>
         <intent-filter android:autoVerify="true">
@@ -51,7 +51,7 @@
           <category android:name="android.intent.category.BROWSABLE" />
             <data
                 android:scheme="https"
-                android:host="old.panaxeo.com"
+                android:host="mobile-sdk-example-apps.web.app"
                 android:pathPattern="/exponea/inappcb.html" />
         </intent-filter>
         <intent-filter android:autoVerify="true">
@@ -60,7 +60,7 @@
           <category android:name="android.intent.category.BROWSABLE" />
             <data
                 android:scheme="https"
-                android:host="old.panaxeo.com"
+                android:host="mobile-sdk-example-apps.web.app"
                 android:pathPattern="/exponea/anonymize.html" />
         </intent-filter>
         <intent-filter>
