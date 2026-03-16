@@ -11,6 +11,19 @@ parentDocSlug: react-native-sdk
 > Refer to the [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 2.7.0
+#### March 16, 2026
+* Added:
+  * Updates native Android SDK to version 4.10.0.
+  * Updates native iOS SDK to version 3.11.0.
+  * Updates Example App's universal and app links to new domain.
+  * Adds requirePushAuthorization parameter for Android configuration function.
+  * Adds support for React Native 0.81.6.
+  * Enables precompiled headers for iOS to speed up builds.
+* Fixed:
+  * Fixes carousel sorting by adding default function when custom function isn't provided.
+
+
 ## Release Notes for 2.6.0
 #### December 15, 2025
 * Added:
