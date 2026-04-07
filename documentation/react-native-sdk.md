@@ -2,7 +2,8 @@
 title: React Native SDK
 excerpt: Exponea SDK for React Native
 slug: react-native-sdk
-categorySlug: integrations
+category:
+  uri: /branches/2/categories/guides/Developers
 ---
 
 > 📘 

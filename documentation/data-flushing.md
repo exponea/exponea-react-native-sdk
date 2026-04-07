@@ -2,8 +2,10 @@
 title: Data flushing for React Native SDK
 excerpt: Learn how the React Native SDK uploads data to the Engagement API and how to customize this behavior
 slug: react-native-sdk-data-flushing
-categorySlug: integrations
-parentDocSlug: react-native-sdk-setup
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk-setup
 ---
 
 ## Data flushing

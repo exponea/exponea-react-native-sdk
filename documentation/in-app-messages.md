@@ -2,8 +2,10 @@
 title: In-app messages for React Native SDK
 excerpt: Display native in-app messages based on definitions set up in Engagement using the React Native SDK
 slug: react-native-sdk-in-app-messages
-categorySlug: integrations
-parentDocSlug: react-native-sdk-in-app-personalization
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk-in-app-personalization
 ---
 
 The SDK enables you to display native in-app messages in your app based on definitions set up in Engagement. 

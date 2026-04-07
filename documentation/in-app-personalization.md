@@ -2,8 +2,10 @@
 title: In-app personalization for React Native SDK
 excerpt: Display in-app personalization based on definitions set up in Engagement using the React Native SDK
 slug: react-native-sdk-in-app-personalization
-categorySlug: integrations
-parentDocSlug: react-native-sdk
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk
 ---
 
 Through in-app personalization, Engagement provides ways to display campaigns within your mobile applications. In-app personalization can take the form of in-app messages that appear as overlays or pop-ups, or in-app content blocks that appear in line with the app's existing content.

@@ -2,8 +2,10 @@
 title: Segmentation for React Native SDK
 excerpt: Implement real-time segments using the React Native SDK
 slug: react-native-sdk-segmentation
-categorySlug: integrations
-parentDocSlug: react-native-sdk
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk
 ---
 
 The [Real-time segments](https://documentation.bloomreach.com/discovery/docs/real-time-customer-segments-for-discovery) feature personalizes the product search, category and pathway results in real-time based on customer demographic and behavioral data. The feature combines Bloomreach Discovery’s extensive search algorithms and Bloomreach Engagement’s rich customer data to get the best of both worlds.

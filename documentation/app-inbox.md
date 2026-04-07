@@ -2,8 +2,10 @@
 title: App Inbox for React Native SDK
 excerpt: Add a message inbox to your app using the React Native SDK
 slug: react-native-sdk-app-inbox
-categorySlug: integrations
-parentDocSlug: react-native-sdk
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk
 ---
 
 The App Inbox feature creates a mobile communication channel that lives directly in your app. This inbox can receive messages from marketing campaigns and stores mobile push notifications for a set time period.

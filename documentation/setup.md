@@ -2,8 +2,10 @@
 title: Initial setup for React Native SDK
 excerpt: Install and configure the React Native SDK
 slug: react-native-sdk-setup
-categorySlug: integrations
-parentDocSlug: react-native-sdk
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk
 ---
 
 ## Install the SDK

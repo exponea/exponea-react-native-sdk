@@ -2,8 +2,10 @@
 title: iOS push notifications for React Native SDK
 excerpt: Enable push notifications on iOS using the React Native SDK
 slug: react-native-sdk-push-ios
-categorySlug: integrations
-parentDocSlug: react-native-sdk-push-notifications
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk-push-notifications
 ---
 
 The React Native SDK relies on the native iOS SDK to handle push notifications on iOS. This guide provides shortened instructions for iOS within the context of the React Native SDK and refers to the [push notifications documentation for the iOS SDK](https://documentation.bloomreach.com/engagement/docs/ios-sdk-push-notifications) for details.

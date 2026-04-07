@@ -2,8 +2,10 @@
 title: Tracking consent for React Native SDK
 excerpt: Manage tracking consent using the React Native SDK.
 slug: react-native-sdk-tracking-consent
-categorySlug: integrations
-parentDocSlug: react-native-sdk-tracking
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk-tracking
 ---
 
 Depending on local data access regulations, access to data on a user's device may require explicit consent. To follow such requirements, Engagement allows you to enable the standalone "tracking consent" feature. This feature activates the tracking consent option for in-app messages, in-app content blocks, and mobile push notifications.

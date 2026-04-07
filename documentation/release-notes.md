@@ -2,8 +2,10 @@
 title: Release notes for React Native SDK
 excerpt: Exponea React Native SDK release notes
 slug: react-native-sdk-release-notes
-categorySlug: integrations
-parentDocSlug: react-native-sdk
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk
 ---
 
 > 📘

@@ -2,8 +2,10 @@
 title: Configuration for React Native SDK
 excerpt: Full configuration reference for the React Native SDK
 slug: react-native-sdk-configuration
-categorySlug: integrations
-parentDocSlug: react-native-sdk-setup
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk-setup
 ---
 
 This page provides an overview of all configuration parameters for the SDK. In addition to the universal parameters, there are Android-specific and iOS-specific parameters.

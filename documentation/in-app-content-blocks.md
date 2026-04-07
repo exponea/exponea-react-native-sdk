@@ -2,8 +2,10 @@
 title: In-app content blocks for React Native SDK
 excerpt: Display native in-app content blocks based on definitions set up in Engagement using the React Native SDK
 slug: react-native-sdk-in-app-content-blocks
-categorySlug: integrations
-parentDocSlug: react-native-sdk-in-app-personalization
+category:
+  uri: /branches/2/categories/guides/Developers
+parent:
+  uri: react-native-sdk-in-app-personalization
 ---
 
 In-app content blocks provide a way to display campaigns within your mobile applications that seamlessly blend with the overall app design. Unlike [In-app messages for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-messages) that appear as overlays or pop-ups demanding immediate attention, in-app content blocks display inline with the app's existing content.
