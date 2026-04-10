@@ -26,32 +26,6 @@ parent:
 * Fixed:
   * Fixes carousel sorting by adding default function when custom function isn't provided.
 
-
-## Release Notes for 2.6.0
-#### December 15, 2025
-* Added:
-  * Adds documentation for [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-to-version-230-or-higher), including notification state event as a new token tracking method, Application ID configuration, and migration requirements for the Multiple mobile apps feature.
-  * Updates native Android SDK to version 4.8.0.
-  * Updates native iOS SDK to version 3.9.0.
-  * Updates Example App's application and bundle ID and Firebase Cloud Messaging (FCM)/Huawei Mobile Services (HMS) integration configuration.
-
-## Release Notes for 3.0.0
-
-#### March 25, 2026
-
-- Breaking:
-  - Complete SDK rewrite using React Native's [TurboModules](https://reactnative.dev/docs/turbo-modules) architecture. Requires React Native 0.82 or higher and the New Architecture enabled in your app. Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-from-version-2xx-to-3xx) for migration instructions.
-  - `LogLevel.DEBUG` wire value changed from `'DEBUG'` to `'DBG'` to avoid iOS `#define DEBUG` preprocessor conflict. Code using the `LogLevel.DEBUG` enum constant is unaffected; only code that hardcodes the string `'DEBUG'` must be updated.
-  - In-app message tracking methods (`trackInAppMessageClick`, `trackInAppMessageClose`, and their `WithoutTrackingConsent` variants) now accept `string | null` instead of `string | undefined` for `buttonText` and `buttonUrl` parameters.
-- Added:
-  - Adds cross-platform `requestPushAuthorization()` method, replacing the iOS-only `requestIosPushAuthorization()`.
-  - Adds named function exports for all SDK methods, enabling tree-shaking.
-  - Updates native iOS SDK to version 3.11.0.
-  - Updates native Android SDK to version 4.10.0.
-  - Updates build system to `react-native-builder-bob` with Yarn 4 and Turborepo.
-- Deprecated:
-  - `requestIosPushAuthorization()` is deprecated. Use `requestPushAuthorization()` instead.
-
 ## Release Notes for 2.6.0
 
 #### December 15, 2025
