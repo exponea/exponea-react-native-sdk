@@ -12,18 +12,18 @@ The SDK exchanges data with the Engagement APIs through authorized HTTP/HTTPS co
 
 ## Token authorization
 
-The default token authorization mode provides [public API access](https://documentation.bloomreach.com/engagement/reference/authentication#public-api-access) using an API key as a token. 
+The default token authorization mode provides [public API access](https://documentation.bloomreach.com/engagement/reference/authentication#public-api-access) using an API key as a token.
 
 Token authorization is used for the following API endpoints by default:
 
-* `POST /track/v2/projects/<projectToken>/customers` for tracking of customer data
-* `POST /track/v2/projects/<projectToken>/customers/events` for tracking of event data
-* `POST /track/v2/projects/<projectToken>/campaigns/clicks` for tracking campaign events
-* `POST /data/v2/projects/<projectToken>/consent/categories` for fetching consents
-* `POST /webxp/s/<projectToken>/inappmessages?v=1` for fetching InApp messages
-* `POST /webxp/projects/<projectToken>/appinbox/fetch` for fetching of AppInbox data
-* `POST /webxp/projects/<projectToken>/appinbox/markasread` for marking of AppInbox message as read
-* `POST /campaigns/send-self-check-notification?project_id=<projectToken>` for part of self-check push notification flow
+- `POST /track/v2/projects/<projectToken>/customers` for tracking of customer data
+- `POST /track/v2/projects/<projectToken>/customers/events` for tracking of event data
+- `POST /track/v2/projects/<projectToken>/campaigns/clicks` for tracking campaign events
+- `POST /data/v2/projects/<projectToken>/consent/categories` for fetching consents
+- `POST /webxp/s/<projectToken>/inappmessages?v=1` for fetching InApp messages
+- `POST /webxp/projects/<projectToken>/appinbox/fetch` for fetching of AppInbox data
+- `POST /webxp/projects/<projectToken>/appinbox/markasread` for marking of AppInbox message as read
+- `POST /campaigns/send-self-check-notification?project_id=<projectToken>` for part of self-check push notification flow
 
 Developers must set the token using the `authorizationToken` [configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) parameter when [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
 
@@ -48,8 +48,8 @@ The customer token is encoded using **JSON Web Token (JWT)**, an open industry s
 
 The SDK sends the customer token in `Bearer <value>` format. Currently, the SDK supports customer token authorization for the following Engagement API endpoints:
 
-* `POST /webxp/projects/<projectToken>/appinbox/fetch` for fetching of AppInbox data
-* `POST /webxp/projects/<projectToken>/appinbox/markasread` for marking of AppInbox message as read
+- `POST /webxp/projects/<projectToken>/appinbox/fetch` for fetching of AppInbox data
+- `POST /webxp/projects/<projectToken>/appinbox/markasread` for marking of AppInbox message as read
 
 Developers can enable customer token authorization by setting the `advancedAuthEnabled` [configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) parameter to `true` when [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
 
@@ -61,6 +61,7 @@ Exponea.configure({
   ...
 }).catch(error => console.log(error))
 ```
+
 > ❗️
 >
 > Now you need to specify your `applicationId`. Refer to the [Configure application ID](#configure-application-id) for further information.
@@ -75,13 +76,14 @@ Additionally, developers must implement an authorization provider that provides 
 >
 > Refer to [Generating customer token](https://documentation.bloomreach.com/engagement/docs/customer-token#generating-customer-token) in the customer token documentation for step-by-step instructions to generate a JWT customer token.
 
-
 ### Android authorization provider
 
-First, implement the `com.exponea.RNAuthorizationProvider` interface as in the following example:
+First, implement the `com.exponea.sdk.services.AuthorizationProvider` interface as in the following example:
 
 ```java
-public class ExampleAuthProvider implements RNAuthorizationProvider {
+import com.exponea.sdk.services.AuthorizationProvider;
+
+public class ExampleAuthProvider implements AuthorizationProvider {
     @Nullable
     @Override
     public String getAuthorizationToken() {
@@ -89,10 +91,6 @@ public class ExampleAuthProvider implements RNAuthorizationProvider {
     }
 }
 ```
-
-> 👍
->
-> If your Android native code is written in Kotlin, you may implement `com.exponea.sdk.services.AuthorizationProvider` directly.
 
 Then register your authorization provider in the `AndroidManifest.xml` file as in the following example:
 
@@ -151,7 +149,7 @@ If you define `ExponeaAuthProvider` but it is not working as expected, check the
    ```
    Class ExponeaAuthProvider does not conform to NSObject
    ```
-2. The registered class must conform to `AuthorizationProviderType`. If it doesn't, you'll see the following log message:
+3. The registered class must conform to `AuthorizationProviderType`. If it doesn't, you'll see the following log message:
    ```
    Class ExponeaAuthProvider does not conform to AuthorizationProviderType
    ```
@@ -268,6 +266,7 @@ Exponea.configure({
   ...
 }).catch(error => console.log(error))
 ```
+
 Make sure your `applicationId` value matches exactly Application ID configured in your Bloomreach Engagement under **Project Settings > Campaigns > Channels > Push Notifications.**
 
 **Single mobile app:** If your Engagement project supports only one app, you can skip the `applicationId` configuration. The SDK will automatically use the default value "default-application".

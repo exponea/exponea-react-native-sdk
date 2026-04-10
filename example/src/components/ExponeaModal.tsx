@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Modal,
-  Text,
-  TouchableOpacity,
-  Platform,
-} from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
 interface ExponeaModalProps {
   visible: boolean;
@@ -15,18 +8,20 @@ interface ExponeaModalProps {
 }
 
 export default function ExponeaModal(
-  props: ExponeaModalProps,
+  props: ExponeaModalProps
 ): React.ReactElement {
   return (
-    <Modal visible={props.visible} transparent={true}>
-      <View style={styles.container}>
-        <View style={styles.modal}>
-          <View style={styles.closeButtonContainer}>
-            <TouchableOpacity onPress={props.onClose}>
-              <Text style={styles.closeButtonText}>✖</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.contentContainer}>{props.children}</View>
+    <Modal
+      transparent={true}
+      visible={props.visible}
+      onRequestClose={props.onClose}
+    >
+      <View style={styles.overlay}>
+        <View style={styles.modalContainer}>
+          <TouchableOpacity style={styles.closeButton} onPress={props.onClose}>
+            <Text style={styles.closeButtonText}>✖</Text>
+          </TouchableOpacity>
+          {props.children}
         </View>
       </View>
     </Modal>
@@ -34,40 +29,34 @@ export default function ExponeaModal(
 }
 
 const styles = StyleSheet.create({
-  container: {
+  overlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modal: {
+  modalContainer: {
     minWidth: 300,
     minHeight: 100,
-    margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     borderRadius: 5,
     padding: 10,
-    alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
   },
-  closeButtonContainer: {
-    zIndex: 1,
+  closeButton: {
     position: 'absolute',
-    right: 5,
-    top: Platform.OS === 'ios' ? 5 : 0,
-  },
-  closeButtonText: {
-    fontSize: 16,
-    color: '#333',
+    top: 10,
+    right: 10,
+    zIndex: 10,
     padding: 5,
   },
-  contentContainer: {
-    marginTop: 10,
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });

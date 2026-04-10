@@ -12,7 +12,11 @@ parent:
 
 The Exponea React Native SDK can be installed in your app using [yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/). [CocoaPods](https://cocoapods.org/) is required to set up the iOS app.
 
-The SDK is compatible with React Native 0.77.0 - 0.81.4. Earlier versions may work but have not been tested.
+> ❗️Warning
+>
+> **SDK version 3.0.0 and higher** requires React Native's [New Architecture (TurboModules)](https://reactnative.dev/docs/turbo-modules). If your app still uses the old architecture (JavaScript Bridge), you must migrate before upgrading. Refer to the [React Native New Architecture migration guide](https://reactnative.dev/docs/new-architecture-intro) and the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-from-version-2xx-to-3xx) for details.
+
+The SDK is compatible with React Native 0.82.0 - 0.83.0 and requires Node.js 20.19.4 or higher.
 
 > ❗️
 >
@@ -34,7 +38,7 @@ yarn add react-native-exponea-sdk
 npm install react-native-exponea-sdk --save
 ```
 
-Optionally, you can specify version constraints as `react-native-exponea-sdk@<version>` (for example, `react-native-exponea-sdk@^1.8.0)`). Refer to [Ranges](https://github.com/npm/node-semver#versions) in the npm semver documentation for details.  
+Optionally, you can specify version constraints as `react-native-exponea-sdk@<version>` (for example, `react-native-exponea-sdk@^1.8.0)`). Refer to [Ranges](https://github.com/npm/node-semver#versions) in the npm semver documentation for details.
 
 ### iOS setup
 
@@ -97,11 +101,11 @@ Initialize the SDK:
 
 ```typescript
 Exponea.configure({
-  projectToken: "YOUR_PROJECT_TOKEN",
-  authorizationToken: "YOUR_API_KEY",
+  projectToken: 'YOUR_PROJECT_TOKEN',
+  authorizationToken: 'YOUR_API_KEY',
   // default baseUrl value is https://api.exponea.com
-  baseUrl: "YOUR_API_BASE_URL" 
-}).catch(error => console.log(error))
+  baseUrl: 'YOUR_API_BASE_URL',
+}).catch((error) => console.log(error));
 ```
 
 Configure application ID:
@@ -127,13 +131,13 @@ React Native application code can be reloaded without restarting the native appl
 ```typescript
 async function configureExponea(configuration: Configuration) {
   try {
-    if (!await Exponea.isConfigured()) {
-      Exponea.configure(configuration)
+    if (!(await Exponea.isConfigured())) {
+      Exponea.configure(configuration);
     } else {
-      console.log("Exponea SDK already configured.")
+      console.log('Exponea SDK already configured.');
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 ```
@@ -174,155 +178,157 @@ Below is an example Expo config plugin that you can use as a starting point:
 ```typescript
 /* eslint-disable @typescript-eslint/no-var-requires */
 const {
-    withPlugins,
-    withAppBuildGradle,
-    withAndroidManifest,
-    withAppDelegate,
-    withDangerousMod,
-  } = require("@expo/config-plugins");
-  const { writeFileSync, mkdirSync, existsSync } = require("fs");
-  
-  // Update android/app/build.gradle
-  function withExponeaBuildGradle(config) {
-    return withAppBuildGradle(config, async (cfg) => {
-      const { modResults } = cfg;
-      const { contents } = modResults;
-      const lines = contents.split("\n");
-      const configIndex = lines.findIndex((line) => /defaultConfig {/.test(line));
-      const dependenciesIndex = lines.findIndex((line) =>
-        /dependencies {/.test(line)
-      );
-  
-      modResults.contents = [
-        ...lines.slice(0, configIndex + 1),
-        "        multiDexEnabled true",
-        ...lines.slice(configIndex + 1, dependenciesIndex + 1),
-        `    implementation("com.google.firebase:firebase-messaging:24.0.0")`,
-        ...lines.slice(dependenciesIndex + 1),
-      ].join("\n");
-  
-      return cfg;
-    });
-  }
-  
-  // Update android/app/src/main/AndroidManifest.xml
-  function withExponeaAndroidManifest(config) {
-    return withAndroidManifest(config, async (cfg) => {
-      if (!cfg.modResults.manifest.application[0].service)
-        cfg.modResults.manifest.application[0].service = [];
-      cfg.modResults.manifest.application[0].service.push({
-        $: {
-          "android:name": ".MessageService",
-          "android:exported": "false",
-        },
-        "intent-filter": [
-          {
-            action: {
-              $: {
-                "android:name": "com.google.firebase.MESSAGING_EVENT",
-              },
+  withPlugins,
+  withAppBuildGradle,
+  withAndroidManifest,
+  withAppDelegate,
+  withDangerousMod,
+} = require('@expo/config-plugins');
+const { writeFileSync, mkdirSync, existsSync } = require('fs');
+
+// Update android/app/build.gradle
+function withExponeaBuildGradle(config) {
+  return withAppBuildGradle(config, async (cfg) => {
+    const { modResults } = cfg;
+    const { contents } = modResults;
+    const lines = contents.split('\n');
+    const configIndex = lines.findIndex((line) => /defaultConfig {/.test(line));
+    const dependenciesIndex = lines.findIndex((line) =>
+      /dependencies {/.test(line)
+    );
+
+    modResults.contents = [
+      ...lines.slice(0, configIndex + 1),
+      '        multiDexEnabled true',
+      ...lines.slice(configIndex + 1, dependenciesIndex + 1),
+      `    implementation("com.google.firebase:firebase-messaging:24.0.0")`,
+      ...lines.slice(dependenciesIndex + 1),
+    ].join('\n');
+
+    return cfg;
+  });
+}
+
+// Update android/app/src/main/AndroidManifest.xml
+function withExponeaAndroidManifest(config) {
+  return withAndroidManifest(config, async (cfg) => {
+    if (!cfg.modResults.manifest.application[0].service)
+      cfg.modResults.manifest.application[0].service = [];
+    cfg.modResults.manifest.application[0].service.push({
+      '$': {
+        'android:name': '.MessageService',
+        'android:exported': 'false',
+      },
+      'intent-filter': [
+        {
+          action: {
+            $: {
+              'android:name': 'com.google.firebase.MESSAGING_EVENT',
             },
           },
-        ],
-      });
-      return cfg;
+        },
+      ],
     });
-  }
-  
-  // Update ios/MyApp/AppDelegate.mm or ios/MyApp/AppDelegate.swift
-  function withExponeaAppDelegate(config) {
-    const modifyAppDelegateForObjectiveC = (cfg) => {
-      const { modResults } = cfg;
-      const { contents } = modResults;
-      const lines = contents.split("\n");
-  
-      const importIndex = lines.findIndex((line) =>
-        /^#import "AppDelegate.h"/.test(line)
-      );
-      const didFinishLaunchingIndex = lines.findIndex((line) =>
-        /return \[super application:application didFinishLaunchingWithOptions:launchOptions\]/.test(
+    return cfg;
+  });
+}
+
+// Update ios/MyApp/AppDelegate.mm or ios/MyApp/AppDelegate.swift
+function withExponeaAppDelegate(config) {
+  const modifyAppDelegateForObjectiveC = (cfg) => {
+    const { modResults } = cfg;
+    const { contents } = modResults;
+    const lines = contents.split('\n');
+
+    const importIndex = lines.findIndex((line) =>
+      /^#import "AppDelegate.h"/.test(line)
+    );
+    const didFinishLaunchingIndex = lines.findIndex((line) =>
+      /return \[super application:application didFinishLaunchingWithOptions:launchOptions\]/.test(
+        line
+      )
+    );
+    const continueUserActivityIndex = lines.findIndex((line) =>
+      /return \[super application:application continueUserActivity:userActivity restorationHandler:restorationHandler\]/.test(
+        line
+      )
+    );
+    const didRegisterForRemoteNotificationsWithDeviceTokenIndex =
+      lines.findIndex((line) =>
+        /return \[super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken\]/.test(
           line
         )
       );
-      const continueUserActivityIndex = lines.findIndex((line) =>
-        /return \[super application:application continueUserActivity:userActivity restorationHandler:restorationHandler\]/.test(
-          line
-        )
-      );
-      const didRegisterForRemoteNotificationsWithDeviceTokenIndex =
-        lines.findIndex((line) =>
-          /return \[super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken\]/.test(
-            line
-          )
-        );
-      const didReceiveRemoteNotificationIndex = lines.findIndex((line) =>
-        /return \[super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler\]/.test(
-          line
-        )
-      );
-      const endIndex = lines.findIndex((line) => /@end/.test(line));
-  
-      modResults.contents = [
-        ...lines.slice(0, importIndex),
-        `#import <ExponeaRNAppDelegate.h>
+    const didReceiveRemoteNotificationIndex = lines.findIndex((line) =>
+      /return \[super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler\]/.test(
+        line
+      )
+    );
+    const endIndex = lines.findIndex((line) => /@end/.test(line));
+
+    modResults.contents = [
+      ...lines.slice(0, importIndex),
+      `#import <ExponeaRNAppDelegate.h>
   #import <UserNotifications/UserNotifications.h>`,
-        ...lines.slice(importIndex, didFinishLaunchingIndex),
-        `  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+      ...lines.slice(importIndex, didFinishLaunchingIndex),
+      `  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     center.delegate = self;`,
-        ...lines.slice(didFinishLaunchingIndex, continueUserActivityIndex),
-        `  [Exponea continueUserActivity: userActivity];`,
-        ...lines.slice(
-          continueUserActivityIndex,
-          didRegisterForRemoteNotificationsWithDeviceTokenIndex
-        ),
-        `  [Exponea handlePushNotificationToken: deviceToken];`,
-        ...lines.slice(
-          didRegisterForRemoteNotificationsWithDeviceTokenIndex,
-          didReceiveRemoteNotificationIndex
-        ),
-        `  [Exponea handlePushNotificationOpenedWithUserInfo:userInfo];`,
-        ...lines.slice(didReceiveRemoteNotificationIndex, endIndex),
-        `- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+      ...lines.slice(didFinishLaunchingIndex, continueUserActivityIndex),
+      `  [Exponea continueUserActivity: userActivity];`,
+      ...lines.slice(
+        continueUserActivityIndex,
+        didRegisterForRemoteNotificationsWithDeviceTokenIndex
+      ),
+      `  [Exponea handlePushNotificationToken: deviceToken];`,
+      ...lines.slice(
+        didRegisterForRemoteNotificationsWithDeviceTokenIndex,
+        didReceiveRemoteNotificationIndex
+      ),
+      `  [Exponea handlePushNotificationOpenedWithUserInfo:userInfo];`,
+      ...lines.slice(didReceiveRemoteNotificationIndex, endIndex),
+      `- (void)userNotificationCenter:(UNUserNotificationCenter *)center
       didReceiveNotificationResponse:(UNNotificationResponse *)response
       withCompletionHandler:(void (^)(void))completionHandler
   {
     [Exponea handlePushNotificationOpenedWithResponse: response];
     completionHandler();
   }`,
-        ...lines.slice(endIndex),
-      ].join("\n");
-  
-      return cfg;
-    };
-    const modifyAppDelegateForSwift = (cfg) => {
-      let contents = cfg.modResults.contents;
-      // Step 1: import ExponeaSDK
-      if (!contents.includes('import ExponeaSDK')) {
-        contents = 'import ExponeaSDK\n' + contents;
-      }
-      // Step 2: Register as UNUserNotificationCenterDelegate
+      ...lines.slice(endIndex),
+    ].join('\n');
+
+    return cfg;
+  };
+  const modifyAppDelegateForSwift = (cfg) => {
+    let contents = cfg.modResults.contents;
+    // Step 1: import ExponeaSDK
+    if (!contents.includes('import ExponeaSDK')) {
+      contents = 'import ExponeaSDK\n' + contents;
+    }
+    // Step 2: Register as UNUserNotificationCenterDelegate
+    contents = contents.replace(
+      'class AppDelegate: ExpoAppDelegate {',
+      'class AppDelegate: ExpoAppDelegate, UNUserNotificationCenterDelegate {'
+    );
+    const launchRegex =
+      /func application\([\s\S]*?didFinishLaunchingWithOptions[\s\S]*?\)\s*-> Bool\s*{([\s\S]*?)return super\.application/m;
+    if (
+      launchRegex.test(contents) &&
+      !contents.includes('UNUserNotificationCenter.current().delegate = self')
+    ) {
+      contents = contents.replace(launchRegex, (match, body) => {
+        const newBody =
+          body.trim() +
+          '\n    UNUserNotificationCenter.current().delegate = self\n    ';
+        return match.replace(body, '\n    ' + newBody);
+      });
+    }
+    // Step 3: Receive UserNotificationCenter event
+    const didReceiveRegexp =
+      /func userNotificationCenter\([\s\S]*?didReceive[\s\S]*?\)\s*{([\s\S]*?)}/m;
+    if (!didReceiveRegexp.test(contents)) {
       contents = contents.replace(
-        'class AppDelegate: ExpoAppDelegate {',
-        'class AppDelegate: ExpoAppDelegate, UNUserNotificationCenterDelegate {'
-      )
-      const launchRegex = /func application\([\s\S]*?didFinishLaunchingWithOptions[\s\S]*?\)\s*-> Bool\s*{([\s\S]*?)return super\.application/m;
-      if (launchRegex.test(contents) && !contents.includes('UNUserNotificationCenter.current().delegate = self')) {
-        contents = contents.replace(
-          launchRegex,
-          (match, body) => {
-            const newBody =
-              body.trim() +
-              '\n    UNUserNotificationCenter.current().delegate = self\n    ';
-            return match.replace(body, '\n    ' + newBody);
-          }
-        );
-      }
-      // Step 3: Receive UserNotificationCenter event
-      const didReceiveRegexp = /func userNotificationCenter\([\s\S]*?didReceive[\s\S]*?\)\s*{([\s\S]*?)}/m;
-      if (!didReceiveRegexp.test(contents)) {
-        contents = contents.replace(
-                  /\n}\s*$/m,
-                  `\n
+        /\n}\s*$/m,
+        `\n
   public func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     didReceive response: UNNotificationResponse,
@@ -330,106 +336,129 @@ const {
   ) {
     completionHandler()
   }
-\n}`);
-      }
-      if (didReceiveRegexp.test(contents) && !contents.includes('Exponea.shared.handlePushNotificationOpened(response: response)')) {
-        contents = contents.replace(
-          didReceiveRegexp,
-          (match, body) => {
-            const newBody = 'Exponea.shared.handlePushNotificationOpened(response: response)    ' + body;
-            return match.replace(body, '\n    ' + newBody);
-          }
-        );
-      }
-      // Step 4: Will present UserNotificationCenter event
-      const willPresentRegexp = /func userNotificationCenter\([\s\S]*?willPresent[\s\S]*?\)\s*{([\s\S]*?)}/m;
-      if (!willPresentRegexp.test(contents)) {
-        contents = contents.replace(
-                  /\n}\s*$/m,
-                  `\n  public func userNotificationCenter(
+\n}`
+      );
+    }
+    if (
+      didReceiveRegexp.test(contents) &&
+      !contents.includes(
+        'Exponea.shared.handlePushNotificationOpened(response: response)'
+      )
+    ) {
+      contents = contents.replace(didReceiveRegexp, (match, body) => {
+        const newBody =
+          'Exponea.shared.handlePushNotificationOpened(response: response)    ' +
+          body;
+        return match.replace(body, '\n    ' + newBody);
+      });
+    }
+    // Step 4: Will present UserNotificationCenter event
+    const willPresentRegexp =
+      /func userNotificationCenter\([\s\S]*?willPresent[\s\S]*?\)\s*{([\s\S]*?)}/m;
+    if (!willPresentRegexp.test(contents)) {
+      contents = contents.replace(
+        /\n}\s*$/m,
+        `\n  public func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     willPresent notification: UNNotification,
     withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
   ) {
     completionHandler([.banner, .list, .sound])
   }
-\n}`);
-      }
-      // Step 5: Register Token
-      const registerTokenRegexp = /(func application\([^\)]*?didRegisterForRemoteNotificationsWithDeviceToken[\s\S]*?\)\s*{)([\s\S]*?)(})/m;
-      if (!registerTokenRegexp.test(contents)) {
-        contents = contents.replace(
-                  /\n}\s*$/m,
-                  `\n  public override func application(
+\n}`
+      );
+    }
+    // Step 5: Register Token
+    const registerTokenRegexp =
+      /(func application\([^\)]*?didRegisterForRemoteNotificationsWithDeviceToken[\s\S]*?\)\s*{)([\s\S]*?)(})/m;
+    if (!registerTokenRegexp.test(contents)) {
+      contents = contents.replace(
+        /\n}\s*$/m,
+        `\n  public override func application(
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
   }
-  \n}`);
-      }
-      if (registerTokenRegexp.test(contents) && !contents.includes('Exponea.shared.handlePushNotificationToken')) {
-        contents = contents.replace(
-          registerTokenRegexp,
-          (match, funcDef, body, funcEnd) => {
-            return funcDef +
-              body +
-              '    Exponea.shared.handlePushNotificationToken(deviceToken: deviceToken)\n  ' +
-              funcEnd;
-          }
-        );
-      }
-      // Step 6: Receive PushNotification
-      const receivePushRegexp = /(func application\([^\)]*?didReceiveRemoteNotification[\s\S]*?\)\s*{)([\s\S]*?)(completionHandler[\s\S]*?})/m;
-      if (!receivePushRegexp.test(contents)) {
-        contents = contents.replace(
-                  /\n}\s*$/m,
-                  `\n  public override func application(
+  \n}`
+      );
+    }
+    if (
+      registerTokenRegexp.test(contents) &&
+      !contents.includes('Exponea.shared.handlePushNotificationToken')
+    ) {
+      contents = contents.replace(
+        registerTokenRegexp,
+        (match, funcDef, body, funcEnd) => {
+          return (
+            funcDef +
+            body +
+            '    Exponea.shared.handlePushNotificationToken(deviceToken: deviceToken)\n  ' +
+            funcEnd
+          );
+        }
+      );
+    }
+    // Step 6: Receive PushNotification
+    const receivePushRegexp =
+      /(func application\([^\)]*?didReceiveRemoteNotification[\s\S]*?\)\s*{)([\s\S]*?)(completionHandler[\s\S]*?})/m;
+    if (!receivePushRegexp.test(contents)) {
+      contents = contents.replace(
+        /\n}\s*$/m,
+        `\n  public override func application(
     _ application: UIApplication,
     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
   ) {
     completionHandler(.newData)
   }
-  \n}`);
-      }
-      if (receivePushRegexp.test(contents) && !contents.includes('Exponea.shared.handlePushNotificationOpened(userInfo: userInfo)')) {
-        contents = contents.replace(
-          receivePushRegexp,
-          (match, funcDef, body, funcEnd) => {
-            return funcDef +
-              body +
-              'Exponea.shared.handlePushNotificationOpened(userInfo: userInfo)\n    ' +
-              funcEnd;
-          }
-        );
-      }
-
-      cfg.modResults.contents = contents;
-      return cfg;
+  \n}`
+      );
     }
-    return withAppDelegate(config, (cfg) => {
-      if (cfg.modResults.language === 'swift') {
-        return modifyAppDelegateForSwift(cfg);
-      } else {
-        return modifyAppDelegateForObjectiveC(cfg);
-      }
-    });
-  }
-  
-  // Add the file MessageService.java
-  function withExponeaAndroidMessageService(config) {
-    return withDangerousMod(config, [
-      "android",
-      (cfg) => {
-        const androidProjRoot = cfg.modRequest.platformProjectRoot;
-        const packageName = cfg.android.package;
-        const pathToDir = packageName.replaceAll(".", "/");
-        mkdirSync(`${androidProjRoot}/app/src/main/java/${pathToDir}`, {
-          recursive: true,
-        });
-        writeFileSync(
-          `${androidProjRoot}/app/src/main/java/${pathToDir}/MessageService.java`,
-          `package ${packageName};
+    if (
+      receivePushRegexp.test(contents) &&
+      !contents.includes(
+        'Exponea.shared.handlePushNotificationOpened(userInfo: userInfo)'
+      )
+    ) {
+      contents = contents.replace(
+        receivePushRegexp,
+        (match, funcDef, body, funcEnd) => {
+          return (
+            funcDef +
+            body +
+            'Exponea.shared.handlePushNotificationOpened(userInfo: userInfo)\n    ' +
+            funcEnd
+          );
+        }
+      );
+    }
+
+    cfg.modResults.contents = contents;
+    return cfg;
+  };
+  return withAppDelegate(config, (cfg) => {
+    if (cfg.modResults.language === 'swift') {
+      return modifyAppDelegateForSwift(cfg);
+    } else {
+      return modifyAppDelegateForObjectiveC(cfg);
+    }
+  });
+}
+
+// Add the file MessageService.java
+function withExponeaAndroidMessageService(config) {
+  return withDangerousMod(config, [
+    'android',
+    (cfg) => {
+      const androidProjRoot = cfg.modRequest.platformProjectRoot;
+      const packageName = cfg.android.package;
+      const pathToDir = packageName.replaceAll('.', '/');
+      mkdirSync(`${androidProjRoot}/app/src/main/java/${pathToDir}`, {
+        recursive: true,
+      });
+      writeFileSync(
+        `${androidProjRoot}/app/src/main/java/${pathToDir}/MessageService.java`,
+        `package ${packageName};
   
   import android.app.NotificationManager;
   import android.content.Context;
@@ -458,26 +487,26 @@ const {
       }
   }
   `
-        );
-        return cfg;
-      },
-    ]);
-  }
-  
-  // Replace AppDelegate.h
-  function withExponeaIosAppDelegateH(config) {
-    return withDangerousMod(config, [
-      "ios",
-      (cfg) => {
-        const iosProjRoot = cfg.modRequest.platformProjectRoot;
-        const projectName = cfg.name;
-        const appDelegateH = `${iosProjRoot}/${projectName}/AppDelegate.h`;
-        if (!existsSync(appDelegateH)) {
-            return config;
-        }
-        writeFileSync(
-          appDelegateH,
-          `#import <RCTAppDelegate.h>
+      );
+      return cfg;
+    },
+  ]);
+}
+
+// Replace AppDelegate.h
+function withExponeaIosAppDelegateH(config) {
+  return withDangerousMod(config, [
+    'ios',
+    (cfg) => {
+      const iosProjRoot = cfg.modRequest.platformProjectRoot;
+      const projectName = cfg.name;
+      const appDelegateH = `${iosProjRoot}/${projectName}/AppDelegate.h`;
+      if (!existsSync(appDelegateH)) {
+        return config;
+      }
+      writeFileSync(
+        appDelegateH,
+        `#import <RCTAppDelegate.h>
   #import <UIKit/UIKit.h>
   #import <Expo/Expo.h>
   #import <UserNotifications/UNUserNotificationCenter.h>
@@ -486,23 +515,23 @@ const {
   
   @end
   `
-        );
-        return cfg;
-      },
-    ]);
-  }
-  
-  function withExponea(config) {
-    return withPlugins(config, [
-      withExponeaBuildGradle,
-      withExponeaAndroidManifest,
-      withExponeaAppDelegate,
-      withExponeaAndroidMessageService,
-      withExponeaIosAppDelegateH,
-    ]);
-  }
-  
-  module.exports = withExponea;
+      );
+      return cfg;
+    },
+  ]);
+}
+
+function withExponea(config) {
+  return withPlugins(config, [
+    withExponeaBuildGradle,
+    withExponeaAndroidManifest,
+    withExponeaAppDelegate,
+    withExponeaAndroidMessageService,
+    withExponeaIosAppDelegateH,
+  ]);
+}
+
+module.exports = withExponea;
 ```
 
 > 🚧
@@ -519,20 +548,20 @@ Also in your project app config, add the required configuration for [Android pus
 
 ```json
 {
-    "ios": {
-      "entitlements": {
-        "aps-environment": "development",
-        "com.apple.security.application-groups": ["<your-app-group-id>"]
-      },
-      "infoPlist": {
-        "UIBackgroundModes": ["remote-notification"]
-      }
+  "ios": {
+    "entitlements": {
+      "aps-environment": "development",
+      "com.apple.security.application-groups": ["<your-app-group-id>"]
     },
-    "android": {
-      "package": "<your-package.id>",
-      "googleServicesFile": "<path-to-your-google-services.json>"
-    },
-   "plugins": ["./plugins/exponea/index.js"]
+    "infoPlist": {
+      "UIBackgroundModes": ["remote-notification"]
+    }
+  },
+  "android": {
+    "package": "<your-package.id>",
+    "googleServicesFile": "<path-to-your-google-services.json>"
+  },
+  "plugins": ["./plugins/exponea/index.js"]
 }
 ```
 
@@ -548,14 +577,18 @@ The SDK can be further configured by setting additional properties of the `Confi
 
 The SDK supports the following log levels defined in `LogLevel`:
 
-| Log level | Description |
-| ----------| ----------- |
-| `OFF`     | Disables all logging |
-| `ERROR`   | Serious errors or breaking issues |
-| `WARN` | Warnings and recommendations + `ERROR` |
-| `INFO`    | Informative messages + `WARN` + `ERROR` |
-| `DEBUG`   | Debugging information + `INFO` + `WARN` + `ERROR`  |
+| Log level | Description                                                              |
+| --------- | ------------------------------------------------------------------------ |
+| `OFF`     | Disables all logging                                                     |
+| `ERROR`   | Serious errors or breaking issues                                        |
+| `WARN`    | Warnings and recommendations + `ERROR`                                   |
+| `INFO`    | Informative messages + `WARN` + `ERROR`                                  |
+| `DEBUG`   | Debugging information + `INFO` + `WARN` + `ERROR`                        |
 | `VERBOSE` | Information about all SDK actions + `DEBUG` + `INFO` + `WARN` + `ERROR`. |
+
+> ❗️Warning
+>
+> **SDK version 3.0.0 change:** The serialized wire value for `LogLevel.DEBUG` changed from `'DEBUG'` to `'DBG'` to avoid a conflict with the iOS `#define DEBUG` preprocessor macro. Code using the `LogLevel.DEBUG` enum constant is unaffected. If you hardcode the string value (for example, for storage or comparison), update `'DEBUG'` to `'DBG'`. On iOS, `'DBG'` maps to `.verbose` as the native iOS SDK has no separate debug level.
 
 The default log level is `INFO`. While developing or debugging, setting the log level to `debug` or `verbose` can be helpful.
 

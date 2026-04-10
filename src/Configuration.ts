@@ -1,6 +1,6 @@
 import EventType from './EventType';
-import ExponeaProject from './ExponeaProject';
-import {JsonObject} from './Json';
+import type ExponeaProject from './ExponeaProject';
+import type { JsonObject } from './Json';
 
 interface Configuration {
   /** Default Exponea project token */
@@ -114,4 +114,4 @@ export enum HttpLoggingLevel {
   BODY = 'BODY',
 }
 
-export default Configuration;
+export type { Configuration as default };

@@ -1,5 +1,5 @@
-import {createNavigationContainerRef} from '@react-navigation/native';
-import {Screen} from '../screens/Screens';
+import { createNavigationContainerRef } from '@react-navigation/native';
+import { Screen } from '../screens/Screens';
 
 export const navigationRef = createNavigationContainerRef();
 

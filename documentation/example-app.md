@@ -51,7 +51,7 @@ You must have the following software installed to be able to build and run the e
    ```
    yarn
    ```
-5. To run the app on iOS:
+6. To run the app on iOS:
    1. Run CocoaPods in the `ios` directory to install dependencies:
       ```shell
       cd ios
@@ -62,13 +62,13 @@ You must have the following software installed to be able to build and run the e
       ```shell
       react-native run-ios
       ```
-6. To run the app on Android:
+7. To run the app on Android:
    1. Connect a virtual or physical Android device.
    2. Run the app:
       ```shell
       react-native run-android --mode=GmsDebug
       ```
-      Alternatively, use `--mode=HmsDebug` for Huawei devices without GooglePlay services but with HMS Core. For React Native version <0.73, use `--variant` instead of `--mode`, see [#2026](https://github.com/react-native-community/cli/pull/2026). 
+      Alternatively, use `--mode=HmsDebug` for Huawei devices without GooglePlay services but with HMS Core. For React Native version <0.73, use `--variant` instead of `--mode`, see [#2026](https://github.com/react-native-community/cli/pull/2026).
 
 > 📘
 >
@@ -84,20 +84,20 @@ When you run the app in the simulator, you'll see the **AuthScreen**. Enter your
 The app provides several screens, accessible using the bottom navigation, to test the different SDK features:
 
 - The **Tracking** screen enables you to test tracking of different events and properties, as well as open the app inbox. The `Identify customer` and `Track event` buttons open modals to enter test data.
-  > [`TrackingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/TrackingScreen.tsx)
-  > [`IdentifyCustomerModal.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/IdentifyCustomerModal.tsx)
-  > [`TrackEventModal.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/TrackEventModal.tsx)
+
+  > [`TrackingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/TrackingScreen.tsx) > [`IdentifyCustomerModal.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/IdentifyCustomerModal.tsx) > [`TrackEventModal.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/TrackEventModal.tsx)
 
 - The **Fetching** screen enables you to fetch consents, recommendations, and segments.
+
   > [`FetchingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/FetchingScreen.tsx)
 
 - The **Flushing** screen lets you trigger a manual data flush as well as anonymize the customer data. The `Anonymize` button opens a modal to optionally enter new project configuration parameters.
-  > [`FlushingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/FlushingScreen.tsx)
-  > [AnonymizeModal.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/AnonymizeModal.tsx)
+
+  > [`FlushingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/FlushingScreen.tsx) > [AnonymizeModal.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/AnonymizeModal.tsx)
 
 - The **Config** screen enables you to configure default properties to track with any event. The `Default properties` button opens a modal that lists the current default properties and enables you to enter new ones.
-  > [TrackingScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/TrackingScreen.tsx)
-  > [DefaultPropertiesModal.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/DefaultPropertiesModal.tsx)
+
+  > [TrackingScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/TrackingScreen.tsx) > [DefaultPropertiesModal.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/DefaultPropertiesModal.tsx)
 
 - The **In-App Content Blocks** screens displays in-app content blocks. Use placeholder IDs `example_top`, `ph_x_example_iOS`, and `example_list` in your in-app content block settings.
   > [`InAppCbScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/InAppCbScreen.tsx)
@@ -107,6 +107,7 @@ Try out the different features in the app, then find the customer profile in the
 Until you use `Identify customer` in the app, the customer is tracked anonymously using a cookie soft ID. You can look up the cookie value in the logs and find the corresponding profile in the Engagement web app.
 
 Once you use `Identify customer` in the app to set the `registered` hard ID (use an email address as value), the customer is identified and can be found in Engagement web app by their email address.
+
 > 📘
 >
 > Refer to [Customer identification](https://documentation.bloomreach.com/engagement/docs/customer-identification) for more information on soft IDs and hard IDs.

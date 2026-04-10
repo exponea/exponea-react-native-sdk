@@ -1,221 +1,87 @@
-// android/build.gradle
-
-// based on:
-//
-// * https://github.com/facebook/react-native/blob/0.60-stable/template/android/build.gradle
-//   original location:
-//   - https://github.com/facebook/react-native/blob/0.58-stable/local-cli/templates/HelloWorld/android/build.gradle
-//
-// * https://github.com/facebook/react-native/blob/0.60-stable/template/android/app/build.gradle
-//   original location:
-//   - https://github.com/facebook/react-native/blob/0.58-stable/local-cli/templates/HelloWorld/android/app/build.gradle
-def detectReactNativeVersion() {
-    def rnVersionString = detectReactNativeVersionString().replaceAll('^0+\\.', '')
-    return new java.math.BigDecimal(rnVersionString)
-}
-def detectReactNativeVersionString() {
-    return "node --print JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'),'utf-8')).version"
-            .execute(null, rootDir).text
-            .trim()
-}
-def REACT_NATIVE_VERSION = detectReactNativeVersion()
-def REACT_NATIVE_VERSION_STRING = detectReactNativeVersionString()
-
-allprojects {
-    configurations.all {
-        resolutionStrategy {
-            force "com.facebook.react:react-native:" + REACT_NATIVE_VERSION_STRING
-        }
-    }
-}
-
 buildscript {
-    ext {
-        kotlinVersion = "2.1.20"
-        kotlin_version = "2.1.20"
-    }
+  ext.getExtOrDefault = {name ->
+    return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['Exponea_' + name]
+  }
 
-    // The Android Gradle plugin is only required when opening the android folder stand-alone.
-    // This avoids unnecessary downloads and potential conflicts when the library is included as a
-    // module dependency in an application project.
-    // ref: https://docs.gradle.org/current/userguide/tutorial_using_tasks.html#sec:build_script_external_dependencies
-    if (project == rootProject) {
-        repositories {
-            google()
-            mavenCentral()
-            maven { url "https://plugins.gradle.org/m2/" }
-        }
-        dependencies {
-            classpath 'com.android.tools.build:gradle:8.8.0'
-            classpath "org.jlleitschuh.gradle:ktlint-gradle:9.2.1"
-        }
-    }
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    }
+  repositories {
+    google()
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath "com.android.tools.build:gradle:8.7.2"
+    // noinspection DifferentKotlinGradleVersion
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}"
+  }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
-apply plugin: 'kotlin-android'
 
-def DEFAULT_COMPILE_SDK_VERSION = 36
-def DEFAULT_BUILD_TOOLS_VERSION = '36.0.0'
-def DEFAULT_MIN_SDK_VERSION = 24
-def DEFAULT_TARGET_SDK_VERSION = 36
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
 
-def safeExtGet(prop, fallback) {
-    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
-}
+apply plugin: "com.facebook.react"
 
-if (project == rootProject) {
-    apply plugin: "org.jlleitschuh.gradle.ktlint"
-    ktlint {
-        verbose = true
-        android = true
-    }
+def getExtOrIntegerDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["Exponea_" + name]).toInteger()
 }
 
 android {
-    namespace "com.exponea"
-    compileSdkVersion safeExtGet('compileSdkVersion', DEFAULT_COMPILE_SDK_VERSION)
-    buildToolsVersion safeExtGet('buildToolsVersion', DEFAULT_BUILD_TOOLS_VERSION)
-    defaultConfig {
-        minSdkVersion safeExtGet('minSdkVersion', DEFAULT_MIN_SDK_VERSION)
-        targetSdkVersion safeExtGet('targetSdkVersion', DEFAULT_TARGET_SDK_VERSION)
-        versionCode 1
-        versionName "1.0"
+  namespace "com.exponea"
+
+  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
+
+  defaultConfig {
+    minSdkVersion getExtOrIntegerDefault("minSdkVersion")
+    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+  }
+
+  buildFeatures {
+    buildConfig true
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
     }
-    lintOptions {
-        abortOnError false
+  }
+
+  lintOptions {
+    disable "GradleCompatible"
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  sourceSets {
+    main {
+      java.srcDirs += [
+        "generated/java",
+        "generated/jni"
+      ]
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions { jvmTarget = "17" }
+  }
 }
 
 repositories {
-    // ref: https://www.baeldung.com/maven-local-repository
-    mavenLocal()
-    maven {
-        // Android JSC is installed from npm
-        url "$rootDir/../node_modules/jsc-android/dist"
-    }
-    google()
-    maven { url 'https://jitpack.io' }
-    mavenCentral()
-    maven {
-        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-        url("$rootDir/../node_modules/react-native/android")
-    }
+  mavenCentral()
+  google()
 }
+
+def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    if (REACT_NATIVE_VERSION >= 71) {
-        implementation "com.facebook.react:react-android:" + REACT_NATIVE_VERSION_STRING
-    } else {
-        // noinspection GradleDynamicVersion
-        implementation 'com.facebook.react:react-native:+'
-    }
-    implementation 'com.exponea.sdk:sdk:4.10.0'
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+  implementation "com.facebook.react:react-android"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation 'com.exponea.sdk:sdk:4.10.0'
+  implementation 'com.google.code.gson:gson:2.10.1'
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'androidx.test:core:1.4.0'
-    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit:1.2.40'
-    testImplementation "org.robolectric:robolectric:4.7.3"
-    testImplementation "io.mockk:mockk:1.13.7"
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4'
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                def packageJson = new groovy.json.JsonSlurper().parseText(file('../package.json').text)
-                groupId = 'com.exponea'
-                artifactId = packageJson.name
-                version = packageJson.version
-                artifact(bundleReleaseAar)
-                pom {
-                    name = packageJson.title
-                    description = packageJson.description
-                    url = packageJson.repository.baseUrl
-
-                    licenses {
-                        license {
-                            name = packageJson.license
-                            url = packageJson.repository.baseUrl + '/blob/main/' + packageJson.licenseFilename
-                            distribution = 'repo'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id = packageJson.author.username
-                            name = packageJson.author.name
-                        }
-                    }
-                }
-                pom.withXml {
-                    final dependenciesNode = asNode().appendNode('dependencies')
-
-                    ext.addDependency = { Dependency dep, String scope ->
-                        if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
-                            return // invalid dependencies should be ignored
-
-                        final dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('artifactId', dep.name)
-
-                        if (dep.version == 'unspecified') {
-                            dependencyNode.appendNode('groupId', project.ext.pomGroupID)
-                            dependencyNode.appendNode('version', project.ext.pomVersion)
-                        } else {
-                            dependencyNode.appendNode('groupId', dep.group)
-                            dependencyNode.appendNode('version', dep.version)
-                        }
-
-                        dependencyNode.appendNode('scope', scope)
-                        // Some dependencies may have types, such as aar, that should be mentioned in the POM file
-                        def artifactsList = dep.properties['artifacts']
-                        if (artifactsList != null && artifactsList.size() > 0) {
-                            final artifact = artifactsList[0]
-                            dependencyNode.appendNode('type', artifact.getType())
-                        }
-
-                        if (!dep.transitive) {
-                            // In case of non transitive dependency, all its dependencies should be force excluded from them POM file
-                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                            exclusionNode.appendNode('groupId', '*')
-                            exclusionNode.appendNode('artifactId', '*')
-                        } else if (!dep.properties.excludeRules.empty) {
-                            // For transitive with exclusions, all exclude rules should be added to the POM file
-                            final exclusions = dependencyNode.appendNode('exclusions')
-                            dep.properties.excludeRules.each { ExcludeRule rule ->
-                                final exclusionNode = exclusions.appendNode('exclusion')
-                                exclusionNode.appendNode('groupId', rule.group ?: '*')
-                                exclusionNode.appendNode('artifactId', rule.module ?: '*')
-                            }
-                        }
-                    }
-                    configurations.implementation.getDependencies().each { dep -> addDependency(dep, "compile") }
-                }
-            }
-        }
-        repositories {
-            maven {
-                url = "file://${projectDir}/../android/maven"
-            }
-        }
-    }
+  // Test dependencies
+  testImplementation 'junit:junit:4.13.2'
+  testImplementation 'androidx.test:core:1.5.0'
+  testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+  testImplementation "org.robolectric:robolectric:4.11.1"
+  testImplementation "io.mockk:mockk:1.13.9"
+  testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0'
 }

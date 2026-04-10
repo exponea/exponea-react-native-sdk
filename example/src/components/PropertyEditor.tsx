@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import ExponeaButton from '../components/ExponeaButton';
-import ExponeaInput from '../components/ExponeaInput';
+import { StyleSheet, View, Text } from 'react-native';
+import ExponeaButton from './ExponeaButton';
+import ExponeaInput from './ExponeaInput';
 
 interface PropertyEditorProps {
   properties: Record<string, string>;
@@ -9,10 +9,11 @@ interface PropertyEditorProps {
 }
 
 export default function PropertyEditor(
-  props: PropertyEditorProps,
+  props: PropertyEditorProps
 ): React.ReactElement {
   const [addingKey, setAddingKey] = React.useState('');
   const [addingValue, setAddingValue] = React.useState('');
+
   const onAdd = () => {
     const properties = Object.assign({}, props.properties);
     properties[addingKey] = addingValue;
@@ -20,6 +21,7 @@ export default function PropertyEditor(
     setAddingValue('');
     props.onChange(properties);
   };
+
   return (
     <View style={styles.container}>
       <PropertyList properties={props.properties} />
@@ -56,11 +58,11 @@ function PropertyList(props: {
 }): React.ReactElement {
   return (
     <View>
-      {Object.keys(props.properties).map(key => (
+      {Object.keys(props.properties).map((key) => (
         <Property
           key={key}
           propertyKey={key}
-          propertyValue={props.properties[key]}
+          propertyValue={props.properties[key] ?? ''}
         />
       ))}
     </View>

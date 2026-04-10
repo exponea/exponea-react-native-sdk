@@ -10,29 +10,13 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url 'https://developer.huawei.com/repo/'
-        }
+        maven { url 'https://developer.huawei.com/repo/' }
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.8.0")
-        classpath("com.google.gms:google-services:4.3.14")
-        classpath("com.huawei.agconnect:agcp:1.5.2.300")
+        classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
-    }
-}
-
-allprojects {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven {
-            url 'https://developer.huawei.com/repo/'
-        }
-
-        google()
-        maven { url 'https://jitpack.io' }
+        classpath("com.google.gms:google-services:4.4.2")
     }
 }
 

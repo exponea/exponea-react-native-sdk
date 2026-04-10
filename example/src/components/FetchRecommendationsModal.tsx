@@ -1,11 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, Alert, View, ScrollView} from 'react-native';
+import { StyleSheet, Text, Alert, View, ScrollView } from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
 import ExponeaModal from './ExponeaModal';
 import PropertyEditor from './PropertyEditor';
-import Exponea from 'react-native-exponea-sdk';
+import { fetchRecommendations } from 'react-native-exponea-sdk';
+import type { RecommendationOptions } from 'react-native-exponea-sdk';
 import ExponeaInput from './ExponeaInput';
-import {RecommendationOptions} from 'react-native-exponea-sdk/lib/Recommendation';
 import ExponeaPicker from './ExponeaPicker';
 import ListEditor from './ListEditor';
 
@@ -15,17 +15,17 @@ interface FetchRecommendationsModalProps {
 }
 
 export default function FetchRecommendationsModal(
-  props: FetchRecommendationsModalProps,
+  props: FetchRecommendationsModalProps
 ): React.ReactElement {
   const [id, setId] = React.useState('');
   const [fillWithRandom, setFillWithRandom] = React.useState(true);
   const [size, setSize] = React.useState('');
   const [items, setItems] = React.useState({});
   const [noTrack, setNoTrack] = React.useState<boolean | 'undefined'>(
-    'undefined',
+    'undefined'
   );
   const [whitelist, setWhitelist] = React.useState<Array<string>>([]);
-  const fetchRecommendations = () => {
+  const onFetchRecommendations = () => {
     const options: RecommendationOptions = {
       id,
       fillWithRandom,
@@ -38,15 +38,15 @@ export default function FetchRecommendationsModal(
     setWhitelist([]);
     setSize('');
     props.onClose();
-    Exponea.fetchRecommendations(options)
-      .then(recommendations => {
+    fetchRecommendations(options)
+      .then((recommendations) => {
         Alert.alert(
           'Received recommendations',
-          JSON.stringify(recommendations, null, 2),
+          JSON.stringify(recommendations, null, 2)
         );
       })
-      .catch(error =>
-        Alert.alert('Error fetching recommendations', error.message),
+      .catch((error) =>
+        Alert.alert('Error fetching recommendations', error.message)
       );
   };
   return (
@@ -54,7 +54,8 @@ export default function FetchRecommendationsModal(
       <Text style={styles.title}>Fetch recommendations</Text>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContainer}>
+        contentContainerStyle={styles.scrollViewContainer}
+      >
         <Text style={styles.subtitle}>Id</Text>
         <View style={styles.inputContainer}>
           <ExponeaInput
@@ -69,7 +70,7 @@ export default function FetchRecommendationsModal(
           width={100}
           value={fillWithRandom}
           setValue={setFillWithRandom}
-          options={{true: true, false: false}}
+          options={{ true: true, false: false }}
         />
         <Text style={styles.subtitle}>Size (optional)</Text>
         <View style={styles.inputContainer}>
@@ -87,7 +88,7 @@ export default function FetchRecommendationsModal(
           width={140}
           value={noTrack}
           setValue={setNoTrack}
-          options={{undefined: 'undefined', true: true, false: false}}
+          options={{ undefined: 'undefined', true: true, false: false }}
         />
         <Text style={styles.subtitle}>
           Catalog attributes whitelist (optional)
@@ -96,7 +97,7 @@ export default function FetchRecommendationsModal(
       </ScrollView>
       <ExponeaButton
         title="Fetch recommendation"
-        onPress={fetchRecommendations}
+        onPress={onFetchRecommendations}
       />
     </ExponeaModal>
   );

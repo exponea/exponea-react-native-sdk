@@ -10,6 +10,29 @@ import Foundation
 import ExponeaSDK
 import Combine
 
+// Extension to retrieve first value from PassthroughSubject with timeout
+extension PassthroughSubject where Failure == Never {
+    func retrieveFirstOrNull(timeout: TimeInterval) -> Output? {
+        var result: Output?
+        let semaphore = DispatchSemaphore(value: 0)
+
+        let cancellable = self.first()
+            .timeout(.seconds(timeout), scheduler: DispatchQueue.global())
+            .sink(
+                receiveCompletion: { _ in
+                    semaphore.signal()
+                },
+                receiveValue: { value in
+                    result = value
+                }
+            )
+
+        _ = semaphore.wait(timeout: .now() + timeout)
+        cancellable.cancel()
+        return result
+    }
+}
+
 class BridgedContentBlockSelector {
 
     private let responseTimeout: TimeInterval = 2

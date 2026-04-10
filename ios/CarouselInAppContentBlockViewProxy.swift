@@ -2,39 +2,38 @@
 //  CarouselInAppContentBlockViewProxy.swift
 //  Exponea
 //
-//  Created by Adam Mihalik on 11/02/2025.
-//  Copyright © 2025 Facebook. All rights reserved.
+//  Adapted for React Native New Architecture (Fabric)
 //
 
 import Foundation
+import UIKit
 import ExponeaSDK
 
-class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCarouselCallback {
+// Protocol for communicating events back to the Fabric ComponentView
+@objc public protocol CarouselContentBlockEventEmitter: AnyObject {
+    func emitDimensChanged(width: Double, height: Double)
+    func emitContentBlockEvent(data: NSDictionary)
+    func emitDataRequest(data: NSDictionary)
+}
+
+@objc(CarouselInAppContentBlockViewProxy)
+@objcMembers
+public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCarouselCallback {
 
     private var currentCarouselInstance: RNCarouselInAppContentBlockView?
-
     private var bridgedContentSelector = BridgedContentBlockSelector()
 
-    @objc var initProps: NSDictionary? {
-        didSet {
-            guard let initPropsMap = initProps else {
-                ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: initProps must be declared")
-                return
-            }
-            guard let placeholderId: String = try? initPropsMap.getRequiredSafely(property: "placeholderId") else {
-                ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: placeholderId must be declared")
-                return
-            }
-            self.recreateCarouselView(
-                placeholderId: placeholderId,
-                maxMessagesCount: try? initPropsMap.getOptionalSafely(property: "maxMessagesCount"),
-                scrollDelay: try? initPropsMap.getOptionalSafely(property: "scrollDelay")
-            )
-        }
-    }
-    @objc var overrideDefaultBehavior: Bool = false
-    @objc var trackActions: Bool = true
-    @objc var customFilterActive: Bool = false {
+    // Delegate to emit events to Fabric ComponentView
+    @objc public weak var eventEmitter: CarouselContentBlockEventEmitter?
+
+    // Props
+    private var placeholderId: String?
+    private var maxMessagesCount: Int?
+    private var scrollDelay: TimeInterval?
+
+    public var overrideDefaultBehavior: Bool = false
+    public var trackActions: Bool = true
+    @objc public var customFilterActive: Bool = false {
         didSet {
             if customFilterActive {
                 bridgedContentSelector.filterRequestFn = { data in
@@ -45,7 +44,7 @@ class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCarouselCal
             }
         }
     }
-    @objc var customSortActive: Bool = false {
+    @objc public var customSortActive: Bool = false {
         didSet {
             if customSortActive {
                 bridgedContentSelector.sortRequestFn = { data in
@@ -56,11 +55,69 @@ class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCarouselCal
             }
         }
     }
-    @objc var onDimensChanged: RCTDirectEventBlock?
-    @objc var onContentBlockEvent: RCTDirectEventBlock?
-    @objc var onContentBlockDataRequestEvent: RCTDirectEventBlock?
 
-    func onMessageShown(
+    @objc public func setPlaceholderId(_ newPlaceholderId: String?) {
+        placeholderId = newPlaceholderId
+        recreateCarouselViewIfNeeded()
+    }
+
+    @objc public func setMaxMessagesCount(_ count: NSNumber?) {
+        maxMessagesCount = count?.intValue
+        recreateCarouselViewIfNeeded()
+    }
+
+    @objc public func setScrollDelay(_ delay: NSNumber?) {
+        scrollDelay = delay?.doubleValue
+        recreateCarouselViewIfNeeded()
+    }
+
+    private func recreateCarouselViewIfNeeded() {
+        guard ExponeaSDK.Exponea.shared.isConfigured else {
+            destroyPreviousCarouselInstance()
+            return
+        }
+        guard let placeholderId = placeholderId else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: placeholderId must be declared")
+            return
+        }
+        recreateCarouselView(
+            placeholderId: placeholderId,
+            maxMessagesCount: maxMessagesCount,
+            scrollDelay: scrollDelay
+        )
+    }
+
+    // Called from ComponentView to handle filter response
+    @objc public func handleFilterResponse(_ jsonString: String) {
+        guard let data = jsonString.data(using: .utf8),
+              let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [String] else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to parse filter response")
+            return
+        }
+        let dataArray = parseInAppContentBlockResponses(jsonArray)
+        bridgedContentSelector.onContentFilterResponse(dataArray)
+    }
+
+    // Called from ComponentView to handle sort response
+    @objc public func handleSortResponse(_ jsonString: String) {
+        guard let data = jsonString.data(using: .utf8),
+              let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [String] else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to parse sort response")
+            return
+        }
+        let dataArray = parseInAppContentBlockResponses(jsonArray)
+        bridgedContentSelector.onContentSortResponse(dataArray)
+    }
+
+    private func parseInAppContentBlockResponses(_ source: [String]) -> [InAppContentBlockResponse] {
+        return source
+            .compactMap { $0.data(using: .utf8) }
+            .compactMap { try? JSONDecoder().decode(InAppContentBlockResponse.self, from: $0) }
+    }
+
+    // MARK: - DefaultContentBlockCarouselCallback
+
+    public func onMessageShown(
         placeholderId: String,
         contentBlock: ExponeaSDK.InAppContentBlockResponse,
         index: Int,
@@ -74,20 +131,20 @@ class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCarouselCal
         ))
     }
 
-    func onMessagesChanged(count: Int, messages: [ExponeaSDK.InAppContentBlockResponse]) {
+    public func onMessagesChanged(count: Int, messages: [ExponeaSDK.InAppContentBlockResponse]) {
         notifyContentBlockCarouselEvent(.onMessageChanged(
             count: count,
             contentBlocks: messages
         ))
     }
 
-    func onNoMessageFound(placeholderId: String) {
+    public func onNoMessageFound(placeholderId: String) {
         notifyContentBlockCarouselEvent(.onNoMessageFound(
             placeholderId: placeholderId
         ))
     }
 
-    func onError(
+    public func onError(
         placeholderId: String,
         contentBlock: ExponeaSDK.InAppContentBlockResponse?,
         errorMessage: String
@@ -99,45 +156,65 @@ class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCarouselCal
         ))
     }
 
-    func onCloseClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
+    public func onCloseClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
         notifyContentBlockCarouselEvent(.onCloseClicked(
             placeholderId: placeholderId,
             contentBlock: contentBlock
         ))
     }
 
-    func onActionClickedSafari(
+    public func onActionClickedSafari(
         placeholderId: String,
         contentBlock: ExponeaSDK.InAppContentBlockResponse,
         action: ExponeaSDK.InAppContentBlockAction
     ) {
+        print("[ExponeaSDK] Carousel onActionClickedSafari called")
+        print("[ExponeaSDK] PlaceholderId: \(placeholderId)")
+        print("[ExponeaSDK] Action URL: \(action.url ?? "nil")")
+        print("[ExponeaSDK] Action type: \(action.type)")
+        print("[ExponeaSDK] overrideDefaultBehavior: \(overrideDefaultBehavior)")
+
         notifyContentBlockCarouselEvent(.onActionClicked(
             placeholderId: placeholderId,
             contentBlock: contentBlock,
             action: action
         ))
+
+        // Open URL if not overriding default behavior
+        if !overrideDefaultBehavior {
+            print("[ExponeaSDK] Not overriding default behavior, will attempt to open URL")
+            if let urlString = action.url {
+                print("[ExponeaSDK] URL string: \(urlString)")
+                if let url = URL(string: urlString) {
+                    print("[ExponeaSDK] Valid URL created: \(url)")
+                    DispatchQueue.main.async {
+                        let canOpen = UIApplication.shared.canOpenURL(url)
+                        print("[ExponeaSDK] Can open URL: \(canOpen)")
+                        if canOpen {
+                            print("[ExponeaSDK] Opening URL...")
+                            UIApplication.shared.open(url, options: [:]) { success in
+                                print("[ExponeaSDK] URL opened successfully: \(success)")
+                            }
+                        } else {
+                            print("[ExponeaSDK] Cannot open URL - may need URL scheme whitelist in Info.plist")
+                        }
+                    }
+                } else {
+                    print("[ExponeaSDK] Failed to create URL from string: \(urlString)")
+                }
+            } else {
+                print("[ExponeaSDK] No URL in action")
+            }
+        } else {
+            print("[ExponeaSDK] Default behavior is overridden, not opening URL")
+        }
     }
 
-    func onHeightUpdate(placeholderId: String, height: CGFloat) {
+    public func onHeightUpdate(placeholderId: String, height: CGFloat) {
         notifyDimensChanged(width: 0, height: height)
     }
 
-    func onFilterResponse(_ args: NSArray) {
-        let dataArray = parseInAppContentBlockResponses(args)
-        bridgedContentSelector.onContentFilterResponse(dataArray)
-    }
-
-    func onSortResponse(_ args: NSArray) {
-        let dataArray = parseInAppContentBlockResponses(args)
-        bridgedContentSelector.onContentSortResponse(dataArray)
-    }
-
-    private func parseInAppContentBlockResponses(_ source: NSArray) -> [InAppContentBlockResponse] {
-        return source
-            .compactMap { $0 as? String }
-            .compactMap { $0.data(using: .utf8) }
-            .compactMap { try? JSONDecoder().decode(InAppContentBlockResponse.self, from: $0) }
-    }
+    // MARK: - Private Methods
 
     private func recreateCarouselView(
         placeholderId: String,
@@ -171,67 +248,51 @@ class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCarouselCal
     }
 
     private func notifyDimensChanged(width: CGFloat, height: CGFloat) {
-        guard let onDimensChanged = onDimensChanged else {
-            ExponeaSDK.Exponea.logger.log(
-                .error,
-                message: "InAppCbCarousel: Callback for dimensions change not registered"
-            )
-            return
-        }
-        onDimensChanged([
-            "width": width,
-            "height": height
-        ])
+        eventEmitter?.emitDimensChanged(
+            width: Double(width),
+            height: Double(height)
+        )
     }
 
     private func notifyContentBlockCarouselEvent(_ event: ContentBlockCarouselEvent) {
-        guard let onContentBlockEvent else {
-            ExponeaSDK.Exponea.logger.log(
-                .error,
-                message: "InAppCbCarousel: Callback for Carousel event not registered"
-            )
-            return
-        }
-        onContentBlockEvent(event.toDictionary())
+        eventEmitter?.emitContentBlockEvent(data: event.toDictionary() as NSDictionary)
     }
 
     private func notifyContentFilterRequest(input: [ExponeaSDK.InAppContentBlockResponse]) {
-        guard let onContentBlockDataRequestEvent else {
-            ExponeaSDK.Exponea.logger.log(
-                .error,
-                message: "InAppCbCarousel: Callback for Carousel data filter request not registered"
-            )
+        let jsonStrings = input.compactMap({ contentBlock in
+            guard let data = try? JSONEncoder().encode(contentBlock),
+                  let body = String(data: data, encoding: .utf8) else {
+                return nil as String?
+            }
+            return body
+        })
+
+        // Serialize array to JSON string
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonStrings),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to serialize filter request")
             return
         }
-        onContentBlockDataRequestEvent([
-            "requestType": "filter",
-            "data": input.compactMap({ contentBlock in
-                guard let data = try? JSONEncoder().encode(contentBlock),
-                      let body = String(data: data, encoding: .utf8) else {
-                    return nil as String?
-                }
-                return body
-            })
-        ])
+
+        eventEmitter?.emitDataRequest(data: ["requestType": "filter", "data": jsonString] as NSDictionary)
     }
 
     private func notifyContentSortRequest(input: [ExponeaSDK.InAppContentBlockResponse]) {
-        guard let onContentBlockDataRequestEvent else {
-            ExponeaSDK.Exponea.logger.log(
-                .error,
-                message: "InAppCbCarousel: Callback for Carousel data sort request not registered"
-            )
+        let jsonStrings = input.compactMap({ contentBlock in
+            guard let data = try? JSONEncoder().encode(contentBlock),
+                  let body = String(data: data, encoding: .utf8) else {
+                return nil as String?
+            }
+            return body
+        })
+
+        // Serialize array to JSON string
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonStrings),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to serialize sort request")
             return
         }
-        onContentBlockDataRequestEvent([
-            "requestType": "sort",
-            "data": input.compactMap({ contentBlock in
-                guard let data = try? JSONEncoder().encode(contentBlock),
-                      let body = String(data: data, encoding: .utf8) else {
-                    return nil as String?
-                }
-                return body
-            })
-        ])
+
+        eventEmitter?.emitDataRequest(data: ["requestType": "sort", "data": jsonString] as NSDictionary)
     }
 }

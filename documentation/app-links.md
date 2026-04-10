@@ -108,4 +108,3 @@ If you don't use the `ExponeaRNAppDelegate`, you must call the processing method
           restorationHandler:restorationHandler];
 }
 ```
-

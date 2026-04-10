@@ -1,17 +1,17 @@
 import React from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
-import Exponea from 'react-native-exponea-sdk';
+import { fetchConsents, getSegments } from 'react-native-exponea-sdk';
+import type { Segment } from 'react-native-exponea-sdk';
 import FetchRecommendationsModal from '../components/FetchRecommendationsModal';
-import {Segment} from '../../../src/ExponeaType';
 
 export default function FetchingScreen(): React.ReactElement {
   const [showingFetchRecommendations, setShowingFetchRecommendations] =
     React.useState(false);
 
-  const fetchConsents = async () => {
+  const onFetchConsents = async () => {
     try {
-      const consents = await Exponea.fetchConsents();
+      const consents = await fetchConsents();
       Alert.alert('Received consents', JSON.stringify(consents, null, 2));
     } catch (error) {
       let errorMessage = '';
@@ -21,15 +21,12 @@ export default function FetchingScreen(): React.ReactElement {
       Alert.alert('Error fetching consents', errorMessage);
     }
   };
-  const fetchRecommendations = () => {
+  const onFetchRecommendations = () => {
     setShowingFetchRecommendations(true);
   };
-  const fetchSegments = async () => {
+  const onFetchSegments = async () => {
     try {
-      const segments: Array<Segment> = await Exponea.getSegments(
-        'discovery',
-        true,
-      );
+      const segments: Array<Segment> = await getSegments('discovery', true);
       Alert.alert('Received segments', JSON.stringify(segments, null, 2));
     } catch (error) {
       let errorMessage = '';
@@ -47,12 +44,12 @@ export default function FetchingScreen(): React.ReactElement {
           setShowingFetchRecommendations(false);
         }}
       />
-      <ExponeaButton title="Fetch Consents" onPress={fetchConsents} />
+      <ExponeaButton title="Fetch Consents" onPress={onFetchConsents} />
       <ExponeaButton
         title="Fetch Recommendations"
-        onPress={fetchRecommendations}
+        onPress={onFetchRecommendations}
       />
-      <ExponeaButton title="Fetch Segments" onPress={fetchSegments} />
+      <ExponeaButton title="Fetch Segments" onPress={onFetchSegments} />
     </View>
   );
 }

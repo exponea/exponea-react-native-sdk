@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ExponeaError: LocalizedError {
+public enum ExponeaError: LocalizedError {
     case notConfigured
     case alreadyConfigured
     case flushModeNotPeriodic
@@ -16,6 +16,7 @@ enum ExponeaError: LocalizedError {
     case notAvailableForPlatform(name: String)
     case fetchError(description: String)
     case generalError(_ message: String)
+    case invalidValue(for: String)
 
     public var errorDescription: String? {
         switch self {
@@ -33,6 +34,8 @@ enum ExponeaError: LocalizedError {
             return "Error: \(message)"
         case .configurationError:
             return "Exponea SDK is not configured. Check logs for details."
+        case .invalidValue(let detail):
+            return "Invalid value: \(detail)"
         }
     }
 }

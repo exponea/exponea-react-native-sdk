@@ -80,11 +80,8 @@ internal class ExponeaModuleAnonymizeTest {
         every { Exponea.anonymize() } just Runs
         module.anonymize(
             JavaOnlyMap.of(
-                "exponeaProject",
-                JavaOnlyMap.of(
-                    "projectToken", "new project token",
-                    "authorizationToken", "new authorization token"
-                )
+                "projectToken", "new project token",
+                "authorizationToken", "new authorization token"
             ),
             JavaOnlyMap.of(),
             MockResolvingPromise {
@@ -104,11 +101,8 @@ internal class ExponeaModuleAnonymizeTest {
         module.anonymize(
             JavaOnlyMap.of(),
             JavaOnlyMap.of(
-                "projectMapping",
-                JavaOnlyMap.of(
-                    "NON_EXISTING_EVENT_TYPE",
-                    JavaOnlyArray.of()
-                )
+                "NON_EXISTING_EVENT_TYPE",
+                JavaOnlyArray.of()
             ),
             MockRejectingPromise {
                 assertEquals(ExponeaModule.ExponeaDataException::class, it.errorThrowable!!::class)
@@ -126,23 +120,17 @@ internal class ExponeaModuleAnonymizeTest {
         every { Exponea.anonymize() } just Runs
         module.anonymize(
             JavaOnlyMap.of(
-                "exponeaProject",
-                JavaOnlyMap.of(
-                    "projectToken", "new project token",
-                    "authorizationToken", "new authorization token",
-                    "baseUrl", "https://something.com"
-                )
+                "projectToken", "new project token",
+                "authorizationToken", "new authorization token",
+                "baseUrl", "https://something.com"
             ),
             JavaOnlyMap.of(
-                "projectMapping",
-                JavaOnlyMap.of(
-                    "INSTALL",
-                    JavaOnlyArray.of(
-                        JavaOnlyMap.of(
-                            "projectToken", "install project token",
-                            "authorizationToken", "install authorization token",
-                            "baseUrl", "https://install.something.com"
-                        )
+                "INSTALL",
+                JavaOnlyArray.of(
+                    JavaOnlyMap.of(
+                        "projectToken", "install project token",
+                        "authorizationToken", "install authorization token",
+                        "baseUrl", "https://install.something.com"
                     )
                 )
             ),

@@ -21,33 +21,29 @@ To use real-time segments in your app, you must register one or more customized 
 Each instance must define the following three items:
 
 1. An `exposingCategory` indicating your point of interest for segmentation:
-   * Possible values are `content`, `discovery`, or `merchandising`. You will get updates only for segmentation data assigned to the specified `exposingCategory`.
+   - Possible values are `content`, `discovery`, or `merchandising`. You will get updates only for segmentation data assigned to the specified `exposingCategory`.
 2. A boolean flag `includeFirstLoad` to force a fetch of segmentation data:
-   * Setting this flag to `true` triggers a segmentation data fetch immediately.
-   * The SDK will notify this callback instance with the new data even if the data has not changed from the last known state.
-   * If the data has changed, the SDK will also notify any other registered callbacks.
-   * Setting this flag to `false` also triggers a segmentation data fetch, but the SDK only notifies the instance if the new data differs from the last known state.
+   - Setting this flag to `true` triggers a segmentation data fetch immediately.
+   - The SDK will notify this callback instance with the new data even if the data has not changed from the last known state.
+   - If the data has changed, the SDK will also notify any other registered callbacks.
+   - Setting this flag to `false` also triggers a segmentation data fetch, but the SDK only notifies the instance if the new data differs from the last known state.
 3. A handler method `onNewData` for new segmentation data:
-   * The method will receive all segmentation data for `exposingCategory` assigned to the current customer.
-   * The data are provided as a list of `Segment` objects; each `Segment` contains `id` and `segmentation_id` values.
+   - The method will receive all segmentation data for `exposingCategory` assigned to the current customer.
+   - The data are provided as a list of `Segment` objects; each `Segment` contains `id` and `segmentation_id` values.
 
 #### Example
 
 ```typescript
-const callback = new SegmentationDataCallback(
-    'discovery',
-    true,
-    (data) => {
-        console.info('Segments: Got new segments: ' + data);
-    },
-);
+const callback = new SegmentationDataCallback('discovery', true, (data) => {
+  console.info('Segments: Got new segments: ' + data);
+});
 Exponea.registerSegmentationDataCallback(callback);
 ```
 
 The data payload of each `Segment` is as follows:
 
 ```json
-{ 
+{
   "id": "66140257f4cb337324209871",
   "segmentation_id": "66140215fb50effc8a7218b4"
 }
@@ -64,9 +60,9 @@ console.info('Segments: Got new segments: ' + segments);
 
 Segments data received by `getSegments` method are primary loaded from valid cache. Cache is automatically fetched from server if:
 
-* cache is empty or was loaded for previous customer
-* cache data are older than 5 seconds
-* method is forced to fetch segments from server by developer
+- cache is empty or was loaded for previous customer
+- cache data are older than 5 seconds
+- method is forced to fetch segments from server by developer
 
 If you want to force to fetch segmentations data from server, use `force` parameter with `true` value as argument:
 
@@ -102,11 +98,11 @@ The SDK allows you to register multiple `SegmentationDataCallback` instances for
 
 The callback behavior follows the following principles:
 
-* A callback receives data assigned only for the specified `exposingCategory`.
-* A callback is always notified if data differs from the previous reload in the scope of the specified `exposingCategory`.
-* A newly registered callback is also notified for unchanged data if `includeFirstLoad` is `true`, but only once. On subsequent updates, the callback is notified only if the data have changed.
-* A deregistered callback stops listening for data changes.
-* A callback is always notified in a background thread.
+- A callback receives data assigned only for the specified `exposingCategory`.
+- A callback is always notified if data differs from the previous reload in the scope of the specified `exposingCategory`.
+- A newly registered callback is also notified for unchanged data if `includeFirstLoad` is `true`, but only once. On subsequent updates, the callback is notified only if the data have changed.
+- A deregistered callback stops listening for data changes.
+- A callback is always notified in a background thread.
 
 > 👍
 >
@@ -122,11 +118,11 @@ Deregistration of a callback instance is up to the developer. If you don't dereg
 
 ```typescript
 const segmentCallbackInstance = new SegmentationDataCallback(
-        'discovery',
-        true,
-        (data) => {
+  'discovery',
+  true,
+  (data) => {
     console.info('Segments: Got new segments: ' + data);
-},
+  }
 );
 Exponea.registerSegmentationDataCallback(segmentCallbackInstance);
 // you have to keep segmentCallbackInstance
@@ -141,24 +137,24 @@ Although a `SegmentationDataCallback` allows only one `exposingCategory`, you ca
 
 ```typescript
 const data = new Observable((subscriber) => {
-    Exponea.registerSegmentationDataCallback(new SegmentationDataCallback(
-        'discovery',
-        false,
-        (data) => { subscriber.next(data); },
-    ));
-    Exponea.registerSegmentationDataCallback(new SegmentationDataCallback(
-        'merchandising',
-        false,
-        (data) => { subscriber.next(data); },
-    ));
-    Exponea.registerSegmentationDataCallback(new SegmentationDataCallback(
-        'discovery',
-        true,
-        (data) => { subscriber.next(data); },
-    ));
+  Exponea.registerSegmentationDataCallback(
+    new SegmentationDataCallback('discovery', false, (data) => {
+      subscriber.next(data);
+    })
+  );
+  Exponea.registerSegmentationDataCallback(
+    new SegmentationDataCallback('merchandising', false, (data) => {
+      subscriber.next(data);
+    })
+  );
+  Exponea.registerSegmentationDataCallback(
+    new SegmentationDataCallback('discovery', true, (data) => {
+      subscriber.next(data);
+    })
+  );
 });
 data.subscribe((segments) => {
-    console.info('New data arrived! ' + segments);
+  console.info('New data arrived! ' + segments);
 });
 ```
 
@@ -171,7 +167,6 @@ data.subscribe((segments) => {
 > 👍
 >
 > All log messages related to the segmentation process are prefixed with `Segments:` to make them easier to find. Bear in mind that some supporting processes (such as HTTP communication) are logging without this prefix.
-
 
 The process of updating segmentation data may be canceled due to the current state of the SDK. Segmentation data are assigned to the current customer and the process is active only if there are any callbacks registered. The SDK logs information about all these validations.
 
@@ -213,7 +208,7 @@ If you are not receiving segmentation data while registering a customer, please 
 - ```
   Segments: Customer IDs <customer_ids> merge failed, unable to fetch segments
   ```
-  The segmentation data update process requires to link IDs but that part of the process failed. Please refer to the error log messages and check your `Exponea.identifyCustomer` usage. This  should not happen, please discuss this with the Bloomreach support team.
+  The segmentation data update process requires to link IDs but that part of the process failed. Please refer to the error log messages and check your `Exponea.identifyCustomer` usage. This should not happen, please discuss this with the Bloomreach support team.
 - ```
   Segments: New data are ignored because were loaded for different customer
   ```

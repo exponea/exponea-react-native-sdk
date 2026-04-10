@@ -77,11 +77,10 @@ enum ContentBlockCarouselEvent {
             if let cbJson = try? JsonDataParser.toJson(value: contentBlock) {
                 result["contentBlock"] = cbJson
             }
-            result["action"] = [
-                "type": action.type.description,
-                "name": action.name ?? "",
-                "url": action.url ?? ""
-            ]
+            // Send action as JSON string to match TypeScript expectation
+            if let actionJson = try? JsonDataParser.toJson(value: action) {
+                result["contentBlockAction"] = actionJson
+            }
         }
         return result
     }

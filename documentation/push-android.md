@@ -67,53 +67,56 @@ dependencies {
 ```
 
 #### Checklist:
-- [ ] The `google-services.json` file downloaded from the Firebase console is in your **application** folder, for example, *my-project/app/google-services.json*.
-- [ ] Your **application** Gradle build file (*android/app/build.gradle*) contains `apply plugin: 'com.google.gms.google-services'`.
-- [ ] Your **top level** Gradle build file (*android/build.gradle*) has `classpath 'com.google.gms:google-services:X.X.X'` listed in the build script dependencies.
+
+- [ ] The `google-services.json` file downloaded from the Firebase console is in your **application** folder, for example, _my-project/app/google-services.json_.
+- [ ] Your **application** Gradle build file (_android/app/build.gradle_) contains `apply plugin: 'com.google.gms.google-services'`.
+- [ ] Your **top level** Gradle build file (_android/build.gradle_) has `classpath 'com.google.gms:google-services:X.X.X'` listed in the build script dependencies.
 
 #### Implement Firebase messaging in your app
 
 Next, you must create and register a service that extends `FirebaseMessagingService`. The service should call `handleRemoteMessage` in the `onMessageReceived` method and `handleNewToken` in the `onNewToken` method. The SDK's automatic tracking relies on your app providing this implementation.
 
 1. Create the service:
+
    ```kotlin
-   import android.app.NotificationManager;  
-   import android.content.Context;  
-   import androidx.annotation.NonNull;  
-   import com.exponea.ExponeaModule;  
-   import com.google.firebase.messaging.FirebaseMessagingService;  
-   import com.google.firebase.messaging.RemoteMessage;  
-    
-   public class MessageService extends FirebaseMessagingService {  
-    
-       @Override  
-       public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {  
-           super.onMessageReceived(remoteMessage);  
+   import android.app.NotificationManager;
+   import android.content.Context;
+   import androidx.annotation.NonNull;
+   import com.exponea.ExponeaModule;
+   import com.google.firebase.messaging.FirebaseMessagingService;
+   import com.google.firebase.messaging.RemoteMessage;
+
+   public class MessageService extends FirebaseMessagingService {
+
+       @Override
+       public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+           super.onMessageReceived(remoteMessage);
            ExponeaModule.Companion.handleRemoteMessage(
                getApplicationContext(),
-               remoteMessage.getData(),  
+               remoteMessage.getData(),
                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)
-           );  
-       }  
-    
-       @Override  
-       public void onNewToken(@NonNull String token) {  
-           super.onNewToken(token);  
+           );
+       }
+
+       @Override
+       public void onNewToken(@NonNull String token) {
+           super.onNewToken(token);
            ExponeaModule.Companion.handleNewToken(
-               getApplicationContext(), 
+               getApplicationContext(),
                token
-           );  
-       }  
+           );
+       }
    }
    ```
+
 2. Register the service in `AndroidManifest.xml`:
    ```xml
    ...
-   <application>  
-     <service android:name=".MessageService" android:exported="false" >  
-       <intent-filter> 
-         <action android:name="com.google.firebase.MESSAGING_EVENT" />  
-       </intent-filter> 
+   <application>
+     <service android:name=".MessageService" android:exported="false" >
+       <intent-filter>
+         <action android:name="com.google.firebase.MESSAGING_EVENT" />
+       </intent-filter>
      </service>
    </application>
    ...
@@ -144,47 +147,48 @@ Follow the instructions in [Set up Huawei Mobile Services](https://documentation
 Next, you must create and register a service that extends `HmsMessagingService`. The service should call `handleRemoteMessage` in the `onMessageReceived` method and `handleNewHmsToken` in the `onNewToken` method. The SDK's automatic tracking relies on your app providing this implementation.
 
 1. Create the service:
+
    ```kotlin
-   import android.app.NotificationManager;  
-   import android.content.Context;  
-   import androidx.annotation.NonNull;  
-   import com.exponea.ExponeaModule;  
-   import com.huawei.hms.push.HmsMessageService;  
-   import com.huawei.hms.push.RemoteMessage;  
+   import android.app.NotificationManager;
+   import android.content.Context;
+   import androidx.annotation.NonNull;
+   import com.exponea.ExponeaModule;
+   import com.huawei.hms.push.HmsMessageService;
+   import com.huawei.hms.push.RemoteMessage;
 
-   public class MessageService extends HmsMessageService {  
+   public class MessageService extends HmsMessageService {
 
-       @Override  
-       public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {  
-           super.onMessageReceived(remoteMessage);  
-           ExponeaModule.Companion.handleRemoteMessage(  
-               getApplicationContext(),  
-               remoteMessage.getDataOfMap(),  
+       @Override
+       public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+           super.onMessageReceived(remoteMessage);
+           ExponeaModule.Companion.handleRemoteMessage(
+               getApplicationContext(),
+               remoteMessage.getDataOfMap(),
                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)
-           );  
-       }  
-    
-       @Override  
-       public void onNewToken(@NonNull String token) {  
-           super.onNewToken(token);  
-           ExponeaModule.Companion.handleNewHmsToken(  
-               getApplicationContext(),  
+           );
+       }
+
+       @Override
+       public void onNewToken(@NonNull String token) {
+           super.onNewToken(token);
+           ExponeaModule.Companion.handleNewHmsToken(
+               getApplicationContext(),
                token
-           );  
-       }  
+           );
+       }
    }
    ```
 
 2. Register the service in `AndroidManifest.xml`:
    ```xml
    ...
-   <application>  
-     <service android:name=".MessageService" android:exported="false">  
-       <intent-filter> 
-         <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>  
-       </intent-filter> 
-     </service> 
-     <meta-data  android:name="push_kit_auto_init_enabled"  android:value="true"/>  
+   <application>
+     <service android:name=".MessageService" android:exported="false">
+       <intent-filter>
+         <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
+       </intent-filter>
+     </service>
+     <meta-data  android:name="push_kit_auto_init_enabled"  android:value="true"/>
    </application>
    ...
    ```
@@ -205,7 +209,7 @@ The SDK already registers the `POST_NOTIFICATIONS` permission.
 
 The runtime permission dialog to ask the user to grant the permission must be triggered from your application. You may use SDK API for that purpose:
 
-```dart 
+```dart
 _plugin.requestPushAuthorization()
 .then((accepted) => print("User has ${accepted ? 'accepted': 'rejected'} push notifications."))
 .catchError((error) => print('Error: $error'));
@@ -213,11 +217,11 @@ _plugin.requestPushAuthorization()
 
 The behavior of this callback is as follows:
 
-* For Android API level <33:
-  * Permission is not required, return `true` automatically.
-* For Android API level 33+:
-  * Show the dialog, return the user's decision (`true`/`false`).
-  * In case of previously granted permission, don't show the dialog return `true`.
+- For Android API level <33:
+  - Permission is not required, return `true` automatically.
+- For Android API level 33+:
+  - Show the dialog, return the user's decision (`true`/`false`).
+  - In case of previously granted permission, don't show the dialog return `true`.
 
 ## Customization
 
@@ -291,4 +295,3 @@ class SomeActivity : ReactActivity() {
 	}
 }
 ```
-

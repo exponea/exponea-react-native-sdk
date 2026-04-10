@@ -50,11 +50,11 @@ Open the Xcode project located in the `ios` folder in your React Native project.
 In Xcode, select your application target, and on the `Signing & Capabilities` tab, add the following capabilities:
 
 - `Push Notifications`
-   Required for alert push notifications.
+  Required for alert push notifications.
 - `Background Modes` (select `Remote notifications`)
-   Required for silent push notifications.
+  Required for silent push notifications.
 - `App Groups` (create a new app group for your app)
-   Required for application extensions that handle push notification delivery and rich content.
+  Required for application extensions that handle push notification delivery and rich content.
 
 > ❗️
 >
@@ -66,17 +66,19 @@ In Xcode, select your application target, and on the `Signing & Capabilities` ta
 
 For your application to be able to respond to push notification-related events, its `AppDelegate` must implement several methods (see the [native iOS SDK documentation](https://documentation.bloomreach.com/engagement/docs/ios-sdk-push-notifications#step-3-implement-application-delegate-methods) for details).
 
-[`ExponeaRNAppDelegate.m`](https://github.com/exponea/exponea-react-native-sdk/blob/main/ios/ExponeaRNAppDelegate.m) in the React Native SDK provides default implementations of these methods. We recommend that you extend `ExponeaRNAppDelegate` in your `AppDelegate`. 
+[`ExponeaRNAppDelegate.m`](https://github.com/exponea/exponea-react-native-sdk/blob/main/ios/ExponeaRNAppDelegate.m) in the React Native SDK provides default implementations of these methods. We recommend that you extend `ExponeaRNAppDelegate` in your `AppDelegate`.
 
 1. Open `AppDelegate.h` and replace the contents with the following:
+
    ```swift
    #import <React/RCTBridgeDelegate.h>
    #import <UIKit/UIKit.h>
    #import <ExponeaRNAppDelegate.h>
- 
+
    @interface AppDelegate : ExponeaRNAppDelegate<RCTBridgeDelegate>
    @end
    ```
+
 2. Open `AppDelegate.m` and add a super call to `didFinishLaunchingWithOptions`:
    ```swift
      - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -152,16 +154,18 @@ Exponea.configure({
 
 ### Step 4: Request notification permission
 
-Your app requires explicit permission from the user to receive "alert" notifications that are visible to the user. 
+Your app requires explicit permission from the user to receive "alert" notifications that are visible to the user.
 
 You can request authorization by calling `Exponea.requestPushAuthorization()`:
 
 ```typescript
 Exponea.requestPushAuthorization()
-.then(accepted => {
-  console.log(`User has ${accepted ? 'accepted': 'rejected'} push notifications.`)
-})
-.catch(error => console.log(error.message))
+  .then((accepted) => {
+    console.log(
+      `User has ${accepted ? 'accepted' : 'rejected'} push notifications.`
+    );
+  })
+  .catch((error) => console.log(error.message));
 ```
 
 > 👍
@@ -170,8 +174,8 @@ Exponea.requestPushAuthorization()
 
 ### Checklist:
 
- - [ ] Engagement should now be able to send push notifications to iOS devices. Refer to the [Creating a new notification](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) guide for instructions.
- - [ ] At this point, your app doesn't show images or actions in push notifications. Follow the instructions to implement [rich push notifications](#rich-push-notifications) if you want to support this.
+- [ ] Engagement should now be able to send push notifications to iOS devices. Refer to the [Creating a new notification](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) guide for instructions.
+- [ ] At this point, your app doesn't show images or actions in push notifications. Follow the instructions to implement [rich push notifications](#rich-push-notifications) if you want to support this.
 
 ## Customization
 
@@ -186,8 +190,9 @@ For each extension, follow the instructions in [Notification extensions](https:/
 Calling the `ExponeaNotificationContentService.didReceive()` method will enhance the notification body with the image and actions delivered within the `UNNotification` payload. Notification actions shown by `ExponeaNotificationContentService` are registered with configurations to open your application with required information and handle campaign clicks automatically.
 
 #### Checklist:
- - [ ] Check that push notifications with images and buttons sent from Engagement are correctly displayed on your device. Push delivery tracking should work.
- - [ ] If you don't see buttons in the expanded push notification, the content extension is **not** running. Double check `UNNotificationExtensionCategory` in `Info.plist` - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for the extensions and the main app.
+
+- [ ] Check that push notifications with images and buttons sent from Engagement are correctly displayed on your device. Push delivery tracking should work.
+- [ ] If you don't see buttons in the expanded push notification, the content extension is **not** running. Double check `UNNotificationExtensionCategory` in `Info.plist` - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for the extensions and the main app.
 
 ### Rich push notifications for Expo managed apps
 
@@ -203,13 +208,13 @@ const {
   withPlugins,
   withDangerousMod,
   withXcodeProject,
-} = require('@expo/config-plugins')
-const { existsSync, mkdirSync, writeFileSync, readFileSync } = require('fs')
-const path = require('path')
+} = require('@expo/config-plugins');
+const { existsSync, mkdirSync, writeFileSync, readFileSync } = require('fs');
+const path = require('path');
 
-const TEAM_ID = '<your-apple-team-id>'
-const IPHONEOS_DEPLOYMENT_TARGET = '15.1'
-const TARGETED_DEVICE_FAMILY = `"1,2"`
+const TEAM_ID = '<your-apple-team-id>';
+const IPHONEOS_DEPLOYMENT_TARGET = '15.1';
+const TARGETED_DEVICE_FAMILY = `"1,2"`;
 
 /**
  * Mirrors a file from this plugin folder to the ios/android project folder
@@ -217,9 +222,9 @@ const TARGETED_DEVICE_FAMILY = `"1,2"`
  * @param pathSegments any number of segments for the file name and its path.
  */
 function copyFile(...pathSegments) {
-  const src = path.resolve(__dirname, ...pathSegments)
-  const dst = path.resolve(...pathSegments)
-  writeFileSync(dst, readFileSync(src, 'utf-8'))
+  const src = path.resolve(__dirname, ...pathSegments);
+  const dst = path.resolve(...pathSegments);
+  writeFileSync(dst, readFileSync(src, 'utf-8'));
 }
 
 // Creates the 'ExponeaNotificationContent' folder
@@ -230,11 +235,11 @@ function withExponeaNotificationContentFolder(config, params) {
       //create a new folder
       const srcPath = path.resolve(
         cfg.modRequest.projectRoot,
-        cfg.modRequest.platformProjectRoot,
-      )
-      const newFolderPath = path.resolve(srcPath, 'ExponeaNotificationContent')
+        cfg.modRequest.platformProjectRoot
+      );
+      const newFolderPath = path.resolve(srcPath, 'ExponeaNotificationContent');
       if (!existsSync(newFolderPath)) {
-        mkdirSync(newFolderPath)
+        mkdirSync(newFolderPath);
       }
 
       // Entitlement file
@@ -243,20 +248,20 @@ function withExponeaNotificationContentFolder(config, params) {
           __dirname,
           'ios',
           'ExponeaNotificationContent',
-          'ExponeaNotificationContent.entitlements',
+          'ExponeaNotificationContent.entitlements'
         ),
-        'utf-8',
-      )
+        'utf-8'
+      );
       entitlementFileContent = entitlementFileContent.replace(
         '{{APP_GROUP_ID}}',
-        `group.${params.bundleIdentifier}`,
-      )
+        `group.${params.bundleIdentifier}`
+      );
       const entitlementFileDestination = path.resolve(
         'ios',
         'ExponeaNotificationContent',
-        'ExponeaNotificationContent.entitlements',
-      )
-      writeFileSync(entitlementFileDestination, entitlementFileContent)
+        'ExponeaNotificationContent.entitlements'
+      );
+      writeFileSync(entitlementFileDestination, entitlementFileContent);
 
       // PList file
       let pListFileContent = readFileSync(
@@ -264,39 +269,39 @@ function withExponeaNotificationContentFolder(config, params) {
           __dirname,
           'ios',
           'ExponeaNotificationContent',
-          'ExponeaNotificationContent-Info.plist',
+          'ExponeaNotificationContent-Info.plist'
         ),
-        'utf-8',
-      )
+        'utf-8'
+      );
       pListFileContent = pListFileContent.replace(
         '{{APP_BUNDLE_ID}}',
-        params.bundleIdentifier,
-      )
+        params.bundleIdentifier
+      );
       pListFileContent = pListFileContent.replace(
         '{{APP_VERSION}}',
-        params.appVersion,
-      )
+        params.appVersion
+      );
       pListFileContent = pListFileContent.replace(
         '{{IOS_BUILD_NUMBER}}',
-        params.iosBuildNumber,
-      )
+        params.iosBuildNumber
+      );
       const pListFileDestination = path.resolve(
         'ios',
         'ExponeaNotificationContent',
-        'ExponeaNotificationContent-Info.plist',
-      )
-      writeFileSync(pListFileDestination, pListFileContent)
+        'ExponeaNotificationContent-Info.plist'
+      );
+      writeFileSync(pListFileDestination, pListFileContent);
 
       // Swift file
       copyFile(
         'ios',
         'ExponeaNotificationContent',
-        'NotificationViewController.swift',
-      )
+        'NotificationViewController.swift'
+      );
 
-      return cfg
+      return cfg;
     },
-  ])
+  ]);
 }
 
 // Creates the 'ExponeaNotificationService' folder
@@ -307,11 +312,11 @@ function withExponeaNotificationServiceFolder(config, params) {
       // Creates the folder
       const srcPath = path.resolve(
         cfg.modRequest.projectRoot,
-        cfg.modRequest.platformProjectRoot,
-      )
-      const newFolderPath = path.resolve(srcPath, 'ExponeaNotificationService')
+        cfg.modRequest.platformProjectRoot
+      );
+      const newFolderPath = path.resolve(srcPath, 'ExponeaNotificationService');
       if (!existsSync(newFolderPath)) {
-        mkdirSync(newFolderPath)
+        mkdirSync(newFolderPath);
       }
 
       // Entitlement file
@@ -320,20 +325,20 @@ function withExponeaNotificationServiceFolder(config, params) {
           __dirname,
           'ios',
           'ExponeaNotificationService',
-          'ExponeaNotificationService.entitlements',
+          'ExponeaNotificationService.entitlements'
         ),
-        'utf-8',
-      )
+        'utf-8'
+      );
       entitlementFileContent = entitlementFileContent.replace(
         '{{APP_GROUP_ID}}',
-        `group.${params.bundleIdentifier}`,
-      )
+        `group.${params.bundleIdentifier}`
+      );
       const entitlementFileDestination = path.resolve(
         'ios',
         'ExponeaNotificationService',
-        'ExponeaNotificationService.entitlements',
-      )
-      writeFileSync(entitlementFileDestination, entitlementFileContent)
+        'ExponeaNotificationService.entitlements'
+      );
+      writeFileSync(entitlementFileDestination, entitlementFileContent);
 
       // PList File
       let pListFileContent = readFileSync(
@@ -341,28 +346,28 @@ function withExponeaNotificationServiceFolder(config, params) {
           __dirname,
           'ios',
           'ExponeaNotificationService',
-          'ExponeaNotificationService-Info.plist',
+          'ExponeaNotificationService-Info.plist'
         ),
-        'utf-8',
-      )
+        'utf-8'
+      );
       pListFileContent = pListFileContent.replace(
         '{{APP_BUNDLE_ID}}',
-        params.bundleIdentifier,
-      )
+        params.bundleIdentifier
+      );
       pListFileContent = pListFileContent.replace(
         '{{APP_VERSION}}',
-        params.appVersion,
-      )
+        params.appVersion
+      );
       pListFileContent = pListFileContent.replace(
         '{{IOS_BUILD_NUMBER}}',
-        params.iosBuildNumber,
-      )
+        params.iosBuildNumber
+      );
       const pListFileDestination = path.resolve(
         'ios',
         'ExponeaNotificationService',
-        'ExponeaNotificationService-Info.plist',
-      )
-      writeFileSync(pListFileDestination, pListFileContent)
+        'ExponeaNotificationService-Info.plist'
+      );
+      writeFileSync(pListFileDestination, pListFileContent);
 
       // Swift file
       let swiftFileContent = readFileSync(
@@ -370,24 +375,24 @@ function withExponeaNotificationServiceFolder(config, params) {
           __dirname,
           'ios',
           'ExponeaNotificationService',
-          'NotificationService.swift',
+          'NotificationService.swift'
         ),
-        'utf-8',
-      )
+        'utf-8'
+      );
       swiftFileContent = swiftFileContent.replace(
         '{{APP_GROUP_ID}}',
-        `group.${params.bundleIdentifier}`,
-      )
+        `group.${params.bundleIdentifier}`
+      );
       const swiftFileDestination = path.resolve(
         'ios',
         'ExponeaNotificationService',
-        'NotificationService.swift',
-      )
-      writeFileSync(swiftFileDestination, swiftFileContent)
+        'NotificationService.swift'
+      );
+      writeFileSync(swiftFileDestination, swiftFileContent);
 
-      return cfg
+      return cfg;
     },
-  ])
+  ]);
 }
 
 // Updates the podfile to add exponea dependency
@@ -395,12 +400,13 @@ function withExponeaPod(config) {
   return withDangerousMod(config, [
     'ios',
     (cfg) => {
-      const { platformProjectRoot } = cfg.modRequest
-      const podfilePath = path.resolve(platformProjectRoot, 'Podfile')
-      const contents = readFileSync(podfilePath, 'utf-8')
+      const { platformProjectRoot } = cfg.modRequest;
+      const podfilePath = path.resolve(platformProjectRoot, 'Podfile');
+      const contents = readFileSync(podfilePath, 'utf-8');
       writeFileSync(
         podfilePath,
-        contents + `
+        contents +
+          `
 target 'ExponeaNotificationService' do
   pod "ExponeaSDK-Notifications", "3.11.0"
 end
@@ -411,15 +417,15 @@ end`,
       )
       return cfg
     },
-  ])
+  ]);
 }
 
 // Update the xcode project to add the new targets.
 // This is mostly copied from https://github.com/nikwebr/expo-notification-service-extension-plugin/blob/main/plugin/withServiceExtensionIos.ts
 const withExponeaNotificationContentXcodeTarget = (config, params) => {
   return withXcodeProject(config, async (cfg) => {
-    const NSE_TARGET_NAME = 'ExponeaNotificationContent'
-    const xcodeProject = cfg.modResults
+    const NSE_TARGET_NAME = 'ExponeaNotificationContent';
+    const xcodeProject = cfg.modResults;
     // Create new PBXGroup for the extension
     const extGroup = xcodeProject.addPbxGroup(
       [
@@ -428,31 +434,31 @@ const withExponeaNotificationContentXcodeTarget = (config, params) => {
         'NotificationViewController.swift',
       ],
       NSE_TARGET_NAME,
-      NSE_TARGET_NAME,
-    )
+      NSE_TARGET_NAME
+    );
 
     // Add the new PBXGroup to the top level group. This makes the
     // files / folder appear in the file explorer in Xcode.
-    const groups = xcodeProject.hash.project.objects['PBXGroup']
+    const groups = xcodeProject.hash.project.objects['PBXGroup'];
     Object.keys(groups).forEach(function (key) {
       if (
         typeof groups[key] === 'object' &&
         groups[key].name === undefined &&
         groups[key].path === undefined
       ) {
-        xcodeProject.addToPbxGroup(extGroup.uuid, key)
+        xcodeProject.addToPbxGroup(extGroup.uuid, key);
       }
-    })
+    });
 
     // WORK AROUND for codeProject.addTarget BUG
     // Xcode projects don't contain these if there is only one target
     // An upstream fix should be made to the code referenced in this link:
     //   - https://github.com/apache/cordova-node-xcode/blob/8b98cabc5978359db88dc9ff2d4c015cba40f150/lib/pbxProject.js#L860
-    const projObjects = xcodeProject.hash.project.objects
+    const projObjects = xcodeProject.hash.project.objects;
     projObjects['PBXTargetDependency'] =
-      projObjects['PBXTargetDependency'] || {}
+      projObjects['PBXTargetDependency'] || {};
     projObjects['PBXContainerItemProxy'] =
-      projObjects['PBXTargetDependency'] || {}
+      projObjects['PBXTargetDependency'] || {};
 
     // Add the NSE target
     // This adds PBXTargetDependency and PBXContainerItemProxy for you
@@ -460,62 +466,63 @@ const withExponeaNotificationContentXcodeTarget = (config, params) => {
       NSE_TARGET_NAME,
       'app_extension',
       NSE_TARGET_NAME,
-      `${params.bundleIdentifier}.ExponeaNotificationContent`,
-    )
+      `${params.bundleIdentifier}.ExponeaNotificationContent`
+    );
 
     // Add build phases to the new target
     xcodeProject.addBuildPhase(
       ['NotificationViewController.swift'],
       'PBXSourcesBuildPhase',
       'Sources',
-      nseTarget.uuid,
-    )
+      nseTarget.uuid
+    );
     xcodeProject.addBuildPhase(
       [],
       'PBXResourcesBuildPhase',
       'Resources',
-      nseTarget.uuid,
-    )
+      nseTarget.uuid
+    );
 
     xcodeProject.addBuildPhase(
       [],
       'PBXFrameworksBuildPhase',
       'Frameworks',
-      nseTarget.uuid,
-    )
+      nseTarget.uuid
+    );
 
     // Edit the Deployment info of the new Target, only IphoneOS and Targeted Device Family
     // However, can be more
-    const configurations = xcodeProject.pbxXCBuildConfigurationSection()
+    const configurations = xcodeProject.pbxXCBuildConfigurationSection();
     for (const key in configurations) {
       if (
         typeof configurations[key].buildSettings !== 'undefined' &&
         configurations[key].buildSettings.PRODUCT_NAME == `"${NSE_TARGET_NAME}"`
       ) {
-        const buildSettingsObj = configurations[key].buildSettings
-        buildSettingsObj.DEVELOPMENT_TEAM = TEAM_ID
-        buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = IPHONEOS_DEPLOYMENT_TARGET
-        buildSettingsObj.TARGETED_DEVICE_FAMILY = TARGETED_DEVICE_FAMILY
-        buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_TARGET_NAME}/${NSE_TARGET_NAME}.entitlements`
-        buildSettingsObj.CODE_SIGN_STYLE = 'Automatic'
-        buildSettingsObj.SWIFT_VERSION = '5.0'
+        const buildSettingsObj = configurations[key].buildSettings;
+        buildSettingsObj.DEVELOPMENT_TEAM = TEAM_ID;
+        buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET =
+          IPHONEOS_DEPLOYMENT_TARGET;
+        buildSettingsObj.TARGETED_DEVICE_FAMILY = TARGETED_DEVICE_FAMILY;
+        buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_TARGET_NAME}/${NSE_TARGET_NAME}.entitlements`;
+        buildSettingsObj.CODE_SIGN_STYLE = 'Automatic';
+        buildSettingsObj.SWIFT_VERSION = '5.0';
       }
     }
 
     xcodeProject.addFramework('UserNotificationsUI.framework', {
       target: nseTarget.uuid,
-    })
+    });
 
-    xcodeProject.addTargetAttribute('DevelopmentTeam', TEAM_ID, nseTarget)
-    xcodeProject.addTargetAttribute('DevelopmentTeam', TEAM_ID)
-    return cfg
-  })
-}
+    xcodeProject.addTargetAttribute('DevelopmentTeam', TEAM_ID, nseTarget);
+    xcodeProject.addTargetAttribute('DevelopmentTeam', TEAM_ID);
+    return cfg;
+  });
+};
 
 const withExponeaNotificationServiceXcodeTarget = (config, params) => {
   return withXcodeProject(config, async (cfg) => {
-    const NSE_TARGET_NAME = 'ExponeaNotificationService'
-    const xcodeProject = cfg.modResults
+    const NSE_TARGET_NAME = 'ExponeaNotificationService';
+    const xcodeProject = cfg.modResults;
     // Create new PBXGroup for the extension
     const extGroup = xcodeProject.addPbxGroup(
       [
@@ -524,12 +531,12 @@ const withExponeaNotificationServiceXcodeTarget = (config, params) => {
         'NotificationService.swift',
       ],
       NSE_TARGET_NAME,
-      NSE_TARGET_NAME,
-    )
+      NSE_TARGET_NAME
+    );
 
     // Add the new PBXGroup to the top level group. This makes the
     // files / folder appear in the file explorer in Xcode.
-    const groups = xcodeProject.hash.project.objects['PBXGroup']
+    const groups = xcodeProject.hash.project.objects['PBXGroup'];
 
     Object.keys(groups).forEach(function (key) {
       if (
@@ -537,19 +544,19 @@ const withExponeaNotificationServiceXcodeTarget = (config, params) => {
         groups[key].name === undefined &&
         groups[key].path === undefined
       ) {
-        xcodeProject.addToPbxGroup(extGroup.uuid, key)
+        xcodeProject.addToPbxGroup(extGroup.uuid, key);
       }
-    })
+    });
 
     // WORK AROUND for codeProject.addTarget BUG
     // Xcode projects don't contain these if there is only one target
     // An upstream fix should be made to the code referenced in this link:
     //   - https://github.com/apache/cordova-node-xcode/blob/8b98cabc5978359db88dc9ff2d4c015cba40f150/lib/pbxProject.js#L860
-    const projObjects = xcodeProject.hash.project.objects
+    const projObjects = xcodeProject.hash.project.objects;
     projObjects['PBXTargetDependency'] =
-      projObjects['PBXTargetDependency'] || {}
+      projObjects['PBXTargetDependency'] || {};
     projObjects['PBXContainerItemProxy'] =
-      projObjects['PBXTargetDependency'] || {}
+      projObjects['PBXTargetDependency'] || {};
 
     // Add the NSE target
     // This adds PBXTargetDependency and PBXContainerItemProxy for you
@@ -557,53 +564,54 @@ const withExponeaNotificationServiceXcodeTarget = (config, params) => {
       NSE_TARGET_NAME,
       'app_extension',
       NSE_TARGET_NAME,
-      `${params.bundleIdentifier}.ExponeaNotificationService`,
-    )
+      `${params.bundleIdentifier}.ExponeaNotificationService`
+    );
 
     // Add build phases to the new target
     xcodeProject.addBuildPhase(
       ['NotificationService.swift'],
       'PBXSourcesBuildPhase',
       'Sources',
-      nseTarget.uuid,
-    )
+      nseTarget.uuid
+    );
     xcodeProject.addBuildPhase(
       [],
       'PBXResourcesBuildPhase',
       'Resources',
-      nseTarget.uuid,
-    )
+      nseTarget.uuid
+    );
 
     xcodeProject.addBuildPhase(
       [],
       'PBXFrameworksBuildPhase',
       'Frameworks',
-      nseTarget.uuid,
-    )
+      nseTarget.uuid
+    );
 
     // Edit the Deployment info of the new Target, only IphoneOS and Targeted Device Family
     // However, can be more
-    const configurations = xcodeProject.pbxXCBuildConfigurationSection()
+    const configurations = xcodeProject.pbxXCBuildConfigurationSection();
     for (const key in configurations) {
       if (
         typeof configurations[key].buildSettings !== 'undefined' &&
         configurations[key].buildSettings.PRODUCT_NAME == `"${NSE_TARGET_NAME}"`
       ) {
-        const buildSettingsObj = configurations[key].buildSettings
-        buildSettingsObj.DEVELOPMENT_TEAM = TEAM_ID
-        buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = IPHONEOS_DEPLOYMENT_TARGET
-        buildSettingsObj.TARGETED_DEVICE_FAMILY = TARGETED_DEVICE_FAMILY
-        buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_TARGET_NAME}/${NSE_TARGET_NAME}.entitlements`
-        buildSettingsObj.CODE_SIGN_STYLE = 'Automatic'
-        buildSettingsObj.SWIFT_VERSION = '5.0'
+        const buildSettingsObj = configurations[key].buildSettings;
+        buildSettingsObj.DEVELOPMENT_TEAM = TEAM_ID;
+        buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET =
+          IPHONEOS_DEPLOYMENT_TARGET;
+        buildSettingsObj.TARGETED_DEVICE_FAMILY = TARGETED_DEVICE_FAMILY;
+        buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_TARGET_NAME}/${NSE_TARGET_NAME}.entitlements`;
+        buildSettingsObj.CODE_SIGN_STYLE = 'Automatic';
+        buildSettingsObj.SWIFT_VERSION = '5.0';
       }
     }
 
-    xcodeProject.addTargetAttribute('DevelopmentTeam', TEAM_ID, nseTarget)
-    xcodeProject.addTargetAttribute('DevelopmentTeam', TEAM_ID)
-    return cfg
-  })
-}
+    xcodeProject.addTargetAttribute('DevelopmentTeam', TEAM_ID, nseTarget);
+    xcodeProject.addTargetAttribute('DevelopmentTeam', TEAM_ID);
+    return cfg;
+  });
+};
 
 /**
  * Creates iOS extensions to handle Bloomreach rich push notifications
@@ -616,10 +624,10 @@ function withIosRichPush(config, params) {
     withExponeaPod,
     [withExponeaNotificationContentXcodeTarget, params],
     [withExponeaNotificationServiceXcodeTarget, params],
-  ])
+  ]);
 }
 
-module.exports = withIosRichPush
+module.exports = withIosRichPush;
 ```
 
 #### Create folders for the **Notification Service Extension** and the **Notification Content Extension**
@@ -627,8 +635,9 @@ module.exports = withIosRichPush
 Create new folders for the **Notification Service Extension** and the **Notification Content Extension** (for example `ExponeaNotificationContent` and `ExponeaNotificationService`) and place them in the same folder as the plugin config script from the previous step. Copy the files created by Xcode in the `ios` folder for each extension to the newly created folder if you followed the steps in [Rich push notifications](#rich-push-notifications), or create them from scratch. You can draw inspiration from the example app, specifically [ExampleNotificationContent](https://github.com/exponea/exponea-react-native-sdk/tree/main/example/ios/ExampleNotificationContent) and [ExampleNotificationService](https://github.com/exponea/exponea-react-native-sdk/tree/main/example/ios/ExampleNotificationService), and use them as a starting template. If the names of your files differ, please adjust their names or the config plugin script accordingly.
 
 #### Checklist:
- - [ ] Check that push notifications with images and buttons sent from Engagement are correctly displayed on your device. Push delivery tracking should work.
- - [ ] If you don't see buttons in the expanded push notification, the content extension is **not** running. Double check `UNNotificationExtensionCategory` in `Info.plist` - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for the extensions and the main app.
+
+- [ ] Check that push notifications with images and buttons sent from Engagement are correctly displayed on your device. Push delivery tracking should work.
+- [ ] If you don't see buttons in the expanded push notification, the content extension is **not** running. Double check `UNNotificationExtensionCategory` in `Info.plist` - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for the extensions and the main app.
 
 ### Retrieve push notification token manually
 
@@ -636,7 +645,7 @@ Sometimes, your application may need to retrieve the current push token while ru
 
 A common use case is when the `Exponea.shared.anonymize()` method is called. Invoking `anonymize` removes the push notification token from local storage. Hence, it needs to be updated right after `anonymize`, or before or after `identifyCustomer`, depending on your push notifications usage.
 
-``` swift
+```swift
 class YourClass {
     @objc(signOutAndSignIn:resolve:reject:)
     func signOutAndSignIn(

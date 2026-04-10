@@ -1,5 +1,8 @@
 const path = require('path');
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const { getDefaultConfig } = require('@react-native/metro-config');
+const { withMetroConfig } = require('react-native-monorepo-config');
+
+const root = path.resolve(__dirname, '..');
 
 /**
  * Metro configuration
@@ -7,20 +10,7 @@ const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
  *
  * @type {import('@react-native/metro-config').MetroConfig}
  */
-const sdkRoot = path.resolve(__dirname, 'node_modules/react-native-exponea-sdk');
-
-const config = {
-  resolver: {
-    blockList: [
-      new RegExp(`${sdkRoot}/node_modules/.*`),
-      new RegExp(`${sdkRoot}/example/node_modules/.*`),
-    ],
-    extraNodeModules: {
-      react: path.resolve(__dirname, 'node_modules/react'),
-      'react-native': path.resolve(__dirname, 'node_modules/react-native'),
-    },
-  },
-  watchFolders: [sdkRoot],
-};
-
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = withMetroConfig(getDefaultConfig(__dirname), {
+  root,
+  dirname: __dirname,
+});

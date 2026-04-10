@@ -8,7 +8,7 @@ parent:
   uri: react-native-sdk-in-app-personalization
 ---
 
-The SDK enables you to display native in-app messages in your app based on definitions set up in Engagement. 
+The SDK enables you to display native in-app messages in your app based on definitions set up in Engagement.
 
 In-app messages work out of the box once the [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup) in your app; no development work is required. However, you can customize the behavior to meet your specific requirements.
 
@@ -37,12 +37,15 @@ The SDK automatically tracks `banner` events for in-app messages with the follow
 >
 > The behavior of in-app message tracking may be affected by the tracking consent feature, which in enabled mode requires explicit consent for tracking. Refer to the [Tracking consent for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking-consent) documentation for details.
 
-
 ## Customization
 
 ### Customize in-app message actions
 
 You can override the SDK's default behavior in response to an in-app message action (click button or close message) by setting up an `InAppMessageCallback` instance on the `Exponea` instance.
+
+> 📘 Note
+>
+> **SDK version 3.0.0 change:** The callback interface has been internally renamed from `InAppMessageCallback` to `InAppMessageCallbackImpl`. A backward-compatible type alias is exported, so existing imports of `InAppMessageCallback` continue to work without changes.
 
 If the `overrideDefaultBehavior` parameter is `true`, the SDK will not perform the default in-app action (for example, resolving a deep link).
 
@@ -54,12 +57,19 @@ Exponea.setInAppMessageCallback({
   overrideDefaultBehavior: false,
   // If trackActions is set to false, click and close in-app events will not be tracked automatically
   trackActions: true,
-  inAppMessageClickAction(message: InAppMessage, button: InAppMessageButton): void {
+  inAppMessageClickAction(
+    message: InAppMessage,
+    button: InAppMessageButton
+  ): void {
     // Here goes your code
     // Method called when action button has been clicked by user.
     // The button contains button text and button URL
   },
-  inAppMessageCloseAction(message: InAppMessage, button: InAppMessageButton | undefined, interaction: boolean): void {
+  inAppMessageCloseAction(
+    message: InAppMessage,
+    button: InAppMessageButton | undefined,
+    interaction: boolean
+  ): void {
     // Here goes your code
     // Method called when in-app message has been closed.
     // On in-app close by click on CANCEL button:
@@ -73,7 +83,11 @@ Exponea.setInAppMessageCallback({
     //  - the `button` is null
     //  - the `interaction` is false
   },
-  inAppMessageError(message: InAppMessage | undefined, errorMessage: string): void {
+  inAppMessageError(
+    message: InAppMessage | undefined,
+    errorMessage: string
+  ): void {
+
     // Here goes your code
     // Method called when any error occurs while showing in-app message.
     // In-app message could be NULL if error is not related to in-app message.
@@ -87,29 +101,22 @@ Exponea.setInAppMessageCallback({
 
 If you set `trackActions` to `false` but you still want to track click or close events under some circumstances, you can call the `Exponea` methods `trackInAppMessageClick` or `trackInAppMessageClose` in the action method:
 
-```typescript
-Exponea.setInAppMessageCallback(false, false, (action) => {
-    console.log('InApp action received - App.tsx');
-    if (<your-special-condition>) {
-        if (interaction) {
-            Exponea.trackInAppMessageClick(action.message, action.button?.text, action.button?.url)
-        } else {
-            Exponea.trackInAppMessageClose(action.message)
-        }
-    }
-});
+> ❗️Warning
+>
+> **SDK version 3.0.0 change:** The `trackInAppMessageClick` and `trackInAppMessageClose` methods (and their `WithoutTrackingConsent` variants) now accept `string | null` instead of `string | undefined` for `buttonText` and `buttonUrl` parameters. Update any calls that pass `undefined` to pass `null` instead.
 
+```typescript
 Exponea.setInAppMessageCallback({
   overrideDefaultBehavior: false,
   trackActions: false,
   inAppMessageClickAction(message: InAppMessage, button: InAppMessageButton): void {
     if (<your-special-condition>) {
-      Exponea.trackInAppMessageClick(message, button.text, button.url);
+      Exponea.trackInAppMessageClick(message, button.text ?? null, button.url ?? null);
     }
   },
   inAppMessageCloseAction(message: InAppMessage, button: InAppMessageButton | undefined, interaction: boolean): void {
     if (<your-special-condition>) {
-      Exponea.trackInAppMessageClose(message, button?.text, interaction);
+      Exponea.trackInAppMessageClose(message, button?.text ?? null, interaction);
     }
   },
   inAppMessageError(message: InAppMessage | undefined, errorMessage: string): void {
@@ -160,6 +167,7 @@ If your app is successfully requesting and receiving in-app messages but they ar
 - In-app messages are triggered when an event is tracked based on conditions set up in Engagement. Once a message passes those filters, the SDK will try to present the message.
 
 - The SDK hooks into the application lifecycle.
+
   - On iOS, the message will be presented in the top-most `presentedViewController` (except for slide-in messages that use `UIWindow` directly).
   - On Android, the message will be presented in a new Activity (except for slide-in messages which are directly injected into the currently running Activity).
 

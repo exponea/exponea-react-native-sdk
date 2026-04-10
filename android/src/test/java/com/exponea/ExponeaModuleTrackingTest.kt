@@ -111,7 +111,7 @@ internal class ExponeaModuleTrackingTest {
         module.trackEvent(
             "event_name",
             JavaOnlyMap.of("string", "asd", "number", 123, "boolean", false),
-            JavaOnlyMap.of(),
+            null,
             MockResolvingPromise {
                 verify { Exponea.trackEvent(any(), any(), any()) }
             }
@@ -124,7 +124,7 @@ internal class ExponeaModuleTrackingTest {
         module.trackEvent(
             "event_name",
             JavaOnlyMap.of("string", "asd", "number", 123, "boolean", false),
-            JavaOnlyMap.of(),
+            null,
             MockResolvingPromise {
                 verify {
                     Exponea.trackEvent(
@@ -143,7 +143,7 @@ internal class ExponeaModuleTrackingTest {
         module.trackEvent(
             "event_name",
             JavaOnlyMap.of("string", "asd", "number", 123, "boolean", false),
-            JavaOnlyMap.of("timestamp", null),
+            null,
             MockResolvingPromise {
                 verify {
                     Exponea.trackEvent(
@@ -162,7 +162,7 @@ internal class ExponeaModuleTrackingTest {
         module.trackEvent(
             "event_name",
             JavaOnlyMap.of("string", "asd", "number", 123, "boolean", false),
-            JavaOnlyMap.of("timestamp", 123),
+            123.0,
             MockResolvingPromise {
                 verify {
                     Exponea.trackEvent(
@@ -180,7 +180,7 @@ internal class ExponeaModuleTrackingTest {
         every { Exponea.isInitialized } returns false
         every { Exponea.trackSessionStart(any()) } just Runs
         module.trackSessionStart(
-            JavaOnlyMap.of(),
+            null,
             MockResolvingPromise {
                 verify { Exponea.trackSessionStart(any()) }
             }
@@ -191,7 +191,7 @@ internal class ExponeaModuleTrackingTest {
     fun `track session start should resolve and track session start without timestamp parameter`() {
         every { Exponea.isInitialized } returns true
         module.trackSessionStart(
-            JavaOnlyMap.of(),
+            null,
             MockResolvingPromise {
                 verify { Exponea.trackSessionStart(range(currentTimeSeconds() - 1, currentTimeSeconds() + 1)) }
             }
@@ -202,7 +202,7 @@ internal class ExponeaModuleTrackingTest {
     fun `track session start should resolve and track session start with empty timestamp parameter`() {
         every { Exponea.isInitialized } returns true
         module.trackSessionStart(
-            JavaOnlyMap.of("timestamp", null),
+            null,
             MockResolvingPromise {
                 verify { Exponea.trackSessionStart(range(currentTimeSeconds() - 1, currentTimeSeconds() + 1)) }
             }
@@ -213,7 +213,7 @@ internal class ExponeaModuleTrackingTest {
     fun `track session start should resolve and track session start with timestamp parameter`() {
         every { Exponea.isInitialized } returns true
         module.trackSessionStart(
-            JavaOnlyMap.of("timestamp", 123),
+            123.0,
             MockResolvingPromise {
                 verify { Exponea.trackSessionStart(123.0) }
             }
@@ -225,7 +225,7 @@ internal class ExponeaModuleTrackingTest {
         every { Exponea.isInitialized } returns false
         every { Exponea.trackSessionEnd(any()) } just Runs
         module.trackSessionEnd(
-            JavaOnlyMap.of(),
+            null,
             MockResolvingPromise {
                 verify { Exponea.trackSessionEnd(any()) }
             }
@@ -236,7 +236,7 @@ internal class ExponeaModuleTrackingTest {
     fun `track session end should resolve and track session end without timestamp parameter`() {
         every { Exponea.isInitialized } returns true
         module.trackSessionEnd(
-            JavaOnlyMap.of(),
+            null,
             MockResolvingPromise {
                 verify { Exponea.trackSessionEnd(range(currentTimeSeconds() - 1, currentTimeSeconds() + 1)) }
             }
@@ -247,7 +247,7 @@ internal class ExponeaModuleTrackingTest {
     fun `track session end should resolve and track session end with empty timestamp parameter`() {
         every { Exponea.isInitialized } returns true
         module.trackSessionEnd(
-            JavaOnlyMap.of("timestamp", null),
+            null,
             MockResolvingPromise {
                 verify { Exponea.trackSessionEnd(range(currentTimeSeconds() - 1, currentTimeSeconds() + 1)) }
             }
@@ -258,7 +258,7 @@ internal class ExponeaModuleTrackingTest {
     fun `track session end should resolve and track session end with timestamp parameter`() {
         every { Exponea.isInitialized } returns true
         module.trackSessionEnd(
-            JavaOnlyMap.of("timestamp", 123),
+            123.0,
             MockResolvingPromise {
                 verify { Exponea.trackSessionEnd(123.0) }
             }
@@ -269,6 +269,7 @@ internal class ExponeaModuleTrackingTest {
     fun `tracks delivered production push notification`() {
         every { Exponea.isInitialized } returns true
         val notificationSlot = slot<NotificationData>()
+        every { Exponea.trackDeliveredPush(any(), any()) } just Runs
         module.trackDeliveredPush(
             getPushNotificationAsMap(),
             MockResolvingPromise {
@@ -332,6 +333,7 @@ internal class ExponeaModuleTrackingTest {
         every { Exponea.isInitialized } returns true
         val notificationSlot = slot<NotificationData>()
         val actionSlot = slot<NotificationAction>()
+        every { Exponea.trackClickedPush(any(), any(), any()) } just Runs
         module.trackClickedPush(
             getPushNotificationAsMap() + getPushNotificationActionAsMap(),
             MockResolvingPromise {
@@ -402,9 +404,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
         val buttonLink = slot<String>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val buttonUrlValue = button?.getString("url")
         module.trackInAppMessageClick(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            buttonUrl = buttonUrlValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClick(
@@ -430,9 +438,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
         val buttonLink = slot<String>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal-richstyle.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal-richstyle.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val buttonUrlValue = button?.getString("url")
         module.trackInAppMessageClick(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            buttonUrl = buttonUrlValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClick(
@@ -458,9 +472,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
         val buttonLink = slot<String>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val buttonUrlValue = button?.getString("url")
         module.trackInAppMessageClickWithoutTrackingConsent(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            buttonUrl = buttonUrlValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClickWithoutTrackingConsent(
@@ -486,9 +506,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
         val buttonLink = slot<String>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal-richstyle.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-minimal-richstyle.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val buttonUrlValue = button?.getString("url")
         module.trackInAppMessageClickWithoutTrackingConsent(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            buttonUrl = buttonUrlValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClickWithoutTrackingConsent(
@@ -514,9 +540,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
         val buttonLink = slot<String?>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val buttonUrlValue = button?.getString("url")
         module.trackInAppMessageClick(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            buttonUrl = buttonUrlValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClick(
@@ -540,9 +572,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
         val buttonLink = slot<String?>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls-richstyle.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls-richstyle.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val buttonUrlValue = button?.getString("url")
         module.trackInAppMessageClick(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            buttonUrl = buttonUrlValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClick(
@@ -566,9 +604,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
         val buttonLink = slot<String?>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val buttonUrlValue = button?.getString("url")
         module.trackInAppMessageClickWithoutTrackingConsent(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            buttonUrl = buttonUrlValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClickWithoutTrackingConsent(
@@ -592,9 +636,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
         val buttonLink = slot<String?>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls-richstyle.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-click-nulls-richstyle.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val buttonUrlValue = button?.getString("url")
         module.trackInAppMessageClickWithoutTrackingConsent(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            buttonUrl = buttonUrlValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClickWithoutTrackingConsent(
@@ -618,9 +668,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
         val interaction = slot<Boolean>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val interactionValue = data.getBoolean("interaction")
         module.trackInAppMessageClose(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            interaction = interactionValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClose(
@@ -646,9 +702,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
         val interaction = slot<Boolean>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete-richstyle.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete-richstyle.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val interactionValue = data.getBoolean("interaction")
         module.trackInAppMessageClose(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            interaction = interactionValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClose(
@@ -674,9 +736,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
         val interaction = slot<Boolean>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val interactionValue = data.getBoolean("interaction")
         module.trackInAppMessageCloseWithoutTrackingConsent(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            interaction = interactionValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageCloseWithoutTrackingConsent(
@@ -702,9 +770,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
         val interaction = slot<Boolean>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete-richstyle.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-complete-richstyle.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val interactionValue = data.getBoolean("interaction")
         module.trackInAppMessageCloseWithoutTrackingConsent(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            interaction = interactionValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageCloseWithoutTrackingConsent(
@@ -730,9 +804,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String>()
         val interaction = slot<Boolean>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-double-values.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-double-values.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val interactionValue = data.getBoolean("interaction")
         module.trackInAppMessageCloseWithoutTrackingConsent(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            interaction = interactionValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageCloseWithoutTrackingConsent(
@@ -759,9 +839,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
         val interaction = slot<Boolean>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val interactionValue = data.getBoolean("interaction")
         module.trackInAppMessageClose(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            interaction = interactionValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClose(
@@ -786,9 +872,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
         val interaction = slot<Boolean>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal-richstyle.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal-richstyle.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val interactionValue = data.getBoolean("interaction")
         module.trackInAppMessageClose(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            interaction = interactionValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageClose(
@@ -813,9 +905,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
         val interaction = slot<Boolean>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val interactionValue = data.getBoolean("interaction")
         module.trackInAppMessageCloseWithoutTrackingConsent(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            interaction = interactionValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageCloseWithoutTrackingConsent(
@@ -840,9 +938,15 @@ internal class ExponeaModuleTrackingTest {
         val messageSlot = slot<InAppMessage>()
         val buttonText = slot<String?>()
         val interaction = slot<Boolean>()
-        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal-richstyle.json").readText())
+        val data = TestJsonParser.parse(File("../src/test_data/in-app-close-minimal-richstyle.json").readText()) as ReadableMap
+        val message = data.getMap("message")!!
+        val button = data.getMap("button")
+        val buttonTextValue = button?.getString("text")
+        val interactionValue = data.getBoolean("interaction")
         module.trackInAppMessageCloseWithoutTrackingConsent(
-            params = data as ReadableMap,
+            message = message,
+            buttonText = buttonTextValue,
+            interaction = interactionValue,
             promise = MockResolvingPromise {
                 verify {
                     Exponea.trackInAppMessageCloseWithoutTrackingConsent(

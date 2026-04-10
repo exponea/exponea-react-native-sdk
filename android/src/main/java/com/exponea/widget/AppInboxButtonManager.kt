@@ -1,22 +1,42 @@
 package com.exponea.widget
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import android.widget.Button
 import com.exponea.asColorString
 import com.exponea.asSize
 import com.exponea.sdk.Exponea
 import com.exponea.style.ButtonStyle
 import com.facebook.react.bridge.Dynamic
+import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.viewmanagers.AppInboxButtonManagerDelegate
+import com.facebook.react.viewmanagers.AppInboxButtonManagerInterface
 
-class AppInboxButtonManager : SimpleViewManager<Button>() {
-    override fun getName() = "RNAppInboxButton"
+@ReactModule(name = AppInboxButtonManager.REACT_CLASS)
+class AppInboxButtonManager :
+    SimpleViewManager<Button>(),
+    AppInboxButtonManagerInterface<Button> {
+
+    private val delegate: ViewManagerDelegate<Button> =
+        AppInboxButtonManagerDelegate(this)
+
+    companion object {
+        const val REACT_CLASS = "AppInboxButton"
+    }
 
     private var buttonStyle: ButtonStyle? = null
     private var defaultTextColor: String? = null
     private var defaultIcon: Drawable? = null
+
+    override fun getName() = REACT_CLASS
+
+    override fun getDelegate(): ViewManagerDelegate<Button> = delegate
 
     override fun createViewInstance(reactContext: ThemedReactContext): Button {
         val button = Exponea.appInboxProvider.getAppInboxButton(reactContext)
@@ -37,48 +57,39 @@ class AppInboxButtonManager : SimpleViewManager<Button>() {
         return buttonStyle!!
     }
 
-    @ReactProp(name = "textOverride")
-    fun setText(button: Button, value: String?) {
+    // Codegen-generated interface methods
+    override fun setTextOverride(button: Button, value: String?) {
         ensureStyle().merge(ButtonStyle(textOverride = value)).applyTo(button)
     }
 
-    @ReactProp(name = "textColor")
-    fun setTextColor(button: Button, value: String?) {
+    override fun setTextColor(button: Button, value: String?) {
         ensureStyle().merge(ButtonStyle(textColor = value ?: defaultTextColor)).applyTo(button)
     }
 
-    @ReactProp(name = "backgroundColor")
-    fun setBackgroundColor(button: Button, value: String?) {
+    override fun setBackgroundColor(button: Button, value: String?) {
         ensureStyle().merge(ButtonStyle(backgroundColor = value)).applyTo(button)
     }
 
-    @ReactProp(name = "showIcon")
-    fun setShowIcon(button: Button, value: Boolean?) {
+    override fun setShowIcon(button: Button, value: Boolean) {
         ensureStyle().merge(ButtonStyle(showIcon = value))
-        // !!! ButtonStyle is able only to hide icon
-        value?.let {
-            val icon = if (it) defaultIcon else null
-            button.setCompoundDrawablesRelative(icon, null, null, null)
-        }
+        // ButtonStyle can only hide icon, so we need to handle showing it separately
+        val icon = if (value) defaultIcon else null
+        button.setCompoundDrawablesRelative(icon, null, null, null)
     }
 
-    @ReactProp(name = "textSize")
-    fun setTextSize(button: Button, value: Dynamic) {
-        ensureStyle().merge(ButtonStyle(textSize = value.asSize()?.asString())).applyTo(button)
+    override fun setTextSize(button: Button, value: String?) {
+        ensureStyle().merge(ButtonStyle(textSize = value)).applyTo(button)
     }
 
-    @ReactProp(name = "enabled")
-    fun setEnabled(button: Button, value: Boolean?) {
+    override fun setEnabled(button: Button, value: Boolean) {
         ensureStyle().merge(ButtonStyle(enabled = value)).applyTo(button)
     }
 
-    @ReactProp(name = "borderRadius")
-    fun setBorderRadius(button: Button, value: Dynamic) {
-        ensureStyle().merge(ButtonStyle(borderRadius = value.asSize()?.asString())).applyTo(button)
+    override fun setBorderRadius(button: Button, value: String?) {
+        ensureStyle().merge(ButtonStyle(borderRadius = value)).applyTo(button)
     }
 
-    @ReactProp(name = "textWeight")
-    fun setFontWeight(button: Button, value: String?) {
+    override fun setTextWeight(button: Button, value: String?) {
         ensureStyle().merge(ButtonStyle(textWeight = value)).applyTo(button)
     }
 }

@@ -1,51 +1,61 @@
-//
-//  JsonDataParser.swift
-//  Exponea
-//
-//  Created by Panaxeo on 18/06/2020.
-//  Copyright © 2020 Panaxeo. All rights reserved.
-//
-
 import Foundation
 import ExponeaSDK
 
-struct JsonDataParser {
-    static func parse(dictionary: NSDictionary) throws -> [String: JSONConvertible] {
-        var data: [String: JSONConvertible] = [:]
-        try dictionary.forEach { key, value in
-            guard let key = key as? String else {
-                throw ExponeaDataError.invalidValue(for: "property key")
+/// Parser for JSON data structures
+public class JsonDataParser {
+    
+    /// Parse a dictionary into JSON-convertible format
+    /// - Parameter dictionary: The dictionary to parse
+    /// - Returns: A dictionary of JSON-convertible values
+    /// - Throws: ExponeaDataError if parsing fails
+    public static func parse(dictionary: NSDictionary) throws -> [String: JSONConvertible] {
+        var result: [String: JSONConvertible] = [:]
+        
+        for (key, value) in dictionary {
+            guard let keyString = key as? String else {
+                throw ExponeaDataError.invalidType(for: "key in properties dictionary")
             }
-            data[key] = try parseValue(value: value)
-        }
-        return data
-    }
-
-    static func parseArray(array: NSArray) throws -> [JSONConvertible] {
-        return try array.map { try parseValue(value: $0) }
-    }
-
-    static func parseValue(value: Any) throws -> JSONConvertible {
-        if let dictionary = value as? NSDictionary {
-            return try parse(dictionary: dictionary)
-        } else if let array = value as? NSArray {
-            return try parseArray(array: array)
-        } else if let number = value as? NSNumber {
-            if number === kCFBooleanFalse {
-                return false
-            } else if number === kCFBooleanTrue {
-                return true
+            
+            // Convert Swift types to JSONConvertible
+            if let stringValue = value as? String {
+                result[keyString] = stringValue
+            } else if let numberValue = value as? NSNumber {
+                // Check if it's a boolean
+                if CFGetTypeID(numberValue) == CFBooleanGetTypeID() {
+                    result[keyString] = numberValue.boolValue
+                } else if numberValue.doubleValue == floor(numberValue.doubleValue) {
+                    result[keyString] = numberValue.intValue
+                } else {
+                    result[keyString] = numberValue.doubleValue
+                }
+            } else if let boolValue = value as? Bool {
+                result[keyString] = boolValue
+            } else if let doubleValue = value as? Double {
+                result[keyString] = doubleValue
+            } else if let intValue = value as? Int {
+                result[keyString] = intValue
+            } else if let floatValue = value as? Float {
+                result[keyString] = Double(floatValue)
             } else {
-                return number.doubleValue
+                throw ExponeaDataError.invalidType(for: "value for key \(keyString)")
             }
-        } else if let string = value as? NSString {
-            return string
         }
-        throw ExponeaDataError.invalidType(for: "value in data '\(type(of: value))'")
+        
+        return result
     }
 
-    static func toJson(value: Encodable) throws -> String? {
-        let data = try JSONEncoder().encode(value)
-        return String(data: data, encoding: .utf8)
+    /// Convert an encodable value to JSON dictionary
+    /// - Parameter value: The value to convert to JSON
+    /// - Returns: A dictionary representation of the value
+    /// - Throws: Error if encoding fails
+    public static func toJson<T: Encodable>(value: T) throws -> [String: Any] {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        let data = try encoder.encode(value)
+        let json = try JSONSerialization.jsonObject(with: data, options: [])
+        guard let dictionary = json as? [String: Any] else {
+            throw ExponeaDataError.invalidType(for: "JSON encoding result")
+        }
+        return dictionary
     }
 }

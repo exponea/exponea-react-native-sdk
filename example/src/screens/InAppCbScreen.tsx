@@ -1,12 +1,21 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useCallback } from 'react';
-import {FlatList, Image, Platform, StyleSheet, Text, View} from 'react-native';
-import InAppContentBlocksPlaceholder from 'react-native-exponea-sdk/lib/InAppContentBlocksPlaceholder';
+import {
+  FlatList,
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import icon1 from '../img/ic_dialog_map.png';
 import icon2 from '../img/ic_media_route.png';
 import icon3 from '../img/ic_menu_search.png';
 import icon4 from '../img/ic_star.png';
-import ContentBlockCarouselView from 'react-native-exponea-sdk/lib/ContentBlockCarouselView';
+import {
+  ContentBlockCarouselView,
+  InAppContentBlocksPlaceholder,
+} from 'react-native-exponea-sdk';
 
 interface ProductsViewModel {
   icon: string;
@@ -16,7 +25,11 @@ interface ProductsViewModel {
 }
 
 export default function InAppCbScreen(): React.ReactElement {
-    const [carouselStatus, setCarouselStatus] = React.useState({index: -1, count: 0, name: ''});
+  const [carouselStatus, setCarouselStatus] = React.useState({
+    index: -1,
+    count: 0,
+    name: '',
+  });
   const [] = React.useState(false);
   const platformSpecificPlaceholderId =
     Platform.OS === 'ios' ? 'ph_x_example_iOS' : 'ph_x_example_Android';
@@ -59,7 +72,7 @@ export default function InAppCbScreen(): React.ReactElement {
     return result;
   }
   const productsArray = generateProducts();
-  const renderItem = useCallback(({item} : {item:ProductsViewModel}) => {
+  const renderItem = useCallback(({ item }: { item: ProductsViewModel }) => {
     if (item.showAd) {
       return (
         <InAppContentBlocksPlaceholder
@@ -78,7 +91,8 @@ export default function InAppCbScreen(): React.ReactElement {
             borderTopColor: '#222',
             paddingTop: 8,
             paddingBottom: 8,
-          }}>
+          }}
+        >
           <Image
             style={{
               tintColor: '#000',
@@ -86,7 +100,7 @@ export default function InAppCbScreen(): React.ReactElement {
               height: 28,
               marginRight: 8,
             }}
-            source={{uri: item.icon}}
+            source={{ uri: item.icon }}
           />
           <View>
             <Text>{item.title}</Text>
@@ -94,7 +108,8 @@ export default function InAppCbScreen(): React.ReactElement {
               style={{
                 paddingRight: 24,
                 textAlign: 'justify',
-              }}>
+              }}
+            >
               {item.description}
             </Text>
           </View>
@@ -104,59 +119,66 @@ export default function InAppCbScreen(): React.ReactElement {
   }, []);
   return (
     <View style={styles.container}>
-    <Text>Default Carousel: example_carousel</Text>
-          <ContentBlockCarouselView
-            style={{
-              width: '100%',
-            }}
-            placeholderId={'example_carousel'}
-            onMessageShown={(_placeholderId, cb, index, count) => {
-              setCarouselStatus({
-                name: cb.name,
-                index: index,
-                count: count
-              })
-            }}
-            onMessagesChanged={(count, cbs) => {
-              if (cbs.length === 0) {
-                setCarouselStatus({
-                  name: '',
-                  index: -1,
-                  count: count
-                })
-              }
-            }}
-            onNoMessageFound={(placeholderId) => {
-              console.log(`Carousel ${placeholderId} is empty`);
-            }}
-            onError={(placeholderId, cb, errorMessage) => {
-              console.log(`Carousel ${placeholderId} error: ${errorMessage}`);
-            }}
-            onCloseClicked={(placeholderId, cb) => {
-              console.log(`MESSAGE CLOSE CLICKED`)
-              console.log(`Message ${typeof cb} has been closed in carousel ${placeholderId}`);
-            }}
-            onActionClicked={(placeholderId, cb, action) => {
-              console.log(`Action ${action.name} has been clicked in carousel ${placeholderId}`);
-            }}
-            overrideDefaultBehavior={false}
-            trackActions={true}
-            filterContentBlocks={(source) => {
-              console.log(`Before custom CBs filtering ${source.length}`)
-              let filtered = source.filter((item) => {
-                return item.name?.toLowerCase().indexOf('discarded') < 0
-              })
-              console.log(`After custom CBs filtering = ${filtered.length}`)
-              return filtered
-            }}
-            sortContentBlocks={(source) => {
-              console.log(`Before custom CBs sorting ${JSON.stringify(source)}`)
-              let sorted = source.reverse()
-              console.log(`After custom CBs sorting ${JSON.stringify(sorted)}`)
-              return sorted
-            }}
-          />
-          <Text>Showing {carouselStatus.name} as {carouselStatus.index + 1} of {carouselStatus.count}</Text>
+      <Text>Default Carousel: example_carousel</Text>
+      <ContentBlockCarouselView
+        style={{
+          width: '100%',
+        }}
+        placeholderId={'example_carousel'}
+        onMessageShown={(_placeholderId, cb, index, count) => {
+          setCarouselStatus({
+            name: cb.name,
+            index: index,
+            count: count,
+          });
+        }}
+        onMessagesChanged={(count, cbs) => {
+          if (cbs.length == 0) {
+            setCarouselStatus({
+              name: '',
+              index: -1,
+              count: count,
+            });
+          }
+        }}
+        onNoMessageFound={(placeholderId) => {
+          console.log(`Carousel ${placeholderId} is empty`);
+        }}
+        onError={(placeholderId, cb, errorMessage) => {
+          console.log(`Carousel ${placeholderId} error: ${errorMessage}`);
+        }}
+        onCloseClicked={(placeholderId, cb) => {
+          console.log(`MESSAGE CLOSE CLICKED`);
+          console.log(
+            `Message ${typeof cb} has been closed in carousel ${placeholderId}`
+          );
+        }}
+        onActionClicked={(placeholderId, cb, action) => {
+          console.log(
+            `Action ${action.name} has been clicked in carousel ${placeholderId}`
+          );
+        }}
+        overrideDefaultBehavior={false}
+        trackActions={true}
+        filterContentBlocks={(source) => {
+          console.log(`Before custom CBs filtering ${source.length}`);
+          let filtered = source.filter((item) => {
+            return item.name?.toLowerCase().indexOf('discarded') < 0;
+          });
+          console.log(`After custom CBs filtering = ${filtered.length}`);
+          return filtered;
+        }}
+        sortContentBlocks={(source) => {
+          console.log(`Before custom CBs sorting ${JSON.stringify(source)}`);
+          let sorted = source.reverse();
+          console.log(`After custom CBs sorting ${JSON.stringify(sorted)}`);
+          return sorted;
+        }}
+      />
+      <Text>
+        Showing {carouselStatus.name} as {carouselStatus.index + 1} of{' '}
+        {carouselStatus.count}
+      </Text>
       <Text>Placeholder: example_top</Text>
       <InAppContentBlocksPlaceholder
         style={{

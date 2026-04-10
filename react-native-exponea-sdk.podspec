@@ -1,7 +1,6 @@
 require "json"
 
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
-folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
 Pod::Spec.new do |s|
   s.name         = "react-native-exponea-sdk"
@@ -17,31 +16,13 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "15.1" }
   s.source       = { :git => "https://github.com/github_account/react-native-exponea-sdk.git", :tag => "#{s.version}" }
 
-  s.source_files = "ios/**/*.{h,c,m,mm,swift}"
-  s.exclude_files = "ios/Tests/*.{h,c,m,mm,swift}"
-  s.requires_arc = true
+  s.source_files = "ios/**/*.{h,m,mm,swift,cpp}"
+  s.exclude_files = ["ios/Tests/*.{h,c,m,mm,swift}", "ios/build/**/*"]
+  s.private_header_files = "ios/**/*.h"
 
   s.dependency "React-Core"
   s.dependency "ExponeaSDK", "3.11.0"
   s.dependency "AnyCodable-FlightSchool", "0.4.0"
 
-  # Don't install the dependencies when we run `pod install` in the old architecture.
-  if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
-    s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
-    s.pod_target_xcconfig    = {
-      "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
-      "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -DFOLLY_CFG_NO_COROUTINES=1 -DFOLLY_HAVE_CLOCK_GETTIME=1",
-      "CLANG_CXX_LANGUAGE_STANDARD" => "c++20"
-    }
-    s.dependency "React-Codegen"
-    if ENV['RCT_USE_RN_DEP'] == '1' then
-      s.dependency "ReactNativeDependencies"
-    else
-      s.dependency "RCT-Folly"
-    end
-    s.dependency "RCTRequired"
-    s.dependency "RCTTypeSafety"
-    s.dependency "ReactCommon/turbomodule/core"
-  end
+  install_modules_dependencies(s)
 end
-

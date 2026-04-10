@@ -37,10 +37,11 @@ internal class ExponeaModuleTest {
     @Before
     fun before() {
         mockkObject(Exponea)
-        module = ExponeaModule(BridgeReactContext(ApplicationProvider.getApplicationContext()))
+        val context = BridgeReactContext(ApplicationProvider.getApplicationContext())
+        module = ExponeaModule(context)
 
         // we need to create dummy package with meta data for android sdk telemetry
-        val packageManager = module.reactContext.packageManager
+        val packageManager = context.packageManager
         val shadowPackageManager = shadowOf(packageManager)
         val packageInfo = PackageInfo()
         packageInfo.packageName = "org.robolectric.default"
@@ -62,6 +63,8 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should initialize Exponea SDK`() {
+        every { Exponea.init(any(), any()) } just Runs
+        every { Exponea.isInitialized } returns true
         module.configure(
             JavaOnlyMap.of("projectToken", "mock", "authorizationToken", "mock"),
             MockResolvingPromise { }
@@ -94,9 +97,9 @@ internal class ExponeaModuleTest {
     @Test
     fun `should resolve Exponea SDK configuration status`() {
         every { Exponea.isInitialized } returns true
-        module.isConfigured(MockResolvingPromise { assertEquals(true, it.result) })
+        assertEquals(true, module.isConfigured())
         every { Exponea.isInitialized } returns false
-        module.isConfigured(MockResolvingPromise { assertEquals(false, it.result) })
+        assertEquals(false, module.isConfigured())
     }
 
     @Test
@@ -151,6 +154,8 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should get default properties`() {
+        every { Exponea.isInitialized } returns true
+        // Should return empty JSON object "{}" when no properties set (not null)
         every { Exponea.defaultProperties } returns hashMapOf()
         module.getDefaultProperties(MockResolvingPromise { assertEquals("{}", it.result) })
         every { Exponea.defaultProperties } returns hashMapOf("key" to "value", "number" to 123)
@@ -161,6 +166,10 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should set default properties`() {
+        every { Exponea.isInitialized } returns true
+        every { Exponea.init(any(), any()) } just Runs
+        every { Exponea.defaultProperties = any() } just Runs
+        every { Exponea.defaultProperties } returns hashMapOf()
         Exponea.init(ApplicationProvider.getApplicationContext(), ExponeaConfiguration(
             projectToken = "mockToken"
         ))
@@ -168,6 +177,7 @@ internal class ExponeaModuleTest {
             JavaOnlyMap.of(),
             MockResolvingPromise { assertEquals(hashMapOf<String, Any>(), Exponea.defaultProperties) }
         )
+        every { Exponea.defaultProperties } returns hashMapOf("key" to "value", "number" to 123.0)
         module.setDefaultProperties(
             JavaOnlyMap.of("key", "value", "number", 123),
             MockResolvingPromise {
@@ -213,8 +223,12 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should call segments getter with force`() {
-        val data = TestJsonParser.parse(File("../src/test_data/get-segments-forced.json").readText())
-        module.getSegments(data as ReadableMap, MockResolvingPromise {})
+        every { Exponea.isInitialized } returns true
+        every { Exponea.getSegments(any(), any(), any()) } just Runs
+        val data = TestJsonParser.parse(File("../src/test_data/get-segments-forced.json").readText()) as ReadableMap
+        val exposingCategory = data.getString("exposingCategory")!!
+        val force = data.getBoolean("force")
+        module.getSegments(exposingCategory, force, MockResolvingPromise {})
         verify {
             Exponea.getSegments("discovery", true, any())
         }
@@ -222,8 +236,12 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should call segments getter without force`() {
-        val data = TestJsonParser.parse(File("../src/test_data/get-segments-nonforced.json").readText())
-        module.getSegments(data as ReadableMap, MockResolvingPromise {})
+        every { Exponea.isInitialized } returns true
+        every { Exponea.getSegments(any(), any(), any()) } just Runs
+        val data = TestJsonParser.parse(File("../src/test_data/get-segments-nonforced.json").readText()) as ReadableMap
+        val exposingCategory = data.getString("exposingCategory")!!
+        val force = data.getBoolean("force")
+        module.getSegments(exposingCategory, force, MockResolvingPromise {})
         verify {
             Exponea.getSegments("discovery", false, any())
         }
@@ -231,8 +249,12 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should call segments getter without force param`() {
-        val data = TestJsonParser.parse(File("../src/test_data/get-segments-minimal.json").readText())
-        module.getSegments(data as ReadableMap, MockResolvingPromise {})
+        every { Exponea.isInitialized } returns true
+        every { Exponea.getSegments(any(), any(), any()) } just Runs
+        val data = TestJsonParser.parse(File("../src/test_data/get-segments-minimal.json").readText()) as ReadableMap
+        val exposingCategory = data.getString("exposingCategory")!!
+        val force = if (data.hasKey("force")) data.getBoolean("force") else null
+        module.getSegments(exposingCategory, force, MockResolvingPromise {})
         verify {
             Exponea.getSegments("discovery", false, any())
         }
@@ -249,7 +271,7 @@ internal class ExponeaModuleTest {
         every { Exponea.isInitialized } returns false
         module.stopIntegration(MockRejectingPromise {
             assertEquals(
-                "This functionality is unavailable without initialization of SDK",
+                "Exponea SDK is not configured. Call Exponea.configure() before calling functions of the SDK",
                 it.errorThrowable?.localizedMessage
             )
         })
@@ -259,14 +281,14 @@ internal class ExponeaModuleTest {
     fun `should allow to clearLocalCustomerData for non-initialized Exponea SDK`() {
         every { Exponea.isInitialized } returns true
         every { Exponea.clearLocalCustomerData() } just Runs
-        module.clearLocalCustomerData(JavaOnlyMap(), MockRejectingPromise {
+        module.clearLocalCustomerData(null, MockRejectingPromise {
             assertEquals(
                 "The functionality is unavailable due to running Integration",
                 it.errorThrowable?.localizedMessage
             )
         })
         every { Exponea.isInitialized } returns false
-        module.clearLocalCustomerData(JavaOnlyMap(), MockResolvingPromise {
+        module.clearLocalCustomerData(null, MockResolvingPromise {
             verify { Exponea.isInitialized }
             verify { Exponea.clearLocalCustomerData() }
         })

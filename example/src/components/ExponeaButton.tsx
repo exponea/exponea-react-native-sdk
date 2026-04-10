@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface ExponeaButtonProps {
   compact?: boolean;
@@ -9,7 +9,7 @@ interface ExponeaButtonProps {
 }
 
 export default function ExponeaButton(
-  props: ExponeaButtonProps,
+  props: ExponeaButtonProps
 ): React.ReactElement {
   return (
     <TouchableOpacity
@@ -19,9 +19,11 @@ export default function ExponeaButton(
         props.disabled ? styles.disabledContainer : null,
         props.compact ? styles.compactContainer : null,
       ]}
-      onPress={props.onPress}>
+      onPress={props.onPress}
+    >
       <Text
-        style={[styles.label, props.disabled ? styles.disabledLabel : null]}>
+        style={[styles.label, props.disabled ? styles.disabledLabel : null]}
+      >
         {props.title}
       </Text>
     </TouchableOpacity>

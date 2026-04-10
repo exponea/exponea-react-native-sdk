@@ -21,18 +21,18 @@ Functions of the SDK return promises that can reject in case of a data format er
 ```typescript
 function cookieLogger() {
   Exponea.getCustomerCookie()
-    .then(cookie => console.log(cookie))
-    .catch(error => console.log(error))
+    .then((cookie) => console.log(cookie))
+    .catch((error) => console.log(error));
 }
 ```
 
 ```typescript
 async function cookieLogger() {
   try {
-    const cookie = await Exponea.getCustomerCookie()
-    console.log(cookie)
+    const cookie = await Exponea.getCustomerCookie();
+    console.log(cookie);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 ```
@@ -46,13 +46,13 @@ React Native applications code can be reloaded without restarting the native app
 ```typescript
 async function configureExponea(configuration: Configuration) {
   try {
-    if (!await Exponea.isConfigured()) {
-      Exponea.configure(configuration)
+    if (!(await Exponea.isConfigured())) {
+      Exponea.configure(configuration);
     } else {
-      console.log("Exponea SDK already configured.")
+      console.log('Exponea SDK already configured.');
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 ```
@@ -65,7 +65,7 @@ Below are some common compilation issues encountered while integrating the SDK, 
 
 If your log contains warnings like the following:
 
-``` 
+```
 ld: warning: Could not find or use auto-linked library 'swiftFoundation'
 ld: warning: Could not find or use auto-linked library 'swiftCompatibility51'
 ld: warning: Could not find or use auto-linked library 'swiftMetal'

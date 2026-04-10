@@ -64,7 +64,6 @@ The SDK fetches and displays the App Inbox automatically as follows:
    - A button for each action in the message that opens a browser link or invokes a universal link. No button is displayed for an action that opens the current app.
 5. Call `Exponea.trackAppInboxClick` automatically when the user clicks a button in the message detail view.
 
-
 ![App Inbox messages list view and message detail view](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/Documentation/images/app-inbox-react-native.png)
 
 > ❗️
@@ -112,78 +111,102 @@ The App Inbox screens are designed to satisfy most customers' needs. However, th
 
 ```typescript
 Exponea.setAppInboxProvider({
-      appInboxButton: {
-        // ButtonStyle
-        textOverride: 'text value',
-        textColor: 'color',
+  appInboxButton: {
+    // ButtonStyle
+    textOverride: 'text value',
+    textColor: 'color',
+    backgroundColor: 'color',
+    showIcon: true,
+    textSize: '12px',
+    enabled: true,
+    borderRadius: '5px',
+    textWeight: 'bold|normal|100..900',
+  },
+  detailView: {
+    title: {
+      // TextViewStyle
+      visible: true,
+      textColor: 'color',
+      textSize: '12px',
+      textWeight: 'bold|normal|100..900',
+      textOverride: 'text',
+    },
+    content: {
+      /* TextViewStyle */
+    },
+    receivedTime: {
+      /* TextViewStyle */
+    },
+    image: {
+      // ImageViewStyle
+      visible: true,
+      backgroundColor: 'color',
+    },
+    button: {
+      /* ButtonStyle */
+    },
+  },
+  listView: {
+    emptyTitle: {
+      /* TextViewStyle */
+    },
+    emptyMessage: {
+      /* TextViewStyle */
+    },
+    errorTitle: {
+      /* TextViewStyle */
+    },
+    errorMessage: {
+      /* TextViewStyle */
+    },
+    progress: {
+      // ProgressBarStyle
+      visible: true,
+      progressColor: 'color',
+      backgroundColor: 'color',
+    },
+    list: {
+      backgroundColor: 'color',
+      item: {
         backgroundColor: 'color',
-        showIcon: true,
-        textSize: '12px',
-        enabled: true,
-        borderRadius: '5px',
-        textWeight: 'bold|normal|100..900'
-      },
-      detailView: {
+        readFlag: {
+          /* ImageViewStyle */
+        },
+        receivedTime: {
+          /* TextViewStyle */
+        },
         title: {
-          // TextViewStyle
-          visible: true,
-          textColor: 'color',
-          textSize: '12px',
-          textWeight: 'bold|normal|100..900',
-          textOverride: 'text'
+          /* TextViewStyle */
         },
-        content: { /* TextViewStyle */ },
-        receivedTime: { /* TextViewStyle */ },
+        content: {
+          /* TextViewStyle */
+        },
         image: {
-          // ImageViewStyle
-          visible: true,
-          backgroundColor: 'color'
+          /* ImageViewStyle */
         },
-        button: { /* ButtonStyle */ }
       },
-      listView: {
-        emptyTitle:  { /* TextViewStyle */ },
-        emptyMessage:  { /* TextViewStyle */ },
-        errorTitle:  { /* TextViewStyle */ },
-        errorMessage:  { /* TextViewStyle */ },
-        progress: {
-          // ProgressBarStyle
-          visible: true,
-          progressColor: 'color',
-          backgroundColor: 'color'
-        },
-        list: {
-          backgroundColor: 'color',
-          item: {
-            backgroundColor: 'color',
-            readFlag: { /* ImageViewStyle */ },
-            receivedTime:  { /* TextViewStyle */ },
-            title:  { /* TextViewStyle */ },
-            content:  { /* TextViewStyle */ },
-            image: { /* ImageViewStyle */ }
-          }
-        }
-      }
-    })
+    },
+  },
+});
 ```
 
 Supported colors formats:
 
-* Short hex `#rgb` or with alpha `#rgba`
-* Hex format `#rrggbb` or `#rrggbbaa`
-* RGB format `rgb(255, 255, 255)`
-* RGBA format `rgba(255, 255, 255, 1.0)` or `rgba(255 255 255 / 1.0)`
-* ARGB format `argb(1.0, 255, 255, 255)`
-* Name format `yellow` (names has to be supported by Android/iOS platform)
+- Short hex `#rgb` or with alpha `#rgba`
+- Hex format `#rrggbb` or `#rrggbbaa`
+- RGB format `rgb(255, 255, 255)`
+- RGBA format `rgba(255, 255, 255, 1.0)` or `rgba(255 255 255 / 1.0)`
+- ARGB format `argb(1.0, 255, 255, 255)`
+- Name format `yellow` (names has to be supported by Android/iOS platform)
 
 Supported size formats:
 
-* Pixels `12px` or `12`
-* Scaleable Pixels `12sp`
-* Density-independent Pixels `12dp` or `12dip`
-* Points `12pt`
-* Inches `12in`
-* Millimeters `12mm`
+- Pixels `12px` or `12`
+- Scaleable Pixels `12sp`
+- Density-independent Pixels `12dp` or `12dip`
+- Points `12pt`
+- Inches `12in`
+- Millimeters `12mm`
 
 > ❗️
 >
@@ -191,9 +214,9 @@ Supported size formats:
 
 Supported text weight formats:
 
-* 'normal' - normal/regular style on both platforms
-* 'bold' - bold style on both platforms
-* Number from `100` to `900` - mainly usable on iOS. Limited support on Android (100-600 means 'normal'; 700-900 means 'bold')
+- 'normal' - normal/regular style on both platforms
+- 'bold' - bold style on both platforms
+- Number from `100` to `900` - mainly usable on iOS. Limited support on Android (100-600 means 'normal'; 700-900 means 'bold')
 
 > 👍
 >
@@ -291,20 +314,20 @@ A list of App Inbox messages assigned to the current customer can be fetched as 
 
 ```typescript
 Exponea.fetchAppInbox()
-  .then(list => {
-    list.forEach(message => console.log(message))
+  .then((list) => {
+    list.forEach((message) => console.log(message));
   })
-  .catch(error => console.log(error.message))
+  .catch((error) => console.log(error.message));
 ```
 
 It's also possible to fetch a single message by its ID from the App Inbox as follows:
 
 ```typescript
-Exponea.fetchAppInboxItem("<messageId>")
-   .then(item => {
-      console.log(item)
-   })
-   .catch(error => console.log(error.message))
+Exponea.fetchAppInboxItem('<messageId>')
+  .then((item) => {
+    console.log(item);
+  })
+  .catch((error) => console.log(error.message));
 ```
 
 Fetching a single message triggers fetching the entire App Inbox (including incremental loading) but will retrieve the data from local storage if the App Inbox was fetched previously.
@@ -314,12 +337,12 @@ Fetching a single message triggers fetching the entire App Inbox (including incr
 Use the `markAppInboxAsRead` method, passing an App Inbox message object as argument, to mark the message as read:
 
 ```typescript
-Exponea.markAppInboxAsRead(message)
+Exponea.markAppInboxAsRead(message);
 ```
 
 > ❗️
 >
-> Marking a message as read using the `markAppInboxAsRead` method does not trigger a tracking event for opening the message. To track an opened message, you need to call the `ExponeaPlugin().trackAppInboxOpened` method). 
+> Marking a message as read using the `markAppInboxAsRead` method does not trigger a tracking event for opening the message. To track an opened message, you need to call the `ExponeaPlugin().trackAppInboxOpened` method).
 
 ### Track App Inbox events manually
 

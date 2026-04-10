@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import ExponeaProject from 'react-native-exponea-sdk/lib/ExponeaProject';
+import { StyleSheet, View, Text } from 'react-native';
+import type { ExponeaProject } from 'react-native-exponea-sdk';
 import ExponeaButton from './ExponeaButton';
 import ExponeaInput from './ExponeaInput';
 
@@ -10,7 +10,7 @@ interface ExponeaProjectEditorProps {
 }
 
 export default function ExponeaProjectEditor(
-  props: ExponeaProjectEditorProps,
+  props: ExponeaProjectEditorProps
 ): React.ReactElement {
   const [editing, setEditing] = React.useState(false);
   const onSave = (value: ExponeaProject | undefined) => {
@@ -66,13 +66,13 @@ interface EditingProps {
 
 function Editing(props: EditingProps): React.ReactElement {
   const [projectToken, setProjectToken] = React.useState(
-    props.value ? props.value.projectToken : '',
+    props.value ? props.value.projectToken : ''
   );
   const [authorizationToken, setAuthorizationToken] = React.useState(
-    props.value ? props.value.authorizationToken : '',
+    props.value ? props.value.authorizationToken : ''
   );
   const [baseUrl, setBaseUrl] = React.useState(
-    props.value ? props.value.baseUrl || '' : '',
+    props.value ? props.value.baseUrl || '' : ''
   );
   const onSave = () => {
     props.onSave({

@@ -9,21 +9,21 @@
 import Foundation
 import ExponeaSDK
 
-class ConfigurationParser {
+public class ConfigurationParser {
 
     private let dictionary: NSDictionary
 
-    init(_ dictionary: NSDictionary) {
+    public init(_ dictionary: NSDictionary) {
         self.dictionary = dictionary
     }
-    static func parseExponeaProject(dictionary: NSDictionary, defaultBaseUrl: String) throws -> ExponeaProject {
+    public static func parseExponeaProject(dictionary: NSDictionary, defaultBaseUrl: String) throws -> ExponeaProject {
         let projectToken: String = try dictionary.getRequiredSafely(property: "projectToken")
         let authorizationToken: String = try dictionary.getRequiredSafely(property: "authorizationToken")
         let baseUrl: String = try dictionary.getOptionalSafely(property: "baseUrl") ?? defaultBaseUrl
         return ExponeaProject(baseUrl: baseUrl, projectToken: projectToken, authorization: .token(authorizationToken))
     }
 
-    static func parseProjectMapping(
+    public static func parseProjectMapping(
         dictionary: NSDictionary,
         defaultBaseUrl: String
     ) throws -> [EventType: [ExponeaProject]]? {
@@ -47,7 +47,7 @@ class ConfigurationParser {
         return mapping
     }
 
-    func parseProjectSettings() throws -> ExponeaSDK.Exponea.ProjectSettings {
+    public func parseProjectSettings() throws -> ExponeaSDK.Exponea.ProjectSettings {
         let projectToken: String = try dictionary.getRequiredSafely(property: "projectToken")
         let authorizationToken: String = try dictionary.getRequiredSafely(property: "authorizationToken")
         let baseUrl = try dictionary.getOptionalSafely(property: "baseUrl") ?? ExponeaSDK.Constants.Repository.baseUrl
@@ -63,7 +63,7 @@ class ConfigurationParser {
         )
     }
 
-    func parsePushNotificationTracking() throws -> ExponeaSDK.Exponea.PushNotificationTracking {
+    public func parsePushNotificationTracking() throws -> ExponeaSDK.Exponea.PushNotificationTracking {
         var appGroup = ""
         if let iosDictionary: NSDictionary = try? dictionary.getOptionalSafely(property: "ios") {
             appGroup = try iosDictionary.getOptionalSafely(property: "appGroup") ?? appGroup
@@ -99,7 +99,7 @@ class ConfigurationParser {
         }
     }
 
-    func parseSessionTracking() throws -> ExponeaSDK.Exponea.AutomaticSessionTracking {
+    public func parseSessionTracking() throws -> ExponeaSDK.Exponea.AutomaticSessionTracking {
         let automaticSessionTracking: Bool
             = try dictionary.getOptionalSafely(property: "automaticSessionTracking") ?? true
         let timeout = try dictionary.getOptionalSafely(property: "sessionTimeout")
@@ -108,36 +108,36 @@ class ConfigurationParser {
         return automaticSessionTracking ? .enabled(timeout: timeout) : .disabled
     }
 
-    func parseDefaultProperties() throws -> [String: JSONConvertible]? {
+    public func parseDefaultProperties() throws -> [String: JSONConvertible]? {
         if let props: NSDictionary = try dictionary.getOptionalSafely(property: "defaultProperties") {
             return try JsonDataParser.parse(dictionary: props)
         }
         return nil
     }
 
-    func parseFlushingSetup() throws -> ExponeaSDK.Exponea.FlushingSetup {
+    public func parseFlushingSetup() throws -> ExponeaSDK.Exponea.FlushingSetup {
         let maxRetries = try dictionary.getOptionalSafely(property: "flushMaxRetries")
             ?? ExponeaSDK.Constants.Session.maxRetries
         return ExponeaSDK.Exponea.FlushingSetup(mode: .immediate, maxRetries: maxRetries)
     }
 
-    func parseAllowDefaultCustomerProperties() throws -> Bool {
+    public func parseAllowDefaultCustomerProperties() throws -> Bool {
         return try dictionary.getOptionalSafely(property: "allowDefaultCustomerProperties") ?? true
     }
 
-    func parseAdvancedAuthEnabled() throws -> Bool? {
+    public func parseAdvancedAuthEnabled() throws -> Bool? {
         return try dictionary.getOptionalSafely(property: "advancedAuthEnabled")
     }
 
-    func parseInAppContentBlocksPlaceholders() throws -> [String] {
+    public func parseInAppContentBlocksPlaceholders() throws -> [String] {
         return try dictionary.getOptionalSafely(property: "inAppContentBlockPlaceholdersAutoLoad") ?? []
     }
 
-    func parseManualSessionAutoClose() throws -> Bool {
+    public func parseManualSessionAutoClose() throws -> Bool {
         return try dictionary.getOptionalSafely(property: "manualSessionAutoClose") ?? true
     }
 
-    func parseApplicationId() throws -> String? {
+    public func parseApplicationId() throws -> String? {
         try dictionary.getOptionalSafely(property: "applicationId")
     }
 }

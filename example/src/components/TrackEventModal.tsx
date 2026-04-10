@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, Alert, View} from 'react-native';
+import { StyleSheet, Text, Alert, View } from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
 import ExponeaModal from './ExponeaModal';
 import ExponeaInput from './ExponeaInput';
 import PropertyEditor from './PropertyEditor';
-import Exponea from 'react-native-exponea-sdk';
+import { trackEvent } from 'react-native-exponea-sdk';
 
 interface TrackEventModalProps {
   visible: boolean;
@@ -12,19 +12,19 @@ interface TrackEventModalProps {
 }
 
 export default function TrackEventModal(
-  props: TrackEventModalProps,
+  props: TrackEventModalProps
 ): React.ReactElement {
   const [eventType, setEventType] = React.useState('event_name');
   const [properties, setProperties] = React.useState({});
 
-  const trackEvent = () => {
+  const onTrackEvent = () => {
     console.log('Tracking event requested');
-    Exponea.trackEvent(eventType, properties)
+    trackEvent(eventType, properties)
       .then(() => {
         console.log('Closing tracking event dialog');
         setProperties({});
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(`Error occured while tracking event ${error.message}`);
         Alert.alert('Error tracking event', error.message);
       });
@@ -44,7 +44,7 @@ export default function TrackEventModal(
       </View>
       <Text style={styles.subtitle}>Properties</Text>
       <PropertyEditor properties={properties} onChange={setProperties} />
-      <ExponeaButton title="Track event" onPress={trackEvent} />
+      <ExponeaButton title="Track event" onPress={onTrackEvent} />
     </ExponeaModal>
   );
 }

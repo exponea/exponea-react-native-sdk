@@ -9,19 +9,21 @@ The SDK is implemented in Typescript as a wrapper around [native Android SDK](ht
 ## Getting started
 
 Install the package using npm or yarn:
-* `$ yarn add react-native-exponea-sdk`
-* `$ npm install react-native-exponea-sdk --save`
+
+- `$ yarn add react-native-exponea-sdk`
+- `$ npm install react-native-exponea-sdk --save`
 
 ### iOS setup
 
-* `$ cd ios`
-* `$ pod install`
+- `$ cd ios`
+- `$ pod install`
 
 Minimal supported iOS version for Exponea SDK is 15.1, you may need to change iOS version on the first line of your `ios/Podfile` to `platform :ios, '15.1'`, or higher.
 
 ### Android setup
 
 You'll most likely need to enable multidex. Edit `android/app/build.gradle` and add `multiDexEnabled true` to android defaultConfig.
+
 ```
 android {
     ...
@@ -52,7 +54,7 @@ android {
 - [Example app](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app)
 - [Development](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-development)
 - [Release notes](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-release-notes)
-   - [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update)
+  - [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update)
 
 If facing any issues, look for **Troubleshooting** section in the respective document.
 

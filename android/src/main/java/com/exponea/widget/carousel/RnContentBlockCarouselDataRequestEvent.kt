@@ -13,15 +13,18 @@ internal class RnContentBlockCarouselDataRequestEvent(
     private val input: List<InAppContentBlock>
 ) : Event<RnContentBlockCarouselDataRequestEvent>(surfaceId, viewTag) {
     companion object {
-        const val EVENT_NAME = "contentBlockCarouselDataRequestEvent"
+        const val EVENT_NAME = "contentBlockDataRequestEvent"
     }
-    override fun getEventName(): String = EVENT_NAME
+    override fun getEventName(): String {
+        return EVENT_NAME
+    }
     override fun getEventData(): WritableMap {
+        val jsonArray = input.map { ExponeaGson.instance.toJson(it) }
+        val jsonString = ExponeaGson.instance.toJson(jsonArray)
         return Arguments.createMap().apply {
             putString("requestType", requestType.value)
-            putArray("data", Arguments.fromList(
-                input.map { ExponeaGson.instance.toJson(it) }
-            ))
+            // Send as JSON string to match TypeScript expectation
+            putString("data", jsonString)
         }
     }
 }

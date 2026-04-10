@@ -12,8 +12,8 @@ Depending on local data access regulations, access to data on a user's device ma
 
 Depending on local data access regulations, access to data on a user's device may require explicit consent. To follow such requirements, Engagement allows you to enable the standalone "tracking consent" feature. This feature activates the tracking consent option for in-app messages, in-app content blocks, and mobile push notifications.
 
-> 📘 
-> 
+> 📘
+>
 > Refer to [Configuration of the tracking consent categories](https://documentation.bloomreach.com/engagement/docs/configuration-of-tracking-consent) in the Engagement consent management documentation for more information about the tracking consent feature.
 
 ## How the SDK manages tracking consent
@@ -43,8 +43,8 @@ The SDK tracks push notification clicks by calling `Exponea.trackClickedPush`. T
 - The tracking consent feature is enabled and `has_tracking_consent` is `true`.
 - The action URL contains the query parameter `xnpe_force_track` with the value `true` (overriding `has_tracking_consent`).
 
-> 👍 
-> 
+> 👍
+>
 > An event that is tracked because `xnpe_force_track` (forced tracking) is enabled will contain an additional property `tracking_forced` with value `true`.
 
 If you are invoking the `Exponea.trackClickedPush` method manually and you want to ignore tracking consent, you may use `Exponea.trackClickedPushWithoutTrackingConsent` instead.
@@ -59,8 +59,8 @@ The SDK tracks in-app message clicks by calling `Exponea.trackInAppMessageClick`
 - The tracking consent feature is enabled and `has_tracking_consent` is `true`.
 - The action URL contains the query parameter `xnpe_force_track` with the value `true` (overriding `has_tracking_consent`).
 
-> 👍 
-> 
+> 👍
+>
 > An event that is tracked because `xnpe_force_track` (forced tracking) is enabled will contain an additional property `tracking_forced` with value `true`.
 
 If you are invoking the `Exponea.trackInAppMessageClick` method manually and want to ignore tracking consent, you may use `Exponea.trackInAppMessageClickWithoutTrackingConsent` instead. This method will track the event regardless of tracking consent.
@@ -92,8 +92,8 @@ The SDK tracks app inbox action clicks by calling `Exponea.trackAppInboxClick`. 
 - The tracking consent feature is enabled and `has_tracking_consent` is `true`.
 - The action URL contains the query parameter `xnpe_force_track` with the value `true` (overriding `has_tracking_consent`).
 
-> 👍 
-> 
+> 👍
+>
 > An event that is tracked because `xnpe_force_track` (forced tracking) is enabled will contain an additional property `tracking_forced` with value `true`.
 
 If you are invoking the `Exponea.trackAppInboxClick` method manually and you want to ignore tracking consent, you may use `Exponea.trackAppInboxClickWithoutTrackingConsent` instead. This method will track the event regardless of tracking consent.
@@ -115,8 +115,8 @@ The SDK tracks in-app content block clicks by calling `Exponea.trackInAppContent
 - The tracking consent feature is enabled and `has_tracking_consent` is `true`.
 - The action URL contains the query parameter `xnpe_force_track` with the value `true` (overriding `has_tracking_consent`).
 
-> 👍 
-> 
+> 👍
+>
 > An event that is tracked because `xnpe_force_track` (forced tracking) is enabled will contain an additional property `tracking_forced` with value `true`.
 
 If you are invoking the `Exponea.trackInAppContentBlockClick` method manually and you want to ignore tracking consent, you may use `Exponea.trackInAppContentBlockClickWithoutTrackingConsent` instead. This method will track the event regardless of tracking consent.

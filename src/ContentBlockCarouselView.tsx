@@ -1,151 +1,178 @@
-import React, { useRef, useState } from 'react';
-import { findNodeHandle, NativeSyntheticEvent, StyleProp, UIManager, View, ViewProps, ViewStyle } from 'react-native';
-import { InAppContentBlock, InAppContentBlockAction } from './ExponeaType';
-import RNContentBlockCarouselView, { ContentBlockCarouselEvent, ContentBlockDataRequestEvent } from './RNContentBlockCarouselView';
-import { DimensEvent } from './RNInAppContentBlocksPlaceholder';
+import React, { useRef, useCallback } from 'react';
+import { type ViewProps } from 'react-native';
+import ContentBlockCarouselViewNativeComponent, {
+  Commands,
+} from './ContentBlockCarouselViewNativeComponent';
+import type {
+  InAppContentBlock,
+  InAppContentBlockAction,
+} from './NativeExponea';
 
-interface ContentBlockCarouselProps extends ViewProps {
-    placeholderId: string;
-    maxMessagesCount?: number;
-    scrollDelay?: number;
-    overrideDefaultBehavior?: boolean;
-    trackActions?: boolean;
-    onMessageShown?: (placeholderId: string, contentBlock: InAppContentBlock, index: number, count: number) => void;
-    onMessagesChanged?: (count: number, messages: InAppContentBlock[]) => void;
-    onNoMessageFound?: (placeholderId: string) => void;
-    onError?: (placeholderId: string, contentBlock: InAppContentBlock|undefined, errorMessage: string) => void;
-    onCloseClicked?: (placeholderId: string, contentBlock: InAppContentBlock) => void;
-    onActionClicked?: (placeholderId: string, contentBlock: InAppContentBlock, action: InAppContentBlockAction) => void;
-    filterContentBlocks?: (blocks: InAppContentBlock[]) => InAppContentBlock[];
-    sortContentBlocks?: (blocks: InAppContentBlock[]) => InAppContentBlock[];
-    style?: StyleProp<ViewStyle> | undefined;
-}
-
-interface DimensInfo {
-    width: number | undefined;
-    height: number | undefined;
+export interface ContentBlockCarouselViewProps extends ViewProps {
+  placeholderId: string;
+  maxMessagesCount?: number;
+  scrollDelay?: number;
+  overrideDefaultBehavior?: boolean;
+  trackActions?: boolean;
+  filterContentBlocks?: (blocks: InAppContentBlock[]) => InAppContentBlock[];
+  sortContentBlocks?: (blocks: InAppContentBlock[]) => InAppContentBlock[];
+  onMessageShown?: (
+    placeholderId: string,
+    contentBlock: InAppContentBlock,
+    index: number,
+    count: number
+  ) => void;
+  onMessagesChanged?: (count: number, messages: InAppContentBlock[]) => void;
+  onNoMessageFound?: (placeholderId: string) => void;
+  onError?: (
+    placeholderId: string,
+    contentBlock: InAppContentBlock | undefined,
+    errorMessage: string
+  ) => void;
+  onCloseClicked?: (
+    placeholderId: string,
+    contentBlock: InAppContentBlock
+  ) => void;
+  onActionClicked?: (
+    placeholderId: string,
+    contentBlock: InAppContentBlock,
+    action: InAppContentBlockAction
+  ) => void;
 }
 
 export default function ContentBlockCarouselView(
-    props: ContentBlockCarouselProps,
-): React.ReactElement {
-    const ref = useRef(null);
-    const {
-        placeholderId,
-        maxMessagesCount,
-        scrollDelay,
-        overrideDefaultBehavior,
-        trackActions,
-        filterContentBlocks: filterContentBlocksFn,
-        sortContentBlocks: sortContentBlocksFn,
-        style: viewStyle,
-        ...viewProps
-    } = props
-    const [dimens, setDimens] = useState(({} as DimensInfo))
-    function _onDimensChanged(event: NativeSyntheticEvent<DimensEvent>) {
-        setDimens({
-            width: dimens.width,
-            height: event.nativeEvent.height,
-        })
-    }
-    function _onContentBlockEvent(event: NativeSyntheticEvent<ContentBlockCarouselEvent>) {
-        const nativeEvent: ContentBlockCarouselEvent = event.nativeEvent 
-        switch(nativeEvent.eventType) {
-            case 'onMessageShown':
-                props.onMessageShown && nativeEvent.contentBlock && props.onMessageShown(
-                    nativeEvent.placeholderId!,
-                    JSON.parse(nativeEvent.contentBlock)!,
-                    nativeEvent.index!,
-                    nativeEvent.count!
-                )
-              break;
-            case 'onMessagesChanged':
-                props.onMessagesChanged && nativeEvent.contentBlocks && props.onMessagesChanged(
-                    nativeEvent.count!,
-                    JSON.parse(nativeEvent.contentBlocks)!
-                )
-                break;
-            case 'onNoMessageFound':
-                props.onNoMessageFound && props.onNoMessageFound(nativeEvent.placeholderId!)
-                break;
-            case 'onError':
-                const contentBlock: InAppContentBlock | undefined = nativeEvent.contentBlock && JSON.parse(nativeEvent.contentBlock)
-                props.onError && props.onError(
-                    nativeEvent.placeholderId!,
-                    contentBlock,
-                    nativeEvent.errorMessage!
-                )
-                break;
-            case 'onCloseClicked':
-                props.onCloseClicked && nativeEvent.contentBlock && props.onCloseClicked(
-                    nativeEvent.placeholderId!,
-                    JSON.parse(nativeEvent.contentBlock)!
-                )
-                break;
-            case 'onActionClicked':
-                props.onActionClicked && nativeEvent.contentBlock && nativeEvent.contentBlockAction && props.onActionClicked(
-                    nativeEvent.placeholderId!,
-                    JSON.parse(nativeEvent.contentBlock)!,
-                    JSON.parse(nativeEvent.contentBlockAction)!
-                )
-                break;
-          }
-    }
-    function _onContentBlockDataRequestEvent(event: NativeSyntheticEvent<ContentBlockDataRequestEvent>) {
-        const nativeEvent: ContentBlockDataRequestEvent = event.nativeEvent
-        let response: InAppContentBlock[] = nativeEvent.data.map((each) => {
-            return JSON.parse(each)
-        })
-        switch(nativeEvent.requestType) {
-            case 'filter':
-                response = (filterContentBlocksFn && filterContentBlocksFn(response)) ?? response
-                break;
-            case 'sort':
-                response = (sortContentBlocksFn && sortContentBlocksFn(response)) ?? response
-                break;
+  props: ContentBlockCarouselViewProps
+) {
+  const {
+    placeholderId,
+    maxMessagesCount,
+    scrollDelay,
+    overrideDefaultBehavior = false,
+    trackActions = false,
+    filterContentBlocks,
+    sortContentBlocks,
+    onMessageShown,
+    onMessagesChanged,
+    onNoMessageFound,
+    onError,
+    onCloseClicked,
+    onActionClicked,
+    style,
+    ...viewProps
+  } = props;
+
+  const componentRef = useRef(null);
+  const [dimensions, setDimensions] = React.useState({ width: 0, height: 0 });
+
+  const handleEvent = useCallback(
+    (event: any) => {
+      const {
+        eventType,
+        contentBlock,
+        contentBlockAction,
+        errorMessage,
+        index,
+        count,
+        contentBlocks,
+      } = event.nativeEvent;
+
+      switch (eventType) {
+        case 'onMessageShown':
+          const cb = contentBlock ? JSON.parse(contentBlock) : undefined;
+          onMessageShown?.(placeholderId, cb, index, count);
+          break;
+        case 'onMessagesChanged':
+          const blocks = contentBlocks ? JSON.parse(contentBlocks) : [];
+          onMessagesChanged?.(count, blocks);
+          break;
+        case 'onNoMessageFound':
+          console.log('[ContentBlockCarouselView] Calling onNoMessageFound');
+          onNoMessageFound?.(placeholderId);
+          break;
+        case 'onError':
+          const errorCb = contentBlock ? JSON.parse(contentBlock) : undefined;
+          onError?.(placeholderId, errorCb, errorMessage);
+          break;
+        case 'onCloseClicked':
+          const closeCb = contentBlock ? JSON.parse(contentBlock) : undefined;
+          onCloseClicked?.(placeholderId, closeCb);
+          break;
+        case 'onActionClicked':
+          const actionCb = contentBlock ? JSON.parse(contentBlock) : undefined;
+          const action = contentBlockAction
+            ? JSON.parse(contentBlockAction)
+            : undefined;
+          onActionClicked?.(placeholderId, actionCb, action);
+          break;
+        default:
+          console.warn(
+            '[ContentBlockCarouselView] Unknown event type:',
+            eventType
+          );
+      }
+    },
+    [
+      placeholderId,
+      onMessageShown,
+      onMessagesChanged,
+      onNoMessageFound,
+      onError,
+      onCloseClicked,
+      onActionClicked,
+    ]
+  );
+
+  const handleDataRequest = useCallback(
+    (event: any) => {
+      const { requestType, data } = event.nativeEvent;
+      const dataArray: string[] = JSON.parse(data);
+      const blocks: InAppContentBlock[] = dataArray.map((json: string) =>
+        JSON.parse(json)
+      );
+
+      if (requestType === 'filter' && filterContentBlocks) {
+        const filtered = filterContentBlocks(blocks);
+        const jsonStrings = filtered.map((b) => JSON.stringify(b));
+        if (componentRef.current) {
+          Commands.filterResponse(
+            componentRef.current,
+            JSON.stringify(jsonStrings)
+          );
         }
-        const normalisedResponse = response.map((each) => {
-            return JSON.stringify(each)
-        })
-        const viewId = findNodeHandle(ref.current);
-        UIManager.dispatchViewManagerCommand(
-            viewId,
-            nativeEvent.requestType + 'Response',
-            [normalisedResponse]
-        )
-    }
-    function _mergeViewStyle(): StyleProp<ViewStyle> {
-        return Object.assign(
-          {},
-          viewStyle,
-          {
-              width: dimens.width,
-              height: dimens.height,
-          }
-        );
-    }
-    return (
-        <View
-            {...viewProps}
-            style={_mergeViewStyle()}
-        >
-            <RNContentBlockCarouselView
-                ref={ref}
-                initProps={{
-                    placeholderId: placeholderId,
-                    maxMessagesCount: maxMessagesCount,
-                    scrollDelay: scrollDelay
-                }}
-                overrideDefaultBehavior={overrideDefaultBehavior}
-                trackActions={trackActions}
-                {...viewProps}
-                style={_mergeViewStyle()}
-                onDimensChanged={_onDimensChanged}
-                onContentBlockEvent={_onContentBlockEvent}
-                customFilterActive={!!filterContentBlocksFn}
-                customSortActive={!!sortContentBlocksFn}
-                onContentBlockDataRequestEvent={_onContentBlockDataRequestEvent}
-            />
-        </View>
-    );
+      } else if (requestType === 'sort' && sortContentBlocks) {
+        const sorted = sortContentBlocks(blocks);
+        const jsonStrings = sorted.map((b) => JSON.stringify(b));
+        if (componentRef.current) {
+          Commands.sortResponse(
+            componentRef.current,
+            JSON.stringify(jsonStrings)
+          );
+        }
+      }
+    },
+    [filterContentBlocks, sortContentBlocks]
+  );
+
+  const handleDimensChanged = useCallback((event: any) => {
+    const { width, height } = event.nativeEvent;
+    setDimensions({ width, height });
+  }, []);
+
+  return (
+    <ContentBlockCarouselViewNativeComponent
+      ref={componentRef}
+      {...viewProps}
+      style={[style, dimensions.height > 0 && { height: dimensions.height }]}
+      placeholderId={placeholderId}
+      maxMessagesCount={maxMessagesCount}
+      scrollDelay={scrollDelay}
+      overrideDefaultBehavior={overrideDefaultBehavior}
+      trackActions={trackActions}
+      customFilterActive={!!filterContentBlocks}
+      customSortActive={!!sortContentBlocks}
+      onDimensChanged={handleDimensChanged}
+      onContentBlockEvent={handleEvent}
+      onContentBlockDataRequestEvent={handleDataRequest}
+    />
+  );
 }

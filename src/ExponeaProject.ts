@@ -7,4 +7,4 @@ interface ExponeaProject {
   baseUrl?: string;
 }
 
-export default ExponeaProject;
+export type { ExponeaProject as default };

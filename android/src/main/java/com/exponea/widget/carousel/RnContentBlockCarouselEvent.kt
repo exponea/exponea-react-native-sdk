@@ -11,19 +11,22 @@ internal class RnContentBlockCarouselEvent(
     private val event: ContentBlockCarouselEvent
 ) : Event<RnContentBlockCarouselEvent>(surfaceId, viewTag) {
     companion object {
-        const val EVENT_NAME = "contentBlockCarouselEvent"
+        const val EVENT_NAME = "contentBlockEvent"
     }
-    override fun getEventName(): String = EVENT_NAME
+    override fun getEventName(): String {
+        return EVENT_NAME
+    }
     override fun getEventData(): WritableMap = event.run {
-        Arguments.createMap().apply {
+        val eventData = Arguments.createMap().apply {
             putString("eventType", eventType.value)
             placeholderId?.let { putString("placeholderId", it) }
             contentBlock?.let { putString("contentBlock", ExponeaGson.instance.toJson(it)) }
-            action?.let { putString("action", ExponeaGson.instance.toJson(it)) }
+            action?.let { putString("contentBlockAction", ExponeaGson.instance.toJson(it)) }
             errorMessage?.let { putString("errorMessage", it) }
             index?.let { putInt("index", it) }
             count?.let { putInt("count", it) }
             contentBlocks?.let { putString("contentBlocks", ExponeaGson.instance.toJson(it)) }
         }
+        return eventData
     }
 }

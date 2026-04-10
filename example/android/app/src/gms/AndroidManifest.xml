@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.exponea.example">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
-        <service android:name=".MessageService" android:exported="false" >
+        <service android:name="exponea.example.MessageService" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

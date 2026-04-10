@@ -1,32 +1,39 @@
 package com.exponea.widget
 
 import com.exponea.fromJson
-import com.exponea.getNullSafely
-import com.exponea.getRequired
-import com.exponea.mapOfPhasedRegistrationNames
 import com.exponea.sdk.models.InAppContentBlock
 import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.Logger
-import com.exponea.toArrayListRecursively
-import com.exponea.toHashMapRecursively
 import com.exponea.widget.carousel.CarouselDataRequestEventType
 import com.exponea.widget.carousel.ContentBlockCarouselEvent
 import com.exponea.widget.carousel.ContentBlockCarouselViewProxy
 import com.exponea.widget.carousel.RnContentBlockCarouselDataRequestEvent
 import com.exponea.widget.carousel.RnContentBlockCarouselEvent
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.ReadableArray
-import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.common.MapBuilder
+import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.uimanager.PixelUtil
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.uimanager.ViewManagerDelegate
+import com.facebook.react.viewmanagers.ContentBlockCarouselViewManagerDelegate
+import com.facebook.react.viewmanagers.ContentBlockCarouselViewManagerInterface
 
-class ContentBlockCarouselViewManager : SimpleViewManager<ContentBlockCarouselViewProxy>() {
+@ReactModule(name = ContentBlockCarouselViewManager.REACT_CLASS)
+class ContentBlockCarouselViewManager :
+    SimpleViewManager<ContentBlockCarouselViewProxy>(),
+    ContentBlockCarouselViewManagerInterface<ContentBlockCarouselViewProxy> {
 
-    override fun getName() = "RNContentBlockCarouselView"
+    private val delegate: ViewManagerDelegate<ContentBlockCarouselViewProxy> =
+        ContentBlockCarouselViewManagerDelegate(this)
+
+    companion object {
+        const val REACT_CLASS = "ContentBlockCarouselView"
+    }
+
+    override fun getName() = REACT_CLASS
+
+    override fun getDelegate(): ViewManagerDelegate<ContentBlockCarouselViewProxy> = delegate
 
     override fun createViewInstance(reactContext: ThemedReactContext): ContentBlockCarouselViewProxy {
         val container = ContentBlockCarouselViewProxy(reactContext)
@@ -49,106 +56,105 @@ class ContentBlockCarouselViewManager : SimpleViewManager<ContentBlockCarouselVi
         return container
     }
 
-    override fun receiveCommand(target: ContentBlockCarouselViewProxy, commandId: String?, args: ReadableArray?) {
-        super.receiveCommand(target, commandId, args)
-        when (commandId) {
-            CarouselDataRequestEventType.FILTER.value + "Response" -> {
-                val contentBlocks = readCarouselContentBlocksResponse(args)
-                target.onContentFilterResponse(contentBlocks)
-            }
-            CarouselDataRequestEventType.SORT.value + "Response" -> {
-                val contentBlocks = readCarouselContentBlocksResponse(args)
-                target.onContentSortResponse(contentBlocks)
-            }
-            else -> {
-                Logger.w(this, "InAppCbCarousel: Unknown command $commandId")
-            }
+    // Codegen-generated interface methods
+    override fun setPlaceholderId(view: ContentBlockCarouselViewProxy, value: String?) {
+        // Store for later use when all props are set
+        view.tag = (view.tag as? MutableMap<String, Any?> ?: mutableMapOf()).apply {
+            put("placeholderId", value)
         }
+        recreateCarouselIfReady(view)
     }
 
-    private fun readCarouselContentBlocksResponse(args: ReadableArray?): List<InAppContentBlock> {
-        val argsArray = args?.toArrayListRecursively() ?: emptyList()
-        val contentBlocksResponse = (argsArray.firstOrNull() as? List<Any?>) ?: emptyList()
-        val contentBlocks = contentBlocksResponse
-            .mapNotNull { it as? String }
-            .mapNotNull {
-                try {
-                    ExponeaGson.instance.fromJson<InAppContentBlock>(it)
-                } catch (e: Exception) {
-                    Logger.e(this, "InAppCbCarousel: Unable to parse content block: $it", e)
-                    return@mapNotNull null
-                }
-            }
-        return contentBlocks
+    override fun setMaxMessagesCount(view: ContentBlockCarouselViewProxy, value: Int) {
+        view.tag = (view.tag as? MutableMap<String, Any?> ?: mutableMapOf()).apply {
+            put("maxMessagesCount", value)
+        }
+        recreateCarouselIfReady(view)
     }
 
-    @ReactProp(name = "initProps")
-    fun setInitProps(target: ContentBlockCarouselViewProxy, initProps: ReadableMap?) {
-        if (initProps == null) {
-            Logger.e(this, "InAppCbCarousel: initProps must be declared")
-            return
+    override fun setScrollDelay(view: ContentBlockCarouselViewProxy, value: Int) {
+        view.tag = (view.tag as? MutableMap<String, Any?> ?: mutableMapOf()).apply {
+            put("scrollDelay", value)
         }
-        val initPropsMap = initProps.toHashMapRecursively()
-        val placeholderId = initPropsMap.getRequired<String>("placeholderId")
-        val maxMessagesCount = initPropsMap.getNullSafely<Int>("maxMessagesCount")
-        val scrollDelay = initPropsMap.getNullSafely<Int>("scrollDelay")
-        target.recreateCarouselView(
+        recreateCarouselIfReady(view)
+    }
+
+    override fun setOverrideDefaultBehavior(view: ContentBlockCarouselViewProxy, value: Boolean) {
+        view.setOverrideDefaultBehavior(value)
+    }
+
+    override fun setTrackActions(view: ContentBlockCarouselViewProxy, value: Boolean) {
+        view.setTrackActions(value)
+    }
+
+    override fun setCustomFilterActive(view: ContentBlockCarouselViewProxy, value: Boolean) {
+        var contentFilter: ((List<InAppContentBlock>) -> Unit)? = null
+        if (value) {
+            val rnContext = view.context as? ThemedReactContext
+            if (rnContext == null) {
+                Logger.e(this, "InAppCbCarousel: Unable to open custom filter binding, invalid context type")
+            } else {
+                contentFilter = { it -> notifyContentFilterRequest(rnContext, view.id, it) }
+            }
+        }
+        view.setContentFilter(contentFilter)
+    }
+
+    override fun setCustomSortActive(view: ContentBlockCarouselViewProxy, value: Boolean) {
+        var contentSorter: ((List<InAppContentBlock>) -> Unit)? = null
+        if (value) {
+            val rnContext = view.context as? ThemedReactContext
+            if (rnContext == null) {
+                Logger.e(this, "InAppCbCarousel: Unable to open custom sorter binding, invalid context type")
+            } else {
+                contentSorter = { it -> notifyContentSortRequest(rnContext, view.id, it) }
+            }
+        }
+        view.setContentSort(contentSorter)
+    }
+
+    override fun filterResponse(view: ContentBlockCarouselViewProxy, contentBlocks: String) {
+        val blocks = parseContentBlocksFromJson(contentBlocks)
+        view.onContentFilterResponse(blocks)
+    }
+
+    override fun sortResponse(view: ContentBlockCarouselViewProxy, contentBlocks: String) {
+        val blocks = parseContentBlocksFromJson(contentBlocks)
+        view.onContentSortResponse(blocks)
+    }
+
+    private fun recreateCarouselIfReady(view: ContentBlockCarouselViewProxy) {
+        val props = view.tag as? Map<String, Any?> ?: return
+        val placeholderId = props["placeholderId"] as? String ?: return
+        val maxMessagesCount = props["maxMessagesCount"] as? Int
+        val scrollDelay = props["scrollDelay"] as? Int
+
+        view.recreateCarouselView(
             placeholderId = placeholderId,
             maxMessagesCount = maxMessagesCount,
             scrollDelay = scrollDelay
         )
     }
 
-    @ReactProp(name = "overrideDefaultBehavior")
-    fun setOverrideDefaultBehavior(target: ContentBlockCarouselViewProxy, value: Boolean?) {
-        target.setOverrideDefaultBehavior(value)
-    }
-
-    @ReactProp(name = "trackActions")
-    fun setTrackActions(target: ContentBlockCarouselViewProxy, value: Boolean?) {
-        target.setTrackActions(value)
-    }
-
-    @ReactProp(name = "customFilterActive")
-    fun setCustomFilterActive(target: ContentBlockCarouselViewProxy, value: Boolean?) {
-        val customFilterIsActive = value ?: false
-        var contentFilter: ((List<InAppContentBlock>) -> Unit)? = null
-        if (customFilterIsActive) {
-            val rnContext = target.context as? ThemedReactContext
-            if (rnContext == null) {
-                Logger.e(this, "InAppCbCarousel: Unable to open custom filter binding, invalid context type")
-            } else {
-                contentFilter = { it -> notifyContentFilterRequest(rnContext, target.id, it) }
+    private fun parseContentBlocksFromJson(json: String): List<InAppContentBlock> {
+        return try {
+            val jsonArray = ExponeaGson.instance.fromJson(json, List::class.java) as? List<String> ?: emptyList()
+            jsonArray.mapNotNull { blockJson ->
+                try {
+                    ExponeaGson.instance.fromJson<InAppContentBlock>(blockJson)
+                } catch (e: Exception) {
+                    Logger.e(this, "InAppCbCarousel: Unable to parse content block: $blockJson", e)
+                    null
+                }
             }
+        } catch (e: Exception) {
+            Logger.e(this, "InAppCbCarousel: Unable to parse content blocks array: $json", e)
+            emptyList()
         }
-        target.setContentFilter(contentFilter)
     }
 
-    @ReactProp(name = "customSortActive")
-    fun setCustomSortActive(target: ContentBlockCarouselViewProxy, value: Boolean?) {
-        val customSortIsActive = value ?: false
-        var contentSorter: ((List<InAppContentBlock>) -> Unit)? = null
-        if (customSortIsActive) {
-            val rnContext = target.context as? ThemedReactContext
-            if (rnContext == null) {
-                Logger.e(this, "InAppCbCarousel: Unable to open custom sorter binding, invalid context type")
-            } else {
-                contentSorter = { it -> notifyContentSortRequest(rnContext, target.id, it) }
-            }
-        }
-        target.setContentSort(contentSorter)
-    }
-
-    override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any> {
-        val map = (super.getExportedCustomBubblingEventTypeConstants() ?: MapBuilder.builder<String, Any>().build())
-            .toMutableMap()
-        map[DimensChangedEvent.EVENT_NAME] = mapOfPhasedRegistrationNames("onDimensChanged")
-        map[RnContentBlockCarouselEvent.EVENT_NAME] = mapOfPhasedRegistrationNames("onContentBlockEvent")
-        map[RnContentBlockCarouselDataRequestEvent.EVENT_NAME] = mapOfPhasedRegistrationNames(
-            "onContentBlockDataRequestEvent"
-        )
-        return map
-    }
+    // Event registration is handled automatically by Codegen in new architecture
+    // No need to override getExportedCustomBubblingEventTypeConstants()
 
     private fun notifyDimensChanged(context: ThemedReactContext, viewId: Int, width: Float, height: Float) {
         val event = Arguments.createMap().apply {

@@ -1,132 +1,131 @@
-/* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
-import Exponea from 'react-native-exponea-sdk';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Alert } from 'react-native';
+import Exponea, { AppInboxButton } from 'react-native-exponea-sdk';
 import ExponeaButton from '../components/ExponeaButton';
 import IdentifyCustomerModal from '../components/IdentifyCustomerModal';
+import DefaultPropertiesModal from '../components/DefaultPropertiesModal';
 import TrackEventModal from '../components/TrackEventModal';
-import AppInboxButton from 'react-native-exponea-sdk/lib/AppInboxButton';
-import DefaultPropertiesModal from '../components/DefaultPropertiesModal.tsx';
 
-interface AppState {
-  customerCookie: string;
-  identifyingCustomer: boolean;
-  trackingEvent: boolean;
-  defPropsModalShown: boolean;
-}
+export default function TrackingScreen(): React.ReactElement {
+  const [customerCookie, setCustomerCookie] = useState('?');
+  const [identifyModalVisible, setIdentifyModalVisible] = useState(false);
+  const [defPropsModalVisible, setDefPropsModalVisible] = useState(false);
+  const [trackingEventModalVisible, setTrackingEventModalVisible] =
+    useState(false);
+  useEffect(() => {
+    loadCustomerCookie();
+  }, []);
 
-export default class TrackingScreen extends React.Component<{}, AppState> {
-  state = {
-    customerCookie: '?',
-    identifyingCustomer: false,
-    trackingEvent: false,
-    defPropsModalShown: false,
+  const loadCustomerCookie = async () => {
+    try {
+      const cookie = await Exponea.getCustomerCookie();
+      setCustomerCookie(cookie);
+    } catch (error) {
+      setCustomerCookie(`Error: ${error}`);
+    }
   };
 
-  componentDidMount(): void {
-    Exponea.getCustomerCookie()
-      .then(cookie => this.setState({customerCookie: cookie}))
-      .catch(error => {
-        Alert.alert('Error getting customer Cookie', error.message);
-      });
-  }
+  return (
+    <View style={styles.container}>
+      <IdentifyCustomerModal
+        visible={identifyModalVisible}
+        onClose={() => setIdentifyModalVisible(false)}
+        onSuccess={loadCustomerCookie}
+      />
+      <TrackEventModal
+        visible={trackingEventModalVisible}
+        onClose={() => setTrackingEventModalVisible(false)}
+      />
+      <DefaultPropertiesModal
+        visible={defPropsModalVisible}
+        onClose={() => setDefPropsModalVisible(false)}
+      />
 
-  render(): React.ReactNode {
-    return (
-      <View style={styles.container}>
-        <IdentifyCustomerModal
-          visible={this.state.identifyingCustomer}
-          onClose={() => {
-            this.setState({identifyingCustomer: false});
-          }}
-        />
-        <TrackEventModal
-          visible={this.state.trackingEvent}
-          onClose={() => {
-            this.setState({trackingEvent: false});
-          }}
-        />
-        <Text style={styles.label}>Customer cookie:</Text>
-        <Text>{this.state.customerCookie}</Text>
-        <ExponeaButton
-          title="Identify customer"
-          onPress={() => {
-            this.setState({identifyingCustomer: true});
-          }}
-        />
-        <ExponeaButton
-          title="Track event"
-          onPress={() => {
-            this.setState({trackingEvent: true});
-          }}
-        />
-        <DefaultPropertiesModal
-          visible={this.state.defPropsModalShown}
-          onClose={() => {
-            this.setState({defPropsModalShown: false});
-          }}
-        />
-        <ExponeaButton
-          title="Default properties"
-          onPress={() => {
-            this.setState({defPropsModalShown: true});
-          }}
-        />
-        <ExponeaButton
-          title="Authorize push notifications"
-          onPress={() => {
-            Exponea.requestPushAuthorization()
-              .then(result => console.log(`Authorization result: ${result}`))
-              .catch(error => console.log(`Authorization error: ${error}`));
-          }}
-        />
-        <AppInboxButton
-          style={{
-            width: '100%',
-            height: 50,
-          }}
-          {...styles.buttonProps}
-        />
-        <ExponeaButton
-          title="Inbox fetch test"
-          onPress={() => {
-            Exponea.fetchAppInbox()
-              .then(list => {
-                console.log(`AppInbox loaded of size ${list.length}`);
-                if (list.length > 0) {
+      <Text style={styles.label}>Customer cookie:</Text>
+      <Text>{customerCookie}</Text>
+
+      <ExponeaButton
+        title="Identify customer"
+        onPress={() => setIdentifyModalVisible(true)}
+      />
+      <ExponeaButton
+        title="Track event"
+        onPress={() => setTrackingEventModalVisible(true)}
+      />
+      <ExponeaButton
+        title="Default properties"
+        onPress={() => setDefPropsModalVisible(true)}
+      />
+      <ExponeaButton
+        title="Authorize push notifications"
+        onPress={() => {
+          Exponea.requestPushAuthorization()
+            .then((result) => {
+              console.log(`Authorization result: ${result}`);
+              Alert.alert(
+                'Push Notifications',
+                result
+                  ? 'Notifications enabled successfully!'
+                  : 'Notification permission was denied',
+                [{ text: 'OK' }]
+              );
+            })
+            .catch((error) => {
+              console.log(`Authorization error: ${error}`);
+              Alert.alert(
+                'Error',
+                `Failed to authorize notifications: ${error}`,
+                [{ text: 'OK' }]
+              );
+            });
+        }}
+      />
+      <AppInboxButton
+        style={{
+          width: '100%',
+          height: 50,
+        }}
+        borderRadius="5px"
+      />
+      <ExponeaButton
+        title="Inbox fetch test"
+        onPress={() => {
+          Exponea.fetchAppInbox()
+            .then((list) => {
+              console.log(`AppInbox loaded of size ${list.length}`);
+              if (list.length > 0) {
+                console.log(
+                  `AppInbox first message: ${JSON.stringify(list[0])}`
+                );
+              }
+            })
+            .catch((error) => console.log(`AppInbox error: ${error}`));
+        }}
+      />
+      <ExponeaButton
+        title="Inbox fetch first message"
+        onPress={() => {
+          Exponea.fetchAppInbox()
+            .then((list) => {
+              if (list.length === 0) {
+                console.log('AppInbox is empty, identifyCustomer!');
+                return;
+              }
+              Exponea.fetchAppInboxItem(list[0].id)
+                .then((message) =>
                   console.log(
-                    `AppInbox first message: ${JSON.stringify(list[0])}`,
-                  );
-                }
-              })
-              .catch(error => console.log(`AppInbox error: ${error}`));
-          }}
-        />
-        <ExponeaButton
-          title="Inbox fetch first message"
-          onPress={() => {
-            Exponea.fetchAppInbox()
-              .then(list => {
-                if (list.length === 0) {
-                  console.log('AppInbox is empty, identifyCustomer!');
-                  return;
-                }
-                Exponea.fetchAppInboxItem(list[0].id)
-                  .then(message =>
-                    console.log(
-                      `AppInbox first message: ${JSON.stringify(message)}`,
-                    ),
+                    `AppInbox first message: ${JSON.stringify(message)}`
                   )
-                  .catch(error =>
-                    console.log(`AppInbox message error: ${error}`),
-                  );
-              })
-              .catch(error => console.log(`AppInbox error: ${error}`));
-          }}
-        />
-      </View>
-    );
-  }
+                )
+                .catch((error) =>
+                  console.log(`AppInbox message error: ${error}`)
+                );
+            })
+            .catch((error) => console.log(`AppInbox error: ${error}`));
+        }}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -139,8 +138,5 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  buttonProps: {
-    borderRadius: 5,
   },
 });

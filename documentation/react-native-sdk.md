@@ -6,8 +6,8 @@ category:
   uri: /branches/2/categories/guides/Developers
 ---
 
-> 📘 
-> 
+> 📘
+>
 > Bloomreach Engagement was formerly known as Exponea. For backward compatibility, the Exponea name continues to be used in the React Native SDK.
 
 ## What is the Exponea React Native SDK?
@@ -19,7 +19,7 @@ The React Native SDK is implemented in Typescript as a wrapper around the native
 The SDK is [available as open source on GitHub](https://github.com/exponea/exponea-react-native-sdk) for maximum transparency and includes an [Example app for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) you can use as a reference implementation.
 
 > ❗️
-> 
+>
 > Always make sure to capture explicit consent before using the SDK to track and collect data.
 
 ## Get started

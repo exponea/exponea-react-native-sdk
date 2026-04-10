@@ -45,22 +45,22 @@ To respond to a push notification interaction, you can set up a listener using `
 
 ```typescript
 Exponea.setPushOpenedListener((openedPush) => {
-  switch(openedPush.action) {
+  switch (openedPush.action) {
     case PushAction.APP:
       // last push directed user to your app with no link
 
       // log data defined on Exponea backend
-      console.log(openedPush.additionalData) 
+      console.log(openedPush.additionalData);
       break;
     case PushAction.DEEPLINK:
       // last push directed user to your app with deeplink
-      console.log(openedPush.url)
+      console.log(openedPush.url);
       break;
     case PushAction.WEB:
       // last push directed user to web, nothing to do here
       break;
   }
-})
+});
 ```
 
 We recommend registering the listener as soon as possible to ensure proper application flow. However, the SDK will hold the last push notification and call the listener once it's registered.
@@ -75,8 +75,8 @@ You can set up a listener for received push notifications using `Exponea.setPush
 
 ```typescript
 Exponea.setPushReceivedListener((data) => {
-  console.log(data)
-})
+  console.log(data);
+});
 ```
 
 We recommend registering the listener as soon as possible to ensure proper application flow. However, the SDK will hold the last push notification and call the listener once it's registered.
@@ -87,7 +87,7 @@ We recommend registering the listener as soon as possible to ensure proper appli
 
 ### Custom push notification data processing
 
-If the provided native `ExponeaModule.Companion.handleRemoteMessage` (Android) and `ExponeaNotificationService().process` (iOS)  methods don't fit the requirements of your app, or you decide to disable automatic push notifications, you must handle push notifications and process their payload yourself.
+If the provided native `ExponeaModule.Companion.handleRemoteMessage` (Android) and `ExponeaNotificationService().process` (iOS) methods don't fit the requirements of your app, or you decide to disable automatic push notifications, you must handle push notifications and process their payload yourself.
 
 Notification payloads are generated from (possibly complex) scenarios in the Engagement platform and contain all data for Android, iOS and web platforms. Therefore, the payload itself can be complex.
 
@@ -97,40 +97,44 @@ Notification payloads use a JSON data structure.
 
 ```json
 {
-    "notification_id": 123,
-    "url": "https://example.com/main_action",
-    "title": "Notification title",
-    "action": "app|browser|deeplink|self-check",
-    "message": "Notification message",
-    "image": "https://example.com/image.jpg",
-    "actions": [
-        {"title": "Action 1", "action": "app|browser|deeplink", "url": "https://example.com/action1"}
-    ],
-    "sound": "default",
-    "aps": {
-        "alert": {"title": "Notification title", "body": "Notification message"},
-        "mutable-content": 1
-    },
-    "attributes": {
-        "event_type": "campaign",
-        "campaign_id": "123456",
-        "campaign_name": "Campaign name",
-        "action_id": 1,
-        "action_type": "mobile notification",
-        "action_name": "Action 1",
-        "campaign_policy": "policy",
-        "consent_category": "General consent",
-        "subject": "Subject",
-        "language": "en",
-        "platform": "ios|android",
-        "sent_timestamp": 1631234567.89,
-        "recipient": "user@example.com"
-    },
-    "url_params": {"param1": "value1", "param2": "value2"},
-    "source": "xnpe_platform",
-    "silent": false,
-    "has_tracking_consent": true,
-    "consent_category_tracking": "Tracking consent name"
+  "notification_id": 123,
+  "url": "https://example.com/main_action",
+  "title": "Notification title",
+  "action": "app|browser|deeplink|self-check",
+  "message": "Notification message",
+  "image": "https://example.com/image.jpg",
+  "actions": [
+    {
+      "title": "Action 1",
+      "action": "app|browser|deeplink",
+      "url": "https://example.com/action1"
+    }
+  ],
+  "sound": "default",
+  "aps": {
+    "alert": { "title": "Notification title", "body": "Notification message" },
+    "mutable-content": 1
+  },
+  "attributes": {
+    "event_type": "campaign",
+    "campaign_id": "123456",
+    "campaign_name": "Campaign name",
+    "action_id": 1,
+    "action_type": "mobile notification",
+    "action_name": "Action 1",
+    "campaign_policy": "policy",
+    "consent_category": "General consent",
+    "subject": "Subject",
+    "language": "en",
+    "platform": "ios|android",
+    "sent_timestamp": 1631234567.89,
+    "recipient": "user@example.com"
+  },
+  "url_params": { "param1": "value1", "param2": "value2" },
+  "source": "xnpe_platform",
+  "silent": false,
+  "has_tracking_consent": true,
+  "consent_category_tracking": "Tracking consent name"
 }
 ```
 
@@ -144,46 +148,50 @@ allowing you to track multiple push tokens for the same customer across differen
 
 #### SDK versions below 2.5.0:
 
-* Tokens are stored in customer profile properties: `google_push_notification_id`, `huawei_push_notification_id`, or `apple_push_notification_id`
-* One token per customer profile
-* Single application per project
+- Tokens are stored in customer profile properties: `google_push_notification_id`, `huawei_push_notification_id`, or `apple_push_notification_id`
+- One token per customer profile
+- Single application per project
 
 #### SDK versions 2.5.0 and higher:
 
-* Tokens are stored as `notification_state` events
-* Multiple tokens per customer (grouped by Application ID)
-* Multiple applications per project supported
-* Backward compatibility maintained for Application ID `default-application`
+- Tokens are stored as `notification_state` events
+- Multiple tokens per customer (grouped by Application ID)
+- Multiple applications per project supported
+- Backward compatibility maintained for Application ID `default-application`
 
 ### When notification_state events are tracked
 
 The SDK automatically tracks `notification_state` events in the following scenarios:
 
-* SDK initialization
-* App transitions from background to foreground
-* New token received from Firebase, Huawei, or APNs
-* Manual token tracking using `Exponea.trackPushToken(...)` (Android, iOS) or `Exponea.trackHmsPushToken(...)` (Huawei)
-* User anonymization via `Exponea.anonymize()`
-* Notification permission requested via `Exponea.requestPushAuthorization()`
+- SDK initialization
+- App transitions from background to foreground
+- New token received from Firebase, Huawei, or APNs
+- Manual token tracking using `Exponea.trackPushToken(...)` (Android, iOS) or `Exponea.trackHmsPushToken(...)` (Huawei)
+- User anonymization via `Exponea.anonymize()`
+- Notification permission requested via `Exponea.requestPushAuthorization()`
 
 ```typescript
 Exponea.requestPushAuthorization()
-    .then(result => console.log(`Authorization result: ${result}`))
-    .catch(error => console.log(`Authorization error: ${error}`));
+  .then((result) => console.log(`Authorization result: ${result}`))
+  .catch((error) => console.log(`Authorization error: ${error}`));
 ```
 
-The frequency of `notification_state` event tracking depends on the `pushTokenTrackingFrequency` configuration property. [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
+> 📘 Note
+>
+> **SDK version 3.0.0 change:** `requestPushAuthorization()` is a cross-platform method available since SDK version 3.0.0 that works on both iOS and Android. It replaces the deprecated `requestIosPushAuthorization()`, which was iOS-only. If you are upgrading from SDK 2.x.x, replace any calls to `requestIosPushAuthorization()` with `requestPushAuthorization()`.
+
+The frequency of `notification_state` event tracking depends on the `pushTokenTrackingFrequency` configuration property. [See SDK configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
 
 ### notification_state event properties
 
-| Property                | Description                              | Example values                                              |
-|-------------------------|------------------------------------------|-------------------------------------------------------------|
-| `push_notification_token` | Current push notification token          | Token string                                                |
-| `platform`                | Mobile platform                          | `android`, `huawei`, or `iOS`                               |
-| `valid`                   | Token validity status                    | `true` or `false`                                           |
-| `description`             | Token state description                  | `Permission granted`, `Permission denied`, or `Invalidated` |
+| Property                  | Description                                   | Example values                                              |
+| ------------------------- | --------------------------------------------- | ----------------------------------------------------------- |
+| `push_notification_token` | Current push notification token               | Token string                                                |
+| `platform`                | Mobile platform                               | `android`, `huawei`, or `iOS`                               |
+| `valid`                   | Token validity status                         | `true` or `false`                                           |
+| `description`             | Token state description                       | `Permission granted`, `Permission denied`, or `Invalidated` |
 | `application_id`          | Application identifier from SDK configuration | Custom ID or `default-application` (default)                |
-| `device_id`               | Unique device identifier                 | UUID string                                                 |
+| `device_id`               | Unique device identifier                      | UUID string                                                 |
 
 > 📘 Note
 >

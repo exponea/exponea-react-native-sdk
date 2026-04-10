@@ -13,16 +13,32 @@ import com.exponea.sdk.view.InAppContentBlockPlaceholderView
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.common.MapBuilder
+import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.uimanager.PixelUtil
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
+import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.Event
+import com.facebook.react.viewmanagers.InAppContentBlocksPlaceholderManagerDelegate
+import com.facebook.react.viewmanagers.InAppContentBlocksPlaceholderManagerInterface
 
-class InAppContentBlocksPlaceholderManager : SimpleViewManager<InAppContentBlocksPlaceholder>() {
+@ReactModule(name = InAppContentBlocksPlaceholderManager.REACT_CLASS)
+class InAppContentBlocksPlaceholderManager :
+    SimpleViewManager<InAppContentBlocksPlaceholder>(),
+    InAppContentBlocksPlaceholderManagerInterface<InAppContentBlocksPlaceholder> {
 
-    override fun getName() = "RNInAppContentBlocksPlaceholder"
+    private val delegate: ViewManagerDelegate<InAppContentBlocksPlaceholder> =
+        InAppContentBlocksPlaceholderManagerDelegate(this)
+
+    companion object {
+        const val REACT_CLASS = "InAppContentBlocksPlaceholder"
+    }
+
+    override fun getName() = REACT_CLASS
+
+    override fun getDelegate(): ViewManagerDelegate<InAppContentBlocksPlaceholder> = delegate
 
     override fun createViewInstance(reactContext: ThemedReactContext): InAppContentBlocksPlaceholder {
         val container = InAppContentBlocksPlaceholder(reactContext)
@@ -48,29 +64,17 @@ class InAppContentBlocksPlaceholderManager : SimpleViewManager<InAppContentBlock
         return container
     }
 
-    @ReactProp(name = "placeholderId")
-    fun setPlaceholderId(placeholderContainer: InAppContentBlocksPlaceholder, newPlaceholderId: String?) {
-        placeholderContainer.setPlaceholderId(newPlaceholderId)
+    // Codegen-generated interface methods
+    override fun setPlaceholderId(view: InAppContentBlocksPlaceholder, value: String?) {
+        view.setPlaceholderId(value)
     }
 
-    @ReactProp(name = "overrideDefaultBehavior")
-    fun setOverrideDefaultBehavior(
-        placeholderContainer: InAppContentBlocksPlaceholder,
-        newOverrideDefaultBehavior: Boolean?
-    ) {
-        placeholderContainer.setOverrideDefaultBehavior(newOverrideDefaultBehavior)
+    override fun setOverrideDefaultBehavior(view: InAppContentBlocksPlaceholder, value: Boolean) {
+        view.setOverrideDefaultBehavior(value)
     }
 
-    override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any>? {
-        val map = (super.getExportedCustomBubblingEventTypeConstants() ?: MapBuilder.builder<String, Any>().build())
-            .toMutableMap()
-        map.put("dimensChanged", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onDimensChanged")))
-        map.put(
-            "inAppContentBlockEvent",
-            MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onInAppContentBlockEvent"))
-        )
-        return map
-    }
+    // Event registration is handled automatically by Codegen in new architecture
+    // No need to override getExportedCustomBubblingEventTypeConstants()
 
     private fun notifyDimensChanged(context: ThemedReactContext, viewId: Int, width: Float, height: Float) {
         val event = Arguments.createMap().apply {
@@ -164,7 +168,7 @@ class InAppContentBlocksPlaceholder(context: Context?) : LinearLayout(context) {
                 contentBlock: InAppContentBlock,
                 action: InAppContentBlockAction
             ) {
-                inAppContentBlockEventListener?.invoke("onActionClicked", placeholderId, contentBlock, action, null)
+                inAppContentBlockEventListener?.invoke("ACTION_CLICKED", placeholderId, contentBlock, action, null)
                 if (!currentOverrideDefaultBehavior) {
                     currentOriginalBehavior?.onActionClicked(placeholderId, contentBlock, action)
                 }
@@ -174,7 +178,7 @@ class InAppContentBlocksPlaceholder(context: Context?) : LinearLayout(context) {
                 placeholderId: String,
                 contentBlock: InAppContentBlock
             ) {
-                inAppContentBlockEventListener?.invoke("onCloseClicked", placeholderId, contentBlock, null, null)
+                inAppContentBlockEventListener?.invoke("CLOSE_CLICKED", placeholderId, contentBlock, null, null)
                 if (!currentOverrideDefaultBehavior) {
                     currentOriginalBehavior?.onCloseClicked(placeholderId, contentBlock)
                 }
@@ -185,7 +189,7 @@ class InAppContentBlocksPlaceholder(context: Context?) : LinearLayout(context) {
                 contentBlock: InAppContentBlock?,
                 errorMessage: String
             ) {
-                inAppContentBlockEventListener?.invoke("onError", placeholderId, contentBlock, null, errorMessage)
+                inAppContentBlockEventListener?.invoke("ERROR", placeholderId, contentBlock, null, errorMessage)
                 if (!currentOverrideDefaultBehavior) {
                     currentOriginalBehavior?.onError(placeholderId, contentBlock, errorMessage)
                 }
@@ -195,14 +199,14 @@ class InAppContentBlocksPlaceholder(context: Context?) : LinearLayout(context) {
                 placeholderId: String,
                 contentBlock: InAppContentBlock
             ) {
-                inAppContentBlockEventListener?.invoke("onMessageShown", placeholderId, contentBlock, null, null)
+                inAppContentBlockEventListener?.invoke("SHOWN", placeholderId, contentBlock, null, null)
                 if (!currentOverrideDefaultBehavior) {
                     currentOriginalBehavior?.onMessageShown(placeholderId, contentBlock)
                 }
             }
 
             override fun onNoMessageFound(placeholderId: String) {
-                inAppContentBlockEventListener?.invoke("onNoMessageFound", placeholderId, null, null, null)
+                inAppContentBlockEventListener?.invoke("NO_MESSAGE_FOUND", placeholderId, null, null, null)
                 if (!currentOverrideDefaultBehavior) {
                     currentOriginalBehavior?.onNoMessageFound(placeholderId)
                 }

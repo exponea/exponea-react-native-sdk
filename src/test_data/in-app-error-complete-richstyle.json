@@ -23,19 +23,15 @@
       "image_aspect_ratio_width": "16",
       "image_aspect_ratio_height": "9",
       "image_object_fit": "fill",
-      "image_overlay_enabled":false,
+      "image_overlay_enabled": false,
       "title_enabled": true,
-      "title_format": [
-        "bold"
-      ],
+      "title_format": ["bold"],
       "title_align": "center",
       "title_line_height": "32px",
       "title_padding": "200px 10px 15px 10px",
       "title_font_url": "https://webpagepublicity.com/free-fonts/x/Xtrusion%20(BRK).ttf",
       "body_enabled": true,
-      "body_format": [
-        "bold"
-      ],
+      "body_format": ["bold"],
       "body_align": "center",
       "body_line_height": "32px",
       "body_padding": "200px 10px 15px 10px",
@@ -60,9 +56,7 @@
           "button_border_color": "black",
           "button_border_width": "1px",
           "button_font_url": "https://webpagepublicity.com/free-fonts/x/Xtrusion%20(BRK).ttf",
-          "button_font_format": [
-            "bold"
-          ],
+          "button_font_format": ["bold"],
           "button_enabled": true
         },
         {
@@ -79,9 +73,7 @@
           "button_border_color": "black",
           "button_border_width": "1px",
           "button_font_url": "https://webpagepublicity.com/free-fonts/x/Xtrusion%20(BRK).ttf",
-          "button_font_format": [
-            "bold"
-          ],
+          "button_font_format": ["bold"],
           "button_enabled": true
         }
       ]

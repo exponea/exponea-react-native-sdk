@@ -1,9 +1,8 @@
-import React from 'react';
-import {StyleSheet, View, Image, Dimensions} from 'react-native';
-import Exponea from 'react-native-exponea-sdk';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, View, ScrollView } from 'react-native';
+import { clearLocalCustomerData } from 'react-native-exponea-sdk';
 import ExponeaButton from '../components/ExponeaButton';
 import ExponeaInput from '../components/ExponeaInput';
-import logo from '../img/logo.png';
 
 interface AuthScreenProps {
   onStart: (
@@ -11,90 +10,89 @@ interface AuthScreenProps {
     authorization: string,
     advancedAuthKey: string,
     baseUrl: string,
-    applicationId: string,
+    applicationId: string
   ) => void;
 }
 
 export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
-  const [projectToken, setProjectToken] = React.useState('');
-  const [authorization, setAuthorization] = React.useState('');
-  const [advancedAuthKey, setAdvancedAuthKey] = React.useState('');
-  const [baseUrl, setBaseUrl] = React.useState('');
-  const [applicationId, setApplicationId] = React.useState('');
+  const [projectToken, setProjectToken] = useState('');
+  const [authorizationToken, setAuthorizationToken] = useState('');
+  const [baseUrl, setBaseUrl] = useState('');
+
+  const [applicationId, setApplicationId] = useState('');
+  const [advancedAuthKey, setAdvancedAuthKey] = useState('');
+
+  const APP_GROUP = 'group.com.exponea.ExponeaSDK-Example2';
+
   const buttonDisabled =
-    projectToken === '' || authorization === '' || baseUrl === '';
+    projectToken === '' || authorizationToken === '' || baseUrl === '';
+
+  const handleStart = () => {
+    props.onStart(
+      projectToken,
+      authorizationToken,
+      advancedAuthKey,
+      baseUrl,
+      applicationId || 'default-application'
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      <Image
-        style={[
-          styles.image,
-          {
-            width:
-              Dimensions.get('window').width - 2 * styles.container.padding,
-            height: undefined,
-          },
-        ]}
-        resizeMode={'contain'}
-        source={logo}
-      />
-      <ExponeaInput
-        value={projectToken}
-        onChangeText={text => setProjectToken(text)}
-        placeholder="Project token"
-      />
-      <ExponeaInput
-        value={authorization}
-        placeholder="Authorization token"
-        onChangeText={text => setAuthorization(text)}
-      />
-      <ExponeaInput
-        value={advancedAuthKey}
-        onChangeText={text => setAdvancedAuthKey(text)}
-        placeholder="Advanced Auth key"
-      />
-      <ExponeaInput
-        value={baseUrl}
-        placeholder="Base URL"
-        onChangeText={text => setBaseUrl(text)}
-      />
-      <ExponeaInput
-        value={applicationId}
-        placeholder="Application ID"
-        onChangeText={text => setApplicationId(text)}
-      />
-      <ExponeaButton
-        disabled={buttonDisabled}
-        title="Start"
-        onPress={() => {
-          props.onStart(projectToken, authorization, advancedAuthKey, baseUrl, applicationId);
-        }}
-      />
-      <ExponeaButton
-        title="Clear local data"
-        onPress={() => {
-          Exponea.clearLocalCustomerData("group.com.exponea.ExponeaSDK-Example2").then(
-            () => {
-              console.log('SDK data has been cleared');
-            },
-            rejectReason => {
-              console.error(
-                `SDK data clear has been rejected: '${rejectReason}'`,
-              );
-            },
-          );
-        }}
-      />
-    </View>
+    <ScrollView style={styles.container}>
+      <View style={styles.form}>
+        <ExponeaInput
+          value={projectToken}
+          onChangeText={setProjectToken}
+          placeholder="Project token"
+        />
+        <ExponeaInput
+          value={authorizationToken}
+          placeholder="Authorization token"
+          onChangeText={setAuthorizationToken}
+        />
+        <ExponeaInput
+          value={advancedAuthKey}
+          onChangeText={setAdvancedAuthKey}
+          placeholder="Advanced Auth key"
+        />
+        <ExponeaInput
+          value={baseUrl}
+          placeholder="Base URL"
+          onChangeText={setBaseUrl}
+        />
+        <ExponeaInput
+          value={applicationId}
+          placeholder="Application ID (optional)"
+          onChangeText={setApplicationId}
+        />
+        <ExponeaButton
+          disabled={buttonDisabled}
+          title="Start"
+          onPress={handleStart}
+        />
+        <ExponeaButton
+          title="Clear local data"
+          onPress={async () => {
+            try {
+              await clearLocalCustomerData(APP_GROUP);
+              Alert.alert('Success', 'Local customer data has been cleared');
+            } catch (error) {
+              Alert.alert('Error', `Failed to clear data: ${error}`);
+            }
+          }}
+        />
+      </View>
+    </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    paddingTop: 30,
     backgroundColor: '#eee',
   },
-  image: {
-    aspectRatio: 2.5,
+  form: {
+    padding: 10,
+    paddingTop: 30,
   },
 });

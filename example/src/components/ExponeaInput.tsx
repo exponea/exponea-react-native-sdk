@@ -1,19 +1,19 @@
 import React from 'react';
-import {StyleSheet, TextInput} from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
 
 interface ExponeaInputProps {
   compact?: boolean;
+  placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
-  placeholder: string;
 }
 
 export default function ExponeaInput(
-  props: ExponeaInputProps,
+  props: ExponeaInputProps
 ): React.ReactElement {
   return (
     <TextInput
-      style={[styles.input, props.compact ? styles.inputCompact : null]}
+      style={[styles.input, props.compact ? styles.compactInput : null]}
       value={props.value}
       onChangeText={props.onChangeText}
       placeholder={props.placeholder}
@@ -24,17 +24,17 @@ export default function ExponeaInput(
 
 const styles = StyleSheet.create({
   input: {
-    padding: 10,
-    margin: 10,
     height: 45,
-    borderRadius: 5,
-    borderColor: '#999',
+    margin: 10,
+    padding: 10,
     borderWidth: 1,
+    borderColor: '#999',
+    borderRadius: 5,
     backgroundColor: '#fff',
   },
-  inputCompact: {
-    padding: 5,
-    margin: 5,
+  compactInput: {
     height: 30,
+    margin: 5,
+    padding: 5,
   },
 });

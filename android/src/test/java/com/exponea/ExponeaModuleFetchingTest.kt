@@ -9,14 +9,17 @@ import com.exponea.sdk.models.CustomerRecommendationOptions
 import com.exponea.sdk.models.FetchError
 import com.exponea.sdk.models.Result
 import com.exponea.sdk.util.ExponeaGson
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyArray
 import com.facebook.react.bridge.JavaOnlyMap
+import com.facebook.react.bridge.ReadableArray
 import com.google.gson.JsonPrimitive
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.unmockkAll
@@ -35,6 +38,9 @@ internal class ExponeaModuleFetchingTest {
     @Before
     fun before() {
         mockkObject(Exponea)
+        mockkStatic(Arguments::class)
+        every { Arguments.createArray() } answers { JavaOnlyArray() }
+        every { Arguments.createMap() } answers { JavaOnlyMap() }
         module = ExponeaModule(BridgeReactContext(ApplicationProvider.getApplicationContext()))
     }
 
@@ -106,9 +112,13 @@ internal class ExponeaModuleFetchingTest {
         ]"""
         module.fetchConsents(
             MockResolvingPromise {
+                val resultArray = it.result as ReadableArray
+                val resultList = (0 until resultArray.size()).map { i ->
+                    resultArray.getMap(i)!!.toHashMapRecursively()
+                }
                 assertEquals(
                     ExponeaGson.instance.fromJson(expectedResponse, Object::class.java),
-                    ExponeaGson.instance.fromJson(it.result as String, Object::class.java)
+                    ExponeaGson.instance.fromJson(ExponeaGson.instance.toJson(resultList), Object::class.java)
                 )
             }
         )
@@ -235,9 +245,13 @@ internal class ExponeaModuleFetchingTest {
         module.fetchRecommendations(
             JavaOnlyMap.of("id", "mock-id", "fillWithRandom", true),
             MockResolvingPromise {
+                val resultArray = it.result as ReadableArray
+                val resultList = (0 until resultArray.size()).map { i ->
+                    resultArray.getMap(i)!!.toHashMapRecursively()
+                }
                 assertEquals(
                     ExponeaGson.instance.fromJson(expectedResponse, Object::class.java),
-                    ExponeaGson.instance.fromJson(it.result as String, Object::class.java)
+                    ExponeaGson.instance.fromJson(ExponeaGson.instance.toJson(resultList), Object::class.java)
                 )
             }
         )

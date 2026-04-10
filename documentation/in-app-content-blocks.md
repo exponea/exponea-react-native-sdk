@@ -103,26 +103,26 @@ The SDK can only display an in-app content block after it has been fully loaded 
 You may prefetch in-app content blocks for specific placeholders to make them display as soon as possible.
 
 ```typescript
-import Exponea from 'react-native-exponea-sdk'
+import Exponea from 'react-native-exponea-sdk';
 
 Exponea.configure({
   // ... your configuration
   inAppContentBlockPlaceholdersAutoLoad: ['placeholder_1'],
-}).catch(error => console.log(error))
+}).catch((error) => console.log(error));
 ```
 
 ### Handle carousel presentation status
 
 You can register a multiple callbacks to a carousel view instance to retrieve information for each update and/or change behaviour by setting the `trackActions` and `overrideDefaultBehavior` flags.
 
-* trackActions
-  * If `false`, events "close" and "click" on banners won't be tracked by the SDK. Events "show" and "error" are tracked regardless from this flag.
-  * If `true`, events "close" and "click" are tracked by the SDK.
-  * Default behaviour is as with value `true`, all events are tracked by the SDK
-* overrideDefaultBehavior
-  * If `true`, deep-links and universal links won't be opened by SDK. This does not affect tracking behaviour.
-  * If `false`, deep-links and universal links will be opened by SDK.
-  * Default behaviour is as with value `false`, action links are opened by SDK.
+- trackActions
+  - If `false`, events "close" and "click" on banners won't be tracked by the SDK. Events "show" and "error" are tracked regardless from this flag.
+  - If `true`, events "close" and "click" are tracked by the SDK.
+  - Default behaviour is as with value `true`, all events are tracked by the SDK
+- overrideDefaultBehavior
+  - If `true`, deep-links and universal links won't be opened by SDK. This does not affect tracking behaviour.
+  - If `false`, deep-links and universal links will be opened by SDK.
+  - Default behaviour is as with value `false`, action links are opened by SDK.
 
 ```typescript
 <ContentBlockCarouselView
@@ -184,12 +184,14 @@ You can implement additional filtration and sorting by registering your own `fil
   filterContentBlocks={(source) => {
     // if you want keep default filtration, do not register this method
     // you can add your own filtration, for example ignore any item named "discarded"
-    return source.filter((item) => item.name?.toLowerCase().indexOf('discarded') >= 0)
+    return source.filter(
+      (item) => item.name?.toLowerCase().indexOf('discarded') >= 0
+    );
   }}
   sortContentBlocks={(source) => {
     // if you want to keep default sort, do not register this method
     // you can bring your own sorting, for example reverse default sorting result
-    return source.reverse()
+    return source.reverse();
   }}
 />
 ```
@@ -223,4 +225,3 @@ This section provides helpful pointers for troubleshooting in-app content blocks
 While troubleshooting in-app content block issues, you can find useful information in the messages logged by the SDK at verbose log level.
 
 Please refer to the [Android](https://documentation.bloomreach.com/engagement/docs/android-sdk-in-app-content-blocks#log-messages) and [iOS](https://documentation.bloomreach.com/engagement/docs/ios-sdk-in-app-content-blocks#log-messages) documentation for the relevant log messages for each platform.
-    

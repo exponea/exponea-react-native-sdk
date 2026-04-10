@@ -1,0 +1,1044 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		06772E8D7C4E83E564058B55 /* libPods-ExampleNotificationContent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57034AF42C48FD5A38B598FF /* libPods-ExampleNotificationContent.a */; };
+		0F99FF8F4DE157BAEFBF6485 /* ExampleNotificationService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F57F48FEBBFA424C46A5E345 /* ExampleNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0FF6965B5C6CEC3D90B3CE92 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		107FD8EFCA8AF0A1B1A14393 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D5FF24557D65344DD60DE9 /* UserNotifications.framework */; };
+		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		22F6C0B5B509A6C967D98D90 /* libPods-ExampleNotificationService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45D46BAD603B1C4FAAB23D6 /* libPods-ExampleNotificationService.a */; };
+		370CB4E127D6B8F31F052853 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C072E509F2CFF5A3EBB35FE /* Foundation.framework */; };
+		48442388756BF05065C24771 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02EFF90A82F91405F7587EDB /* UserNotifications.framework */; };
+		56F6E1B9BB432AC6694419FC /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCEFB86D2E20F81BAE35617 /* NotificationViewController.swift */; };
+		5F1C2DF97F9DE7F7E494AF34 /* ExampleNotificationContent.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B9045FC213BA72CD493E9603 /* ExampleNotificationContent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6E597E558E04197A7DD05E43 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C072E509F2CFF5A3EBB35FE /* Foundation.framework */; };
+		6F23B9246D58C8D40BD17ED9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C072E509F2CFF5A3EBB35FE /* Foundation.framework */; };
+		7200744F2C74BB1E0035B081 /* CustomerTokenStorageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7200744C2C74BB1E0035B081 /* CustomerTokenStorageModule.swift */; };
+		720074502C74BB1E0035B081 /* CustomerTokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7200744D2C74BB1E0035B081 /* CustomerTokenStorage.swift */; };
+		720074512C74BB1E0035B081 /* CustomerTokenStorageCustomerTokenStorageModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7200744E2C74BB1E0035B081 /* CustomerTokenStorageCustomerTokenStorageModule.m */; };
+		720074532C74BB840035B081 /* ExampleAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720074522C74BB840035B081 /* ExampleAuthProvider.swift */; };
+		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8ACD638CE86C10422A18D948 /* ExponeaExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C63E0E7D004BB651E6421773 /* ExponeaExampleTests.swift */; };
+		B139073283604351D34E5D76 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C732F801736BDDC79C7AD5C7 /* UserNotificationsUI.framework */; };
+		DD2726C6E09E64C0121621BA /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054D72C94299C4376BEF3CC /* NotificationService.swift */; };
+		FD27F253A518223025411E5F /* libPods-ExponeaExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C79C3B0012B18CFF066A50B1 /* libPods-ExponeaExample.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		78DB797D6F843C0DF52BD38B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
+			remoteInfo = ExponeaExample;
+		};
+		CC5669B96AF76783D353396C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 41FDE1A3347A67801237F0EB;
+			remoteInfo = ExampleNotificationContent;
+		};
+		EFF64069BBFB738FCC3FD978 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 625E517304A3BE5D94DD880C;
+			remoteInfo = ExampleNotificationService;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5853FDCA0366476FA0E9BDB9 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0F99FF8F4DE157BAEFBF6485 /* ExampleNotificationService.appex in Embed App Extensions */,
+				5F1C2DF97F9DE7F7E494AF34 /* ExampleNotificationContent.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		02EFF90A82F91405F7587EDB /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		0FCEFB86D2E20F81BAE35617 /* NotificationViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* ExponeaExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExponeaExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ExponeaExample/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ExponeaExample/Info.plist; sourceTree = "<group>"; };
+		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = ExponeaExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		18F64F9027F94E578E40C4BA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		23554AD360B9F1B04F1709D3 /* Pods-ExampleNotificationContent.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleNotificationContent.release.xcconfig"; path = "Target Support Files/Pods-ExampleNotificationContent/Pods-ExampleNotificationContent.release.xcconfig"; sourceTree = "<group>"; };
+		4E7A0E109265545A808A9D7B /* ExampleNotificationService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ExampleNotificationService-Info.plist"; sourceTree = "<group>"; };
+		57034AF42C48FD5A38B598FF /* libPods-ExampleNotificationContent.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleNotificationContent.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C072E509F2CFF5A3EBB35FE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		5D63FCCD00B72A9369291C96 /* ExampleNotificationContent.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = ExampleNotificationContent.entitlements; sourceTree = "<group>"; };
+		617436125B0A9531960179A2 /* Pods-ExponeaExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExponeaExample.debug.xcconfig"; path = "Target Support Files/Pods-ExponeaExample/Pods-ExponeaExample.debug.xcconfig"; sourceTree = "<group>"; };
+		6AF1C170F4CFB1A05F0CD7CA /* ExampleNotificationContent-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ExampleNotificationContent-Info.plist"; sourceTree = "<group>"; };
+		7200744C2C74BB1E0035B081 /* CustomerTokenStorageModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomerTokenStorageModule.swift; sourceTree = "<group>"; };
+		7200744D2C74BB1E0035B081 /* CustomerTokenStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomerTokenStorage.swift; sourceTree = "<group>"; };
+		7200744E2C74BB1E0035B081 /* CustomerTokenStorageCustomerTokenStorageModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerTokenStorageCustomerTokenStorageModule.m; sourceTree = "<group>"; };
+		720074522C74BB840035B081 /* ExampleAuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleAuthProvider.swift; sourceTree = "<group>"; };
+		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ExponeaExample/AppDelegate.swift; sourceTree = "<group>"; };
+		7FFA76C271020DF3262950D3 /* Pods-ExampleNotificationService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleNotificationService.release.xcconfig"; path = "Target Support Files/Pods-ExampleNotificationService/Pods-ExampleNotificationService.release.xcconfig"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ExponeaExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		97AE8E2C3429C3E1AD95C90C /* ExponeaExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExponeaExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2C3D4E5F600001234ABCD /* ExponeaExample.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = ExponeaExample.entitlements; path = ExponeaExample/ExponeaExample.entitlements; sourceTree = "<group>"; };
+		B1EED23C01F8B6921C061269 /* Pods-ExampleNotificationContent.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleNotificationContent.debug.xcconfig"; path = "Target Support Files/Pods-ExampleNotificationContent/Pods-ExampleNotificationContent.debug.xcconfig"; sourceTree = "<group>"; };
+		B9045FC213BA72CD493E9603 /* ExampleNotificationContent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ExampleNotificationContent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C054D72C94299C4376BEF3CC /* NotificationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		C63E0E7D004BB651E6421773 /* ExponeaExampleTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExponeaExampleTests.swift; sourceTree = "<group>"; };
+		C732F801736BDDC79C7AD5C7 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		C79C3B0012B18CFF066A50B1 /* libPods-ExponeaExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExponeaExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C8FD287BDF36BC9F914FB552 /* Pods-ExponeaExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExponeaExample.release.xcconfig"; path = "Target Support Files/Pods-ExponeaExample/Pods-ExponeaExample.release.xcconfig"; sourceTree = "<group>"; };
+		D7D5FF24557D65344DD60DE9 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		E45D46BAD603B1C4FAAB23D6 /* libPods-ExampleNotificationService.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleNotificationService.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E67C62EE6F8A7BF7EAF5F21C /* Pods-ExampleNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleNotificationService.debug.xcconfig"; path = "Target Support Files/Pods-ExampleNotificationService/Pods-ExampleNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
+		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F57F48FEBBFA424C46A5E345 /* ExampleNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ExampleNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7021D44F78A5508ADE492A7 /* ExampleNotificationService.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = ExampleNotificationService.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD27F253A518223025411E5F /* libPods-ExponeaExample.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		86D824B46BB11B022C0CFA4F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				370CB4E127D6B8F31F052853 /* Foundation.framework in Frameworks */,
+				107FD8EFCA8AF0A1B1A14393 /* UserNotifications.framework in Frameworks */,
+				B139073283604351D34E5D76 /* UserNotificationsUI.framework in Frameworks */,
+				06772E8D7C4E83E564058B55 /* libPods-ExampleNotificationContent.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8E77D94197C7851659FA6F59 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E597E558E04197A7DD05E43 /* Foundation.framework in Frameworks */,
+				48442388756BF05065C24771 /* UserNotifications.framework in Frameworks */,
+				22F6C0B5B509A6C967D98D90 /* libPods-ExampleNotificationService.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D93E5305F29545E882087702 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6F23B9246D58C8D40BD17ED9 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		13B07FAE1A68108700A75B9A /* ExponeaExample */ = {
+			isa = PBXGroup;
+			children = (
+				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				761780EC2CA45674006654EE /* AppDelegate.swift */,
+				A1B2C3D4E5F600001234ABCD /* ExponeaExample.entitlements */,
+				13B07FB61A68108700A75B9A /* Info.plist */,
+				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				7200744E2C74BB1E0035B081 /* CustomerTokenStorageCustomerTokenStorageModule.m */,
+				7200744C2C74BB1E0035B081 /* CustomerTokenStorageModule.swift */,
+				7200744D2C74BB1E0035B081 /* CustomerTokenStorage.swift */,
+				720074522C74BB840035B081 /* ExampleAuthProvider.swift */,
+			);
+			name = ExponeaExample;
+			sourceTree = "<group>";
+		};
+		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				C79C3B0012B18CFF066A50B1 /* libPods-ExponeaExample.a */,
+				CB9EA7F409AA38A5931B2715 /* iOS */,
+				02EFF90A82F91405F7587EDB /* UserNotifications.framework */,
+				D7D5FF24557D65344DD60DE9 /* UserNotifications.framework */,
+				C732F801736BDDC79C7AD5C7 /* UserNotificationsUI.framework */,
+				57034AF42C48FD5A38B598FF /* libPods-ExampleNotificationContent.a */,
+				E45D46BAD603B1C4FAAB23D6 /* libPods-ExampleNotificationService.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5598CF5DEC17C8C6CD8B7955 /* ExponeaExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				C63E0E7D004BB651E6421773 /* ExponeaExampleTests.swift */,
+				18F64F9027F94E578E40C4BA /* Info.plist */,
+			);
+			name = ExponeaExampleTests;
+			path = ExponeaExampleTests;
+			sourceTree = SOURCE_ROOT;
+		};
+		6F6671782BAABA3C6E0C68EF /* ExampleNotificationContent */ = {
+			isa = PBXGroup;
+			children = (
+				0FCEFB86D2E20F81BAE35617 /* NotificationViewController.swift */,
+				6AF1C170F4CFB1A05F0CD7CA /* ExampleNotificationContent-Info.plist */,
+				5D63FCCD00B72A9369291C96 /* ExampleNotificationContent.entitlements */,
+			);
+			path = ExampleNotificationContent;
+			sourceTree = "<group>";
+		};
+		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		83CBB9F61A601CBA00E9B192 = {
+			isa = PBXGroup;
+			children = (
+				13B07FAE1A68108700A75B9A /* ExponeaExample */,
+				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				83CBBA001A601CBA00E9B192 /* Products */,
+				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				B104CB4030304D4FCD4A7219 /* ExampleNotificationService */,
+				6F6671782BAABA3C6E0C68EF /* ExampleNotificationContent */,
+				5598CF5DEC17C8C6CD8B7955 /* ExponeaExampleTests */,
+			);
+			indentWidth = 2;
+			sourceTree = "<group>";
+			tabWidth = 2;
+			usesTabs = 0;
+		};
+		83CBBA001A601CBA00E9B192 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				13B07F961A680F5B00A75B9A /* ExponeaExample.app */,
+				F57F48FEBBFA424C46A5E345 /* ExampleNotificationService.appex */,
+				B9045FC213BA72CD493E9603 /* ExampleNotificationContent.appex */,
+				97AE8E2C3429C3E1AD95C90C /* ExponeaExampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B104CB4030304D4FCD4A7219 /* ExampleNotificationService */ = {
+			isa = PBXGroup;
+			children = (
+				C054D72C94299C4376BEF3CC /* NotificationService.swift */,
+				4E7A0E109265545A808A9D7B /* ExampleNotificationService-Info.plist */,
+				F7021D44F78A5508ADE492A7 /* ExampleNotificationService.entitlements */,
+			);
+			path = ExampleNotificationService;
+			sourceTree = "<group>";
+		};
+		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				617436125B0A9531960179A2 /* Pods-ExponeaExample.debug.xcconfig */,
+				C8FD287BDF36BC9F914FB552 /* Pods-ExponeaExample.release.xcconfig */,
+				23554AD360B9F1B04F1709D3 /* Pods-ExampleNotificationContent.release.xcconfig */,
+				B1EED23C01F8B6921C061269 /* Pods-ExampleNotificationContent.debug.xcconfig */,
+				7FFA76C271020DF3262950D3 /* Pods-ExampleNotificationService.release.xcconfig */,
+				E67C62EE6F8A7BF7EAF5F21C /* Pods-ExampleNotificationService.debug.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		CB9EA7F409AA38A5931B2715 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				5C072E509F2CFF5A3EBB35FE /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		13B07F861A680F5B00A75B9A /* ExponeaExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ExponeaExample" */;
+			buildPhases = (
+				BD97ED54A92F613162996F40 /* [CP] Check Pods Manifest.lock */,
+				13B07F871A680F5B00A75B9A /* Sources */,
+				13B07F8C1A680F5B00A75B9A /* Frameworks */,
+				13B07F8E1A680F5B00A75B9A /* Resources */,
+				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				DB4D30DA0CF7C2B6CE73BB57 /* [CP] Embed Pods Frameworks */,
+				9CF76F4DB19E66046B95DBA4 /* [CP] Copy Pods Resources */,
+				5853FDCA0366476FA0E9BDB9 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1B435710C68E722002A936E2 /* PBXTargetDependency */,
+				60045964CF6A5C4E37FEB0BB /* PBXTargetDependency */,
+			);
+			name = ExponeaExample;
+			productName = ExponeaExample;
+			productReference = 13B07F961A680F5B00A75B9A /* ExponeaExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		41FDE1A3347A67801237F0EB /* ExampleNotificationContent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A1148D63EA7AE096BB4F25B /* Build configuration list for PBXNativeTarget "ExampleNotificationContent" */;
+			buildPhases = (
+				F9A53ACE464CD734D105B31A /* [CP] Check Pods Manifest.lock */,
+				DACF93CB20E60EC8C293E184 /* Sources */,
+				86D824B46BB11B022C0CFA4F /* Frameworks */,
+				93172B17D40901279C195E05 /* Resources */,
+				E5D16A29332A440EAC2EF83D /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ExampleNotificationContent;
+			productName = ExampleNotificationContent;
+			productReference = B9045FC213BA72CD493E9603 /* ExampleNotificationContent.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		625E517304A3BE5D94DD880C /* ExampleNotificationService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 47BFAEA9868332535A2F4F4F /* Build configuration list for PBXNativeTarget "ExampleNotificationService" */;
+			buildPhases = (
+				67FC1F26595CC8EE9F5B8836 /* [CP] Check Pods Manifest.lock */,
+				A825FB29F2AAE630CEBCB49A /* Sources */,
+				8E77D94197C7851659FA6F59 /* Frameworks */,
+				C7DB790381EF1093CB275E65 /* Resources */,
+				424C25711F07C2D276B6C7C7 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ExampleNotificationService;
+			productName = ExampleNotificationService;
+			productReference = F57F48FEBBFA424C46A5E345 /* ExampleNotificationService.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		9A7422E67B063B55163638A5 /* ExponeaExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0EFADA76558499C55ECBB074 /* Build configuration list for PBXNativeTarget "ExponeaExampleTests" */;
+			buildPhases = (
+				F36E3797132E69BD91B3FF50 /* Sources */,
+				D93E5305F29545E882087702 /* Frameworks */,
+				92B93B4D6D34218F4512ECDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0411173FB28A50F05A863C50 /* PBXTargetDependency */,
+			);
+			name = ExponeaExampleTests;
+			productName = ExponeaExampleTests;
+			productReference = 97AE8E2C3429C3E1AD95C90C /* ExponeaExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		83CBB9F71A601CBA00E9B192 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1210;
+				TargetAttributes = {
+					13B07F861A680F5B00A75B9A = {
+						LastSwiftMigration = 1120;
+					};
+				};
+			};
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "ExponeaExample" */;
+			compatibilityVersion = "Xcode 12.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 83CBB9F61A601CBA00E9B192;
+			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				13B07F861A680F5B00A75B9A /* ExponeaExample */,
+				625E517304A3BE5D94DD880C /* ExampleNotificationService */,
+				41FDE1A3347A67801237F0EB /* ExampleNotificationContent */,
+				9A7422E67B063B55163638A5 /* ExponeaExampleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		13B07F8E1A680F5B00A75B9A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				0FF6965B5C6CEC3D90B3CE92 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92B93B4D6D34218F4512ECDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93172B17D40901279C195E05 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C7DB790381EF1093CB275E65 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"\\\"$WITH_ENVIRONMENT\\\" \\\"$REACT_NATIVE_XCODE\\\"\"\n";
+		};
+		424C25711F07C2D276B6C7C7 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExampleNotificationService/Pods-ExampleNotificationService-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExampleNotificationService/Pods-ExampleNotificationService-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExampleNotificationService/Pods-ExampleNotificationService-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		67FC1F26595CC8EE9F5B8836 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ExampleNotificationService-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9CF76F4DB19E66046B95DBA4 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExponeaExample/Pods-ExponeaExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExponeaExample/Pods-ExponeaExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExponeaExample/Pods-ExponeaExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BD97ED54A92F613162996F40 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ExponeaExample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DB4D30DA0CF7C2B6CE73BB57 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExponeaExample/Pods-ExponeaExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExponeaExample/Pods-ExponeaExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExponeaExample/Pods-ExponeaExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E5D16A29332A440EAC2EF83D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExampleNotificationContent/Pods-ExampleNotificationContent-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExampleNotificationContent/Pods-ExampleNotificationContent-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExampleNotificationContent/Pods-ExampleNotificationContent-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F9A53ACE464CD734D105B31A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ExampleNotificationContent-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		13B07F871A680F5B00A75B9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				720074512C74BB1E0035B081 /* CustomerTokenStorageCustomerTokenStorageModule.m in Sources */,
+				720074502C74BB1E0035B081 /* CustomerTokenStorage.swift in Sources */,
+				720074532C74BB840035B081 /* ExampleAuthProvider.swift in Sources */,
+				7200744F2C74BB1E0035B081 /* CustomerTokenStorageModule.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A825FB29F2AAE630CEBCB49A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD2726C6E09E64C0121621BA /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DACF93CB20E60EC8C293E184 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56F6E1B9BB432AC6694419FC /* NotificationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F36E3797132E69BD91B3FF50 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8ACD638CE86C10422A18D948 /* ExponeaExampleTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0411173FB28A50F05A863C50 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ExponeaExample;
+			target = 13B07F861A680F5B00A75B9A /* ExponeaExample */;
+			targetProxy = 78DB797D6F843C0DF52BD38B /* PBXContainerItemProxy */;
+		};
+		1B435710C68E722002A936E2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ExampleNotificationService;
+			target = 625E517304A3BE5D94DD880C /* ExampleNotificationService */;
+			targetProxy = EFF64069BBFB738FCC3FD978 /* PBXContainerItemProxy */;
+		};
+		60045964CF6A5C4E37FEB0BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ExampleNotificationContent;
+			target = 41FDE1A3347A67801237F0EB /* ExampleNotificationContent */;
+			targetProxy = CC5669B96AF76783D353396C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0B90FA49658AE2C53BCE52B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 23554AD360B9F1B04F1709D3 /* Pods-ExampleNotificationContent.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ExampleNotificationContent/ExampleNotificationContent.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "ExampleNotificationContent/ExampleNotificationContent-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.sdk.example.notification-content";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example Notification Content";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		13B07F941A680F5B00A75B9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 617436125B0A9531960179A2 /* Pods-ExponeaExample.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ExponeaExample/ExponeaExample.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = ExponeaExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.exponea.sdk.example;
+				PRODUCT_NAME = ExponeaExample;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example App";
+				SWIFT_OBJC_BRIDGING_HEADER = "ExponeaExample/ExponeaExample-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		13B07F951A680F5B00A75B9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C8FD287BDF36BC9F914FB552 /* Pods-ExponeaExample.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ExponeaExample/ExponeaExample.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
+				INFOPLIST_FILE = ExponeaExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.exponea.sdk.example;
+				PRODUCT_NAME = ExponeaExample;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example App";
+				SWIFT_OBJC_BRIDGING_HEADER = "ExponeaExample/ExponeaExample-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		1D6C28D6D990142B473EA02F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E67C62EE6F8A7BF7EAF5F21C /* Pods-ExampleNotificationService.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ExampleNotificationService/ExampleNotificationService.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "ExampleNotificationService/ExampleNotificationService-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.sdk.example.notification-service";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example Notification Service";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4D7E9AB41AA31AEC7CAD44A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B1EED23C01F8B6921C061269 /* Pods-ExampleNotificationContent.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ExampleNotificationContent/ExampleNotificationContent.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "ExampleNotificationContent/ExampleNotificationContent-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.sdk.example.notification-content";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example Notification Content";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5D21C9DF487410372C45379D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ExponeaExampleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.exponea.example.tests;
+				PRODUCT_MODULE_NAME = ExponeaExampleTests;
+				PRODUCT_NAME = ExponeaExampleTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExponeaExample.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ExponeaExample";
+			};
+			name = Debug;
+		};
+		83CBBA201A601CBA00E9B192 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SDKROOT)/usr/lib/swift\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_CFG_NO_COROUTINES=1",
+					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				USE_HERMES = true;
+			};
+			name = Debug;
+		};
+		83CBBA211A601CBA00E9B192 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SDKROOT)/usr/lib/swift\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "$(inherited)";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_CFG_NO_COROUTINES=1",
+					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				SDKROOT = iphoneos;
+				USE_HERMES = true;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C838D25322B7B2DD12C6E05C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7FFA76C271020DF3262950D3 /* Pods-ExampleNotificationService.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ExampleNotificationService/ExampleNotificationService.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H64X793CLY;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "ExampleNotificationService/ExampleNotificationService-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.exponea.sdk.example.notification-service";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Exponea SDK Example Notification Service";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F82FB40566D3FFA0116DF9DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ExponeaExampleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.exponea.example.tests;
+				PRODUCT_MODULE_NAME = ExponeaExampleTests;
+				PRODUCT_NAME = ExponeaExampleTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExponeaExample.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ExponeaExample";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0EFADA76558499C55ECBB074 /* Build configuration list for PBXNativeTarget "ExponeaExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F82FB40566D3FFA0116DF9DF /* Release */,
+				5D21C9DF487410372C45379D /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ExponeaExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13B07F941A680F5B00A75B9A /* Debug */,
+				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		47BFAEA9868332535A2F4F4F /* Build configuration list for PBXNativeTarget "ExampleNotificationService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C838D25322B7B2DD12C6E05C /* Release */,
+				1D6C28D6D990142B473EA02F /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "ExponeaExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83CBBA201A601CBA00E9B192 /* Debug */,
+				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8A1148D63EA7AE096BB4F25B /* Build configuration list for PBXNativeTarget "ExampleNotificationContent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0B90FA49658AE2C53BCE52B7 /* Release */,
+				4D7E9AB41AA31AEC7CAD44A7 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
+}

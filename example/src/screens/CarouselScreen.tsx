@@ -2,22 +2,28 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import ContentBlockCarouselView from 'react-native-exponea-sdk/lib/ContentBlockCarouselView';
+import { ContentBlockCarouselView } from 'react-native-exponea-sdk';
 
 export default function CarouselScreen(): React.ReactElement {
-  const [carouselStatus, setCarouselStatus] = React.useState({index: -1, count: 0, name: ''});
+  const [carouselStatus, setCarouselStatus] = React.useState({
+    index: -1,
+    count: 0,
+    name: '',
+  });
   const platformSpecificPlaceholderId =
     Platform.OS === 'ios' ? 'example_carousel_ios' : 'example_carousel_and';
   const platformSpecificPlaceholderTitle =
-    Platform.OS === 'ios' ? 'iOS Carousel: example_carousel_ios' : 'Android Carousel: example_carousel_and';
+    Platform.OS === 'ios'
+      ? 'iOS Carousel: example_carousel_ios'
+      : 'Android Carousel: example_carousel_and';
   const navigation = useNavigation();
-    React.useEffect(() => {
-      navigation.setOptions({
-        title: 'Carousel',
-        headerShown: true,
-        headerBackTitle: 'Back'
-      });
-    }, [navigation]);
+  React.useEffect(() => {
+    navigation.setOptions({
+      title: 'Carousel',
+      headerShown: true,
+      headerBackTitle: 'Back',
+    });
+  }, [navigation]);
   return (
     <View style={styles.container}>
       <Text>Default Carousel: example_carousel</Text>
@@ -30,16 +36,16 @@ export default function CarouselScreen(): React.ReactElement {
           setCarouselStatus({
             name: cb.name,
             index: index,
-            count: count
-          })
+            count: count,
+          });
         }}
         onMessagesChanged={(count, cbs) => {
           if (cbs.length === 0) {
             setCarouselStatus({
               name: '',
               index: -1,
-              count: count
-            })
+              count: count,
+            });
           }
         }}
         onNoMessageFound={(placeholderId) => {
@@ -49,16 +55,23 @@ export default function CarouselScreen(): React.ReactElement {
           console.log(`Carousel ${placeholderId} error: ${errorMessage}`);
         }}
         onCloseClicked={(placeholderId, cb) => {
-          console.log(`MESSAGE CLOSE CLICKED`)
-          console.log(`Message ${typeof cb} has been closed in carousel ${placeholderId}`);
+          console.log(`MESSAGE CLOSE CLICKED`);
+          console.log(
+            `Message ${typeof cb} has been closed in carousel ${placeholderId}`
+          );
         }}
         onActionClicked={(placeholderId, cb, action) => {
-          console.log(`Action ${action.name} has been clicked in carousel ${placeholderId}`);
+          console.log(
+            `Action ${action.name} has been clicked in carousel ${placeholderId}`
+          );
         }}
         overrideDefaultBehavior={false}
         trackActions={true}
       />
-      <Text>Showing {carouselStatus.name} as {carouselStatus.index + 1} of {carouselStatus.count}</Text>
+      <Text>
+        Showing {carouselStatus.name} as {carouselStatus.index + 1} of{' '}
+        {carouselStatus.count}
+      </Text>
 
       <Text>Customized Carousel: example_carousel</Text>
       <ContentBlockCarouselView
@@ -69,10 +82,12 @@ export default function CarouselScreen(): React.ReactElement {
         scrollDelay={10}
         maxMessagesCount={5}
         filterContentBlocks={(source) => {
-          return source.filter((item) => item.name?.toLowerCase().indexOf('discarded') >= 0)
+          return source.filter(
+            (item) => item.name?.toLowerCase().indexOf('discarded') >= 0
+          );
         }}
         sortContentBlocks={(source) => {
-          return source.reverse()
+          return source.reverse();
         }}
       />
 

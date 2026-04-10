@@ -6,12 +6,24 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import androidx.core.graphics.drawable.DrawableCompat
 import com.exponea.sdk.models.MessageItem
+import com.exponea.sdk.models.MessageItemAction
+import com.exponea.sdk.models.NotificationData
+import com.exponea.sdk.models.InAppMessage
+import com.exponea.sdk.models.InAppContentBlock
+import com.exponea.sdk.models.InAppContentBlockAction
+import com.exponea.sdk.models.Consent
+import com.exponea.sdk.models.ConsentSources
+import com.exponea.sdk.models.CustomerRecommendation
+import com.exponea.sdk.models.PurchasedItem
 import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.Logger
 import com.facebook.react.bridge.Dynamic
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.ReadableType
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.WritableArray
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableType.Array
 import com.facebook.react.bridge.ReadableType.Null
 import com.facebook.react.bridge.ReadableType.Number
@@ -92,6 +104,124 @@ internal fun MessageItem.toMap(): Map<String, Any?> {
         "create_time" to receivedTime,
         "content" to rawContent
     )
+}
+
+/**
+ * Converts ReadableMap to MessageItem using JSON serialization.
+ *
+ * Expected map structure:
+ * {
+ *   "id": String,
+ *   "type": String,
+ *   "is_read": Boolean (optional),
+ *   "create_time": Number (optional),
+ *   "content": Object (optional)
+ * }
+ */
+internal fun ReadableMap.toMessageItem(): MessageItem {
+    val map = this.toHashMapRecursively()
+    val json = ExponeaGson.instance.toJson(map)
+    return ExponeaGson.instance.fromJson(json, MessageItem::class.java)
+}
+
+/**
+ * Converts ReadableMap to MessageItemAction using JSON serialization.
+ *
+ * Expected map structure:
+ * {
+ *   "action": String (optional),
+ *   "title": String (optional),
+ *   "url": String (optional)
+ * }
+ */
+internal fun ReadableMap.toMessageItemAction(): MessageItemAction {
+    val map = this.toHashMapRecursively()
+    val json = ExponeaGson.instance.toJson(map)
+    return ExponeaGson.instance.fromJson(json, MessageItemAction::class.java)
+}
+
+/**
+ * Converts ReadableMap to NotificationData using JSON serialization.
+ *
+ * Expected map structure: Record<string, string> containing push notification data
+ * {
+ *   "platform": String,
+ *   "subject": String,
+ *   "type": String,
+ *   "actionType": String (optional),
+ *   "actionName": String (optional),
+ *   "url": String (optional),
+ *   "url_params": String (optional),
+ *   ...
+ * }
+ */
+internal fun ReadableMap.toNotificationData(): NotificationData {
+    val source = this.toMapStringString()
+    val attributes: HashMap<String, Any> = ExponeaGson.instance.fromJson(source["data"] ?: source["attributes"] ?: "{}")
+    val campaignMap: Map<String, String> = ExponeaGson.instance.fromJson(source["url_params"] ?: "{}")
+    val consentCategoryTracking: String? = source["consent_category_tracking"]
+    val hasTrackingConsent: Boolean = when (source["has_tracking_consent"]) {
+        null -> true
+        else -> source["has_tracking_consent"].toBoolean()
+    }
+    val campaignData = campaignMap.toCampaignData()
+    return NotificationData(
+        attributes,
+        campaignData,
+        consentCategoryTracking,
+        hasTrackingConsent
+    )
+}
+
+/**
+ * Converts ReadableMap to InAppMessage using JSON serialization.
+ *
+ * Expected map structure:
+ * {
+ *   "id": String,
+ *   "name": String,
+ *   "message_type": String (optional),
+ *   "frequency": String,
+ *   "payload": Object (optional),
+ *   "variant_id": Number,
+ *   "variant_name": String,
+ *   "trigger": Object (optional),
+ *   "date_filter": Object (optional),
+ *   "load_priority": Number (optional),
+ *   "load_delay": Number (optional),
+ *   "close_timeout": Number (optional),
+ *   "payload_html": String (optional),
+ *   "is_html": Boolean (optional),
+ *   "has_tracking_consent": Boolean (optional),
+ *   "consent_category_tracking": String (optional),
+ *   "is_rich_text": Boolean (optional)
+ * }
+ */
+internal fun ReadableMap.toInAppMessage(): InAppMessage? {
+    return try {
+        val map = this.toHashMapRecursively()
+        val json = ExponeaGson.instance.toJson(map)
+        ExponeaGson.instance.fromJson(json, InAppMessage::class.java)
+    } catch (e: Exception) {
+        Logger.e(this, "Unable to parse InAppMessage", e)
+        null
+    }
+}
+
+/**
+ * Helper function to deserialize JSON string to InAppContentBlock
+ */
+internal fun String?.toInAppContentBlock(): InAppContentBlock? {
+    if (this == null) return null
+    return ExponeaGson.instance.fromJson(this, InAppContentBlock::class.java)
+}
+
+/**
+ * Helper function to deserialize JSON string to InAppContentBlockAction
+ */
+internal fun String?.toInAppContentBlockAction(): InAppContentBlockAction? {
+    if (this == null) return null
+    return ExponeaGson.instance.fromJson(this, InAppContentBlockAction::class.java)
 }
 
 internal inline fun <reified T : Any> Map<String, Any?>.getNullSafelyMap(
@@ -515,3 +645,288 @@ internal fun mapOfPhasedRegistrationNames(bubbleEventName: String) = MapBuilder.
     "phasedRegistrationNames",
     MapBuilder.of("bubbled", bubbleEventName)
 )
+
+// Group B Type Converters
+internal fun Consent.toMap(): Map<String, Any?> {
+    return mapOf(
+        "id" to id,
+        "legitimateInterest" to legitimateInterest,
+        "sources" to sources.toMap(),
+        "translations" to translations
+    )
+}
+
+internal fun ConsentSources.toMap(): Map<String, Any?> {
+    return mapOf(
+        "createdFromCRM" to createdFromCRM,
+        "imported" to imported,
+        "privateAPI" to privateAPI,
+        "publicAPI" to publicAPI,
+        "trackedFromScenario" to trackedFromScenario
+    )
+}
+
+internal fun CustomerRecommendation.toMap(): Map<String, Any?> {
+    return mapOf(
+        "engineName" to engineName,
+        "itemId" to itemId,
+        "recommendationId" to recommendationId,
+        "recommendationVariantId" to (recommendationVariantId ?: ""),
+        "data" to data
+    )
+}
+
+internal fun Map<String, Any?>.toWritableMap(): WritableMap {
+    val map = Arguments.createMap()
+    for ((key, value) in this) {
+        when (value) {
+            null -> map.putNull(key)
+            is String -> map.putString(key, value)
+            is Int -> map.putInt(key, value)
+            is Double -> map.putDouble(key, value)
+            is Boolean -> map.putBoolean(key, value)
+            is Long -> map.putDouble(key, value.toDouble())
+            is Float -> map.putDouble(key, value.toDouble())
+            is Map<*, *> -> {
+                @Suppress("UNCHECKED_CAST")
+                map.putMap(key, (value as Map<String, Any?>).toWritableMap())
+            }
+            is List<*> -> map.putArray(key, value.toWritableArray())
+            else -> map.putString(key, value.toString())
+        }
+    }
+    return map
+}
+
+internal fun List<*>.toWritableArray(): WritableArray {
+    val array = Arguments.createArray()
+    for (value in this) {
+        when (value) {
+            null -> array.pushNull()
+            is String -> array.pushString(value)
+            is Int -> array.pushInt(value)
+            is Double -> array.pushDouble(value)
+            is Boolean -> array.pushBoolean(value)
+            is Long -> array.pushDouble(value.toDouble())
+            is Float -> array.pushDouble(value.toDouble())
+            is Map<*, *> -> {
+                @Suppress("UNCHECKED_CAST")
+                array.pushMap((value as Map<String, Any?>).toWritableMap())
+            }
+            is List<*> -> array.pushArray(value.toWritableArray())
+            else -> array.pushString(value.toString())
+        }
+    }
+    return array
+}
+
+// Convert ReadableMap to PurchasedItem model
+internal fun Map<String, Any?>.toPurchasedItem(): PurchasedItem {
+    return PurchasedItem(
+        value = getRequired("brutto"),
+        currency = getRequired("currency"),
+        paymentSystem = getRequired("payment_system"),
+        productId = getRequired("item_id"),
+        productTitle = getRequired("product_title"),
+        receipt = getNullSafely("receipt")
+    )
+}
+
+// ============================================================================
+// Converters from old ModelExtensions.kt (Map-based for internal usage)
+// ============================================================================
+
+internal fun Map<String, Any?>.toMessageItem(): MessageItem? {
+    val id = this.getNullSafely("id", String::class)
+    val rawType = this.getNullSafely("type", String::class)
+    if (id.isNullOrEmpty() || rawType.isNullOrEmpty()) {
+        return null
+    }
+    val read = this.getNullSafely("is_read", Boolean::class)
+    val receivedTime = this.getNullSafely("create_time", Double::class)
+    val rawContent = this.getNullSafely<HashMap<String, Any>>("content")
+    return MessageItem(
+        id = id,
+        rawType = rawType,
+        read = read,
+        receivedTime = receivedTime,
+        rawContent = rawContent
+    )
+}
+
+internal fun Map<String, Any?>.toMessageItemAction(): MessageItemAction? {
+    val source = this
+    val sourceType = MessageItemAction.Type.find(source.getNullSafely("type")) ?: return null
+    return MessageItemAction().apply {
+        type = sourceType
+        title = source.getNullSafely("title")
+        url = source.getNullSafely("url")
+    }
+}
+
+internal fun Map<String, Any?>.toInAppMessageAction(): InAppMessageAction? {
+    val source = this
+    val message = source.getNullSafelyMap<Any>("message")
+        ?.toInAppMessage()
+        ?: return null
+    val type = InAppMessageActionType.valueOf(source.getRequired("type"))
+    return InAppMessageAction(
+        message = message,
+        button = source.getNullSafelyMap<Any>("button")?.toInAppMessageButton(),
+        interaction = source.getNullSafely("interaction", Boolean::class),
+        errorMessage = source.getNullSafely("errorMessage", String::class),
+        type = type
+    )
+}
+
+internal fun Map<String, Any?>.toInAppMessageButton(): com.exponea.sdk.models.InAppMessageButton {
+    val source = this
+    return com.exponea.sdk.models.InAppMessageButton(
+        text = source.getNullSafely("text"),
+        url = source.getNullSafely("url")
+    )
+}
+
+internal fun Map<String, Any?>.toInAppMessage(): InAppMessage? {
+    try {
+        return ExponeaGson.instance.fromJson(ExponeaGson.instance.toJson(this), InAppMessage::class.java)
+    } catch (e: Exception) {
+        Logger.e(this, "Unable to parse InAppMessage", e)
+        return null
+    }
+}
+
+internal fun Map<String, Any?>.toInAppContentBlock(): InAppContentBlock? {
+    val source = this
+    val dateFilter = source.getNullSafelyMap<Any>("date_filter")?.toDateFilter() ?: return null
+    return InAppContentBlock(
+        id = source.getRequired("id"),
+        name = source.getRequired("name"),
+        dateFilter = dateFilter,
+        rawFrequency = source.getNullSafely("frequency"),
+        priority = source.getNullSafely("load_priority"),
+        consentCategoryTracking = source.getNullSafely("consentCategoryTracking"),
+        rawContentType = source.getNullSafely("rawContentType"),
+        content = source.getNullSafelyMap("content"),
+        placeholders = source.getRequired("placeholders")
+    )
+}
+
+internal fun Map<String, Any?>.toInAppContentBlockAction(): InAppContentBlockAction {
+    val source = this
+    return InAppContentBlockAction(
+        type = source.getRequired("type"),
+        name = source.getNullSafely("name"),
+        url = source.getNullSafely("url")
+    )
+}
+
+internal fun Map<String, Any?>.toDateFilter(): com.exponea.sdk.models.DateFilter {
+    val source = this
+    return com.exponea.sdk.models.DateFilter(
+        enabled = source.getRequired("enabled"),
+        fromDate = source.getNullSafely("from_date"),
+        toDate = source.getNullSafely("to_date")
+    )
+}
+
+internal fun Map<String, String>.toNotificationData(): NotificationData {
+    val source = this
+    val attributes: HashMap<String, Any> = ExponeaGson.instance.fromJson(source["data"] ?: source["attributes"] ?: "{}")
+    val campaignMap: Map<String, String> = ExponeaGson.instance.fromJson(source["url_params"] ?: "{}")
+    val consentCategoryTracking: String? = source["consent_category_tracking"]
+    val hasTrackingConsent: Boolean = com.exponea.sdk.util.GdprTracking.hasTrackingConsent(source["has_tracking_consent"])
+    val campaignData = campaignMap.toCampaignData()
+    return NotificationData(
+        attributes,
+        campaignData,
+        consentCategoryTracking,
+        hasTrackingConsent
+    )
+}
+
+internal fun Map<String, String>.toCampaignData(): com.exponea.sdk.models.CampaignData {
+    val source = this
+    return com.exponea.sdk.models.CampaignData(
+        source = source["utm_source"],
+        campaign = source["utm_campaign"],
+        content = source["utm_content"],
+        medium = source["utm_medium"],
+        term = source["utm_term"],
+        payload = source["xnpe_cmp"],
+        createdAt = currentTimeSeconds(),
+        completeUrl = null
+    )
+}
+
+internal fun Map<String, Any?>.toNotificationAction(): com.exponea.sdk.models.NotificationAction? {
+    val source = this
+    val actionType: String = source.getNullSafely("actionType") ?: return null
+    return com.exponea.sdk.models.NotificationAction(
+        actionType = actionType,
+        actionName = source.getNullSafely("actionName"),
+        url = source.getNullSafely("url")
+    )
+}
+
+// Converter for OpenedPush to WritableMap (for event emission)
+internal fun OpenedPush.toWritableMap(): WritableMap {
+    val map = Arguments.createMap()
+    map.putString("action", action.value)
+    url?.let { map.putString("url", it) }
+    additionalData?.let { data ->
+        val dataMap = Arguments.createMap()
+        data.forEach { (key, value) ->
+            if (key is String && value is String) {
+                dataMap.putString(key, value)
+            }
+        }
+        map.putMap("additionalData", dataMap)
+    }
+    return map
+}
+
+// Helper to fix number types after Gson deserialization
+// Gson converts all numbers to Double when deserializing to Map, but we want Int for whole numbers
+private fun fixNumberTypes(value: Any?): Any? {
+    return when (value) {
+        is Double -> {
+            // If it's a whole number, convert to Int
+            if (value % 1.0 == 0.0) value.toInt() else value
+        }
+        is Map<*, *> -> {
+            @Suppress("UNCHECKED_CAST")
+            (value as Map<String, Any?>).mapValues { fixNumberTypes(it.value) }
+        }
+        is List<*> -> {
+            value.map { fixNumberTypes(it) }
+        }
+        else -> value
+    }
+}
+
+// Converter for InAppMessageAction to Map (for event emission)
+internal fun InAppMessageAction.toMap(): Map<String, Any?> {
+    val result = LinkedHashMap<String, Any?>()
+    // Add fields in the order expected by tests (message, button, interaction, errorMessage, type)
+    message?.let { msg ->
+        try {
+            val messageJson = ExponeaGson.instance.toJson(msg)
+            val messageMap = ExponeaGson.instance.fromJson(messageJson, Map::class.java)
+            // Fix number types (Gson deserializes all numbers as Double)
+            result["message"] = fixNumberTypes(messageMap)
+        } catch (e: Exception) {
+            Logger.e(this, "Failed to convert InAppMessage to map", e)
+        }
+    }
+    button?.let { btn ->
+        result["button"] = mapOf(
+            "text" to btn.text,
+            "url" to btn.url
+        )
+    }
+    interaction?.let { result["interaction"] = it }
+    errorMessage?.let { result["errorMessage"] = it }
+    result["type"] = type.name
+    return result
+}

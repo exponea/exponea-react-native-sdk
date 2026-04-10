@@ -58,6 +58,7 @@ react {
     //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
     // hermesFlags = ["-O", "-output-source-map"]
 
+    /* Autolinking */
     autolinkLibrariesWithApp()
 }
 
@@ -79,12 +80,16 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+repositories {
+    maven { url 'https://developer.huawei.com/repo/' }
+}
+
 android {
     namespace "com.exponea.example"
     compileSdk rootProject.ext.compileSdkVersion
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    
+
     defaultConfig {
         applicationId "com.exponea.sdk.example"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -107,7 +112,7 @@ android {
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
-            // see https://facebook.github.io/react-native/docs/signed-apk-android.
+            // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -125,7 +130,7 @@ android {
 }
 
 dependencies {
-    gmsImplementation 'com.google.firebase:firebase-messaging:23.0.0'
+    gmsImplementation 'com.google.firebase:firebase-messaging:23.1.0'
     hmsImplementation 'com.huawei.agconnect:agconnect-core:1.5.2.300'
     hmsImplementation 'com.huawei.hms:push:6.3.0.302'
     implementation 'com.exponea.sdk:sdk:4.10.0'
