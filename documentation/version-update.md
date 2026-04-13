@@ -27,11 +27,11 @@ SDK 3.0.0 is built on TurboModules, the new standard that React Native has been 
 - **React Native:** 0.82 or higher (supported up to 0.83.0)
 - **Node.js:** 20.19.4 or higher
 
-### 3. LogLevel.DEBUG wire value change
+### 3. LogLevel.DEBUG renamed to LogLevel.DBG
 
-The serialized string for `LogLevel.DEBUG` changed from `'DEBUG'` to `'DBG'` to avoid a conflict with the iOS `#define DEBUG` preprocessor macro.
+The `LogLevel.DEBUG` enum member has been renamed to `LogLevel.DBG` and its wire value changed from `'DEBUG'` to `'DBG'` to avoid a conflict with the iOS `#define DEBUG` preprocessor macro.
 
-- Code using the `LogLevel.DEBUG` **enum constant** is **unaffected**.
+- Code referencing `LogLevel.DEBUG` **must be updated** to `LogLevel.DBG`.
 - Code that **hardcodes the string** `'DEBUG'` (for example, storing it in a database or comparing against it) must be updated to `'DBG'`.
 - On iOS, `'DBG'` maps to `.verbose` (the native iOS SDK has no separate debug level).
 

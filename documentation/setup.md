@@ -584,12 +584,12 @@ The SDK supports the following log levels defined in `LogLevel`:
 | `ERROR`   | Serious errors or breaking issues                                        |
 | `WARN`    | Warnings and recommendations + `ERROR`                                   |
 | `INFO`    | Informative messages + `WARN` + `ERROR`                                  |
-| `DEBUG`   | Debugging information + `INFO` + `WARN` + `ERROR`                        |
-| `VERBOSE` | Information about all SDK actions + `DEBUG` + `INFO` + `WARN` + `ERROR`. |
+| `DBG`     | Debugging information + `INFO` + `WARN` + `ERROR`                        |
+| `VERBOSE` | Information about all SDK actions + `DBG` + `INFO` + `WARN` + `ERROR`.   |
 
 > ❗️Warning
 >
-> **SDK version 3.0.0 change:** The serialized wire value for `LogLevel.DEBUG` changed from `'DEBUG'` to `'DBG'` to avoid a conflict with the iOS `#define DEBUG` preprocessor macro. Code using the `LogLevel.DEBUG` enum constant is unaffected. If you hardcode the string value (for example, for storage or comparison), update `'DEBUG'` to `'DBG'`. On iOS, `'DBG'` maps to `.verbose` as the native iOS SDK has no separate debug level.
+> **SDK version 3.0.0 change:** The `LogLevel.DEBUG` enum member has been renamed to `LogLevel.DBG` and its wire value changed from `'DEBUG'` to `'DBG'` to avoid a conflict with the iOS `#define DEBUG` preprocessor macro. Code referencing `LogLevel.DEBUG` must be updated to `LogLevel.DBG`. If you hardcode the string value (for example, for storage or comparison), update `'DEBUG'` to `'DBG'`. On iOS, `'DBG'` maps to `.verbose` as the native iOS SDK has no separate debug level.
 
 The default log level is `INFO`. While developing or debugging, setting the log level to `debug` or `verbose` can be helpful.
 

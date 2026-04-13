@@ -1896,7 +1896,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-exponea-sdk (2.7.0):
+  - react-native-exponea-sdk (3.0.0):
     - AnyCodable-FlightSchool (= 0.4.0)
     - boost
     - DoubleConversion
@@ -2957,12 +2957,12 @@ SPEC CHECKSUMS:
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   ExponeaSDK: 2359dca71396a77855f809abd2d639e2f6d67ff6
   ExponeaSDK-Notifications: 6e4abe1e40400e19f628ab54646381e6ed0b4a31
-  fast_float: 914e00b8b67cb8ba184a778c7bbc2e9fe98d37b3
+  fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
   FBLazyVector: a293a88992c4c33f0aee184acab0b64a08ff9458
-  fmt: b85d977e8fe789fd71c77123f9f4920d88c4d170
-  glog: 682871fb30f4a65f657bf357581110656ea90b08
-  hermes-engine: 29283083966976c0661109b59b16aa0244671975
-  RCT-Folly: fb64616e25cfac1c3d10bfd784d68926325ae67f
+  fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
+  glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
+  hermes-engine: 452e2c27b627232e439a8640bbcba41e870a22e2
+  RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
   RCTDeprecation: 2b70c6e3abe00396cefd8913efbf6a2db01a2b36
   RCTRequired: f3540eee8094231581d40c5c6d41b0f170237a81
   RCTSwiftUI: 5928f7ca7e9e2f1a82d85d4c79ea3065137ad81c
@@ -2998,7 +2998,7 @@ SPEC CHECKSUMS:
   React-logger: 9e597cbeda7b8cc8aa8fb93860dade97190f69cc
   React-Mapbuffer: 20046c0447efaa7aace0b76085aa9bb35b0e8105
   React-microtasksnativemodule: 0e837de56519c92d8a2e3097717df9497feb33cb
-  react-native-exponea-sdk: 152d6194943b956d234099758960f4dea5ab2aad
+  react-native-exponea-sdk: 15734d42fba315bc6a6ce21f2d53e442f0eb68f6
   react-native-safe-area-context: c00143b4823773bba23f2f19f85663ae89ceb460
   React-NativeModulesApple: 1a378198515f8e825c5931a7613e98da69320cee
   React-networking: bfd1695ada5a57023006ce05823ac5391c3ce072
@@ -3042,4 +3042,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 5b0466d8a828a26c0f3e739ebbe033ace8c744c9
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
