@@ -1,11 +1,12 @@
 ---
 title: Authorization for React Native SDK
-excerpt: Full authorization reference for the React Native SDK
 slug: react-native-sdk-authorization
 category:
   uri: /branches/2/categories/guides/Developers
 parent:
   uri: react-native-sdk-setup
+content:
+  excerpt: Full authorization reference for the React Native SDK
 ---
 
 The SDK exchanges data with the Engagement APIs through authorized HTTP/HTTPS communication. The SDK supports two authorization modes: the default **token authorization** for public API access and the more secure **customer token authorization** for private API access. Developers can choose the appropriate authorization mode for the required level of security.

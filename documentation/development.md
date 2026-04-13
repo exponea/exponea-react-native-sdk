@@ -1,11 +1,12 @@
 ---
 title: Development for React Native SDK
-excerpt: Work with the React Native SDK source code.
 slug: react-native-sdk-development
 category:
   uri: /branches/2/categories/guides/Developers
 parent:
   uri: react-native-sdk
+content:
+  excerpt: Work with the React Native SDK source code.
 ---
 
 # Development for React Native SDK

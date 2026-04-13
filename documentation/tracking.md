@@ -1,11 +1,12 @@
 ---
 title: Tracking for React Native SDK
-excerpt: Track customers and events using the React Native SDK
 slug: react-native-sdk-tracking
 category:
   uri: /branches/2/categories/guides/Developers
 parent:
   uri: react-native-sdk
+content:
+  excerpt: Track customers and events using the React Native SDK
 ---
 
 You can track events in Engagement to learn more about your app’s usage patterns and to segment your customers by their interactions.

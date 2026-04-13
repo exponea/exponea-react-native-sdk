@@ -1,11 +1,12 @@
 ---
 title: React Native SDK version update guide
-excerpt: Update Exponea React Native SDK in your app to a new version
 slug: react-native-sdk-version-update
 category:
   uri: /branches/2/categories/guides/Developers
 parent:
   uri: react-native-sdk-release-notes
+content:
+  excerpt: Update Exponea React Native SDK in your app to a new version
 ---
 
 This guide will help you upgrade your Exponea SDK to the latest major version.

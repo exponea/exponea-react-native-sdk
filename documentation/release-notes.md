@@ -1,11 +1,12 @@
 ---
 title: Release notes for React Native SDK
-excerpt: Exponea React Native SDK release notes
 slug: react-native-sdk-release-notes
 category:
   uri: /branches/2/categories/guides/Developers
 parent:
   uri: react-native-sdk
+content:
+  excerpt: Exponea React Native SDK release notes
 ---
 
 > 📘

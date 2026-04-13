@@ -1,11 +1,14 @@
 ---
 title: Links for React Native SDK
-excerpt: Track Android App Links and iOS Universal Links in your app using the React Native SDK
 slug: react-native-sdk-links
 category:
   uri: /branches/2/categories/guides/Developers
 parent:
   uri: react-native-sdk
+content:
+  excerpt: >-
+    Track Android App Links and iOS Universal Links in your app using the React
+    Native SDK
 ---
 
 Android App Links and iOS Universal Links allow the links you send through Engagement to open directly in your mobile application without any redirects that would hinder your users' experience.

@@ -1,11 +1,12 @@
 ---
 title: Android push notifications for React Native SDK
-excerpt: Enable push notifications on Android using the React Native SDK
 slug: react-native-sdk-push-android
 category:
   uri: /branches/2/categories/guides/Developers
 parent:
   uri: react-native-sdk-push-notifications
+content:
+  excerpt: Enable push notifications on Android using the React Native SDK
 ---
 
 The React Native SDK relies on the [native Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk) to handle push notifications on Android. This guide provides shortened instructions for Android within the context of the React Native SDK and refers to the [push notifications documentation for the Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk-push-notifications) for details.

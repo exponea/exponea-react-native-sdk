@@ -1,11 +1,12 @@
 ---
 title: Fetch data for React Native SDK
-excerpt: Fetch data from Bloomreach Engagement using the React Native SDK
 slug: react-native-sdk-fetch-data
 category:
   uri: /branches/2/categories/guides/Developers
 parent:
   uri: react-native-sdk
+content:
+  excerpt: Fetch data from Bloomreach Engagement using the React Native SDK
 ---
 
 The SDK provides methods to retrieve data from the Engagement platform.

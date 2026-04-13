@@ -1,11 +1,12 @@
 ---
 title: Example app for React Native SDK
-excerpt: Build, run, and navigate the example app included with the React Native SDK
 slug: react-native-sdk-example-app
 category:
   uri: /branches/2/categories/guides/Developers
 parent:
   uri: react-native-sdk
+content:
+  excerpt: 'Build, run, and navigate the example app included with the React Native SDK'
 ---
 
 The Exponea React Native SDK includes an example application you can use as a reference implementation. You can build and run the app, test Engagement features, and compare the code and behavior of your implementation with the expected behavior and code in the example app.
