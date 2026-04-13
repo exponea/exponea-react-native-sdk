@@ -14,6 +14,18 @@ content:
 > Refer to the [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 3.0.0
+#### April 13, 2026
+- Breaking:
+  - Complete SDK rewrite using React Native's [TurboModules](https://reactnative.dev/docs/turbo-modules) architecture. Requires React Native 0.82 or higher and the New Architecture enabled in your app. Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-from-version-2xx-to-3xx) for migration instructions.
+  - `LogLevel.DEBUG` wire value changed from `'DEBUG'` to `'DBG'` to avoid iOS `#define DEBUG` preprocessor conflict. Code using the `LogLevel.DEBUG` enum constant is unaffected; only code that hardcodes the string `'DEBUG'` must be updated.
+  - In-app message tracking methods (`trackInAppMessageClick`, `trackInAppMessageClose`, and their `WithoutTrackingConsent` variants) now accept `string | null` instead of `string | undefined` for `buttonText` and `buttonUrl` parameters.
+- Added:
+  - Adds cross-platform `requestPushAuthorization()` method, replacing the iOS-only `requestIosPushAuthorization()`.
+  - Adds named function exports for all SDK methods, enabling tree-shaking.
+  - Updates build system to `react-native-builder-bob` with Yarn 4 and Turborepo.
+- Deprecated:
+  - `requestIosPushAuthorization()` is deprecated. Use `requestPushAuthorization()` instead.
 
 ## Release Notes for 2.7.0
 #### March 16, 2026
