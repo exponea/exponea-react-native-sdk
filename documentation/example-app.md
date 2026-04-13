@@ -77,7 +77,7 @@ You must have the following software installed to be able to build and run the e
 
 ## Navigate the example app
 
-![Example app screens (iOS)](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/Documentation/images/react-native-ios.png)
+![Example app screens (iOS)](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native-ios.png)
 
 When you run the app in the simulator, you'll see the **AuthScreen**. Enter your [project token, API token, and API base URL](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management). Optionally, enter `Application ID` if your Engagement project supports multiple mobile apps. If you leave this blank, the SDK uses the default value "default-application". See [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration). Then click `Start` to initialize the SDK (see [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk)).
 > [`AuthScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/AuthScreen.tsx)
@@ -113,7 +113,7 @@ Once you use `Identify customer` in the app to set the `registered` hard ID (use
 >
 > Refer to [Customer identification](https://documentation.bloomreach.com/engagement/docs/customer-identification) for more information on soft IDs and hard IDs.
 
-![Example app screens (Android)](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/Documentation/images/react-native-android.png)
+![Example app screens (Android)](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native-android.png)
 
 ## Troubleshooting
 
