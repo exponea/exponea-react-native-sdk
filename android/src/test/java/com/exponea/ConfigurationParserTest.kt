@@ -70,7 +70,8 @@ internal class ConfigurationParserTest {
                 pushChannelId = "mock-push-channel-id",
                 pushNotificationImportance = NotificationManager.IMPORTANCE_HIGH,
                 httpLoggingLevel = ExponeaConfiguration.HttpLoggingLevel.BODY,
-                allowDefaultCustomerProperties = false
+                allowDefaultCustomerProperties = false,
+                allowWebViewCookies = true
             ),
             ConfigurationParser(data as ReadableMap).parse()
         )
@@ -179,4 +180,15 @@ internal class ConfigurationParserTest {
         val config = ConfigurationParser(data as ReadableMap).parse()
         assertEquals(false, config.requirePushAuthorization)
     }
+
+    @Test
+    fun `allowWebViewCookies should default to false when not set`() {
+        val data = JavaOnlyMap.of(
+            "projectToken", "mock-project-token",
+            "authorizationToken", "mock-authorization-token"
+        )
+        val config = ConfigurationParser(data as ReadableMap).parse()
+        assertEquals(false, config.allowWebViewCookies)
+    }
+
 }
