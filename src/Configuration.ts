@@ -69,6 +69,8 @@ export interface AndroidConfiguration {
   pushNotificationImportance?: PushNotificationImportance;
   /** Level of HTTP logging */
   httpLoggingLevel?: HttpLoggingLevel;
+  /** If true, allows the Exponea SDK WebViews to accept and store cookies without clearing global app cookies */
+  allowWebViewCookies?: boolean;
 }
 
 export interface IOSConfiguration {

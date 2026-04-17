@@ -14,7 +14,10 @@
     "string": "value",
     "boolean": false,
     "number": 3.14159,
-    "array": ["value1", "value2"],
+    "array": [
+      "value1",
+      "value2"
+    ],
     "object": {
       "key": "value"
     }
@@ -33,7 +36,8 @@
     "pushChannelId": "mock-push-channel-id",
     "pushNotificationImportance": "HIGH",
     "httpLoggingLevel": "BODY",
-    "requirePushAuthorization": false
+    "requirePushAuthorization": false,
+    "allowWebViewCookies": true
   },
   "ios": {
     "requirePushAuthorization": false,

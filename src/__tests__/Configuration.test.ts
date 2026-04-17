@@ -56,6 +56,7 @@ test('should construct full configuration', () => {
       pushNotificationImportance: PushNotificationImportance.HIGH,
       httpLoggingLevel: HttpLoggingLevel.BODY,
       requirePushAuthorization: false,
+      allowWebViewCookies: true,
     },
     ios: {
       requirePushAuthorization: false,
