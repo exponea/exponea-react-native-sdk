@@ -17,7 +17,12 @@ public class AppInboxButtonView: UIView {
     }
 
     private func setupButton() {
-        // Get the app inbox button from the Exponea SDK
+        // Get the app inbox button from the Exponea SDK.
+        // Note: getAppInboxButton() returns a SHARED singleton instance. Using AutoLayout
+        // constraints on it causes constraint accumulation across re-renders because
+        // constraints from previous parent views remain active and conflict with new ones,
+        // eventually making the button zero-sized and untappable.
+        // Frame-based layout avoids this problem entirely.
         let appInboxButton = ExponeaSDK.Exponea.shared.getAppInboxButton()
 
         button = appInboxButton
@@ -25,17 +30,11 @@ public class AppInboxButtonView: UIView {
         // Store the default icon for showIcon toggle
         defaultIcon = appInboxButton.imageView?.image
 
-        // Add button to view hierarchy
-        addSubview(appInboxButton)
-        appInboxButton.translatesAutoresizingMaskIntoConstraints = false
+        // Use autoresizingMask so the button fills the container without AutoLayout constraints.
+        appInboxButton.translatesAutoresizingMaskIntoConstraints = true
+        appInboxButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        // Make button fill the entire view
-        NSLayoutConstraint.activate([
-            appInboxButton.leadingAnchor.constraint(equalTo: leadingAnchor),
-            appInboxButton.trailingAnchor.constraint(equalTo: trailingAnchor),
-            appInboxButton.topAnchor.constraint(equalTo: topAnchor),
-            appInboxButton.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        addSubview(appInboxButton)
     }
 
     public override func layoutSubviews() {

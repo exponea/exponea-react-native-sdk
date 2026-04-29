@@ -106,9 +106,20 @@ public struct AllRecommendationData: RecommendationUserData {
             "id": message.id,
             "type": message.type,
             "is_read": message.read,
-            "create_time": message.receivedTime ?? 0,
-            "content": message.rawContent ?? [:]
+            "create_time": NSNumber(value: message.rawReceivedTime ?? 0),
+            "content": TypeConverters.normalizeJsonContent(message.rawContent)
         ]
+    }
+
+    /// Converts [String: JSONValue] (ExponeaSDK internal type) to a plain Foundation dictionary
+    /// that JSI can bridge to JavaScript. JSONValue is a Swift enum and cannot be directly bridged.
+    private static func normalizeJsonContent(_ rawContent: [String: JSONValue]?) -> Any {
+        guard let rawContent = rawContent,
+              let data = try? JSONEncoder().encode(rawContent),
+              let normalized = try? JSONSerialization.jsonObject(with: data) else {
+            return [String: Any]()
+        }
+        return normalized
     }
 
     public static func parseAppInboxMessage(from dict: NSDictionary) throws -> ExponeaSDK.MessageItem {
