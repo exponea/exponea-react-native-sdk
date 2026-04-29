@@ -22,7 +22,7 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
   const [applicationId, setApplicationId] = useState('');
   const [advancedAuthKey, setAdvancedAuthKey] = useState('');
 
-  const APP_GROUP = 'group.com.exponea.ExponeaSDK-Example2';
+  const APP_GROUP = 'group.com.exponea.sdk.example';
 
   const buttonDisabled =
     projectToken === '' || authorizationToken === '' || baseUrl === '';

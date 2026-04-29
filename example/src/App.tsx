@@ -91,8 +91,8 @@ export default function App(): React.ReactElement {
     // our example app is triggering GDPR In-app by custom event tracking so we used it for detection
     // you may implement detection against message title, ID, payload, etc.
     if (!message.trigger) return false;
-    if (message.trigger.event_type !== 'event_name') return false;
-    const triggerFilter = message.trigger.filter as any[];
+    if ((message.trigger as any).event_type !== 'event_name') return false;
+    const triggerFilter = (message.trigger as any).filter as any[];
     return triggerFilter?.[0]?.constraint?.operands?.[0]?.value === 'gdpr';
   };
 

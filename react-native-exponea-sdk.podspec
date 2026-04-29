@@ -25,4 +25,14 @@ Pod::Spec.new do |s|
   s.dependency "AnyCodable-FlightSchool", "0.4.0"
 
   install_modules_dependencies(s)
+
+  # install_modules_dependencies sets SWIFT_COMPILATION_MODE=wholemodule for static library builds.
+  # In wholemodule mode Xcode does not declare the Swift-generated ObjC header as an explicit build
+  # task output, so ObjC files can compile before it exists ('react_native_exponea_sdk-Swift.h'
+  # not found). Switch to incremental only when USE_FRAMEWORKS=static (the same env var React Native
+  # uses) so wholemodule optimization is preserved for dynamic/default builds.
+  # See: https://github.com/exponea/exponea-react-native-sdk/issues/138
+  if ENV['USE_FRAMEWORKS'] == 'static'
+    s.pod_target_xcconfig['SWIFT_COMPILATION_MODE'] = 'incremental'
+  end
 end
