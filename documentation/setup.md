@@ -503,7 +503,7 @@ function withExponeaIosAppDelegateH(config) {
       const projectName = cfg.name;
       const appDelegateH = `${iosProjRoot}/${projectName}/AppDelegate.h`;
       if (!existsSync(appDelegateH)) {
-        return config;
+        return cfg;
       }
       writeFileSync(
         appDelegateH,
