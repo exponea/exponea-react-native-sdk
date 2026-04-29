@@ -60,8 +60,8 @@
   "licenseFilename": "https://opensource.org/licenses/MIT",
   "readmeFilename": "README.md",
   "peerDependencies": {
-    "react": "^17.0.2 || ^18.0.0 || ^19.0.0",
-    "react-native": "<=0.83.0"
+    "react": "^19.0.0",
+    "react-native": ">=0.83.0 <=0.85.2"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
@@ -69,8 +69,9 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.35.0",
     "@react-native-picker/picker": "^2.4.0",
-    "@react-native/babel-preset": "0.83.0",
-    "@react-native/eslint-config": "0.83.0",
+    "@react-native/babel-preset": "0.85.2",
+    "@react-native/eslint-config": "0.85.2",
+    "@react-native/jest-preset": "0.85.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^25.0.10",
     "@types/react": "^19.2.0",
@@ -81,8 +82,8 @@
     "eslint-plugin-prettier": "^5.5.4",
     "jest": "^29.7.0",
     "prettier": "^2.8.8",
-    "react": "19.2.0",
-    "react-native": "0.83.0",
+    "react": "19.2.3",
+    "react-native": "0.85.2",
     "react-native-builder-bob": "^0.40.17",
     "ts-jest": "^29.4.6",
     "turbo": "^2.5.6",
@@ -141,7 +142,7 @@
     "version": "0.56.0"
   },
   "engines": {
-    "node": ">= 20.19.4"
+    "node": "^20.19.4 || ^22.13.0 || ^24.3.0 || >= 25.0.0"
   },
   "packageManager": "yarn@4.11.0"
 }

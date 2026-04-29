@@ -17,7 +17,7 @@ The Exponea React Native SDK can be installed in your app using [yarn](https://y
 >
 > **SDK version 3.0.0 and higher** requires React Native's [New Architecture (TurboModules)](https://reactnative.dev/docs/turbo-modules). If your app still uses the old architecture (JavaScript Bridge), you must migrate before upgrading. Refer to the [React Native New Architecture migration guide](https://reactnative.dev/docs/new-architecture-intro) and the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-from-version-2xx-to-3xx) for details.
 
-The SDK is compatible with React Native 0.82.0 - 0.83.0 and requires Node.js 20.19.4 or higher.
+The SDK is compatible with React Native 0.83.0 - 0.85.2 and requires Node.js 20.19.4 or higher.
 
 > ❗️
 >

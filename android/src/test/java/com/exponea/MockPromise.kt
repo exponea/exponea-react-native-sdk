@@ -33,20 +33,20 @@ open class MockPromise(val onResolved: (MockPromise) -> Unit, val onRejected: (M
         onRejected(this)
     }
 
-    override fun reject(errorName: String, errorMessage: String?) {
-        reject(errorName, errorMessage, errorThrowable, errorMap)
-    }
-
     override fun reject(errorName: String) {
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorName: String, errorThrowable: Throwable?) {
-        reject(errorName, errorMessage, errorThrowable, errorMap)
+    override fun reject(code: String?, message: String?) {
+        reject(code, message, null, null)
     }
 
-    override fun reject(errorName: String, errorMessage: String?, errorThrowable: Throwable?) {
-        reject(errorName, errorMessage, errorThrowable, errorMap)
+    override fun reject(code: String?, throwable: Throwable?) {
+        reject(code, null, throwable, null)
+    }
+
+    override fun reject(code: String?, message: String?, throwable: Throwable?) {
+        reject(code, message, throwable, null)
     }
 
     override fun reject(errorThrowable: Throwable) {
@@ -57,16 +57,16 @@ open class MockPromise(val onResolved: (MockPromise) -> Unit, val onRejected: (M
         reject(errorName, errorMessage, errorThrowable, errorMap)
     }
 
-    override fun reject(errorName: String, errorMap: WritableMap) {
-        reject(errorName, errorMessage, errorThrowable, errorMap)
+    override fun reject(code: String?, userInfo: WritableMap) {
+        reject(code, null, null, userInfo)
     }
 
-    override fun reject(errorName: String, errorThrowable: Throwable?, errorMap: WritableMap) {
-        reject(errorName, errorMessage, errorThrowable, errorMap)
+    override fun reject(code: String?, throwable: Throwable?, userInfo: WritableMap) {
+        reject(code, null, throwable, userInfo)
     }
 
-    override fun reject(errorName: String, errorMessage: String?, errorMap: WritableMap) {
-        reject(errorName, errorMessage, errorThrowable, errorMap)
+    override fun reject(code: String?, message: String?, userInfo: WritableMap) {
+        reject(code, message, null, userInfo)
     }
 }
 

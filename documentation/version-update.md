@@ -24,7 +24,7 @@ SDK 3.0.0 is built on TurboModules, the new standard that React Native has been 
 
 ### 2. React Native and Node.js version requirements
 
-- **React Native:** 0.82 or higher (supported up to 0.83.0)
+- **React Native:** 0.83.0 or higher (supported up to 0.85.2)
 - **Node.js:** 20.19.4 or higher
 
 ### 3. LogLevel.DEBUG renamed to LogLevel.DBG
