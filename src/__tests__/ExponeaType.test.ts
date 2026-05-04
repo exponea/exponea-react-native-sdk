@@ -65,6 +65,7 @@ describe('parameter serialization and typings', () => {
         pushNotificationImportance: PushNotificationImportance.HIGH,
         httpLoggingLevel: HttpLoggingLevel.BODY,
         requirePushAuthorization: false,
+        allowWebViewCookies: false,
       },
       ios: {
         requirePushAuthorization: false,

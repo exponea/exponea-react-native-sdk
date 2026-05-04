@@ -33,7 +33,8 @@
     "pushChannelId": "mock-push-channel-id",
     "pushNotificationImportance": "HIGH",
     "httpLoggingLevel": "BODY",
-    "requirePushAuthorization": false
+    "requirePushAuthorization": false,
+    "allowWebViewCookies": false
   },
   "ios": {
     "requirePushAuthorization": false,

@@ -69,6 +69,13 @@ export interface AndroidConfiguration {
   pushNotificationImportance?: PushNotificationImportance;
   /** Level of HTTP logging */
   httpLoggingLevel?: HttpLoggingLevel;
+  /**
+   * Flag that enables or disables cookies in WebViews. Cookies in WebView could be misused by malware so it is
+   * recommended to keep them disabled (default value). According to shared CookieManager in android, this flag
+   * could affect all WebView instances used by application. If your application is using WebView and page logic
+   * depends on cookies, you may allow them with `true` value.
+   */
+  allowWebViewCookies?: boolean;
 }
 
 export interface IOSConfiguration {

@@ -240,6 +240,8 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                         )
                     }
                 }
+                "allowWebViewCookies" ->
+                    configuration.allowWebViewCookies = map.getSafely("allowWebViewCookies", Boolean::class)
             }
         }
     }
