@@ -15,7 +15,7 @@ protocol IsExponeaReactNativeSDK {}
 @objc(ExponeaRNVersion)
 public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     required public override init() {}
-    public func getVersion() -> String { "3.0.0" }
+    public func getVersion() -> String { "3.1.0" }
 }
 
 @objcMembers public class ExponeaBridge: NSObject {

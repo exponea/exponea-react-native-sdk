@@ -14,6 +14,17 @@ content:
 > Refer to the [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 3.1.0
+#### May 13, 2026
+* Added:
+  * Adds `allowWebViewCookies` configuration parameter for Android to control cookie usage in WebViews.
+  * Adds support for React Native 0.85.2.
+* Fixed:
+  * Fixes iOS App Inbox returning undefined for message timestamps and content fields in the TurboModule architecture.
+  * Fixes iOS App Inbox button not responding to taps.
+  * Fixes build error in Expo managed workflow with static library builds.
+  * Fixes in-app message tracking, missing enum exports, and TurboModule compatibility.
+
 ## Release Notes for 3.0.0
 #### April 13, 2026
 - Breaking:
