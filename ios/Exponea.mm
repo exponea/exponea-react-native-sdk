@@ -651,13 +651,36 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
 
 // MARK: - In-App Message Tracking Methods
 
-- (void)trackInAppMessageClick:(NSDictionary *)message
+- (NSDictionary *)inAppMessageToDictionary:(const JS::NativeExponea::InAppMessage &)message
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    if (message.id_()) { dict[@"id"] = message.id_(); }
+    if (message.name()) { dict[@"name"] = message.name(); }
+    if (message.message_type()) { dict[@"message_type"] = message.message_type(); }
+    if (message.frequency()) { dict[@"frequency"] = message.frequency(); }
+    dict[@"variant_id"] = @(message.variant_id());
+    if (message.variant_name()) { dict[@"variant_name"] = message.variant_name(); }
+    if (message.payload()) { dict[@"payload"] = message.payload(); }
+    if (message.trigger()) { dict[@"trigger"] = message.trigger(); }
+    if (message.date_filter()) { dict[@"date_filter"] = message.date_filter(); }
+    if (message.load_priority().has_value()) { dict[@"load_priority"] = @(message.load_priority().value()); }
+    if (message.load_delay().has_value()) { dict[@"load_delay"] = @(message.load_delay().value()); }
+    if (message.close_timeout().has_value()) { dict[@"close_timeout"] = @(message.close_timeout().value()); }
+    if (message.payload_html()) { dict[@"payload_html"] = message.payload_html(); }
+    if (message.is_html().has_value()) { dict[@"is_html"] = @(message.is_html().value()); }
+    if (message.has_tracking_consent().has_value()) { dict[@"has_tracking_consent"] = @(message.has_tracking_consent().value()); }
+    if (message.consent_category_tracking()) { dict[@"consent_category_tracking"] = message.consent_category_tracking(); }
+    if (message.is_rich_text().has_value()) { dict[@"is_rich_text"] = @(message.is_rich_text().value()); }
+    return dict;
+}
+
+- (void)trackInAppMessageClick:(JS::NativeExponea::InAppMessage &)message
                     buttonText:(NSString *)buttonText
                      buttonUrl:(NSString *)buttonUrl
                        resolve:(RCTPromiseResolveBlock)resolve
                         reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackInAppMessageClick:message
+    BOOL success = [_exponeaBridge trackInAppMessageClick:[self inAppMessageToDictionary:message]
                                                buttonText:buttonText
                                                 buttonUrl:buttonUrl
                                           considerConsent:YES];
@@ -668,13 +691,13 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
     }
 }
 
-- (void)trackInAppMessageClickWithoutTrackingConsent:(NSDictionary *)message
+- (void)trackInAppMessageClickWithoutTrackingConsent:(JS::NativeExponea::InAppMessage &)message
                                           buttonText:(NSString *)buttonText
                                            buttonUrl:(NSString *)buttonUrl
                                              resolve:(RCTPromiseResolveBlock)resolve
                                               reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackInAppMessageClick:message
+    BOOL success = [_exponeaBridge trackInAppMessageClick:[self inAppMessageToDictionary:message]
                                                buttonText:buttonText
                                                 buttonUrl:buttonUrl
                                           considerConsent:NO];
@@ -685,13 +708,13 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
     }
 }
 
-- (void)trackInAppMessageClose:(NSDictionary *)message
+- (void)trackInAppMessageClose:(JS::NativeExponea::InAppMessage &)message
                     buttonText:(NSString *)buttonText
                    interaction:(BOOL)interaction
                        resolve:(RCTPromiseResolveBlock)resolve
                         reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackInAppMessageClose:message
+    BOOL success = [_exponeaBridge trackInAppMessageClose:[self inAppMessageToDictionary:message]
                                                buttonText:buttonText
                                               interaction:interaction
                                           considerConsent:YES];
@@ -702,13 +725,13 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
     }
 }
 
-- (void)trackInAppMessageCloseWithoutTrackingConsent:(NSDictionary *)message
+- (void)trackInAppMessageCloseWithoutTrackingConsent:(JS::NativeExponea::InAppMessage &)message
                                           buttonText:(NSString *)buttonText
                                          interaction:(BOOL)interaction
                                              resolve:(RCTPromiseResolveBlock)resolve
                                               reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackInAppMessageClose:message
+    BOOL success = [_exponeaBridge trackInAppMessageClose:[self inAppMessageToDictionary:message]
                                                buttonText:buttonText
                                               interaction:interaction
                                           considerConsent:NO];

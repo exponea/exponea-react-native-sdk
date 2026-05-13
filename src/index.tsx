@@ -57,6 +57,11 @@ export type {
 };
 
 export { FlushMode, LogLevel, EventType, SegmentationDataCallback };
+export {
+  PushTokenTrackingFrequency,
+  PushNotificationImportance,
+  HttpLoggingLevel,
+} from './Configuration';
 
 // Interface C: Combines A (Turbo Module) and B (Listeners)
 

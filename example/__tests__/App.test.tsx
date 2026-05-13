@@ -19,7 +19,7 @@ beforeAll(() => {
   jest
     .spyOn(Linking, 'addEventListener')
     .mockImplementation(
-      () => ({ remove: jest.fn() } as unknown as EmitterSubscription)
+      () => ({ remove: jest.fn() }) as unknown as EmitterSubscription
     );
   jest.spyOn(Linking, 'getInitialURL').mockResolvedValue(null);
 });

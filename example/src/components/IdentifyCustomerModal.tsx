@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
+import {
+  Alert,
+  NativeModules,
+  ScrollView,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import { identifyCustomer } from 'react-native-exponea-sdk';
 import ExponeaModal from './ExponeaModal';
 import ExponeaButton from './ExponeaButton';
@@ -20,6 +26,7 @@ export default function IdentifyCustomerModal(
   const handleIdentify = async () => {
     try {
       await identifyCustomer(ids, properties);
+      NativeModules.CustomerTokenStorage.configure({ customerIds: ids });
       Alert.alert('Success', 'Customer identified successfully');
       setIds({});
       setProperties({});

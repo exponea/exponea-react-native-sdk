@@ -3355,7 +3355,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^8.36.0":
+"@typescript-eslint/eslint-plugin@npm:8.53.1, @typescript-eslint/eslint-plugin@npm:^8.36.0":
   version: 8.53.1
   resolution: "@typescript-eslint/eslint-plugin@npm:8.53.1"
   dependencies:
@@ -3375,7 +3375,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^8.36.0":
+"@typescript-eslint/parser@npm:8.53.1, @typescript-eslint/parser@npm:^8.36.0":
   version: 8.53.1
   resolution: "@typescript-eslint/parser@npm:8.53.1"
   dependencies:
@@ -5341,6 +5341,27 @@ __metadata:
     jest:
       optional: true
   checksum: 10c0/54c149328c97964a34958b7e32c56f24e9c9fb8eeb6892c357ae527d543cc766d960ef024baaa57be603befda8cb1e25f5cb9701993f554655143e199264ba7a
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-jest@npm:^29.15.2":
+  version: 29.15.2
+  resolution: "eslint-plugin-jest@npm:29.15.2"
+  dependencies:
+    "@typescript-eslint/utils": "npm:^8.0.0"
+  peerDependencies:
+    "@typescript-eslint/eslint-plugin": ^8.0.0
+    eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
+    jest: "*"
+    typescript: ">=4.8.4 <7.0.0"
+  peerDependenciesMeta:
+    "@typescript-eslint/eslint-plugin":
+      optional: true
+    jest:
+      optional: true
+    typescript:
+      optional: true
+  checksum: 10c0/be8d59b0d4c1ff1afd5294b227cdd190a3a7741fb28f8092d359eda1010cb87ef61c3db6c0a794e9612f745ae008c4d53ee78754d8faf87a22a823b71c9b14e4
   languageName: node
   linkType: hard
 
@@ -9235,12 +9256,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.8, prettier@npm:^2.8.8":
+"prettier@npm:2.8.8":
   version: 2.8.8
   resolution: "prettier@npm:2.8.8"
   bin:
     prettier: bin-prettier.js
   checksum: 10c0/463ea8f9a0946cd5b828d8cf27bd8b567345cf02f56562d5ecde198b91f47a76b7ac9eae0facd247ace70e927143af6135e8cf411986b8cb8478784a4d6d724a
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.0.0":
+  version: 3.8.3
+  resolution: "prettier@npm:3.8.3"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 10c0/754816fd7593eb80f6376d7476d463e832c38a12f32775a82683adb6e35b772b1f484d65f19401507b983a8c8a7cd5a4a9f12006bd56491e8f35503473f77473
   languageName: node
   linkType: hard
 
@@ -9527,13 +9557,16 @@ __metadata:
     "@types/jest": "npm:^29.5.14"
     "@types/node": "npm:^25.0.10"
     "@types/react": "npm:^19.2.0"
+    "@typescript-eslint/eslint-plugin": "npm:8.53.1"
+    "@typescript-eslint/parser": "npm:8.53.1"
     commitlint: "npm:^19.8.1"
     del-cli: "npm:^6.0.0"
     eslint: "npm:^9.35.0"
     eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-jest: "npm:^29.15.2"
     eslint-plugin-prettier: "npm:^5.5.4"
     jest: "npm:^29.7.0"
-    prettier: "npm:^2.8.8"
+    prettier: "npm:^3.0.0"
     react: "npm:19.2.3"
     react-native: "npm:0.85.2"
     react-native-builder-bob: "npm:^0.40.17"

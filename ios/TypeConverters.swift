@@ -145,10 +145,11 @@ public struct AllRecommendationData: RecommendationUserData {
 
     // MARK: - In-App Message Converters
     public static func parseInAppMessage(from dict: NSDictionary) throws -> ExponeaSDK.InAppMessage {
-        // Convert NSDictionary to Data, then decode using JSONDecoder
+        // Convert NSDictionary to Data, then decode using JSONDecoder.
+        // ExponeaSDK.InAppMessage and all its nested types use explicit CodingKeys with
+        // snake_case raw values, so no key decoding strategy is needed (default .useDefaultKeys).
         let jsonData = try JSONSerialization.data(withJSONObject: dict, options: [])
         let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
         let message = try decoder.decode(ExponeaSDK.InAppMessage.self, from: jsonData)
         return message
     }

@@ -48,5 +48,6 @@ public class CustomerTokenStorageModule extends BaseJavaModule {
         CustomerTokenStorage.INSTANCE_HOLDER.INSTANCE.configure(
                 host, projectToken, publicKey, customerIds, expiration
         );
+        promise.resolve(null);
     }
 }

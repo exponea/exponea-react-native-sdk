@@ -128,6 +128,11 @@ export interface AppInboxStyle {
 }
 
 export interface Spec extends TurboModule {
+  // Required by NativeEventEmitter; iOS is satisfied by RCTEventEmitter inheritance,
+  // Android provides explicit no-op overrides in ExponeaModule.
+  addListener(eventType: string): void;
+  removeListeners(count: number): void;
+
   isConfigured(): boolean;
 
   /** Configures Exponea SDK. Should only be called once. You need to configure ExponeaSDK before calling most methods */

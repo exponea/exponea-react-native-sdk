@@ -52,6 +52,10 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
     return NAME
   }
 
+  // Required by NativeEventEmitter spec; actual events are sent via DeviceEventEmitter.
+  override fun addListener(eventType: String) {}
+  override fun removeListeners(count: Double) {}
+
   override fun isConfigured(): Boolean {
       return Exponea.isInitialized
   }
@@ -526,13 +530,15 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
   override fun fetchAppInbox(promise: Promise) = requireInitialized(promise) {
       catchAndReject(promise) {
           Exponea.fetchAppInbox { messages ->
-              if (messages != null) {
-                  val messagesArray = messages.map { messageItem ->
-                      messageItem.toMap().toWritableMap()
-                  }.toWritableArray()
-                  promise.resolve(messagesArray)
-              } else {
-                  promise.reject("AppInboxError", "Failed to fetch App Inbox messages")
+              try {
+                  if (messages != null) {
+                      val messagesArray = messages.map { it.toMap() }.toWritableArray()
+                      promise.resolve(messagesArray)
+                  } else {
+                      promise.reject("AppInboxError", "Failed to fetch App Inbox messages")
+                  }
+              } catch (e: Exception) {
+                  promise.reject("AppInboxError", "Exception processing App Inbox: ${e.message}")
               }
           }
       }
@@ -541,11 +547,14 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
   override fun fetchAppInboxItem(messageId: String, promise: Promise) = requireInitialized(promise) {
       catchAndReject(promise) {
           Exponea.fetchAppInboxItem(messageId) { messageItem ->
-              if (messageItem != null) {
-                  val messageMap = messageItem.toMap().toWritableMap()
-                  promise.resolve(messageMap)
-              } else {
-                  promise.reject("AppInboxError", "Message with ID $messageId not found")
+              try {
+                  if (messageItem != null) {
+                      promise.resolve(messageItem.toMap().toWritableMap())
+                  } else {
+                      promise.reject("AppInboxError", "Message with ID $messageId not found")
+                  }
+              } catch (e: Exception) {
+                  promise.reject("AppInboxError", "Exception processing App Inbox item: ${e.message}")
               }
           }
       }
