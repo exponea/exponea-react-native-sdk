@@ -95,6 +95,26 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
   return @"Exponea";
 }
 
+- (NSDictionary *)appInboxMessageToDictionary:(const JS::NativeExponea::AppInboxMessage &)message
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"id"] = message.id_();
+    dict[@"type"] = message.type();
+    if (message.is_read().has_value()) { dict[@"is_read"] = @(message.is_read().value()); }
+    if (message.create_time().has_value()) { dict[@"create_time"] = @(message.create_time().value()); }
+    if (message.content()) { dict[@"content"] = message.content(); }
+    return dict;
+}
+
+- (NSDictionary *)appInboxActionToDictionary:(const JS::NativeExponea::AppInboxAction &)action
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    if (action.action()) { dict[@"action"] = action.action(); }
+    if (action.title()) { dict[@"title"] = action.title(); }
+    if (action.url()) { dict[@"url"] = action.url(); }
+    return dict;
+}
+
 - (NSNumber *)isConfigured
 {
     return @([_exponeaBridge isConfigured]);
@@ -587,19 +607,19 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
     }];
 }
 
-- (void)markAppInboxAsRead:(NSDictionary *)message
+- (void)markAppInboxAsRead:(JS::NativeExponea::AppInboxMessage &)message
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge markAppInboxAsRead:message];
+    BOOL success = [_exponeaBridge markAppInboxAsRead:[self appInboxMessageToDictionary:message]];
     resolve(@(success));
 }
 
-- (void)trackAppInboxOpened:(NSDictionary *)message
+- (void)trackAppInboxOpened:(JS::NativeExponea::AppInboxMessage &)message
                     resolve:(RCTPromiseResolveBlock)resolve
                      reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxOpened:message considerConsent:YES];
+    BOOL success = [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message] considerConsent:YES];
     if (success) {
         resolve([NSNull null]);
     } else {
@@ -607,11 +627,11 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
     }
 }
 
-- (void)trackAppInboxOpenedWithoutTrackingConsent:(NSDictionary *)message
+- (void)trackAppInboxOpenedWithoutTrackingConsent:(JS::NativeExponea::AppInboxMessage &)message
                                           resolve:(RCTPromiseResolveBlock)resolve
                                            reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxOpened:message considerConsent:NO];
+    BOOL success = [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message] considerConsent:NO];
     if (success) {
         resolve([NSNull null]);
     } else {
@@ -619,13 +639,13 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
     }
 }
 
-- (void)trackAppInboxClick:(NSDictionary *)action
-                   message:(NSDictionary *)message
+- (void)trackAppInboxClick:(JS::NativeExponea::AppInboxAction &)action
+                   message:(JS::NativeExponea::AppInboxMessage &)message
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxClick:action
-                                              message:message
+    BOOL success = [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
+                                              message:[self appInboxMessageToDictionary:message]
                                        considerConsent:YES];
     if (success) {
         resolve([NSNull null]);
@@ -634,13 +654,13 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
     }
 }
 
-- (void)trackAppInboxClickWithoutTrackingConsent:(NSDictionary *)action
-                                         message:(NSDictionary *)message
+- (void)trackAppInboxClickWithoutTrackingConsent:(JS::NativeExponea::AppInboxAction &)action
+                                         message:(JS::NativeExponea::AppInboxMessage &)message
                                          resolve:(RCTPromiseResolveBlock)resolve
                                           reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxClick:action
-                                              message:message
+    BOOL success = [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
+                                              message:[self appInboxMessageToDictionary:message]
                                        considerConsent:NO];
     if (success) {
         resolve([NSNull null]);
