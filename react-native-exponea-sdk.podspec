@@ -43,6 +43,7 @@ Pod::Spec.new do |s|
       '"$(DERIVED_SOURCES_DIR)"'
     ].compact.join(' ')
     s.pod_target_xcconfig = pod_target_xcconfig.merge(
+      'CLANG_CXX_LANGUAGE_STANDARD' => rct_cxx_language_standard(),
       'SWIFT_COMPILATION_MODE' => 'incremental',
       'SWIFT_OBJC_INTERFACE_HEADER_NAME' => 'react_native_exponea_sdk-Swift.h'
     )
