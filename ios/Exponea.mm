@@ -611,8 +611,22 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge markAppInboxAsRead:[self appInboxMessageToDictionary:message]];
-    resolve(@(success));
+    NSString *messageId = message.id_();
+    if (messageId == nil || messageId.length == 0) {
+        reject(@"ExponeaError", @"App inbox message ID is missing", nil);
+        return;
+    }
+
+    [_exponeaBridge markAppInboxAsRead:messageId
+                                success:^(BOOL marked) {
+        if (marked) {
+            resolve(@(YES));
+        } else {
+            reject(@"ExponeaError", [NSString stringWithFormat:@"Failed to mark app inbox message %@ as read", messageId], nil);
+        }
+    } failure:^(NSError *error) {
+        reject(@"ExponeaError", error.localizedDescription, error);
+    }];
 }
 
 - (void)trackAppInboxOpened:(JS::NativeExponea::AppInboxMessage &)message
