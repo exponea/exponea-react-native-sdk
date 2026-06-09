@@ -190,6 +190,10 @@ For each extension, follow the instructions in [Notification extensions](https:/
 
 Calling the `ExponeaNotificationContentService.didReceive()` method will enhance the notification body with the image and actions delivered within the `UNNotification` payload. Notification actions shown by `ExponeaNotificationContentService` are registered with configurations to open your application with required information and handle campaign clicks automatically.
 
+> ⚠️ **Important**
+>
+> The `ExponeaSDK-Notifications` pod version must match the core iOS SDK version used by `react-native-exponea-sdk`. A mismatch won't break notification display but will silently prevent `delivered` status from being tracked in Bloomreach. Check the current core SDK version in the [React Native SDK changelog](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-release-notes).
+
 #### Checklist:
 
 - [ ] Check that push notifications with images and buttons sent from Engagement are correctly displayed on your device. Push delivery tracking should work.
