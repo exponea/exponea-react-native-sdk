@@ -25,7 +25,7 @@ The SDK is compatible with React Native 0.83.0 - 0.85.2 and requires Node.js 20.
 
 > 📘
 >
-> Refer to https://github.com/exponea/exponea-react-native-sdk for the latest Exponea React Native SDK release.
+> Refer to the [release notes](https://github.com/exponea/exponea-react-native-sdk/releases) for the latest Exponea React Native SDK release.
 
 ### Install package
 
@@ -86,8 +86,11 @@ Now that you have installed the SDK in your project, you must import, configure,
 >
 > Refer to [Stop SDK integration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-tracking#stop-sdk-integration) for details.
 
-The required configuration parameters are `projectToken`, `authorizationToken`, and `baseUrl`. You can find these in the Bloomreach Engagement webapp under `Project settings` > `Access management` > `API`.
+> ❗️ Re-initializing after `stopIntegration()` (Android)
+>
+> On Android, `stopIntegration()` clears the locally stored push notification token. After a subsequent `Exponea.configure()` call, the SDK starts without a stored token.  After each re-initialization, your `FirebaseMessagingService.onNewToken` or HMS `onNewToken` callback must call `handleNewToken` with the token your app already holds. For more details, see [Push notification token is missing after `stopIntegration()`](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android#push-notification-token-is-missing-after-stopintegration).
 
+`integrationConfig` is the required configuration parameter. For a standard integration, use `ProjectConfig` with `projectToken`, `authorizationToken`, and `baseUrl` (credentials available in the Engagement web app under **Project settings** > **Access management** > **API**). For a [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration, use `StreamConfig` with `streamId` and an optional `baseUrl` (stream ID available in the Data hub app under **Event streams** > select your stream > **Access Security**).
 > 📘
 >
 > Refer to [Mobile SDKs API access management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
@@ -98,18 +101,60 @@ Import the SDK:
 import Exponea from 'react-native-exponea-sdk';
 ```
 
-Initialize the SDK:
+Initialize the SDK with a `ProjectConfig`:
 
 ```typescript
 Exponea.configure({
-  projectToken: 'YOUR_PROJECT_TOKEN',
-  authorizationToken: 'YOUR_API_KEY',
-  // default baseUrl value is https://api.exponea.com
-  baseUrl: 'YOUR_API_BASE_URL',
+  integrationConfig: {
+    projectToken: 'YOUR_PROJECT_TOKEN',
+    authorizationToken: 'YOUR_API_KEY',
+    // default baseUrl value is https://api.exponea.com
+    baseUrl: 'YOUR_API_BASE_URL',
+  },
 }).catch((error) => console.log(error));
 ```
 
-Configure application ID:
+Or initialize with a `StreamConfig`:
+
+```typescript
+Exponea.configure({
+  integrationConfig: {
+    streamId: 'YOUR_STREAM_ID',
+    // default baseUrl value is https://api.exponea.com
+    baseUrl: 'YOUR_API_BASE_URL',
+  },
+}).catch((error) => console.log(error));
+```
+
+> 📘  Note
+>
+> - For details on JWT authentication, see [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#sdk-auth-token-authorization).
+> - For an overview of event stream setup, see [configure React Native SDK with JWT authentication](https://documentation.bloomreach.com/data-hub/docs/configure-react-native-sdk-with-jwt-authentication) in the Data hub documentation.
+
+### Initialize with customer identity
+
+Optionally, provide a `CustomerIdentity` as the second argument to `Exponea.configure()` to identify the customer immediately during initialization:
+
+```typescript
+import type { CustomerIdentity } from 'react-native-exponea-sdk';
+
+const customerIdentity: CustomerIdentity = {
+  customerIds: { registered: 'jane.doe@example.com' },
+  sdkAuthToken: 'your-jwt-token',
+};
+
+Exponea.configure(
+  {
+    integrationConfig: {
+      streamId: 'YOUR_STREAM_ID',
+      baseUrl: 'YOUR_API_BASE_URL',
+    },
+  },
+  customerIdentity
+).catch((error) => console.log(error));
+```
+
+### Configure application ID
 
 **Multiple mobile apps:** If your Engagement project supports multiple mobile apps, specify the `applicationId` in your configuration. This helps distinguish between different apps in your project.
 
@@ -460,16 +505,16 @@ function withExponeaAndroidMessageService(config) {
       writeFileSync(
         `${androidProjRoot}/app/src/main/java/${pathToDir}/MessageService.java`,
         `package ${packageName};
-  
+
   import android.app.NotificationManager;
   import android.content.Context;
   import androidx.annotation.NonNull;
   import com.exponea.ExponeaModule;
   import com.google.firebase.messaging.FirebaseMessagingService;
   import com.google.firebase.messaging.RemoteMessage;
-  
+
   public class MessageService extends FirebaseMessagingService {
-  
+
       @Override
       public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
           super.onMessageReceived(remoteMessage);
@@ -478,7 +523,7 @@ function withExponeaAndroidMessageService(config) {
                   remoteMessage.getData(),
                   (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
       }
-  
+
       @Override
       public void onNewToken(@NonNull String token) {
           super.onNewToken(token);
@@ -511,9 +556,9 @@ function withExponeaIosAppDelegateH(config) {
   #import <UIKit/UIKit.h>
   #import <Expo/Expo.h>
   #import <UserNotifications/UNUserNotificationCenter.h>
-  
+
   @interface AppDelegate : EXAppDelegateWrapper <UNUserNotificationCenterDelegate>
-  
+
   @end
   `
       );

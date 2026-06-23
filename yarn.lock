@@ -2514,6 +2514,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/hashes@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@noble/hashes@npm:2.2.0"
+  checksum: 10c0/cad8630c504d6b9271984f685cd0af9101b40988fc2dfbe17ccdf068a9941f95cc5c9957d89e9ca4b7ca94c15cb35f93510c5d53a09fbcc83ee503b93d0a1034
+  languageName: node
+  linkType: hard
+
 "@nodable/entities@npm:^2.1.0":
   version: 2.1.0
   resolution: "@nodable/entities@npm:2.1.0"
@@ -9509,6 +9516,7 @@ __metadata:
     "@babel/core": "npm:^7.25.2"
     "@babel/preset-env": "npm:^7.25.3"
     "@babel/runtime": "npm:^7.25.0"
+    "@noble/hashes": "npm:^2.2.0"
     "@react-native-community/cli": "npm:20.1.3"
     "@react-native-community/cli-platform-android": "npm:20.1.3"
     "@react-native-community/cli-platform-ios": "npm:20.1.3"

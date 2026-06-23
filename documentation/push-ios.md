@@ -413,11 +413,11 @@ function withExponeaPod(config) {
         contents +
           `
 target 'ExponeaNotificationService' do
-  pod "ExponeaSDK-Notifications", "3.11.0"
+  pod "ExponeaSDK-Notifications", "4.2.0"
 end
 
 target 'ExponeaNotificationContent' do
-  pod "ExponeaSDK-Notifications", "3.11.0"
+  pod "ExponeaSDK-Notifications", "4.2.0"
 end`,
       )
       return cfg

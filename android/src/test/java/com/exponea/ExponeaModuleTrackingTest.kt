@@ -2,7 +2,7 @@ package com.exponea
 
 import androidx.test.core.app.ApplicationProvider
 import com.exponea.sdk.Exponea
-import com.exponea.sdk.models.CustomerIds
+import com.exponea.sdk.models.CustomerIdentity
 import com.exponea.sdk.models.InAppMessage
 import com.exponea.sdk.models.NotificationAction
 import com.exponea.sdk.models.NotificationData
@@ -53,12 +53,16 @@ internal class ExponeaModuleTrackingTest {
     @Test
     fun `identify customer should run even if Exponea is not initialized`() {
         every { Exponea.isInitialized } returns false
-        every { Exponea.identifyCustomer(any(), any()) } just Runs
+        every {
+            Exponea.identifyCustomer(any<CustomerIdentity>(), any<Map<String, Any>>())
+        } just Runs
         module.identifyCustomer(
-            JavaOnlyMap.of("id", "value"),
+            JavaOnlyMap.of("customerIds", JavaOnlyMap.of("id", "value")),
             JavaOnlyMap.of("email", "a@b.c"),
             MockResolvingPromise {
-                verify { Exponea.identifyCustomer(any(), any()) }
+                verify {
+                    Exponea.identifyCustomer(any<CustomerIdentity>(), any<Map<String, Any>>())
+                }
             }
         )
     }
@@ -66,22 +70,43 @@ internal class ExponeaModuleTrackingTest {
     @Test
     fun `identify customer should resolve and identify customer with correct data`() {
         every { Exponea.isInitialized } returns true
-        val customerIdsSlot = slot<CustomerIds>()
+        val identitySlot = slot<CustomerIdentity>()
+        every {
+            Exponea.identifyCustomer(capture(identitySlot), any<Map<String, Any>>())
+        } just Runs
         module.identifyCustomer(
-            JavaOnlyMap.of("id", "value"),
+            JavaOnlyMap.of("customerIds", JavaOnlyMap.of("id", "value")),
             JavaOnlyMap.of("email", "a@b.c"),
             MockResolvingPromise {
                 verify {
                     Exponea.identifyCustomer(
-                        capture(customerIdsSlot),
-                        PropertiesList(hashMapOf("email" to "a@b.c"))
+                        any<CustomerIdentity>(),
+                        hashMapOf<String, Any>("email" to "a@b.c")
                     )
                 }
             }
         )
-        assertTrue(customerIdsSlot.isCaptured)
-        val customerIds = customerIdsSlot.captured
-        assertEquals(CustomerIds().withId("id", "value"), customerIds)
+        assertTrue(identitySlot.isCaptured)
+        assertEquals(mapOf("id" to "value"), identitySlot.captured.customerIds)
+        assertEquals(null, identitySlot.captured.sdkAuthToken)
+    }
+
+    @Test
+    fun `identify customer should pass sdkAuthToken when provided`() {
+        every { Exponea.isInitialized } returns true
+        val identitySlot = slot<CustomerIdentity>()
+        every {
+            Exponea.identifyCustomer(capture(identitySlot), any<Map<String, Any>>())
+        } just Runs
+        module.identifyCustomer(
+            JavaOnlyMap.of("customerIds", JavaOnlyMap.of("id", "value"), "sdkAuthToken", "jwt-token-here"),
+            JavaOnlyMap.of(),
+            MockResolvingPromise {
+                verify { Exponea.identifyCustomer(any<CustomerIdentity>(), any<Map<String, Any>>()) }
+            }
+        )
+        assertTrue(identitySlot.isCaptured)
+        assertEquals("jwt-token-here", identitySlot.captured.sdkAuthToken)
     }
 
     @Test

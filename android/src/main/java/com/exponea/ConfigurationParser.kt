@@ -6,7 +6,8 @@ import android.graphics.Color
 import androidx.core.content.res.ResourcesCompat
 import com.exponea.sdk.models.EventType
 import com.exponea.sdk.models.ExponeaConfiguration
-import com.exponea.sdk.models.ExponeaProject
+import com.exponea.sdk.models.ProjectConfig
+import com.exponea.sdk.models.StreamConfig
 import com.facebook.react.bridge.ReadableMap
 import java.lang.NumberFormatException
 
@@ -14,36 +15,27 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
     private val configuration = ExponeaConfiguration()
 
     companion object {
-        fun requireProjectAndAuthorization(map: Map<String, Any?>) {
-            if (!map.containsKey("projectToken")) {
-                throw ExponeaModule.ExponeaDataException(
-                    "Required property 'projectToken' missing in configuration object"
-                )
-            }
-            if (!map.containsKey("authorizationToken")) {
-                throw ExponeaModule.ExponeaDataException(
-                    "Required property 'authorizationToken' missing in configuration object"
-                )
+
+        fun parseProjectConfig(map: Map<String, Any?>): ProjectConfig {
+            val projectToken = map.getSafely("projectToken", String::class)
+            val authorization = "Token ${ map.getSafely("authorizationToken", String::class) }"
+            val baseUrl = map["baseUrl"] as? String
+            return if (baseUrl != null) {
+                ProjectConfig(baseUrl = baseUrl, projectToken = projectToken, authorization = authorization)
+            } else {
+                ProjectConfig(projectToken = projectToken, authorization = authorization)
             }
         }
 
-        fun parseExponeaProject(map: Map<String, Any?>, defaultBaseUrl: String): ExponeaProject {
-            return ExponeaProject(
-                if (map.containsKey("baseUrl")) map.getSafely("baseUrl", String::class) else defaultBaseUrl,
-                map.getSafely("projectToken", String::class),
-                "Token ${ map.getSafely("authorizationToken", String::class) }"
-            )
-        }
-
-        fun parseProjectMapping(map: Map<String, Any?>, defaultBaseUrl: String): Map<EventType, List<ExponeaProject>> {
-            val mapping: HashMap<EventType, List<ExponeaProject>> = hashMapOf()
+        fun parseIntegrationRouteMap(map: Map<String, Any?>): Map<EventType, List<ProjectConfig>> {
+            val mapping = mutableMapOf<EventType, List<ProjectConfig>>()
             map.forEach { eventTypeConfiguration ->
                 val eventType: EventType
                 try {
                     eventType = EventType.valueOf(eventTypeConfiguration.key)
                 } catch (e: Exception) {
                     throw ExponeaModule.ExponeaDataException(
-                        "Invalid event type ${eventTypeConfiguration.key} found in project configuration",
+                        "Invalid event type '${eventTypeConfiguration.key}' found in project configuration",
                         e
                     )
                 }
@@ -51,11 +43,11 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     @Suppress("UNCHECKED_CAST")
                     val projectList = eventTypeConfiguration.value as List<Map<String, Any?>>
                     mapping[eventType] = projectList.map {
-                        parseExponeaProject(it, defaultBaseUrl)
+                        parseProjectConfig(it)
                     }
                 } catch (e: Exception) {
                     throw ExponeaModule.ExponeaDataException(
-                        "Invalid project definition for event type ${eventTypeConfiguration.key}",
+                        "Invalid project definition for event type '${eventTypeConfiguration.key}'",
                         e
                     )
                 }
@@ -64,50 +56,83 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
         }
     }
 
+    /**
+     * Parses an [ExponeaConfiguration] from the bridge map.
+     *
+     * Expects the post-migration shape produced by the JS bridge layer:
+     * - `integrationConfig` is required and contains either:
+     *   - `streamId` (+ optional `baseUrl`) for [StreamConfig], or
+     *   - `projectToken` + `authorizationToken` (+ optional `baseUrl`) for [ProjectConfig]
+     * - `integrationRouteMap` (renamed from the deprecated `projectMapping`) maps event types to extra projects
+     * - Legacy top-level `projectToken`/`authorizationToken`/`baseUrl`/`projectMapping` are not accepted here.
+     */
     fun parse(context: Context? = null): ExponeaConfiguration {
         val map = readableMap.toHashMapRecursively()
-        requireProjectAndAuthorization(map)
+        @Suppress("UNCHECKED_CAST")
+        val integrationConfigMap = map["integrationConfig"] as? Map<String, Any>
+            ?: throw ExponeaModule.ExponeaDataException(
+                "Required property 'integrationConfig' missing in configuration object"
+            )
+        val hasStreamId = integrationConfigMap.containsKey("streamId")
+        val hasProjectToken = integrationConfigMap.containsKey("projectToken")
+        val baseUrl = integrationConfigMap["baseUrl"] as? String
+
+        configuration.integrationConfig = when {
+            hasStreamId -> {
+                val streamId = integrationConfigMap.getSafely("streamId", String::class)
+                if (baseUrl != null) StreamConfig(baseUrl, streamId) else StreamConfig(streamId = streamId)
+            }
+            hasProjectToken -> {
+                if (!integrationConfigMap.containsKey("authorizationToken")) {
+                    throw ExponeaModule.ExponeaDataException(
+                        "Required property 'authorizationToken' missing in configuration object"
+                    )
+                }
+                val projectToken = integrationConfigMap.getSafely("projectToken", String::class)
+                val authorization = "Token ${integrationConfigMap.getSafely("authorizationToken", String::class)}"
+                if (baseUrl != null) {
+                    ProjectConfig(baseUrl, projectToken, authorization)
+                } else {
+                    ProjectConfig(projectToken = projectToken, authorization = authorization)
+                }
+            }
+            else -> throw ExponeaModule.ExponeaDataException(
+                "'integrationConfig' requires either 'streamId' for 'StreamConfig', " +
+                "or 'projectToken' and 'authorizationToken' for 'ProjectConfig'"
+            )
+        }
         configuration.requirePushAuthorization = true
         map.forEach { entry ->
             when (entry.key) {
-                "projectToken" ->
-                    configuration.projectToken = map.getSafely("projectToken", String::class)
-                "authorizationToken" ->
-                    configuration.authorization = "Token ${ map.getSafely("authorizationToken", String::class) }"
-                "baseUrl" ->
-                    configuration.baseURL = map.getSafely("baseUrl", String::class)
-                "projectMapping" -> {
+                "integrationRouteMap" -> {
                     @Suppress("UNCHECKED_CAST")
                     val mapping = entry.value as? Map<String, Any?>
                         ?: throw ExponeaModule.ExponeaDataException(
-                            "Unable to parse project mapping, expected map of event types to list of Exponea projects"
+                            "Unable to parse 'integrationRouteMap', expected map of event types to list of project configurations"
                         )
-                    configuration.projectRouteMap = parseProjectMapping(mapping, configuration.baseURL)
+                    configuration.integrationRouteMap = parseIntegrationRouteMap(mapping)
                 }
                 "defaultProperties" -> {
                     @Suppress("UNCHECKED_CAST")
                     val properties = entry.value as? HashMap<String, Any>
                         ?: throw ExponeaModule.ExponeaDataException(
-                            "Unable to parse default properties, expected map of properties"
+                            "Unable to parse 'defaultProperties', expected map of properties"
                         )
                     configuration.defaultProperties = properties
                 }
                 "flushMaxRetries" ->
-                    configuration.maxTries = map.getSafely("flushMaxRetries", Double::class).toInt()
+                    configuration.maxTries = entry.valueAs(Double::class).toInt()
                 "sessionTimeout" ->
-                    configuration.sessionTimeout = map.getSafely("sessionTimeout", Double::class)
+                    configuration.sessionTimeout = entry.valueAs(Double::class)
                 "automaticSessionTracking" ->
-                    configuration.automaticSessionTracking = map.getSafely(
-                        "automaticSessionTracking",
-                        Boolean::class
-                    )
+                    configuration.automaticSessionTracking = entry.valueAs(Boolean::class)
                 "pushTokenTrackingFrequency" -> {
                     try {
-                        val stringValue = map.getSafely("pushTokenTrackingFrequency", String::class)
-                        configuration.tokenTrackFrequency = ExponeaConfiguration.TokenFrequency.valueOf(stringValue)
+                        configuration.tokenTrackFrequency =
+                            ExponeaConfiguration.TokenFrequency.valueOf(entry.valueAs(String::class))
                     } catch (e: Exception) {
                         throw ExponeaModule.ExponeaDataException(
-                            "Incorrect value '${entry.value}' for key ${entry.key}.",
+                            "Incorrect value '${entry.value}' for key '${entry.key}'.",
                             e
                         )
                     }
@@ -115,21 +140,14 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                 "requirePushAuthorization" ->
                     configuration.requirePushAuthorization =
                         map.getNullSafely("requirePushAuthorization", Boolean::class, true) ?: true
-                "allowDefaultCustomerProperties" -> {
-                    configuration.allowDefaultCustomerProperties = map.getSafely(
-                            "allowDefaultCustomerProperties",
-                            Boolean::class
-                    )
-                }
-                "advancedAuthEnabled" -> {
-                    configuration.advancedAuthEnabled = map.getSafely(
-                        "advancedAuthEnabled", Boolean::class
-                    )
-                }
+                "allowDefaultCustomerProperties" ->
+                    configuration.allowDefaultCustomerProperties = entry.valueAs(Boolean::class)
+                "advancedAuthEnabled" ->
+                    configuration.advancedAuthEnabled = entry.valueAs(Boolean::class)
                 "android" -> {
                     @Suppress("UNCHECKED_CAST")
                     val androidConfig = entry.value as? Map<String, Any?> ?: throw ExponeaModule.ExponeaDataException(
-                        "Unable to parse android config, expected map of properties"
+                        "Unable to parse 'android', expected map of properties"
                     )
                     parseAndroidConfig(androidConfig, context)
                 }
@@ -140,13 +158,10 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     ) ?: emptyList()
                     configuration.inAppContentBlockPlaceholdersAutoLoad = placeholderIds
                 }
-                "manualSessionAutoClose" -> {
-                    configuration.manualSessionAutoClose = map.getSafely(
-                        "manualSessionAutoClose", Boolean::class
-                    )
-                }
+                "manualSessionAutoClose" ->
+                    configuration.manualSessionAutoClose = entry.valueAs(Boolean::class)
                 "applicationId" -> {
-                    map.getSafely("applicationId", String::class).let {
+                    entry.valueAs(String::class).let {
                         if (it.isNotEmpty()) {
                             configuration.applicationId = it
                         }
@@ -164,10 +179,9 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     configuration.requirePushAuthorization =
                         map.getNullSafely("requirePushAuthorization", Boolean::class, true) ?: true
                 "automaticPushNotifications" ->
-                    configuration.automaticPushNotification =
-                        map.getSafely("automaticPushNotifications", Boolean::class)
+                    configuration.automaticPushNotification = entry.valueAs(Boolean::class)
                 "pushIconResourceName" -> {
-                    val resourceName = map.getSafely("pushIconResourceName", String::class)
+                    val resourceName = entry.valueAs(String::class)
                     var id: Int? = context?.resources?.getIdentifier(
                         resourceName,
                         "drawable",
@@ -182,12 +196,12 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     }
                 }
                 "pushIcon" ->
-                    configuration.pushIcon = map.getSafely("pushIcon", Double::class).toInt()
+                    configuration.pushIcon = entry.valueAs(Double::class).toInt()
                 "pushAccentColor" ->
-                    configuration.pushAccentColor = map.getSafely("pushAccentColor", Double::class).toInt()
+                    configuration.pushAccentColor = entry.valueAs(Double::class).toInt()
                 "pushAccentColorRGBA" -> {
                     try {
-                        val channels = parseRGBA(map.getSafely("pushAccentColorRGBA", String::class))
+                        val channels = parseRGBA(entry.valueAs(String::class))
                         if (channels.size == 4) {
                             configuration.pushAccentColor = Color.argb(
                                 channels[3],
@@ -196,16 +210,16 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                                 channels[2]
                             )
                         } else throw ExponeaModule.ExponeaDataException(
-                            "Incorrect value '${entry.value}' for key ${entry.key}."
+                            "Incorrect value '${entry.value}' for key '${entry.key}'."
                         )
-                    } catch (ex: NumberFormatException) {
+                    } catch (_: NumberFormatException) {
                         throw ExponeaModule.ExponeaDataException(
-                            "Incorrect value '${entry.value}' for key ${entry.key}."
+                            "Incorrect value '${entry.value}' for key '${entry.key}'."
                         )
                     }
                 }
                 "pushAccentColorName" -> {
-                    val colorName = map.getSafely("pushAccentColorName", String::class)
+                    val colorName = entry.valueAs(String::class)
                     val resources = context?.resources
                     val id: Int? = resources?.getIdentifier(colorName, "color", context.packageName)
                     if (id != null && id > 0) {
@@ -213,35 +227,35 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                     }
                 }
                 "pushChannelName" ->
-                    configuration.pushChannelName = map.getSafely("pushChannelName", String::class)
+                    configuration.pushChannelName = entry.valueAs(String::class)
                 "pushChannelDescription" ->
-                    configuration.pushChannelDescription = map.getSafely("pushChannelDescription", String::class)
+                    configuration.pushChannelDescription = entry.valueAs(String::class)
                 "pushChannelId" ->
-                    configuration.pushChannelId = map.getSafely("pushChannelId", String::class)
+                    configuration.pushChannelId = entry.valueAs(String::class)
                 "pushNotificationImportance" -> {
-                    when (map.getSafely("pushNotificationImportance", String::class)) {
+                    when (entry.valueAs(String::class)) {
                         "MIN" -> configuration.pushNotificationImportance = NotificationManager.IMPORTANCE_MIN
                         "LOW" -> configuration.pushNotificationImportance = NotificationManager.IMPORTANCE_LOW
                         "DEFAULT" -> configuration.pushNotificationImportance = NotificationManager.IMPORTANCE_DEFAULT
                         "HIGH" -> configuration.pushNotificationImportance = NotificationManager.IMPORTANCE_HIGH
                         else -> throw ExponeaModule.ExponeaDataException(
-                            "Incorrect value '${entry.value}' for key ${entry.key}."
+                            "Incorrect value '${entry.value}' for key '${entry.key}'."
                         )
                     }
                 }
                 "httpLoggingLevel" -> {
                     try {
-                        val stringValue = map.getSafely("httpLoggingLevel", String::class)
-                        configuration.httpLoggingLevel = ExponeaConfiguration.HttpLoggingLevel.valueOf(stringValue)
+                        configuration.httpLoggingLevel =
+                            ExponeaConfiguration.HttpLoggingLevel.valueOf(entry.valueAs(String::class))
                     } catch (e: Exception) {
                         throw ExponeaModule.ExponeaDataException(
-                            "Incorrect value '${entry.value}' for key ${entry.key}.",
+                            "Incorrect value '${entry.value}' for key '${entry.key}'.",
                             e
                         )
                     }
                 }
                 "allowWebViewCookies" ->
-                    configuration.allowWebViewCookies = map.getSafely("allowWebViewCookies", Boolean::class)
+                    configuration.allowWebViewCookies = entry.valueAs(Boolean::class)
             }
         }
     }

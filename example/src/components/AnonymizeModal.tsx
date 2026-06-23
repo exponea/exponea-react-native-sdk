@@ -3,11 +3,12 @@ import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
 import {
   anonymize,
   getCustomerCookie,
-  type ExponeaProject,
+  type ProjectConfig,
 } from 'react-native-exponea-sdk';
 import ExponeaModal from './ExponeaModal';
 import ExponeaButton from './ExponeaButton';
 import ExponeaInput from './ExponeaInput';
+import SdkSetupState from '../util/SdkSetupState';
 
 interface AnonymizeModalProps {
   visible: boolean;
@@ -26,16 +27,17 @@ export default function AnonymizeModal(
     try {
       const oldCookie = await getCustomerCookie();
 
-      let exponeaProject: ExponeaProject | undefined = undefined;
+      let integrationConfig: ProjectConfig | undefined;
       if (projectToken && authorizationToken) {
-        exponeaProject = {
+        integrationConfig = {
           projectToken,
           authorizationToken,
           ...(baseUrl ? { baseUrl } : {}),
         };
       }
 
-      await anonymize(exponeaProject);
+      SdkSetupState.reset();
+      await anonymize(integrationConfig);
 
       const newCookie = await getCustomerCookie();
 

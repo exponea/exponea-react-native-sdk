@@ -77,9 +77,24 @@ You must have the following software installed to be able to build and run the e
 
 ## Navigate the example app
 
-![Example app screens (iOS)](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native-ios.png)
+![Example app auth screens](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native-auth.png)
 
-When you run the app in the simulator, you'll see the **AuthScreen**. Enter your [project token, API token, and API base URL](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management). Optionally, enter `Application ID` if your Engagement project supports multiple mobile apps. If you leave this blank, the SDK uses the default value "default-application". See [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration). Then click `Start` to initialize the SDK (see [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk)).
+Running the app in the simulator displays the **AuthScreen**. The screen fields change depending on the selected integration type. Here's how to set it up:
+1. Select your integration type from the segmented control: **Project Config** or **Stream Config**.
+2. For **Project Config**:
+   - Enter your `Project token`.
+   - Enter your `Authorization token` (API key).
+   - **Optional:** Enter `Advanced Auth key` to enable [customer token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#customer-token-authorization).
+3. For **Stream Config**:
+   - Enter your `Stream ID`. You can find the stream ID in the Data hub app under `Event streams` > select your stream > `Access Security`.
+   - **Optional:** Enter `JWT Key ID` and `JWT Secret` to enable local JWT token generation for testing. Both must be provided together. For more details, see [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#sdk-auth-token-authorization).
+4. Enter the `Base URL` (API base URL for the Bloomreach platform).
+5. **Optional:** Enter a hard ID in the `Registered` field to identify the customer. Leave blank for anonymous tracking.
+6. **Optional:** Enter `Application ID` if your Engagement project supports multiple mobile apps. If you leave this blank, the SDK uses the default value `default-application`. See [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
+7. Click `Start` to [initialize the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk).
+
+The **Clear local data** button invokes `clearLocalCustomerData()` to delete all locally stored data without initializing the SDK.
+
 > [`AuthScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/AuthScreen.tsx)
 
 The app provides several screens, accessible using the bottom navigation, to test the different SDK features:
@@ -92,7 +107,7 @@ The app provides several screens, accessible using the bottom navigation, to tes
 
   > [`FetchingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/FetchingScreen.tsx)
 
-- The **Flushing** screen lets you trigger a manual data flush as well as anonymize the customer data. The `Anonymize` button opens a modal to optionally enter new project configuration parameters.
+- The **Flushing** screen lets you trigger a manual data flush, anonymize the current customer, and stop the SDK integration. The `Anonymize` button opens a modal where you can optionally enter new project configuration parameters.
 
   > [`FlushingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/FlushingScreen.tsx) > [AnonymizeModal.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/AnonymizeModal.tsx)
 
@@ -113,7 +128,7 @@ Once you use `Identify customer` in the app to set the `registered` hard ID (use
 >
 > Refer to [Customer identification](https://documentation.bloomreach.com/engagement/docs/customer-identification) for more information on soft IDs and hard IDs.
 
-![Example app screens (Android)](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native-android.png)
+![Example app screens](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native.png)
 
 ## Troubleshooting
 

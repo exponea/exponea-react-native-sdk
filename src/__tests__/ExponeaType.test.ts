@@ -7,6 +7,7 @@ import {
   PushNotificationImportance,
   PushTokenTrackingFrequency,
 } from '../Configuration';
+import type { ExponeaProject } from '../index';
 
 /*
 Purpose of this file is to test typescript typings and serialization of parameters and return types
@@ -20,20 +21,24 @@ describe('parameter serialization and typings', () => {
   });
   test('configure', async () => {
     mockExponea.configure({
-      projectToken: 'mock-project-token',
-      authorizationToken: 'mock-authorization-token',
+      integrationConfig: {
+        projectToken: 'mock-project-token',
+        authorizationToken: 'mock-authorization-token',
+      },
     });
     expect(mockExponea.lastArgumentsJson).toBe(
-      '[{"projectToken":"mock-project-token","authorizationToken":"mock-authorization-token"}]'
+      '[{"integrationConfig":{"projectToken":"mock-project-token","authorizationToken":"mock-authorization-token"}}]'
     );
   });
 
   test('configure with complete setup', async () => {
     mockExponea.configure({
-      projectToken: 'mock-project-token',
-      authorizationToken: 'mock-authorization-token',
-      baseUrl: 'http://mock-base-url.xxx',
-      projectMapping: {
+      integrationConfig: {
+        projectToken: 'mock-project-token',
+        authorizationToken: 'mock-authorization-token',
+        baseUrl: 'http://mock-base-url.xxx',
+      },
+      integrationRouteMap: {
         [EventType.BANNER]: [
           {
             projectToken: 'other-project-token',
@@ -172,7 +177,7 @@ describe('parameter serialization and typings', () => {
     );
   });
 
-  test('identifyCustomer', () => {
+  test('identifyCustomer - legacy flat ids', () => {
     mockExponea.identifyCustomer(
       { email: 'mock@email.com' },
       {
@@ -205,6 +210,48 @@ describe('parameter serialization and typings', () => {
         }
       ]
     `.replace(/\s/g, '')
+    );
+  });
+
+  test('identifyCustomer - CustomerIdentity with sdkAuthToken', () => {
+    mockExponea.identifyCustomer(
+      { customerIds: { email: 'mock@email.com' }, sdkAuthToken: 'mock-jwt' },
+      { key: 'value' }
+    );
+    expect(mockExponea.lastArgumentsJson).toBe(
+      `[{"customerIds":{"email":"mock@email.com"},"sdkAuthToken":"mock-jwt"},{"key":"value"}]`
+    );
+  });
+
+  test('identifyCustomer - CustomerIdentity without token', () => {
+    mockExponea.identifyCustomer({ customerIds: { email: 'mock@email.com' } });
+    expect(mockExponea.lastArgumentsJson).toBe(
+      `[{"customerIds":{"email":"mock@email.com"}},null]`
+    );
+  });
+
+  test('anonymize - deprecated ExponeaProject overload', () => {
+    const project: ExponeaProject = {
+      projectToken: 'legacy-token',
+      authorizationToken: 'legacy-auth',
+    };
+    mockExponea.anonymize(project, {
+      [EventType.SESSION_END]: [
+        { projectToken: 'route-token', authorizationToken: 'route-auth' },
+      ],
+    });
+    expect(mockExponea.lastArgumentsJson).toBe(
+      `[{"projectToken":"legacy-token","authorizationToken":"legacy-auth"},{"SESSION_END":[{"projectToken":"route-token","authorizationToken":"route-auth"}]}]`
+    );
+  });
+
+  test('anonymize - new StreamConfig overload', () => {
+    mockExponea.anonymize({
+      streamId: 'stream-123',
+      baseUrl: 'https://stream.example.com',
+    });
+    expect(mockExponea.lastArgumentsJson).toBe(
+      `[{"streamId":"stream-123","baseUrl":"https://stream.example.com"},null]`
     );
   });
 

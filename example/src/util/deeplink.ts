@@ -1,4 +1,5 @@
 import { Screen } from '../screens/Screens';
+import SdkSetupState from './SdkSetupState';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -69,9 +70,11 @@ export function handleDeeplinkDestination(
 ): void {
   switch (target) {
     case Screen.StopAndContinue:
+      SdkSetupState.reset();
       deps.stopIntegration().then(() => deps.navigate(Screen.Fetching));
       break;
     case Screen.StopAndRestart:
+      SdkSetupState.reset();
       deps.stopIntegration().then(() => deps.returnToAuth());
       break;
     default:

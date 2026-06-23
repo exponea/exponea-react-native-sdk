@@ -1,8 +1,10 @@
 {
-  "projectToken": "mock-project-token",
-  "authorizationToken": "mock-authorization-token",
-  "baseUrl": "http://mock-base-url.xxx",
-  "projectMapping": {
+  "integrationConfig": {
+    "projectToken": "mock-project-token",
+    "authorizationToken": "mock-authorization-token",
+    "baseUrl": "http://mock-base-url.xxx"
+  },
+  "integrationRouteMap": {
     "BANNER": [
       {
         "projectToken": "other-project-token",

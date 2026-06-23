@@ -6,12 +6,14 @@ import type {
   InAppMessageButton,
   Segment,
 } from './NativeExponea';
+import type { SdkAuthError } from './SdkAuthError';
 
 // Internal listener storage (JavaScript-side)
 let pushOpenedListener: ((openedPush: OpenedPush) => void) | null = null;
 let pushReceivedListener: ((data: any) => void) | null = null;
 let inAppMessageCallback: InAppMessageCallbackImpl | null = null;
 let segmentationCallbacks: Map<string, SegmentationDataCallback> = new Map();
+let sdkAuthErrorCallback: ((error: SdkAuthError) => void) | null = null;
 
 // Event emitter setup (listens to native events)
 // For TurboModules in new architecture, pass the native module instance
@@ -60,6 +62,15 @@ eventEmitter.addListener('newSegments', (data: any) => {
     }
   } catch (e) {
     console.error('Failed to parse newSegments event', e);
+  }
+});
+
+eventEmitter.addListener('sdkAuthError', (data: any) => {
+  if (!sdkAuthErrorCallback) return;
+  try {
+    sdkAuthErrorCallback(JSON.parse(data));
+  } catch (e) {
+    console.error('Failed to parse sdkAuthError event', e);
   }
 });
 
@@ -216,6 +227,23 @@ export class ExponeaListeners {
   ): void {
     segmentationCallbacks.delete(callback.exposingCategory);
     NativeExponea.onSegmentationCallbackRemove(callback.exposingCategory);
+  }
+
+  /**
+   * Registers a callback for SDK auth-token errors emitted by the native SDK.
+   * Replaces any previously registered callback.
+   */
+  static setSdkAuthErrorCallback(
+    callback: (error: SdkAuthError) => void
+  ): void {
+    sdkAuthErrorCallback = callback;
+    NativeExponea.onSdkAuthErrorCallbackSet();
+  }
+
+  /** Removes the previously registered SDK auth error callback. */
+  static removeSdkAuthErrorCallback(): void {
+    sdkAuthErrorCallback = null;
+    NativeExponea.onSdkAuthErrorCallbackRemove();
   }
 
   /**

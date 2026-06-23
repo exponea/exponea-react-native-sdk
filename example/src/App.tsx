@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler'; // This needs to be first import according to docs
 import React, { useState, useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Alert, Linking, NativeModules } from 'react-native';
 import Exponea, {
   isConfigured,
@@ -19,10 +20,14 @@ import Exponea, {
   trackEvent,
   LogLevel,
   SegmentationDataCallback,
+  setSdkAuthToken,
+  setSdkAuthErrorCallback,
+  removeSdkAuthErrorCallback,
 } from 'react-native-exponea-sdk';
 import type {
   InAppMessage,
   InAppMessageButton,
+  CustomerIdentity,
 } from 'react-native-exponea-sdk';
 import AuthScreen from './screens/AuthScreen';
 import TabNavigation from './navigation/TabNavigation';
@@ -32,18 +37,43 @@ import {
   resolveDeeplinkDestination,
   handleDeeplinkDestination,
 } from './util/deeplink';
+import LocalJwtTokenGenerator from './util/LocalJwtTokenGenerator';
+import SdkSetupState from './util/SdkSetupState';
+
+export interface ProjectConfigParams {
+  type: 'project';
+  projectToken: string;
+  authorizationToken: string;
+  baseUrl: string;
+  advancedAuthKey: string;
+  registeredId?: string;
+  applicationId: string;
+}
+
+export interface StreamConfigParams {
+  type: 'stream';
+  streamId: string;
+  baseUrl: string;
+  jwtKeyId: string;
+  jwtSecret: string;
+  registeredId?: string;
+  applicationId: string;
+}
 
 export const AppStateContext = React.createContext<{
   validateSdkState: () => void;
   returnToAuth: () => void;
+  isStreamConfig: boolean;
 }>({
   validateSdkState: () => {},
   returnToAuth: () => {},
+  isStreamConfig: false,
 });
 
 export default function App(): React.ReactElement {
   const [preloaded, setPreloaded] = useState(false);
   const [sdkConfigured, setSdkConfigured] = useState(false);
+  const [isStreamConfig, setIsStreamConfig] = useState(false);
 
   const discoverySegmentationCallback = useRef(
     new SegmentationDataCallback('discovery', false, (data) => {
@@ -83,6 +113,9 @@ export default function App(): React.ReactElement {
   };
 
   const returnToAuth = async () => {
+    removeSdkAuthErrorCallback();
+    setIsStreamConfig(false);
+    SdkSetupState.reset();
     setSdkConfigured(await Exponea.isConfigured());
   };
 
@@ -100,7 +133,7 @@ export default function App(): React.ReactElement {
     const deeplinkDeps = {
       stopIntegration,
       navigate: RootNavigation.navigate,
-      returnToAuth: () => setSdkConfigured(false),
+      returnToAuth,
     };
 
     const openLink = (url: string | null | undefined) => {
@@ -243,40 +276,105 @@ export default function App(): React.ReactElement {
   }, []);
 
   const onStart = async (
-    projectToken: string,
-    authorization: string,
-    advancedAuthKey: string,
-    baseUrl: string,
-    applicationId: string
+    params: ProjectConfigParams | StreamConfigParams
   ): Promise<void> => {
     await setLogLevel(LogLevel.DBG);
-    NativeModules.CustomerTokenStorage.configure({
-      host: baseUrl,
-      projectToken: projectToken,
-      publicKey: advancedAuthKey,
-    });
-    const configuration = {
-      projectToken: projectToken,
-      authorizationToken: authorization,
-      baseUrl: baseUrl,
-      allowDefaultCustomerProperties: false,
-      advancedAuthEnabled: (advancedAuthKey || '').trim().length !== 0,
-      inAppContentBlockPlaceholdersAutoLoad: ['example_top'],
-      ios: {
-        appGroup: 'group.com.exponea.sdk.example',
-      },
-      android: {
-        pushIconResourceName: 'push_icon',
-        pushAccentColorRGBA: '161, 226, 200, 220',
-      },
-      manualSessionAutoClose: true,
-      applicationId: applicationId,
-    };
+
+    let configuration: object;
+
+    if (params.type === 'project') {
+      NativeModules.CustomerTokenStorage.configure({
+        host: params.baseUrl,
+        projectToken: params.projectToken,
+        publicKey: params.advancedAuthKey,
+        ...(params.registeredId
+          ? { customerIds: { registered: params.registeredId } }
+          : {}),
+      });
+      configuration = {
+        integrationConfig: {
+          projectToken: params.projectToken,
+          authorizationToken: params.authorizationToken,
+          baseUrl: params.baseUrl,
+        },
+        allowDefaultCustomerProperties: false,
+        advancedAuthEnabled: params.advancedAuthKey.trim().length !== 0,
+        inAppContentBlockPlaceholdersAutoLoad: ['example_top'],
+        ios: {
+          appGroup: 'group.com.exponea.sdk.example',
+        },
+        android: {
+          pushIconResourceName: 'push_icon',
+          pushAccentColorRGBA: '161, 226, 200, 220',
+        },
+        manualSessionAutoClose: true,
+        applicationId: params.applicationId,
+      };
+    } else {
+      if (params.jwtKeyId && params.jwtSecret) {
+        LocalJwtTokenGenerator.configure(params.jwtSecret, params.jwtKeyId);
+      }
+      configuration = {
+        integrationConfig: {
+          streamId: params.streamId,
+          baseUrl: params.baseUrl,
+        },
+        allowDefaultCustomerProperties: false,
+        inAppContentBlockPlaceholdersAutoLoad: ['example_top'],
+        ios: {
+          appGroup: 'group.com.exponea.sdk.example',
+        },
+        android: {
+          pushIconResourceName: 'push_icon',
+          pushAccentColorRGBA: '161, 226, 200, 220',
+        },
+        manualSessionAutoClose: true,
+        applicationId: params.applicationId,
+      };
+    }
+    if (params.registeredId) {
+      SdkSetupState.setCustomerIds({ registered: params.registeredId });
+    }
+    const customerIdentity: CustomerIdentity | undefined = params.registeredId
+      ? {
+          customerIds: { registered: params.registeredId },
+          sdkAuthToken:
+            params.type === 'stream' && LocalJwtTokenGenerator.isConfigured()
+              ? (LocalJwtTokenGenerator.generateToken({
+                  registered: params.registeredId,
+                }) ?? undefined)
+              : undefined,
+        }
+      : undefined;
     console.log(
       `Configuring Exponea SDK with ${JSON.stringify(configuration)}`
     );
     try {
-      await configure(configuration);
+      await configure(configuration as any, customerIdentity);
+
+      if (params.type === 'stream') {
+        setIsStreamConfig(true);
+      }
+      if (params.type === 'stream' && LocalJwtTokenGenerator.isConfigured()) {
+        setSdkAuthErrorCallback((error) => {
+          console.log(`Auth error received: ${JSON.stringify(error)}`);
+          if (Object.keys(SdkSetupState.customerIds).length === 0) {
+            console.log(
+              'Customer is not identified, skipping JWT token generation'
+            );
+            return;
+          }
+          const newToken = LocalJwtTokenGenerator.generateToken(
+            SdkSetupState.customerIds
+          );
+          if (newToken) {
+            setSdkAuthToken(newToken).catch((e) =>
+              console.error(`Failed to refresh auth token: ${e}`)
+            );
+          }
+        });
+      }
+
       setSdkConfigured(true);
       await checkPushSetup();
       await setAppInboxProvider({
@@ -329,12 +427,18 @@ export default function App(): React.ReactElement {
   }
 
   return (
-    <AppStateContext.Provider
-      value={{ validateSdkState: reloadSdkState, returnToAuth }}
-    >
-      <NavigationContainer ref={RootNavigation.navigationRef}>
-        {sdkConfigured ? <TabNavigation /> : <AuthScreen onStart={onStart} />}
-      </NavigationContainer>
-    </AppStateContext.Provider>
+    <SafeAreaProvider>
+      <AppStateContext.Provider
+        value={{
+          validateSdkState: reloadSdkState,
+          returnToAuth,
+          isStreamConfig,
+        }}
+      >
+        <NavigationContainer ref={RootNavigation.navigationRef}>
+          {sdkConfigured ? <TabNavigation /> : <AuthScreen onStart={onStart} />}
+        </NavigationContainer>
+      </AppStateContext.Provider>
+    </SafeAreaProvider>
   );
 }

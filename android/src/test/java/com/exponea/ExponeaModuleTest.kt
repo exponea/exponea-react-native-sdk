@@ -5,8 +5,10 @@ import android.content.pm.PackageInfo
 import android.os.Bundle
 import androidx.test.core.app.ApplicationProvider
 import com.exponea.sdk.Exponea
+import com.exponea.sdk.models.CustomerIdentity
 import com.exponea.sdk.models.ExponeaConfiguration
 import com.exponea.sdk.models.FlushMode
+import com.exponea.sdk.models.ProjectConfig
 import com.exponea.sdk.util.Logger
 import com.facebook.react.bridge.BridgeReactContext
 import com.facebook.react.bridge.JavaOnlyMap
@@ -16,6 +18,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
+import io.mockk.slot
 import io.mockk.verify
 import java.io.File
 import kotlin.test.assertNotNull
@@ -40,7 +43,7 @@ internal class ExponeaModuleTest {
         val context = BridgeReactContext(ApplicationProvider.getApplicationContext())
         module = ExponeaModule(context)
 
-        // we need to create dummy package with meta data for android sdk telemetry
+        // we need to create dummy package with metadata for android sdk telemetry
         val packageManager = context.packageManager
         val shadowPackageManager = shadowOf(packageManager)
         val packageInfo = PackageInfo()
@@ -63,31 +66,30 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should initialize Exponea SDK`() {
-        every { Exponea.init(any(), any()) } just Runs
+        val configSlot = slot<ExponeaConfiguration>()
+        every { Exponea.init(any(), capture(configSlot)) } just Runs
         every { Exponea.isInitialized } returns true
         module.configure(
-            JavaOnlyMap.of("projectToken", "mock", "authorizationToken", "mock"),
+            JavaOnlyMap.of(
+                "integrationConfig", JavaOnlyMap.of("projectToken", "mock", "authorizationToken", "mock")
+            ),
+            null,
             MockResolvingPromise { }
         )
-        verify {
-            Exponea.init(
-                any(),
-                ExponeaConfiguration(
-                    projectToken = "mock",
-                    authorization = "Token mock",
-                    requirePushAuthorization = true
-                )
-            )
-        }
+        val projectConfig = configSlot.captured.integrationConfig as ProjectConfig
+        assertEquals("mock", projectConfig.projectToken)
+        assertEquals("Token mock", projectConfig.authorization)
+        assertEquals(true, configSlot.captured.requirePushAuthorization)
     }
 
     @Test
     fun `should fail to initialize Exponea SDK without required properties`() {
         module.configure(
             JavaOnlyMap.of(),
+            null,
             MockRejectingPromise {
                 assertEquals(
-                    "Required property 'projectToken' missing in configuration object",
+                    "Required property 'integrationConfig' missing in configuration object",
                     it.errorThrowable?.localizedMessage
                 )
             }
@@ -95,11 +97,64 @@ internal class ExponeaModuleTest {
     }
 
     @Test
+    fun `should initialize Exponea SDK with customerIdentity`() {
+        val configSlot = slot<ExponeaConfiguration>()
+        val customerIdentitySlot = slot<CustomerIdentity?>()
+        every { Exponea.init(any(), capture(configSlot), captureNullable(customerIdentitySlot)) } just Runs
+        every { Exponea.isInitialized } returns true
+        module.configure(
+            JavaOnlyMap.of(
+                "integrationConfig", JavaOnlyMap.of("streamId", "mock-stream-id")
+            ),
+            JavaOnlyMap.of(
+                "customerIds", JavaOnlyMap.of("registered", "user@example.com"),
+                "sdkAuthToken", "jwt-token"
+            ),
+            MockResolvingPromise { }
+        )
+        val identity = customerIdentitySlot.captured
+        assertEquals(mapOf("registered" to "user@example.com"), identity?.customerIds)
+        assertEquals("jwt-token", identity?.sdkAuthToken)
+    }
+
+    @Test
+    fun `should initialize Exponea SDK with customerIdentity containing only sdkAuthToken`() {
+        val customerIdentitySlot = slot<CustomerIdentity?>()
+        every { Exponea.init(any(), any(), captureNullable(customerIdentitySlot)) } just Runs
+        every { Exponea.isInitialized } returns true
+        module.configure(
+            JavaOnlyMap.of(
+                "integrationConfig", JavaOnlyMap.of("streamId", "mock-stream-id")
+            ),
+            JavaOnlyMap.of("sdkAuthToken", "bearer-token"),
+            MockResolvingPromise { }
+        )
+        val identity = customerIdentitySlot.captured
+        assertEquals(emptyMap<String, String>(), identity?.customerIds)
+        assertEquals("bearer-token", identity?.sdkAuthToken)
+    }
+
+    @Test
+    fun `should pass null customerIdentity when customerIdentityMap has no customerIds and no token`() {
+        val customerIdentitySlot = slot<CustomerIdentity?>()
+        every { Exponea.init(any(), any(), captureNullable(customerIdentitySlot)) } just Runs
+        every { Exponea.isInitialized } returns true
+        module.configure(
+            JavaOnlyMap.of(
+                "integrationConfig", JavaOnlyMap.of("streamId", "mock-stream-id")
+            ),
+            JavaOnlyMap.of(),
+            MockResolvingPromise { }
+        )
+        assertEquals(null, customerIdentitySlot.captured)
+    }
+
+    @Test
     fun `should resolve Exponea SDK configuration status`() {
         every { Exponea.isInitialized } returns true
-        assertEquals(true, module.isConfigured())
+        assertEquals(true, module.isConfigured)
         every { Exponea.isInitialized } returns false
-        assertEquals(false, module.isConfigured())
+        assertEquals(false, module.isConfigured)
     }
 
     @Test
@@ -167,21 +222,17 @@ internal class ExponeaModuleTest {
     @Test
     fun `should set default properties`() {
         every { Exponea.isInitialized } returns true
-        every { Exponea.init(any(), any()) } just Runs
-        every { Exponea.defaultProperties = any() } just Runs
-        every { Exponea.defaultProperties } returns hashMapOf()
-        Exponea.init(ApplicationProvider.getApplicationContext(), ExponeaConfiguration(
-            projectToken = "mockToken"
-        ))
+        val propertiesSlot = slot<HashMap<String, Any>>()
+        every { Exponea.defaultProperties = capture(propertiesSlot) } just Runs
+
         module.setDefaultProperties(
             JavaOnlyMap.of(),
-            MockResolvingPromise { assertEquals(hashMapOf<String, Any>(), Exponea.defaultProperties) }
+            MockResolvingPromise { assertEquals(hashMapOf<String, Any>(), propertiesSlot.captured) }
         )
-        every { Exponea.defaultProperties } returns hashMapOf("key" to "value", "number" to 123.0)
         module.setDefaultProperties(
             JavaOnlyMap.of("key", "value", "number", 123),
             MockResolvingPromise {
-                assertEquals(hashMapOf("key" to "value", "number" to 123.0), Exponea.defaultProperties)
+                assertEquals(hashMapOf("key" to "value", "number" to 123.0), propertiesSlot.captured)
             }
         )
     }
@@ -209,7 +260,7 @@ internal class ExponeaModuleTest {
             callbackInstanceId = it.result as String
         })
         assertNotNull(callbackInstanceId)
-        module.unregisterSegmentationDataCallback(callbackInstanceId!!, MockResolvingPromise {
+        module.unregisterSegmentationDataCallback(callbackInstanceId, MockResolvingPromise {
             assertEquals(MockPromise.PromiseStatus.fulfilled, it.status)
         })
     }
@@ -263,10 +314,12 @@ internal class ExponeaModuleTest {
     @Test
     fun `should allow to stopIntegration for initialized Exponea SDK`() {
         every { Exponea.isInitialized } returns true
-        every { Exponea.stopIntegration() } just Runs
+        every { Exponea.stopIntegration(any()) } answers {
+            (firstArg<() -> Unit>()).invoke()
+        }
         module.stopIntegration(MockResolvingPromise {
             verify { Exponea.isInitialized }
-            verify { Exponea.stopIntegration() }
+            verify { Exponea.stopIntegration(any()) }
         })
         every { Exponea.isInitialized } returns false
         module.stopIntegration(MockRejectingPromise {

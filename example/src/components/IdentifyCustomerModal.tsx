@@ -10,11 +10,14 @@ import { identifyCustomer } from 'react-native-exponea-sdk';
 import ExponeaModal from './ExponeaModal';
 import ExponeaButton from './ExponeaButton';
 import PropertyEditor from './PropertyEditor';
+import LocalJwtTokenGenerator from '../util/LocalJwtTokenGenerator';
+import SdkSetupState from '../util/SdkSetupState';
 
 interface IdentifyCustomerModalProps {
   visible: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  isStreamMode?: boolean;
 }
 
 export default function IdentifyCustomerModal(
@@ -23,10 +26,27 @@ export default function IdentifyCustomerModal(
   const [ids, setIds] = useState<Record<string, string>>({});
   const [properties, setProperties] = useState<Record<string, string>>({});
 
-  const handleIdentify = async () => {
+  const handleIdentify = async (withAuthToken = false) => {
     try {
-      await identifyCustomer(ids, properties);
-      NativeModules.CustomerTokenStorage.configure({ customerIds: ids });
+      if (withAuthToken) {
+        if (!LocalJwtTokenGenerator.isConfigured()) {
+          Alert.alert('Error', 'JWT generator is not configured');
+          return;
+        }
+        const token = LocalJwtTokenGenerator.generateToken(ids);
+        if (!token) {
+          Alert.alert('Error', 'Failed to generate JWT token');
+          return;
+        }
+        await identifyCustomer(
+          { customerIds: ids, sdkAuthToken: token },
+          properties
+        );
+      } else {
+        await identifyCustomer({ customerIds: ids }, properties);
+        NativeModules.CustomerTokenStorage.configure({ customerIds: ids });
+      }
+      SdkSetupState.setCustomerIds(ids);
       Alert.alert('Success', 'Customer identified successfully');
       setIds({});
       setProperties({});
@@ -50,7 +70,16 @@ export default function IdentifyCustomerModal(
         <Text style={styles.subtitle}>Properties</Text>
         <PropertyEditor properties={properties} onChange={setProperties} />
 
-        <ExponeaButton title="Identify customer" onPress={handleIdentify} />
+        <ExponeaButton
+          title="Identify customer"
+          onPress={() => handleIdentify(false)}
+        />
+        {props.isStreamMode && (
+          <ExponeaButton
+            title="Identify with auth token"
+            onPress={() => handleIdentify(true)}
+          />
+        )}
       </ScrollView>
     </ExponeaModal>
   );

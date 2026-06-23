@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import ExponeaButton from '../components/ExponeaButton';
 import AnonymizeModal from '../components/AnonymizeModal';
 import Exponea from 'react-native-exponea-sdk';
 import ExponeaModal from '../components/ExponeaModal';
 import { AppStateContext } from '../App';
+import SdkSetupState from '../util/SdkSetupState';
 
 export default function AnonymizeScreen(): React.ReactElement {
   const [anonymizeModalVisible, setAnonymizeModalVisible] = useState(false);
@@ -21,7 +22,7 @@ export default function AnonymizeScreen(): React.ReactElement {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <AnonymizeModal
         visible={anonymizeModalVisible}
         onClose={() => setAnonymizeModalVisible(false)}
@@ -51,39 +52,33 @@ export default function AnonymizeScreen(): React.ReactElement {
         />
       </ExponeaModal>
 
-      <View style={styles.section}>
-        <ExponeaButton
-          title="Anonymize"
-          onPress={() => setAnonymizeModalVisible(true)}
-          disabled={!sdkConfigured}
-        />
-
-        <ExponeaButton
-          title="Stop Integration"
-          onPress={async () => {
-            try {
-              if (await Exponea.isConfigured()) {
-                await Exponea.stopIntegration();
-              }
-            } catch (e) {
-              console.error(`Failed to stop SDK: ${e}`);
+      <ExponeaButton
+        title="Anonymize"
+        onPress={() => setAnonymizeModalVisible(true)}
+        disabled={!sdkConfigured}
+      />
+      <ExponeaButton
+        title="Stop Integration"
+        onPress={async () => {
+          try {
+            if (await Exponea.isConfigured()) {
+              SdkSetupState.reset();
+              await Exponea.stopIntegration();
             }
-            setShowingStopIntegration(true);
-            setSdkConfigured(await Exponea.isConfigured());
-          }}
-        />
-      </View>
-    </ScrollView>
+          } catch (e) {
+            console.error(`Failed to stop SDK: ${e}`);
+          }
+          setShowingStopIntegration(true);
+          setSdkConfigured(await Exponea.isConfigured());
+        }}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  section: {
-    padding: 15,
     justifyContent: 'center',
     alignItems: 'center',
   },

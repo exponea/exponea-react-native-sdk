@@ -1,4 +1,6 @@
 {
-  "projectToken": "mock-project-token",
-  "authorizationToken": "mock-authorization-token"
+  "integrationConfig": {
+    "projectToken": "mock-project-token",
+    "authorizationToken": "mock-authorization-token"
+  }
 }

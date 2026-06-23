@@ -76,7 +76,7 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
 
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"pushOpened", @"pushReceived", @"inAppAction", @"newSegments"];
+  return @[@"pushOpened", @"pushReceived", @"inAppAction", @"newSegments", @"sdkAuthError"];
 }
 
 + (BOOL)requiresMainQueueSetup
@@ -101,10 +101,12 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
 }
 
 - (void)configure:(NSDictionary *)configMap
+ customerIdentity:(NSDictionary *)customerIdentity
           resolve:(RCTPromiseResolveBlock)resolve
            reject:(RCTPromiseRejectBlock)reject
 {
     [_exponeaBridge configureWithConfigMap:configMap
+                       customerIdentityMap:customerIdentity
                                    success:^{
         resolve([NSNull null]);
     } failure:^(NSError * error) {
@@ -222,12 +224,13 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
     }
 }
 
-- (void)identifyCustomer:(NSDictionary *)customerIds
+- (void)identifyCustomer:(NSDictionary *)customerIdentity
               properties:(NSDictionary *)properties
                  resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge identifyCustomerWithCustomerIds:customerIds properties:properties];
+    BOOL success = [_exponeaBridge identifyCustomerWithCustomerIdentity:customerIdentity
+                                                             properties:properties];
     if (success) {
         resolve([NSNull null]);
     } else {
@@ -235,18 +238,36 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
     }
 }
 
-- (void)anonymize:(NSDictionary *)exponeaProject
-   projectMapping:(NSDictionary *)projectMapping
+- (void)anonymize:(NSDictionary *)integrationConfig
+integrationRouteMap:(NSDictionary *)integrationRouteMap
           resolve:(RCTPromiseResolveBlock)resolve
            reject:(RCTPromiseRejectBlock)reject
 {
-    [_exponeaBridge anonymizeWithExponeaProject:exponeaProject
-                                  projectMapping:projectMapping
-                                         success:^{
+    [_exponeaBridge anonymizeWithIntegrationConfig:integrationConfig
+                               integrationRouteMap:integrationRouteMap
+                                           success:^{
         resolve([NSNull null]);
     } failure:^(NSError *error) {
         reject(@"ExponeaError", error.localizedDescription, error);
     }];
+}
+
+- (void)setSdkAuthToken:(NSString *)token
+                resolve:(RCTPromiseResolveBlock)resolve
+                 reject:(RCTPromiseRejectBlock)reject
+{
+    [_exponeaBridge setSdkAuthToken:token];
+    resolve([NSNull null]);
+}
+
+- (void)onSdkAuthErrorCallbackSet
+{
+    [_exponeaBridge onSdkAuthErrorCallbackSet];
+}
+
+- (void)onSdkAuthErrorCallbackRemove
+{
+    [_exponeaBridge onSdkAuthErrorCallbackRemove];
 }
 
 - (void)trackEvent:(NSString *)eventName

@@ -125,7 +125,11 @@ Next, you must create and register a service that extends `FirebaseMessagingServ
 
 > ❗️
 >
-> The methods `ExponeaModule.handleNewToken` and `ExponeaModule.handleRemoteMessage` can be used before SDK initialization if a previous initialization was done. In such a case, each method will track events with the configuration of the last initialization. Consider initializing the SDK in `Application::onCreate` to make sure a fresh configuration is applied in case of an application update.
+> `ExponeaModule.handleNewToken` and `ExponeaModule.handleRemoteMessage` work before SDK initialization if you previously initialized the SDK. In that case, each method tracks events using the last initialization configuration. Consider initializing the SDK in `Application::onCreate` to ensure the SDK uses a fresh configuration after an app update.
+
+> ❗️
+>
+> If your app re-initializes the SDK by calling `Exponea.configure()` after `stopIntegration()`, the SDK clears the stored push token and can't recover it automatically. Your `onNewToken` callback must call `ExponeaModule.Companion.handleNewToken(context, token)` (FCM) or `ExponeaModule.Companion.handleHmsNewToken(context, token)` (HMS) with the token your app already holds, after each re-initialization. For more details, see [Push notification token is missing after `stopIntegration()`](#push-notification-token-is-missing-after-stopintegration).
 
 #### Configure the Firebase Cloud Messaging integration in Engagement
 
@@ -277,22 +281,20 @@ If battery optimization is on for devices running MIUI, it can make push notific
 - Set the "No restrictions" option in the battery saver options for your app.
 - And (probably) most important, turn off `Memory and MIUI Optimization` under `Developer Options`.
 
-### Push notification token is missing after anonymization
+### Push notification token is missing after stopIntegration()
 
-Your app may be using `Exponea.anonymize()` as a sign out feature.
+`Exponea.stopIntegration()` clears the locally stored push notification token. After a subsequent `Exponea.configure()` call, the SDK starts without a stored token—even though the device may still hold a valid token received earlier from the push service.
 
-Keep in mind that invoking the `anonymize` method will remove the push notification token from storage. Your application should retrieve a valid token manually before using any push notification features. You may do this directly after `anonymize` or before or after `identifyCustomer`, depending on your push notifications usage.
+After `stopIntegration()` and a subsequent `Exponea.configure()`, your `FirebaseMessagingService.onNewToken` or HMS `onNewToken` callback must call `handleNewToken` or `handleHmsNewToken` again with the token your app already holds:
 
 ```kotlin
-import com.facebook.react.ReactActivity;
-import com.exponea.sdk.Exponea
-import com.huawei.hms.aaid.HmsInstanceId
+// FCM
+ExponeaModule.Companion.handleNewToken(getApplicationContext(), token)
 
-class SomeActivity : ReactActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val token = HmsInstanceId.getInstance(context).getToken("yourAppId", "HCM")
-        ExponeaModule.Companion.trackHmsPushToken(token)
-	}
-}
+// HMS
+ExponeaModule.Companion.handleHmsNewToken(getApplicationContext(), token)
 ```
+
+> 📘
+>
+> Unlike `stopIntegration()`, `Exponea.anonymize()` **doesn't** clear the locally stored push token. The SDK automatically invalidates the token on the previous customer profile and re-tracks the same token against the new anonymous profile. No manual token re-tracking is required after `anonymize()`.

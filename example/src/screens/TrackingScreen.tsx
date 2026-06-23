@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
-import Exponea, { AppInboxButton } from 'react-native-exponea-sdk';
+import Exponea, {
+  AppInboxButton,
+  setSdkAuthToken,
+} from 'react-native-exponea-sdk';
 import ExponeaButton from '../components/ExponeaButton';
 import IdentifyCustomerModal from '../components/IdentifyCustomerModal';
 import DefaultPropertiesModal from '../components/DefaultPropertiesModal';
 import TrackEventModal from '../components/TrackEventModal';
+import { AppStateContext } from '../App';
+import LocalJwtTokenGenerator from '../util/LocalJwtTokenGenerator';
+import SdkSetupState from '../util/SdkSetupState';
 
 export default function TrackingScreen(): React.ReactElement {
+  const { isStreamConfig } = useContext(AppStateContext);
   const [customerCookie, setCustomerCookie] = useState('?');
   const [identifyModalVisible, setIdentifyModalVisible] = useState(false);
   const [defPropsModalVisible, setDefPropsModalVisible] = useState(false);
@@ -25,12 +32,33 @@ export default function TrackingScreen(): React.ReactElement {
     }
   };
 
+  const handleSetAuthToken = async () => {
+    if (Object.keys(SdkSetupState.customerIds).length === 0) {
+      Alert.alert('Error', 'Customer must be identified first.');
+      return;
+    }
+    const token = LocalJwtTokenGenerator.generateToken(
+      SdkSetupState.customerIds
+    );
+    if (!token) {
+      Alert.alert('Error', 'JWT generator is not configured');
+      return;
+    }
+    try {
+      await setSdkAuthToken(token);
+      Alert.alert('Success', 'Auth token updated');
+    } catch (error) {
+      Alert.alert('Error', `Failed to set auth token: ${error}`);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <IdentifyCustomerModal
         visible={identifyModalVisible}
         onClose={() => setIdentifyModalVisible(false)}
         onSuccess={loadCustomerCookie}
+        isStreamMode={isStreamConfig}
       />
       <TrackEventModal
         visible={trackingEventModalVisible}
@@ -48,6 +76,9 @@ export default function TrackingScreen(): React.ReactElement {
         title="Identify customer"
         onPress={() => setIdentifyModalVisible(true)}
       />
+      {isStreamConfig && (
+        <ExponeaButton title="Set auth token" onPress={handleSetAuthToken} />
+      )}
       <ExponeaButton
         title="Track event"
         onPress={() => setTrackingEventModalVisible(true)}

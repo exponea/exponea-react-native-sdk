@@ -11,6 +11,8 @@ jest.mock('react-native', () => {
     onPushReceivedListenerSet: jest.fn(),
     onPushReceivedListenerRemove: jest.fn(),
     onInAppMessageCallbackRemove: jest.fn(),
+    onSdkAuthErrorCallbackSet: jest.fn(),
+    onSdkAuthErrorCallbackRemove: jest.fn(),
     addListener: jest.fn(),
     removeListeners: jest.fn(),
   };
@@ -36,10 +38,28 @@ jest.mock('react-native', () => {
 
   // Mock NativeEventEmitter to accept undefined argument in tests
   class MockNativeEventEmitter {
+    // Track every emitter created so tests can drive native -> JS events.
+    static instances = [];
+
+    // Dispatch an event to the matching listeners of every emitter instance.
+    static emit(eventType, data) {
+      MockNativeEventEmitter.instances.forEach((instance) => {
+        instance.emit(eventType, data);
+      });
+    }
+
     constructor(nativeModule) {
       // Accept undefined in tests
       this.nativeModule = nativeModule;
       this.listeners = new Map();
+      MockNativeEventEmitter.instances.push(this);
+    }
+
+    emit(eventType, data) {
+      const listeners = this.listeners.get(eventType);
+      if (listeners) {
+        listeners.slice().forEach((listener) => listener(data));
+      }
     }
 
     addListener(eventType, listener) {

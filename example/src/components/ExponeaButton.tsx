@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   disabledContainer: {
-    backgroundColor: '#ffd50080',
+    backgroundColor: '#0000001F',
   },
   label: {
     textAlign: 'center',
@@ -55,6 +55,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   disabledLabel: {
-    opacity: 0.5,
+    color: '#00000061',
   },
 });

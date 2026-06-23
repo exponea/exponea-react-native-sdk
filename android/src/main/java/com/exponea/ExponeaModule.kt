@@ -8,20 +8,24 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.exponea.sdk.Exponea
-import com.exponea.ConfigurationParser
-import com.exponea.sdk.models.CustomerIds
+import com.exponea.sdk.models.CustomerIdentity
 import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
 import com.exponea.style.AppInboxStyleParser
 import com.exponea.sdk.models.CustomerRecommendationOptions
 import com.exponea.sdk.models.EventType
-import com.exponea.sdk.models.ExponeaProject
+import com.exponea.sdk.models.ExponeaConfigurationOverrides
+import com.exponea.sdk.models.IntegrationConfig
+import com.exponea.sdk.models.ProjectConfig
+import com.exponea.sdk.models.SdkAuthCallback
+import com.exponea.sdk.models.SdkAuthError
+import com.exponea.sdk.models.StreamConfig
 import com.exponea.sdk.models.FlushMode
 import com.exponea.sdk.models.FlushPeriod
 import com.exponea.sdk.models.PropertiesList
-import com.exponea.sdk.models.PurchasedItem
 import com.exponea.sdk.util.ExponeaGson
 import com.exponea.sdk.util.Logger
 import java.util.concurrent.TimeUnit
+import org.json.JSONObject
 
 @ReactModule(name = ExponeaModule.NAME)
 class ExponeaModule(private val reactContext: ReactApplicationContext) :
@@ -60,10 +64,15 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
       return Exponea.isInitialized
   }
 
-  override fun configure(configMap: ReadableMap, promise: Promise) {
+  override fun configure(configMap: ReadableMap, customerIdentityMap: ReadableMap?, promise: Promise) {
     try {
       val configuration = ConfigurationParser(configMap).parse(reactContext)
-      Exponea.init(reactContext.currentActivity ?: reactContext, configuration)
+      val customerIdentity = customerIdentityMap?.toCustomerIdentity()
+      Exponea.init(
+        reactContext.currentActivity ?: reactContext,
+        configuration,
+        customerIdentity
+      )
       Exponea.notificationDataCallback = { pushNotificationReceived(it) }
 
       // Verify configuration succeeded
@@ -78,6 +87,13 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
     } catch (e: Exception) {
       promise.reject("CONFIGURE_ERROR", e.message ?: "Unknown configuration error", e)
     }
+  }
+
+  private fun ReadableMap.toCustomerIdentity(): CustomerIdentity? {
+    val customerIds = getMap("customerIds")?.toMapStringString() ?: emptyMap()
+    val token = getString("sdkAuthToken")
+    if (customerIds.isEmpty() && token.isNullOrEmpty()) return null
+    return CustomerIdentity(customerIds = customerIds, sdkAuthToken = token)
   }
 
   // Helper functions
@@ -121,8 +137,7 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
           segmentationDataCallbacks.clear()
           segmentationCallbacksByCategory.clear()
 
-          Exponea.stopIntegration()
-          promise.resolve(null)
+          Exponea.stopIntegration { promise.resolve(null) }
       }
   }
 
@@ -244,51 +259,76 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
       }
   }
 
-  override fun anonymize(exponeaProject: ReadableMap?, projectMapping: ReadableMap?, promise: Promise) {
+  override fun anonymize(integrationConfig: ReadableMap?, integrationRouteMap: ReadableMap?, promise: Promise) {
       catchAndReject(promise) {
-          var project: ExponeaProject? = null
-          // Only parse if map is not null and not empty
-          if (exponeaProject != null && exponeaProject.toHashMapRecursively().isNotEmpty()) {
-              project = ConfigurationParser.parseExponeaProject(
-                  exponeaProject.toHashMapRecursively(),
-                  "https://api.exponea.com" // Default baseURL
-              )
+          var integration: IntegrationConfig? = null
+          val integrationConfigMap = integrationConfig?.toHashMapRecursively()
+          if (!integrationConfigMap.isNullOrEmpty()) {
+              integration = if (integrationConfigMap.containsKey("streamId")) {
+                  val streamId = integrationConfigMap.getSafely("streamId", String::class)
+                  val baseUrl = integrationConfigMap["baseUrl"] as? String
+                  if (baseUrl != null) StreamConfig(baseUrl, streamId) else StreamConfig(streamId = streamId)
+              } else {
+                  ConfigurationParser.parseProjectConfig(integrationConfigMap)
+              }
           }
-          var mapping: Map<EventType, List<ExponeaProject>>? = null
-          // Only parse if map is not null and not empty
-          if (projectMapping != null && projectMapping.toHashMapRecursively().isNotEmpty()) {
-              mapping = ConfigurationParser.parseProjectMapping(
-                  projectMapping.toHashMapRecursively(),
-                  "https://api.exponea.com" // Default baseURL
-              )
+          var mapping: Map<EventType, List<ProjectConfig>>? = null
+          val integrationRouteMapData = integrationRouteMap?.toHashMapRecursively()
+          if (!integrationRouteMapData.isNullOrEmpty()) {
+              mapping = ConfigurationParser.parseIntegrationRouteMap(integrationRouteMapData)
           }
-          if (project != null && mapping != null) {
-              Exponea.anonymize(project, mapping)
-          } else if (project != null) {
-              Exponea.anonymize(project)
-          } else if (mapping != null) {
-              Exponea.anonymize(projectRouteMap = mapping)
+          val overrides = if (mapping != null) {
+              ExponeaConfigurationOverrides(integrationRouteMap = mapping)
           } else {
-              Exponea.anonymize()
+              null
           }
+          Exponea.anonymize(integration, overrides) {
+              promise.resolve(null)
+          }
+      }
+  }
+
+  override fun identifyCustomer(
+      customerIdentity: ReadableMap,
+      properties: ReadableMap,
+      promise: Promise
+  ) {
+      catchAndReject(promise) {
+          @Suppress("UNCHECKED_CAST")
+          val props = properties.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
+          val identity = customerIdentity.toCustomerIdentity()
+              ?: throw ExponeaDataException("identifyCustomer received an invalid CustomerIdentity object")
+          Exponea.identifyCustomer(
+              customerIdentity = identity,
+              properties = props.ifEmpty { null }
+          )
           promise.resolve(null)
       }
   }
 
-  override fun identifyCustomer(customerIds: ReadableMap, properties: ReadableMap, promise: Promise) {
+  override fun setSdkAuthToken(token: String, promise: Promise) {
       catchAndReject(promise) {
-          val ids = CustomerIds()
-          customerIds.toHashMap().forEach {
-              if (it.value is String) ids.withId(it.key, it.value as String)
-          }
-          @Suppress("UNCHECKED_CAST")
-          val props = PropertiesList(
-              properties.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
-          )
-          // Native SDK queues this call if not initialized
-          Exponea.identifyCustomer(ids, props)
+          Exponea.setSdkAuthToken(token)
           promise.resolve(null)
       }
+  }
+
+  override fun onSdkAuthErrorCallbackSet() {
+      Exponea.sdkAuthCallback = object : SdkAuthCallback {
+          override fun onAuthFailure(error: SdkAuthError) {
+              val ids = JSONObject()
+              error.customerIds.forEach { (k, v) -> if (v != null) ids.put(k, v) }
+              val payload = JSONObject().apply {
+                  put("errorCode", error.errorCode.name)
+                  put("customerIds", ids)
+              }
+              sendEvent("sdkAuthError", payload.toString())
+          }
+      }
+  }
+
+  override fun onSdkAuthErrorCallbackRemove() {
+      Exponea.sdkAuthCallback = null
   }
 
   override fun flushData(promise: Promise) = requireInitialized(promise) {
@@ -427,7 +467,7 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
           val styleMap = withStyle.toHashMapRecursively()
 
           // Parse style using SDK's parser
-          val appInboxStyle = AppInboxStyleParser(styleMap).parse();
+          val appInboxStyle = AppInboxStyleParser(styleMap).parse()
 
           // Create and set styled provider
           Exponea.appInboxProvider = StyledAppInboxProvider(appInboxStyle)

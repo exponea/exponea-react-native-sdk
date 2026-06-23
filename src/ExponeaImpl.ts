@@ -1,25 +1,147 @@
 import NativeExponea from './NativeExponea';
-import type { Segment } from './NativeExponea';
+import type { Segment, JsonObject, ExponeaProject } from './NativeExponea';
 import { ExponeaListeners } from './ExponeaListeners';
 import type { ExponeaType } from './index';
+import type Configuration from './Configuration';
+import type { IntegrationConfig, ProjectConfig } from './Configuration';
+import type EventType from './EventType';
+import type { CustomerIdentity } from './CustomerIdentity';
+
+function migrateLegacyConfig(config: Configuration, isStreamConfig: boolean) {
+  const {
+    integrationConfig,
+    integrationRouteMap,
+    projectMapping,
+    projectToken,
+    authorizationToken,
+    baseUrl,
+    advancedAuthEnabled,
+    ...rest
+  } = config as any;
+
+  const resolvedIntegrationConfig =
+    integrationConfig ??
+    (baseUrl
+      ? { projectToken, authorizationToken, baseUrl }
+      : { projectToken, authorizationToken });
+
+  const routeMap = integrationRouteMap ?? projectMapping;
+
+  return {
+    ...rest,
+    integrationConfig: resolvedIntegrationConfig,
+    // StreamConfig doesn't support integrationRouteMap or advancedAuthEnabled — strip them
+    // so the bridge payload matches what was warned about in configure().
+    ...(!isStreamConfig && routeMap ? { integrationRouteMap: routeMap } : {}),
+    ...(!isStreamConfig && advancedAuthEnabled !== undefined
+      ? { advancedAuthEnabled }
+      : {}),
+  };
+}
+
+function isCustomerIdentity(
+  value: Record<string, string> | CustomerIdentity
+): value is CustomerIdentity {
+  const ids = (value as CustomerIdentity).customerIds;
+  return typeof ids === 'object' && ids !== null;
+}
+
+const identifyCustomer: ExponeaType['identifyCustomer'] = (
+  customerIdsOrIdentity: Record<string, string> | CustomerIdentity,
+  properties?: JsonObject
+): Promise<void> => {
+  const identity: CustomerIdentity = isCustomerIdentity(customerIdsOrIdentity)
+    ? customerIdsOrIdentity
+    : { customerIds: customerIdsOrIdentity };
+  return NativeExponea.identifyCustomer(identity, properties ?? {});
+};
+
+const anonymize: ExponeaType['anonymize'] = (
+  integrationConfig?: IntegrationConfig | ExponeaProject,
+  integrationRouteMap?: {
+    [key in EventType]?: Array<ProjectConfig | ExponeaProject>;
+  }
+): Promise<void> => {
+  if ((integrationConfig as any)?.streamId && integrationRouteMap) {
+    console.warn(
+      "'integrationRouteMap' is not supported with 'StreamConfig' and will be ignored."
+    );
+  }
+  return NativeExponea.anonymize(
+    integrationConfig as any,
+    integrationRouteMap as any
+  );
+};
 
 /**
  * Implementation of the Exponea SDK public API.
  * Combines Interface A (Turbo Module methods) and Interface B (Listener methods).
- *
- * This implementation delegates to:
- * - NativeExponea: For 59 Turbo Module methods
- * - ExponeaListeners: For 8 event listener methods
  */
 export const Exponea: ExponeaType = {
   // Interface A implementations (delegate to Turbo Module)
-  configure: (configMap) => NativeExponea.configure(configMap),
+  configure: (config, customerIdentity?: CustomerIdentity) => {
+    const hasLegacy = config.projectToken !== undefined;
+    const hasNew = config.integrationConfig !== undefined;
+    if (!hasLegacy && !hasNew) {
+      return Promise.reject(
+        new Error(
+          'Configuration requires either integrationConfig (ProjectConfig or StreamConfig) or the deprecated projectToken + authorizationToken.'
+        )
+      );
+    }
+    if (hasLegacy && hasNew) {
+      return Promise.reject(
+        new Error(
+          'Provide either integrationConfig or the deprecated projectToken + authorizationToken, not both.'
+        )
+      );
+    }
+    if (hasLegacy) {
+      console.warn(
+        "'projectToken' and 'authorizationToken' at the root level are deprecated. Use 'integrationConfig' with 'ProjectConfig' instead."
+      );
+    }
+    const isStreamConfig =
+      hasNew && !!(config.integrationConfig as any)?.streamId;
+    const hasRouteMap = !!(
+      config.integrationRouteMap || (config as any).projectMapping
+    );
+    if (!isStreamConfig) {
+      if (
+        (config as any).projectMapping &&
+        !(config as any).integrationRouteMap
+      ) {
+        console.warn(
+          "'projectMapping' is deprecated. Use 'integrationRouteMap' with 'ProjectConfig' instead."
+        );
+      }
+      if (
+        (config as any).projectMapping &&
+        (config as any).integrationRouteMap
+      ) {
+        console.warn(
+          "Both 'projectMapping' and 'integrationRouteMap' are set. 'integrationRouteMap' takes precedence; 'projectMapping' will be ignored."
+        );
+      }
+    }
+    if (isStreamConfig && config.advancedAuthEnabled) {
+      console.warn(
+        "'advancedAuthEnabled' is not supported with 'StreamConfig' and will be ignored."
+      );
+    }
+    if (isStreamConfig && hasRouteMap) {
+      console.warn(
+        "'integrationRouteMap'/'projectMapping' is not supported with 'StreamConfig' and will be ignored."
+      );
+    }
+    const bridgePayload = migrateLegacyConfig(config, isStreamConfig);
+    return NativeExponea.configure(bridgePayload, customerIdentity ?? null);
+  },
   isConfigured: () => Promise.resolve(NativeExponea.isConfigured()),
   getCustomerCookie: () => NativeExponea.getCustomerCookie(),
-  identifyCustomer: (customerIds, properties) =>
-    NativeExponea.identifyCustomer(customerIds, properties),
-  anonymize: (exponeaProject, projectMapping) =>
-    NativeExponea.anonymize(exponeaProject as any, projectMapping as any),
+  identifyCustomer,
+  anonymize,
+  setSdkAuthToken: (token) => NativeExponea.setSdkAuthToken(token),
 
   getDefaultProperties: async () => {
     const jsonString = await NativeExponea.getDefaultProperties();
@@ -158,6 +280,10 @@ export const Exponea: ExponeaType = {
     ExponeaListeners.registerSegmentationDataCallback(callback),
   unregisterSegmentationDataCallback: (callback) =>
     ExponeaListeners.unregisterSegmentationDataCallback(callback),
+  setSdkAuthErrorCallback: (callback) =>
+    ExponeaListeners.setSdkAuthErrorCallback(callback),
+  removeSdkAuthErrorCallback: () =>
+    ExponeaListeners.removeSdkAuthErrorCallback(),
 };
 
 // Add internal testing method (not part of public API)

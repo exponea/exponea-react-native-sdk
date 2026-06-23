@@ -43,6 +43,11 @@ internal fun <T : Any> Map<String, Any?>.getSafely(key: String, type: KClass<T>)
     return getValueAsType(value, type, key)
 }
 
+internal fun <T : Any> Map.Entry<String, Any?>.valueAs(type: KClass<T>): T {
+    val value = this.value ?: throw ExponeaModule.ExponeaDataException("Property '${this.key}' cannot be null.")
+    return getValueAsType(value, type, this.key)
+}
+
 private fun <T : Any> getValueAsType(value: Any, type: KClass<T>, key: String): T {
     if (value::class == type) {
         @Suppress("UNCHECKED_CAST")

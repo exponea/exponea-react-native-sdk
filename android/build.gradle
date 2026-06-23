@@ -74,7 +74,7 @@ def kotlin_version = getExtOrDefault("kotlinVersion")
 dependencies {
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'com.exponea.sdk:sdk:4.10.0'
+  implementation 'com.exponea.sdk:sdk:5.2.1'
   implementation 'com.google.code.gson:gson:2.10.1'
 
   // Test dependencies

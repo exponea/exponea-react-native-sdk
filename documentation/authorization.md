@@ -9,7 +9,12 @@ content:
   excerpt: Full authorization reference for the React Native SDK
 ---
 
-The SDK exchanges data with the Engagement APIs through authorized HTTP/HTTPS communication. The SDK supports two authorization modes: the default **token authorization** for public API access and the more secure **customer token authorization** for private API access. Developers can choose the appropriate authorization mode for the required level of security.
+The SDK communicates with Bloomreach APIs over authorized HTTPS—either the Engagement API directly (`ProjectConfig`) or the [Data hub event stream API](https://documentation.bloomreach.com/data-hub/docs/event-streams) (`StreamConfig`). Authorization modes vary depending on the integration type:
+- **Token authorization** (default for `ProjectConfig`): public API access with an API key
+- **Customer token authorization** (optional for `ProjectConfig`): private API access with JWT through a native authorization provider
+- **SDK auth token authorization** (for `StreamConfig`): JWT-based API access with automatic token lifecycle management
+
+Choose the authorization mode that matches your security requirements.
 
 ## Token authorization
 
@@ -20,10 +25,11 @@ Token authorization is used for the following API endpoints by default:
 - `POST /track/v2/projects/<projectToken>/customers` for tracking of customer data
 - `POST /track/v2/projects/<projectToken>/customers/events` for tracking of event data
 - `POST /track/v2/projects/<projectToken>/campaigns/clicks` for tracking campaign events
+- `POST /data/v2/projects/<projectToken>/customers/attributes` for fetching recommendations
 - `POST /data/v2/projects/<projectToken>/consent/categories` for fetching consents
-- `POST /webxp/s/<projectToken>/inappmessages?v=1` for fetching InApp messages
-- `POST /webxp/projects/<projectToken>/appinbox/fetch` for fetching of AppInbox data
-- `POST /webxp/projects/<projectToken>/appinbox/markasread` for marking of AppInbox message as read
+- `POST /webxp/s/<projectToken>/inappmessages?compatibility=3` for fetching in-app messages
+- `POST /webxp/projects/<projectToken>/appinbox/fetch` for fetching of App Inbox data
+- `POST /webxp/projects/<projectToken>/appinbox/markasread` for marking of App Inbox message as read
 - `POST /campaigns/send-self-check-notification?project_id=<projectToken>` for part of self-check push notification flow
 
 Developers must set the token using the `authorizationToken` [configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) parameter when [initializing the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
@@ -42,6 +48,10 @@ Exponea.configure({
 > Now you need to specify your `applicationId`. Refer to the [Configure application ID](#configure-application-id) for further information.
 
 ## Customer token authorization
+
+> ❗️
+>
+> Customer token authorization (`advancedAuthEnabled`) works only with `ProjectConfig` integration. If you set `advancedAuthEnabled` to `true` with a `StreamConfig` integration, the SDK logs a warning and ignores the setting. For stream-based integrations, use [SDK auth token authorization](#sdk-auth-token-authorization) instead.
 
 Customer token authorization is optional and provides [private API access](https://documentation.bloomreach.com/engagement/reference/authentication#private-api-access) to select Engagement API endpoints. The [customer token](https://documentation.bloomreach.com/engagement/docs/customer-token) contains encoded customer IDs and a signature. When the Bloomreach Engagement API receives a customer token, it first verifies the signature and only processes the request if the signature is valid.
 
@@ -255,6 +265,90 @@ public class ExampleAuthProvider: NSObject, AuthorizationProviderType {
 > ❗️
 >
 > A customer token is valid until its expiration and is assigned to the current customer IDs. Bear in mind that if customer IDs change (due to invoking the `identifyCustomer` or `anonymize` methods), the customer token may become invalid for future HTTP requests invoked for new customer IDs.
+
+## Stream integration
+
+### SDK auth token authorization
+
+If you're using a `StreamConfig` integration, the SDK uses JWT-based authentication through an SDK auth token for all authorized API calls.
+
+#### Set the SDK auth token
+
+You can set the SDK auth token in three ways:
+
+1. **During SDK initialization**, by including it in the `CustomerIdentity` passed as the optional second argument to `Exponea.configure()`. For more details, see [Initialize with customer identity](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-with-customer-identity).
+
+2. **During customer identification**, by including it in the `CustomerIdentity` passed to `Exponea.identifyCustomer()`:
+
+```typescript
+import Exponea from 'react-native-exponea-sdk';
+
+Exponea.identifyCustomer(
+  {
+    customerIds: { registered: 'jane.doe@example.com' },
+    sdkAuthToken: 'your-jwt-token',
+  }
+).catch((error) => console.log(error));
+```
+
+3. **Independently**, using the `setSdkAuthToken()` method:
+
+```typescript
+Exponea.setSdkAuthToken('your-jwt-token').catch((error) => console.log(error));
+```
+
+> ❗️
+>
+> `setSdkAuthToken` works only with a `StreamConfig` integration. If you call it with `ProjectConfig`, the SDK logs a warning and ignores the call.
+
+#### Token storage
+
+The SDK stores the auth token persistently across app restarts. It clears the token automatically when `anonymize()` is called or when `identifyCustomer()` is called without a token.
+
+#### SdkAuthErrorCallback
+
+Register an `SdkAuthErrorCallback` using `setSdkAuthErrorCallback()` to be notified of authentication failures and to provide fresh tokens:
+
+```typescript
+import Exponea from 'react-native-exponea-sdk';
+import type { SdkAuthError } from 'react-native-exponea-sdk';
+
+Exponea.setSdkAuthErrorCallback((error: SdkAuthError) => {
+  const newToken = fetchNewTokenFromYourBackend();
+  Exponea.setSdkAuthToken(newToken);
+});
+```
+
+Use `removeSdkAuthErrorCallback()` to deregister:
+
+```typescript
+Exponea.removeSdkAuthErrorCallback();
+```
+
+The `SdkAuthError` object contains:
+
+| Name          | Type                     | Description                                                                                                              |
+|---------------|--------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `errorCode`   | `SdkAuthErrorCode`       | One of `TOKEN_ABOUT_TO_EXPIRE`, `TOKEN_EXPIRED`, `TOKEN_REJECTED`, `TOKEN_NOT_PROVIDED`. iOS only: `TOKEN_INSUFFICIENT`. |
+| `customerIds` | `Record<string, string>` | The current customer IDs.                                                                                                |
+
+The `SdkAuthErrorCode` enum includes the following values:
+
+| Value                   | Description                                                                                     |
+|-------------------------|-------------------------------------------------------------------------------------------------|
+| `TOKEN_ABOUT_TO_EXPIRE` | The current token is approaching its expiration time. The SDK proactively requests a new token. |
+| `TOKEN_EXPIRED`         | The current token has expired. The SDK requests a new token.                                    |
+| `TOKEN_REJECTED`        | The server rejected the token. The SDK requests a new token.                                    |
+| `TOKEN_NOT_PROVIDED`    | No token is set. The SDK cannot make authorized requests.                                       |
+| `TOKEN_INSUFFICIENT`    | (iOS only) Reserved for future use.                                                             |
+
+> ❗️
+>
+> The SDK invokes the callback on a background thread. You can perform asynchronous work such as fetching a new token, but the SDK re-reads the token from its repository after the callback returns. If you need to block on an async operation (for example, an HTTP call to your backend), complete it within the callback before it returns.
+
+> ❗️
+>
+> The SDK assigns the auth token to the current customer IDs. If customer IDs change when you call `identifyCustomer` or `anonymize`, the SDK clears the token. Provide a new token for the new customer.
 
 ## Configure application ID
 

@@ -11,6 +11,10 @@ import type {
   InAppMessageCallback,
   JsonObject,
   ExponeaProject,
+  CustomerIdentity,
+  SdkAuthError,
+  IntegrationConfig,
+  ProjectConfig,
 } from '../index';
 import {
   FlushMode,
@@ -27,8 +31,13 @@ TestUtils.mockExponeaNative();
 
 export class MockExponea implements ExponeaType {
   lastArgumentsJson = '';
-  configure(configuration: Configuration): Promise<void> {
-    this.lastArgumentsJson = JSON.stringify([configuration], withoutNulls);
+  configure(
+    configuration: Configuration,
+    customerIdentity?: CustomerIdentity
+  ): Promise<void> {
+    const args: unknown[] = [configuration];
+    if (customerIdentity !== undefined) args.push(customerIdentity);
+    this.lastArgumentsJson = JSON.stringify(args, withoutNulls);
     return Promise.resolve();
   }
 
@@ -88,25 +97,40 @@ export class MockExponea implements ExponeaType {
   }
 
   anonymize(
-    exponeaProject?: ExponeaProject,
-    projectMapping?: { [key in EventType]?: Array<ExponeaProject> }
+    integrationConfig?: IntegrationConfig | ExponeaProject,
+    integrationRouteMap?:
+      | { [key in EventType]?: Array<ProjectConfig> }
+      | { [key in EventType]?: Array<ExponeaProject> }
   ): Promise<void> {
     this.lastArgumentsJson = JSON.stringify(
-      [exponeaProject, projectMapping],
+      [integrationConfig, integrationRouteMap],
       withoutNulls
     );
     return Promise.resolve();
   }
 
   identifyCustomer(
-    customerIds: Record<string, string>,
-    properties: JsonObject
+    customerIdsOrIdentity: Record<string, string> | CustomerIdentity,
+    properties?: JsonObject
   ): Promise<void> {
     this.lastArgumentsJson = JSON.stringify(
-      [customerIds, properties],
+      [customerIdsOrIdentity, properties],
       withoutNulls
     );
     return Promise.resolve();
+  }
+
+  setSdkAuthToken(token: string): Promise<void> {
+    this.lastArgumentsJson = JSON.stringify([token], withoutNulls);
+    return Promise.resolve();
+  }
+
+  setSdkAuthErrorCallback(_handler: (error: SdkAuthError) => void): void {
+    this.lastArgumentsJson = JSON.stringify([], withoutNulls);
+  }
+
+  removeSdkAuthErrorCallback(): void {
+    this.lastArgumentsJson = JSON.stringify([], withoutNulls);
   }
 
   flushData(): Promise<void> {

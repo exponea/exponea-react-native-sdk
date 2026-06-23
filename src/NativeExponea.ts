@@ -136,7 +136,7 @@ export interface Spec extends TurboModule {
   isConfigured(): boolean;
 
   /** Configures Exponea SDK. Should only be called once. You need to configure ExponeaSDK before calling most methods */
-  configure(configMap: Object): Promise<void>;
+  configure(configMap: Object, customerIdentity: Object | null): Promise<void>;
 
   /** Resolves to cookie of the current customer */
   getCustomerCookie(): Promise<string>;
@@ -171,15 +171,18 @@ export interface Spec extends TurboModule {
   setDefaultProperties(properties: Object): Promise<void>;
 
   /** Anonymizes current customer and creates a new one. Push token is cleared on Exponea backend.
-   * Optionally changes default Exponea project and event-project mapping.
+   * Optionally switches the default Exponea integration (Project or Stream) and event routing map.
    */
   anonymize(
-    exponeaProject?: ExponeaProject,
-    projectMapping?: Object
+    integrationConfig?: Object,
+    integrationRouteMap?: Object
   ): Promise<void>;
 
-  /** Identifies current customer with new customer ids and properties */
-  identifyCustomer(customerIds: Object, properties: Object): Promise<void>;
+  /** Identifies current customer with a customer identity (ids + optional sdkAuthToken) and properties. */
+  identifyCustomer(customerIdentity: Object, properties: Object): Promise<void>;
+
+  /** Sets a Stream JWT auth token used by Stream/Data Hub integrations. */
+  setSdkAuthToken(token: string): Promise<void>;
 
   /** Flushes data to Exponea backend. Only usable in MANUAL FlushMode */
   flushData(): Promise<void>;
@@ -381,6 +384,11 @@ export interface Spec extends TurboModule {
   onSegmentationCallbackSet(category: string, includeFirstLoad: boolean): void;
   /** Notify native that segmentation callback is removed */
   onSegmentationCallbackRemove(category: string): void;
+
+  /** Notify native that the SDK auth error callback is set */
+  onSdkAuthErrorCallbackSet(): void;
+  /** Notify native that the SDK auth error callback is removed */
+  onSdkAuthErrorCallbackRemove(): void;
 }
 
 export enum FlushMode {

@@ -19,25 +19,69 @@ This page provides an overview of all configuration parameters for the SDK. In a
 
 The following parameters are specified in an `Configuration` object. Refer to [src/Configuration.ts](https://github.com/exponea/exponea-react-native-sdk/blob/main/src/Configuration.ts) for the complete interface definition.
 
-- `projectToken` **(required)**
+- `integrationConfig` **(required in new integrations)**
 
-  - Your project token. You can find this in the Engagement web app under `Project settings` > `Access management` > `API`.
+  - Use this property to set your integration configuration.
+  - Use `ProjectConfig` to set up integration with a standard Engagement project, or `StreamConfig` to set up [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration.
+  - `ProjectConfig` fields:
+    - `projectToken` **(required)**: your Engagement project token, found in the Engagement web app under **Project settings** > **Access management** > **API**
+    - `authorizationToken` **(required)**: your Engagement public API key; must be a **public** key (see [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management))
+    - `baseUrl`: API base URL; defaults to `https://api.exponea.com`
+  - `StreamConfig` fields:
+    - `streamId` **(required)**: your Data Hub stream ID, found in the Data Hub app under **Event streams** > select your stream > **Access Security**
+    - `baseUrl`: base URL override for the stream endpoint; defaults to `https://api.exponea.com`
+  - The two modes are mutually exclusive; you can't provide both `projectToken` and `streamId` in the same `integrationConfig`.
+  - Example with `ProjectConfig`:
+    ```typescript
+    integrationConfig: {
+      projectToken: 'YOUR_PROJECT_TOKEN',
+      authorizationToken: 'YOUR_API_KEY',
+      baseUrl: 'https://api.exponea.com',
+    }
+    ```
+  - Example with `StreamConfig`:
+    ```typescript
+    integrationConfig: {
+      streamId: 'YOUR_STREAM_ID',
+      baseUrl: 'https://api.exponea.com',
+    }
+    ```
 
-- `authorizationToken` **(required)**
+- `projectToken` **(deprecated — use `integrationConfig` with `ProjectConfig` instead)**
+
+  - Your project token. You can find this in the Engagement web app under **Project settings** > **Access management** > **API**.
+
+- `authorizationToken` **(deprecated — use `integrationConfig` with `ProjectConfig` instead)**
 
   - Your Engagement API key.
   - The token must be an Engagement **public** key. See [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
   - For more information, refer to [Engagement API documentation](https://documentation.bloomreach.com/engagement/reference/welcome#access-keys).
 
-- `baseUrl`
+- `baseUrl` **(deprecated — use `integrationConfig` with `ProjectConfig` instead)**
 
-  - Your API base URL which can be found in the Engagement web app under `Project settings` > `Access management` > `API`.
+  - Your API base URL which can be found in the Engagement web app under **Project settings** > **Access management** > **API**.
   - Default value `https://api.exponea.com`.
   - If you have custom base URL, you must set this property.
 
-- `projectMapping`
+- `integrationRouteMap`
+  - To track specific events to additional Engagement projects, define a mapping between event types and `ProjectConfig` objects.
+  - The SDK always tracks each event to the default project and any projects it's mapped to.
+  - **Applies only when `integrationConfig` is a `ProjectConfig`.** Ignored for `StreamConfig`.
+  - Example:
+    ```typescript
+    integrationRouteMap: {
+      [EventType.BANNER]: [
+        {
+          projectToken: 'other-project-token',
+          authorizationToken: 'other-auth-token',
+        },
+      ],
+    }
+    ```
+
+- `projectMapping` **(deprecated — use `integrationRouteMap` with `ProjectConfig` instead)**
   - If you need to track some events to a different Engagement project, you can define a mapping between event types and Engagement projects.
-  - An event is always tracked to the default project and any projects it is mapped to.
+  - The SDK always tracks each event to the default project and any projects it's mapped to.
   - Example:
     ```typescript
     projectMapping: {
@@ -95,6 +139,7 @@ The following parameters are specified in an `Configuration` object. Refer to [s
 
   - If set, advanced authorization is used for communication with the Engagement APIs listed in [Customer token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#customer-token-authorization).
   - Refer to the [authorization documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization) for details.
+  - **Only applicable when `integrationConfig` is a `ProjectConfig`.** If set to `true` with a `StreamConfig` integration, the SDK logs a warning and ignores the setting. For stream-based integrations, refer to [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#sdk-auth-token-authorization).
 
 - `inAppContentBlockPlaceholdersAutoLoad`
 

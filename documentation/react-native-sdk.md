@@ -13,9 +13,9 @@ content:
 
 ## What is the Exponea React Native SDK?
 
-The Exponea React Native SDK allows you to integrate your React Native-based mobile application with Bloomreach Engagement and track your customers' behavior in your app. Integrating the SDK in your app will enable you to track events and customer properties, send push notifications, and display in-app messages and content blocks.
+The Exponea React Native SDK lets you integrate your React Native mobile app with Bloomreach Engagement to track events and customer properties, send push notifications, and display in-app messages and content blocks. The SDK supports two integration modes: the standard **Engagement project** integration (project token and API key) and the **[Data hub event streams](https://documentation.bloomreach.com/data-hub/docs/event-streams)** integration (stream ID and JWT-based authentication).
 
-The React Native SDK is implemented in Typescript as a wrapper around the native [Android](https://documentation.bloomreach.com/engagement/docs/android-sdk) and [iOS](https://documentation.bloomreach.com/engagement/docs/ios-sdk) SDKs.
+The React Native SDK is implemented in TypeScript as a wrapper around the native [Android](https://documentation.bloomreach.com/engagement/docs/android-sdk) and [iOS](https://documentation.bloomreach.com/engagement/docs/ios-sdk) SDKs.
 
 The SDK is [available as open source on GitHub](https://github.com/exponea/exponea-react-native-sdk) for maximum transparency and includes an [Example app for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-example-app) you can use as a reference implementation.
 

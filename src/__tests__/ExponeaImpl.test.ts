@@ -1,6 +1,57 @@
 import NativeExponea from '../NativeExponea';
 import { Exponea } from '../ExponeaImpl';
 import { InAppMessageTestData } from './InAppMessageTestData';
+import type { CustomerIdentity } from '../CustomerIdentity';
+
+describe('identifyCustomer bridge wrapping', () => {
+  beforeEach(() => {
+    (NativeExponea as any).identifyCustomer = jest.fn().mockResolvedValue(null);
+  });
+
+  const mockIdentifyCustomer = () =>
+    (NativeExponea as any).identifyCustomer as ReturnType<typeof jest.fn>;
+
+  test('flat record is wrapped into CustomerIdentity', async () => {
+    await Exponea.identifyCustomer(
+      { email: 'jane.doe@example.com' },
+      { first_name: 'Jane' }
+    );
+    expect(mockIdentifyCustomer()).toHaveBeenCalledWith(
+      { customerIds: { email: 'jane.doe@example.com' } },
+      { first_name: 'Jane' }
+    );
+  });
+
+  test('CustomerIdentity with sdkAuthToken passes through unchanged', async () => {
+    const identity: CustomerIdentity = {
+      customerIds: { email: 'jane.doe@example.com' },
+      sdkAuthToken: 'mock-jwt',
+    };
+    await Exponea.identifyCustomer(identity, { first_name: 'Jane' });
+    expect(mockIdentifyCustomer()).toHaveBeenCalledWith(identity, {
+      first_name: 'Jane',
+    });
+  });
+
+  test('CustomerIdentity without sdkAuthToken passes through unchanged', async () => {
+    const identity: CustomerIdentity = {
+      customerIds: { email: 'jane.doe@example.com' },
+    };
+    await Exponea.identifyCustomer(identity, { first_name: 'Jane' });
+    expect(mockIdentifyCustomer()).toHaveBeenCalledWith(identity, {
+      first_name: 'Jane',
+    });
+  });
+
+  test('{ customerIds: null } is NOT treated as CustomerIdentity', async () => {
+    await Exponea.identifyCustomer({ customerIds: null } as any);
+    // should be wrapped as flat record, not passed through as-is
+    expect(mockIdentifyCustomer()).toHaveBeenCalledWith(
+      { customerIds: { customerIds: null } },
+      {}
+    );
+  });
+});
 
 describe('ExponeaImpl normalization', () => {
   beforeEach(() => {

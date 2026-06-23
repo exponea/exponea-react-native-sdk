@@ -47,35 +47,27 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
 
     /// Configure Exponea SDK with the provided configuration
     /// - Parameter configMap: Dictionary containing configuration parameters
+    /// - Parameter customerIdentityMap: Optional dictionary with `customerIds` and `sdkAuthToken` to apply at init
     /// - Parameter success: Success callback called when configuration succeeds
     /// - Parameter failure: Failure callback called when configuration fails
     public func configure(
         configMap: [AnyHashable: Any],
+        customerIdentityMap: [AnyHashable: Any]?,
         success: @escaping () -> Void,
         failure: @escaping (Error) -> Void
     ) {
-        let parser = ConfigurationParser(configMap as NSDictionary)
-
         guard !ExponeaBridge.exponeaInstance.isConfigured else {
             failure(ExponeaError.alreadyConfigured)
             return
         }
 
         do {
-            ExponeaBridge.exponeaInstance.configure(
-                try parser.parseProjectSettings(),
-                pushNotificationTracking: try parser.parsePushNotificationTracking(),
-                automaticSessionTracking: try parser.parseSessionTracking(),
-                defaultProperties: try parser.parseDefaultProperties(),
-                inAppContentBlocksPlaceholders: try parser.parseInAppContentBlocksPlaceholders(),
-                flushingSetup: try parser.parseFlushingSetup(),
-                allowDefaultCustomerProperties: try parser.parseAllowDefaultCustomerProperties(),
-                advancedAuthEnabled: try parser.parseAdvancedAuthEnabled(),
-                manualSessionAutoClose: try parser.parseManualSessionAutoClose(),
-                applicationID: try parser.parseApplicationId()
-            )
+            let configuration = try ConfigurationParser(configMap as NSDictionary).parseConfiguration()
 
-            // Verify configuration succeeded
+            let authContext: CustomerIdentity? = try customerIdentityMap.flatMap { try Self.parseCustomerIdentity($0) }
+
+            ExponeaBridge.exponeaInstance.configure(with: configuration, authContext: authContext)
+
             if ExponeaBridge.exponeaInstance.isConfigured {
                 ExponeaBridge.exponeaInstance.inAppMessagesDelegate = self
                 success()
@@ -122,29 +114,23 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         }
     }
 
-    public func identifyCustomer(customerIds: [AnyHashable: Any], properties: [AnyHashable: Any]) -> Bool {
+    public func identifyCustomer(
+        customerIdentity: [AnyHashable: Any],
+        properties: [AnyHashable: Any]
+    ) -> Bool {
         guard ExponeaBridge.exponeaInstance.isConfigured else {
             print("ExponeaBridge: SDK not configured")
             return false
         }
 
         do {
-            // Parse customer IDs - must be strings
-            var parsedCustomerIds: [String: String] = [:]
-            for (key, value) in customerIds {
-                guard let keyString = key as? String,
-                      let valueString = value as? String else {
-                    throw ExponeaDataError.invalidType(for: "customerIds must be string key-value pairs")
-                }
-                parsedCustomerIds[keyString] = valueString
+            guard let identity = try Self.parseCustomerIdentity(customerIdentity) else {
+                print("ExponeaBridge: identifyCustomer received an invalid CustomerIdentity object")
+                return false
             }
-
-            // Parse properties
             let parsedProperties = try JsonDataParser.parse(dictionary: properties as NSDictionary)
-
-            // Call SDK
             ExponeaSDK.Exponea.shared.identifyCustomer(
-                customerIds: parsedCustomerIds,
+                context: identity,
                 properties: parsedProperties,
                 timestamp: nil
             )
@@ -156,8 +142,8 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     }
 
     public func anonymize(
-        exponeaProject: [AnyHashable: Any]?,
-        projectMapping: [AnyHashable: Any]?,
+        integrationConfig: [AnyHashable: Any]?,
+        integrationRouteMap: [AnyHashable: Any]?,
         success: @escaping () -> Void,
         failure: @escaping (Error) -> Void
     ) {
@@ -167,47 +153,48 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         }
 
         do {
-            // If no project switching, simple anonymize
-            if exponeaProject == nil && projectMapping == nil {
-                ExponeaSDK.Exponea.shared.anonymize()
-                success()
-                return
+            // 1. Resolve integration target.
+            // ExponeaIntegration (stream) and ExponeaProject both conform to ExponeaIntegrationType.
+            // When only a route map is supplied, fall back to the current main project.
+            let integration: (any ExponeaIntegrationType)?
+            if let configDict = integrationConfig as? NSDictionary {
+                if let streamId = configDict["streamId"] as? String {
+                    if let baseUrl = configDict["baseUrl"] as? String {
+                        integration = ExponeaIntegration(baseUrl: baseUrl, streamId: streamId)
+                    } else {
+                        integration = ExponeaIntegration(streamId: streamId)
+                    }
+                } else {
+                    integration = try ConfigurationParser.parseExponeaProject(dictionary: configDict)
+                }
+            } else if integrationRouteMap != nil {
+                guard let current = ExponeaSDK.Exponea.shared.configuration?.mainProject else {
+                    failure(ExponeaError.fetchError(description: "No project available for anonymize. Either provide integrationConfig or ensure SDK has a mainProject configured."))
+                    return
+                }
+                integration = current
+            } else {
+                integration = nil
             }
 
-            // Parse new project if provided, otherwise use current main project
-            var parsedProject: ExponeaProject? = nil
-            if let projectDict = exponeaProject as? NSDictionary {
-                let defaultBaseUrl = ExponeaSDK.Constants.Repository.baseUrl
-                parsedProject = try ConfigurationParser.parseExponeaProject(
-                    dictionary: projectDict,
-                    defaultBaseUrl: defaultBaseUrl
-                )
-            }
-
-            // Get the project to use - parsed project or current main project
-            guard let projectToUse = parsedProject ?? ExponeaSDK.Exponea.shared.configuration?.mainProject else {
-                failure(ExponeaError.fetchError(description: "No project available for anonymize. Either provide exponeaProject or ensure SDK has a mainProject configured."))
-                return
-            }
-
-            // Parse project mapping if provided
+            // 2. Parse route map — project mode only; nil clears any existing overrides.
+            // Stream integrations do not support per-event routing on iOS.
             var parsedMapping: [EventType: [ExponeaProject]]? = nil
-            if let mappingDict = projectMapping as? NSDictionary {
-                let baseUrl = projectToUse.baseUrl
-                parsedMapping = try ConfigurationParser.parseProjectMapping(
-                    dictionary: mappingDict,
-                    defaultBaseUrl: baseUrl
-                )
+            if let project = integration as? ExponeaProject,
+               let mappingDict = integrationRouteMap as? NSDictionary {
+                parsedMapping = try ConfigurationParser.parseIntegrationRouteMap(dictionary: mappingDict)
             }
 
-            // Call SDK with project switching
-            ExponeaSDK.Exponea.shared.anonymize(
-                exponeaProject: projectToUse,
-                projectMapping: parsedMapping
-            )
-            success()
+            // 3. Call SDK.
+            if let integration = integration {
+                ExponeaSDK.Exponea.shared.anonymize(
+                    exponeaIntegrationType: integration,
+                    exponeaProjectMapping: parsedMapping
+                ) { success() }
+            } else {
+                ExponeaSDK.Exponea.shared.anonymize { success() }
+            }
         } catch {
-            // Propagate parsing errors with full details
             failure(error)
         }
     }
@@ -521,9 +508,38 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
             failure(ExponeaError.notConfigured)
             return
         }
-        DispatchQueue.main.async {
-            ExponeaSDK.Exponea.shared.stopIntegration()
-            success()
+        ExponeaSDK.Exponea.shared.stopIntegration { success() }
+    }
+
+    // MARK: - SDK Auth Token (Stream / Data Hub JWT)
+    public func setSdkAuthToken(_ token: String) {
+        ExponeaSDK.Exponea.shared.setSdkAuthToken(token)
+    }
+
+    public func onSdkAuthErrorCallbackSet() {
+        ExponeaSDK.Exponea.shared.setJwtErrorHandler { [weak self] context in
+            let payload: [String: Any] = [
+                "errorCode": Self.mapAuthErrorReason(context.reason),
+                "customerIds": context.customerIds ?? [:]
+            ]
+            guard let json = try? JSONSerialization.data(withJSONObject: payload),
+                  let jsonString = String(data: json, encoding: .utf8) else { return }
+            self?.sendEventToJS(name: "sdkAuthError", body: jsonString)
+        }
+    }
+
+    public func onSdkAuthErrorCallbackRemove() {
+        // iOS SDK has no removeJwtErrorHandler API — replace with a no-op to effectively unregister.
+        ExponeaSDK.Exponea.shared.setJwtErrorHandler { _ in }
+    }
+
+    private static func mapAuthErrorReason(_ reason: JwtErrorContext.Reason) -> String {
+        switch reason {
+        case .expiredSoon:  return "TOKEN_ABOUT_TO_EXPIRE"
+        case .expired:      return "TOKEN_EXPIRED"
+        case .invalid:      return "TOKEN_REJECTED"
+        case .notProvided:  return "TOKEN_NOT_PROVIDED"
+        case .insufficient: return "TOKEN_INSUFFICIENT"
         }
     }
 
@@ -927,6 +943,22 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
             return dict as NSDictionary
         }
         return nil
+    }
+
+    // MARK: - Parsing Helpers
+
+    private static func parseCustomerIdentity(_ dict: [AnyHashable: Any]) throws -> CustomerIdentity? {
+        let rawIds = dict["customerIds"] as? [AnyHashable: Any] ?? [:]
+        var customerIds: [String: String] = [:]
+        for (key, value) in rawIds {
+            guard let keyString = key as? String, let valueString = value as? String else {
+                throw ExponeaDataError.invalidType(for: "customerIds must be string key-value pairs")
+            }
+            customerIds[keyString] = valueString
+        }
+        let token = dict["sdkAuthToken"] as? String
+        guard !customerIds.isEmpty || token != nil else { return nil }
+        return CustomerIdentity(customerIds: customerIds, jwtToken: token)
     }
 
     // MARK: - Enum Converters

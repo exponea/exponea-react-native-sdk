@@ -2,17 +2,49 @@ import EventType from './EventType';
 import type ExponeaProject from './ExponeaProject';
 import type { JsonObject } from './Json';
 
-interface Configuration {
-  /** Default Exponea project token */
+export interface ProjectConfig {
+  /** Project token of the Exponea project */
   projectToken: string;
-  /** Default Exponea project authorization token */
+  /** Authorization token of the Exponea project */
   authorizationToken: string;
-  /** Default Exponea project base URL */
+  /** Base URL of the Exponea project */
   baseUrl?: string;
+}
+
+export interface StreamConfig {
+  /** Stream (Data Hub) ID */
+  streamId: string;
+  /** Base URL override for the Stream endpoint */
+  baseUrl?: string;
+}
+
+/** Either a {@link ProjectConfig} or a {@link StreamConfig}. The two modes are mutually exclusive. */
+export type IntegrationConfig =
+  | (ProjectConfig & { streamId?: never })
+  | (StreamConfig & { projectToken?: never; authorizationToken?: never });
+
+type WithIntegrationConfig = {
+  integrationConfig: IntegrationConfig;
+  projectToken?: never;
+  authorizationToken?: never;
+  baseUrl?: never;
+};
+
+type WithLegacyProject = {
+  integrationConfig?: never;
+  /** @deprecated Use integrationConfig with ProjectConfig instead. */
+  projectToken: string;
+  /** @deprecated Use integrationConfig with ProjectConfig instead. */
+  authorizationToken: string;
+  /** @deprecated Use integrationConfig with ProjectConfig instead. */
+  baseUrl?: string;
+};
+
+interface BaseConfiguration {
+  /** @deprecated Use integrationRouteMap with ProjectConfig instead. */
+  projectMapping?: { [key in EventType]?: Array<ExponeaProject> };
   /** Map event types to extra projects. Every event is tracked into default project and all projects based on this mapping */
-  projectMapping?: {
-    [key in EventType]?: Array<ExponeaProject>;
-  };
+  integrationRouteMap?: { [key in EventType]?: Array<ProjectConfig> };
   /** Default properties added to every event tracked to Exponea */
   defaultProperties?: JsonObject;
   /** Number of retries for event flushing in case of a failure */
@@ -43,6 +75,9 @@ interface Configuration {
   /** Application identifier for the SDK. Defaults to 'default-application'. Must be lowercase alphanumeric with optional dots/hyphens between segments (max 50 characters, pattern: ^[a-z0-9]+(?:[-.][a-z0-9]+)*$) */
   applicationId?: string;
 }
+
+type Configuration = BaseConfiguration &
+  (WithIntegrationConfig | WithLegacyProject);
 
 export interface AndroidConfiguration {
   /** If true, push token is only tracked when the user has granted notification permission. Affects notification_state event. Default true. */

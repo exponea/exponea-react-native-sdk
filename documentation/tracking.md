@@ -49,7 +49,7 @@ Refer to the [Custom events](https://documentation.bloomreach.com/engagement/doc
 #### Arguments
 
 | Name                     | Type       | Description                                                                                               |
-| ------------------------ | ---------- | --------------------------------------------------------------------------------------------------------- |
+|--------------------------|------------|-----------------------------------------------------------------------------------------------------------|
 | eventName **(required)** | String     | Name of the event type, for example `screen_view`.                                                        |
 | properties               | JsonObject | Dictionary of event properties.                                                                           |
 | timestamp                | number     | Unix timestamp (in seconds) specifying when the event was tracked. The default value is the current time. |
@@ -95,7 +95,7 @@ Exponea.trackEvent('purchase', properties);
 
 > 👍
 >
-> Optionally, you can provide a custom `timestamp` if the event happened at a different time. By default the current time will be used.
+> Optionally, provide a custom `timestamp` if the event happened at a different time. The current time is used by default.
 
 ## Customers
 
@@ -127,48 +127,61 @@ Although you can use `identifyCustomer` with a [soft ID](https://documentation.b
 
 #### Arguments
 
-| Name                       | Type                   | Description                                                                                                 |
-| -------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
-| customerIds **(required)** | Record<string, string> | Dictionary of customer unique identifiers. Only identifiers defined in the Engagement project are accepted. |
-| properties                 | JsonObject             | Dictionary of customer properties.                                                                          |
+`identifyCustomer` accepts either of two call signatures:
+
+**Signature 1 (preferred): Using `CustomerIdentity`**
+
+| Name                              | Type               | Description                                                     |
+|-----------------------------------|--------------------|-----------------------------------------------------------------|
+| `customerIdentity` **(required)** | `CustomerIdentity` | Object containing `customerIds` and an optional `sdkAuthToken`. |
+| `properties`                      | `JsonObject`       | Dictionary of customer properties. Defaults to `{}`.            |
+
+The `CustomerIdentity` type:
+
+| Field          | Type                     | Description                                                                                                 |
+|----------------|--------------------------|-------------------------------------------------------------------------------------------------------------|
+| `customerIds`  | `Record<string, string>` | Dictionary of customer unique identifiers. Only identifiers defined in the Engagement project are accepted. |
+| `sdkAuthToken` | `string` (optional)      | Stream JWT. If provided, stored persistently. If omitted, clears any previously set auth token.             |
 
 #### Examples
 
-First, create a record containing at least the customer's hard ID:
-
 ```typescript
-let customerIds = {
-  registered: 'jane.doe@example.com',
-};
+Exponea.identifyCustomer(
+  {
+    customerIds: { registered: 'jane.doe@example.com' },
+  },
+  {
+    first_name: 'Jane',
+    last_name: 'Doe',
+    age: 32,
+  }
+);
 ```
 
-Optionally, create a dictionary with additional customer properties:
+Without additional properties:
 
 ```typescript
-let properties = {
-  first_name: 'Jane',
-  last_name: 'Doe',
-  age: 32,
-};
+Exponea.identifyCustomer({
+  customerIds: { registered: 'jane.doe@example.com' },
+});
 ```
 
-Pass the `customerIds` and `properties` dictionaries to `identifyCustomer()`:
+To identify a customer and set the SDK auth token at the same time, include the token in `CustomerIdentity`:
 
 ```typescript
-Exponea.identifyCustomer(customerIds, properties);
-```
-
-If you only want to update the customer ID without any additional properties, you can pass an empty dictionary into `properties`:
-
-```typescript
-Exponea.identifyCustomer(customerIds, {});
+Exponea.identifyCustomer(
+  {
+    customerIds: { registered: 'jane.doe@example.com' },
+    sdkAuthToken: 'your-jwt-token',
+  },
+);
 ```
 
 ### Anonymize
 
 Use the `anonymize()` method to delete all information stored locally and reset the current SDK state. A typical use case for this is when the user signs out of the app.
 
-Invoking this method will cause the SDK to:
+Invoking this method causes the SDK to:
 
 - Remove the push notification token for the current customer from local device storage and the customer profile in Engagement.
 - Clear local repositories and caches, excluding tracked events.
@@ -178,7 +191,15 @@ Invoking this method will cause the SDK to:
 - Preload in-app messages, in-app content blocks, and app inbox for the new customer.
 - Track a new `installation` event for the new customer.
 
-You can also use the `anonymize` method to switch to a different Engagement project. The SDK will then track events to a new customer record in the new project, similar to the first app session after installation on a new device.
+You can also use the `anonymize` method to switch to a different integration configuration. The SDK then tracks events to a new customer record in the new project or stream, as in the first session after a fresh install.
+
+> 📘 Note
+>
+> When you configure the SDK with `StreamConfig` and set an SDK auth token, the SDK performs a best-effort flush of pending events before clearing local data. If you need to be notified when the anonymization process finishes, use the [promise returned by `anonymize()`](#anonymize-with-completion-callback).
+
+> ❗️ Avoid anonymous events on logout
+>
+> `anonymize()` creates a new anonymous customer profile and tracks events against it. If your integration shouldn't generate events against unidentified customer profiles, use [`stopIntegration()`](#stop-sdk-integration) on logout instead. Unlike `anonymize()`, `stopIntegration()` doesn't create a new anonymous customer profile. This is particularly relevant for `StreamConfig` integrations with an [SDK auth token (JWT)](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#sdk-auth-token-authorization) on a stream configured with signed-only permissions.
 
 #### Examples
 
@@ -186,7 +207,7 @@ You can also use the `anonymize` method to switch to a different Engagement proj
 Exponea.anonymize();
 ```
 
-Switch to a different project:
+Switch to a different project using `ProjectConfig`:
 
 ```typescript
 Exponea.anonymize(
@@ -205,6 +226,41 @@ Exponea.anonymize(
   }
 );
 ```
+
+Switch to a different stream integration:
+
+```typescript
+Exponea.anonymize({
+  streamId: 'new-stream-id',
+  baseUrl: 'https://api.exponea.com',
+});
+```
+
+> 📘
+>
+> If you switch to a `StreamConfig` with `anonymize()`, the SDK ignores the second argument (integration route map). If the new customer needs a Stream JWT, provide a new `CustomerIdentity` via `identifyCustomer()` after anonymization.
+
+#### Anonymize with completion callback
+
+`anonymize()` returns a Promise that resolves when the anonymization process is complete:
+
+```typescript
+Exponea.anonymize().then(() => {
+  // Anonymization is complete
+});
+```
+
+With a new integration configuration:
+
+```typescript
+Exponea.anonymize({ streamId: 'new-stream-id' }).then(() => {
+  // Anonymization is complete, now using the new stream
+});
+```
+
+> 📘 Note
+>
+> If you're using `StreamConfig` with an SDK auth token, the Promise resolves after the best-effort flush finishes. If no flush is needed (for example, with `ProjectConfig` or no SDK auth token), the Promise resolves immediately.
 
 ## Sessions
 
@@ -294,7 +350,9 @@ Exponea.trackHmsPushToken('value-of-push-token');
 
 > ❗️
 >
-> Remember to invoke [anonymize](#anonymize) whenever the user signs out to ensure the push notification token is removed from the user's customer profile. Failing to do this may cause multiple customer profiles share the same token, resulting in duplicate push notifications.
+> Make sure to detach the push notification token from the signed-out customer profile on logout. Otherwise, multiple customer profiles may share the same token, resulting in duplicate push notifications.
+>
+> Call [`anonymize()`](#anonymize) or [`stopIntegration()`](#stop-sdk-integration) on logout, depending on whether you want to create a new anonymous profile. On Android, if you use `stopIntegration()`, you must re-track the push token after each re-initialization—see [Push notification token after stopIntegration()](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android#push-notification-token-is-missing-after-stopintegration).
 
 ### Track push notification delivery manually
 
@@ -371,9 +429,15 @@ If the customer doesn't consent to any tracking, it's recommended not to initial
 
 If the customer requests deletion of personalized data before the SDK is initialized, use the `clearLocalCustomerData(appGroup)` method to remove all locally stored information. For details on the appGroup parameter, see [Using the appGroup parameter on iOS](#using-the-appgroup-parameter-on-ios)
 
+> ❗️
+>
+> `clearLocalCustomerData()` works only when the SDK **isn't** initialized. If the SDK is running, it ignores the call and logs an error. Use [stopIntegration](#stop-sdk-integration) instead.
+>
+> `clearLocalCustomerData()` requires a prior SDK initialization (a configuration must exist on the device). With no prior configuration, the call has no effect and there's nothing to remove.
+
 The customer may also revoke all tracking consent after the SDK is fully initialized and tracking is enabled. In this case, you can stop SDK integration and remove all locally stored data using the [stopIntegration](#stop-sdk-integration) method.
 
-Invoking this method will cause the SDK to:
+Invoking this method causes the SDK to:
 
 - Remove the push notification token for the current customer from local device storage.
 - Clear local repositories and caches, including all previously tracked events that haven't been flushed yet.
@@ -401,9 +465,17 @@ If the customer doesn't consent to any tracking before the SDK is initialized, i
 
 The customer may also revoke all tracking consent later, after the SDK is fully initialized and tracking is enabled. In this case, you can stop SDK integration and remove all locally stored data by using the `Exponea.stopIntegration()` method.
 
-Use the `stopIntegration()` method to delete all information stored locally and stop the SDK if it is already running.
+> 📘 Preferred when avoiding anonymous events
+>
+> Use `stopIntegration()` instead of [`anonymize()`](#anonymize) on logout when your integration shouldn't generate events against an anonymous customer profile. Unlike `anonymize()`, `stopIntegration()` doesn't create a new anonymous customer profile. This applies to any SDK configuration; the typical example is a `StreamConfig` integration with an [SDK auth token (JWT)](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#sdk-auth-token-authorization) on a stream configured with signed-only permissions.
 
-Invoking this method will cause the SDK to:
+> ❗️
+>
+> `stopIntegration()` works only when the SDK is initialized and running. If the SDK isn't initialized, it ignores the call and logs an error. To clear locally stored data when the SDK is not running, use [clearLocalCustomerData](#clear-local-customer-data) instead.
+
+Use `stopIntegration()` to flush all pending data to the server, delete all locally stored data, and stop the SDK.
+
+Invoking this method causes the SDK to:
 
 - Remove the push notification token for the current customer from local device storage.
 - Clear local repositories and caches, including all previously tracked events that were not flushed yet.
@@ -482,18 +554,14 @@ Exponea.setInAppMessageCallback({
 
 #### Stop the SDK but upload tracked data
 
-The SDK caches data (such as sessions, events, and customer properties) in an internal local database and periodically sends them to Bloomreach Engagement. These data are kept locally if the device has no network, or if you configured SDK to upload them less frequently.
+`stopIntegration()` automatically flushes all pending data (sessions, events, customer properties) to the server before clearing local storage. No manual flush is needed.
 
-Invoking the `stopIntegration()` method will remove all these locally stored data that may not be uploaded yet. To avoid loss of these data, invoke request to flush them before stopping the SDK:
+If you need to wait for the flush and teardown to complete before proceeding, use the Promise returned by `stopIntegration()`:
 
-```kotlin
-// Flushing requires that SDK is initialized
-Exponea.configure(...)
-// Invoke flush force-fully
-Exponea.flushMode = FlushMode.MANUAL
-await Exponea.flushData();
-// All data are uploaded, we may stop SDK
-Exponea.stopIntegration()
+```typescript
+Exponea.stopIntegration().then(() => {
+  // SDK is now fully stopped and all data cleared
+});
 ```
 
 #### Stop the SDK and wipe all tracked data
@@ -504,13 +572,13 @@ If a customer is removed from the Bloomreach Engagement platform, you may also n
 
 **Don't initialize the SDK after deleting the customer.** Depending on your configuration, initializing the SDK could trigger an upload of any locally stored events, which may unintentionally recreate the customer profile in Bloomreach Engagement using the stored customer IDs.
 
-To prevent this, invoke `stopIntegration()` immediately without initializing the SDK:
+To prevent this, call `clearLocalCustomerData()` without initializing the SDK:
 
-```kotlin
-Exponea.stopIntegration()
+```typescript
+Exponea.clearLocalCustomerData();
 ```
 
-This results in all previously stored data being removed from the device. The next SDK initialization will be considered a fresh new start.
+This removes all previously stored data from the device without uploading it. The next SDK initialization is considered a fresh new start.
 
 #### Stop the already running SDK
 
@@ -518,19 +586,19 @@ The method `stopIntegration()` can be invoked anytime on a configured and runnin
 
 This is useful if a customer initially consented to tracking but later revokes their consent. When consent is withdrawn, invoke `stopIntegration()` immediately to stop all tracking activities.
 
-```kotlin
+```typescript
 // User gave you permission to track
-Exponea.configure(...)
+Exponea.configure({ ... });
 
 // Later, user decides to stop tracking
-Exponea.stopIntegration()
+Exponea.stopIntegration();
 ```
 
-This results in the SDK stopping all internal processes (such as session tracking and push notifications handling) and removing all locally stored data.
+This results in the SDK flushing all pending events to the server, stopping all internal processes (such as session tracking and push notifications handling), and removing all locally stored data. You can use the Promise to confirm the process is complete.
 
 > ❗️
 >
-> After calling `stopIntegration()`, the SDK will not track or upload any further data. If you need to upload any tracked data to Bloomreach Engagement before stopping the SDK, [flush the data synchronously](#stop-the-sdk-but-upload-tracked-data) before invoking `stopIntegration()`.
+> After calling `stopIntegration()`, the SDK doesn't track or upload any further data. `stopIntegration()` automatically flushes pending data before clearing local storage—no manual flush is needed beforehand.
 
 #### Customer denies tracking consent
 
