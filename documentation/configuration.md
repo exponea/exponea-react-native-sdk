@@ -108,9 +108,8 @@ The following parameters are specified in an `Configuration` object. Refer to [s
   - Flag to control the automatic tracking of `session_start` and `session_end` events.
   - Default value: `true`
 
-- `requirePushAuthorization`
-  - When `true`, the SDK only tracks the push token if the user has granted notification permission; otherwise the `notification_state` event is tracked with `valid = false` and a description such as "Permission denied". When `false`, the token is tracked regardless of permission (e.g. for silent push).
-  - Applied on both iOS and Android. Can be set at root level (same value for both platforms) or overridden per platform via `ios.requirePushAuthorization` or `android.requirePushAuthorization`.
+- `requirePushAuthorization` **(deprecated — use `ios.requirePushAuthorization` instead)**
+  - This property no longer has any effect on Android. Use `ios.requirePushAuthorization` for iOS-specific behavior.
   - Default value: `true`
 
 - `sessionTimeout`
@@ -125,8 +124,8 @@ The following parameters are specified in an `Configuration` object. Refer to [s
   - Indicates the frequency with which the SDK should track the push notification token to Engagement.
   - Default value: `ON_TOKEN_CHANGE`
   - Possible values:
-    - `ON_TOKEN_CHANGE` - tracks push token if it differs from a previously tracked one
-    - `EVERY_LAUNCH` - always tracks push token
+    - `ON_TOKEN_CHANGE` - tracks the push token if it differs from a previously tracked one. The SDK also automatically refreshes the `notification_state` event every 30 days, even when the token hasn't changed.
+    - `EVERY_LAUNCH` - tracks the push token once per app launch (process start). Some operations always trigger tracking regardless of this setting: manual `trackPushToken()` calls, receiving a new token from FCM/HMS/APNs, and calling `anonymize()` or `stopIntegration()`.
     - `DAILY` - tracks push token once per day
 
 - `flushMaxRetries`
@@ -163,6 +162,12 @@ The following parameters are specified in an `Configuration` object. Refer to [s
     - E.g. `com.example.myapp`, `com-example-myapp`, `my-application1`
   - Default value: `default-application`
 
+- `regenerateDeviceIdOnAnonymize`
+
+  - If `true`, calling `Exponea.anonymize()` generates a new `device_id` for the new anonymous customer profile, so the device identifier no longer links the new profile to the previous customer's events.
+  - Set this to `true` when your privacy requirements call for a sign-out flow that produces two unlinkable customer profiles. The default (`false`) preserves the existing behaviour where `device_id` persists across `anonymize()` calls.
+  - Default value: `false`
+
 - `android`
 
   - `AndroidConfiguration` object containing [Android-specific configuration parameters](#android-specific-configuration-parameters).
@@ -174,9 +179,8 @@ The following parameters are specified in an `Configuration` object. Refer to [s
 
 The following parameters are specified in an `AndroidConfiguration` object. Refer to [src/Configuration.ts](https://github.com/exponea/exponea-react-native-sdk/blob/main/src/Configuration.ts) for the complete interface definition.
 
-- `requirePushAuthorization`
-  - Same as the root-level parameter. When set in `android`, it overrides the root value for Android only. Affects `notification_state` event behavior (e.g. "Permission denied" when user has not granted notification permission).
-  - Default value: `true`
+- `requirePushAuthorization` **(deprecated)**
+  - This property has no effect on Android. The SDK always tracks the push token. The `valid` and `description` properties in the `notification_state` event reflect the actual OS notification permission state.
 
 - `automaticPushNotifications`
 
@@ -234,12 +238,11 @@ The following parameters are specified in an `AndroidConfiguration` object. Refe
 The following parameters are specified in an `IOSConfiguration` object. Refer to [src/Configuration.ts](https://github.com/exponea/exponea-react-native-sdk/blob/main/src/Configuration.ts) for the complete interface definition.
 
 - `requirePushAuthorization`
-  - Same as the root-level parameter. When set in `ios`, it overrides the root value for iOS only (same precedence as on Android). The SDK checks push notification authorization status ([Apple documentation](https://developer.apple.com/documentation/usernotifications/unnotificationsettings/1648391-authorizationstatus)) and only tracks the push token if the user is authorized. When disabled, the SDK registers for push on app start and tracks the token (e.g. for silent push). Unless you're only using silent notifications, keep the default value `true`.
-
-  - The SDK can check push notification authorization status ([Apple documentation](https://developer.apple.com/documentation/usernotifications/unnotificationsettings/1648391-authorizationstatus)) and only track the push token if the user is authorized to receive push notifications.
-  - When disabled, the SDK will automatically register for push notifications on app start and track the token to Engagement so your app can receive silent push notifications.
-  - When enabled, the SDK will automatically register for push notifications if the app is authorized to show push notifications to the user.
-  - Unless you're only using silent notifications, keep the default value `true`.
+  - Controls whether the SDK calls `registerForRemoteNotifications()` automatically based on the OS-reported notification authorization status.
+  - When `true` (default), the SDK only calls `registerForRemoteNotifications()` once the OS reports `authorized` or `provisional` status ([Apple documentation](https://developer.apple.com/documentation/usernotifications/unnotificationsettings/1648391-authorizationstatus)). Use this when your app should receive an APNs token only after the user grants notification permission.
+  - When `false`, the SDK calls `registerForRemoteNotifications()` unconditionally on every launch, allowing the app to receive silent pushes regardless of the user's visible notification permission state.
+  - The `valid` field in `notification_state` events always reflects the actual OS authorization status, regardless of your `requirePushAuthorization` setting.
+  - Default value: `true`
 
 - `appGroup`
   - App group used for communication between the main app and notification extensions. This is a required field for rich push notification setup.

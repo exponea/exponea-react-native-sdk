@@ -79,7 +79,6 @@ internal class ExponeaModuleTest {
         val projectConfig = configSlot.captured.integrationConfig as ProjectConfig
         assertEquals("mock", projectConfig.projectToken)
         assertEquals("Token mock", projectConfig.authorization)
-        assertEquals(true, configSlot.captured.requirePushAuthorization)
     }
 
     @Test

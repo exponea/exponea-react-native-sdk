@@ -149,6 +149,10 @@ public class ConfigurationParser {
         try dictionary.getOptionalSafely(property: "applicationId")
     }
 
+    public func parseRegenerateDeviceIdOnAnonymize() throws -> Bool? {
+        try dictionary.getOptionalSafely(property: "regenerateDeviceIdOnAnonymize")
+    }
+
     /// Builds a `Configuration` object suitable for `Exponea.configure(with:authContext:)`.
     /// Extracts push-notification, session, and flushing settings as flat values rather than
     /// the wrapped enum types used by the multi-arg configure overloads.
@@ -198,7 +202,8 @@ public class ConfigurationParser {
             allowDefaultCustomerProperties: try parseAllowDefaultCustomerProperties(),
             advancedAuthEnabled: streamSettings != nil ? nil : try parseAdvancedAuthEnabled(),
             manualSessionAutoClose: try parseManualSessionAutoClose(),
-            applicationID: try parseApplicationId()
+            applicationID: try parseApplicationId(),
+            regenerateDeviceIdOnAnonymize: try parseRegenerateDeviceIdOnAnonymize()
         )
     }
 }

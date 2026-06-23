@@ -197,6 +197,7 @@ test('Configuration type accepts all fields with ProjectConfig (type check)', ()
       appGroup,
     },
     manualSessionAutoClose: true,
+    regenerateDeviceIdOnAnonymize: true,
   };
 
   expect(config.integrationConfig).toEqual({
@@ -212,6 +213,7 @@ test('Configuration type accepts all fields with ProjectConfig (type check)', ()
   );
   expect(config.allowDefaultCustomerProperties).toBe(false);
   expect(config.manualSessionAutoClose).toBe(true);
+  expect(config.regenerateDeviceIdOnAnonymize).toBe(true);
   expect(config.android).toEqual({
     automaticPushNotifications: true,
     pushIcon: 12345,
@@ -267,6 +269,7 @@ test('Configuration type accepts all fields with StreamConfig (type check)', () 
       appGroup,
     },
     manualSessionAutoClose: true,
+    regenerateDeviceIdOnAnonymize: true,
   };
 
   expect(config.integrationConfig).toEqual({
@@ -281,6 +284,7 @@ test('Configuration type accepts all fields with StreamConfig (type check)', () 
   );
   expect(config.allowDefaultCustomerProperties).toBe(false);
   expect(config.manualSessionAutoClose).toBe(true);
+  expect(config.regenerateDeviceIdOnAnonymize).toBe(true);
   expect(config.android).toEqual({
     automaticPushNotifications: true,
     pushIcon: 12345,
@@ -626,5 +630,54 @@ test('configure does not warn when ProjectConfig is used with advancedAuthEnable
   expect(warnSpy).not.toHaveBeenCalled();
   const called = mockConfigure.mock.lastCall![0] as any;
   expect(called.advancedAuthEnabled).toBe(true);
+  warnSpy.mockRestore();
+});
+
+test('configure warns when root-level requirePushAuthorization is set', async () => {
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await Exponea.configure({
+    integrationConfig: {
+      projectToken: PROJECT_TOKEN,
+      authorizationToken: AUTH_TOKEN,
+    },
+    requirePushAuthorization: false,
+  } as any);
+
+  expect(warnSpy).toHaveBeenCalledWith(
+    "[Exponea] 'requirePushAuthorization' at the root level is deprecated. Use 'ios.requirePushAuthorization' instead. It has no effect on Android."
+  );
+  warnSpy.mockRestore();
+});
+
+test('configure warns when android.requirePushAuthorization is set', async () => {
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await Exponea.configure({
+    integrationConfig: {
+      projectToken: PROJECT_TOKEN,
+      authorizationToken: AUTH_TOKEN,
+    },
+    android: { requirePushAuthorization: false },
+  });
+
+  expect(warnSpy).toHaveBeenCalledWith(
+    "[Exponea] 'android.requirePushAuthorization' is deprecated and has no effect on Android. Remove it from your configuration."
+  );
+  warnSpy.mockRestore();
+});
+
+test('configure does not warn when only ios.requirePushAuthorization is set', async () => {
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await Exponea.configure({
+    integrationConfig: {
+      projectToken: PROJECT_TOKEN,
+      authorizationToken: AUTH_TOKEN,
+    },
+    ios: { requirePushAuthorization: false },
+  });
+
+  expect(warnSpy).not.toHaveBeenCalled();
   warnSpy.mockRestore();
 });

@@ -169,9 +169,9 @@ Exponea.requestPushAuthorization()
   .catch((error) => console.log(error.message));
 ```
 
-> 👍
+> 📘 Note
 >
-> Push notification authorization status is tracked as customer property `apple_push_notification_authorized`.
+> `notification_state` events reflect push notification permission status in the `valid` and `description` properties. For more details, see [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
 
 ### Checklist:
 

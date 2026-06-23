@@ -56,8 +56,8 @@ interface BaseConfiguration {
   /** Defines how often should the SDK track push notification token to Exponea */
   pushTokenTrackingFrequency?: PushTokenTrackingFrequency;
   /**
-   * If true, push token is only tracked when the user has granted notification permission; otherwise empty token / permission denied is reported in notification_state.
-   * Applied on both iOS and Android when set at root level. Can be overridden per platform via ios.requirePushAuthorization or android.requirePushAuthorization.
+   * @deprecated Android no longer uses this flag — the push token is always tracked and permission state is reflected via notification_state.valid.
+   * Use ios.requirePushAuthorization instead.
    */
   requirePushAuthorization?: boolean;
   /** Flag to apply `defaultProperties` list to `identifyCustomer` tracking event. */
@@ -74,13 +74,17 @@ interface BaseConfiguration {
   manualSessionAutoClose?: boolean;
   /** Application identifier for the SDK. Defaults to 'default-application'. Must be lowercase alphanumeric with optional dots/hyphens between segments (max 50 characters, pattern: ^[a-z0-9]+(?:[-.][a-z0-9]+)*$) */
   applicationId?: string;
+  /** If true, a new device ID is generated when anonymize() is called. Defaults to false to preserve existing behavior. */
+  regenerateDeviceIdOnAnonymize?: boolean;
 }
 
 type Configuration = BaseConfiguration &
   (WithIntegrationConfig | WithLegacyProject);
 
 export interface AndroidConfiguration {
-  /** If true, push token is only tracked when the user has granted notification permission. Affects notification_state event. Default true. */
+  /**
+   * @deprecated Android no longer uses this flag — the push token is always tracked and permission state is reflected via notification_state.valid.
+   */
   requirePushAuthorization?: boolean;
   /** If true, push notifications are automatically tracked */
   automaticPushNotifications?: boolean;
@@ -114,7 +118,7 @@ export interface AndroidConfiguration {
 }
 
 export interface IOSConfiguration {
-  /** If true, push notification registration and push token tracking is only done if the device is authorized to display push notifications */
+  /** Controls whether the SDK calls registerForRemoteNotifications() only after the OS reports authorized/provisional status. When false, the SDK registers unconditionally to support silent pushes without user permission. Default true. */
   requirePushAuthorization?: boolean;
   /** App group used for communication between main app and notification extensions */
   appGroup?: string;

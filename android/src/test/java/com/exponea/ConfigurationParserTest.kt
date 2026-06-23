@@ -37,7 +37,6 @@ internal class ConfigurationParserTest {
         val projectConfig = result.integrationConfig as ProjectConfig
         assertEquals(MOCK_PROJECT_TOKEN, projectConfig.projectToken)
         assertEquals(TOKEN_MOCK_AUTHORIZATION_TOKEN, projectConfig.authorization)
-        assertEquals(true, result.requirePushAuthorization)
     }
 
     @Test
@@ -78,6 +77,7 @@ internal class ConfigurationParserTest {
         assertEquals(NotificationManager.IMPORTANCE_HIGH, result.pushNotificationImportance)
         assertEquals(ExponeaConfiguration.HttpLoggingLevel.BODY, result.httpLoggingLevel)
         assertEquals(false, result.allowDefaultCustomerProperties)
+        assertEquals(true, result.regenerateDeviceIdOnAnonymize)
     }
 
     @Test
@@ -151,7 +151,6 @@ internal class ConfigurationParserTest {
         assertEquals(MOCK_PROJECT_TOKEN, projectConfig.projectToken)
         assertEquals(TOKEN_MOCK_AUTHORIZATION_TOKEN, projectConfig.authorization)
         assertEquals(HTTP_MOCK_BASE_URL, projectConfig.baseUrl)
-        assertEquals(true, result.requirePushAuthorization)
         assertEquals(123, result.pushAccentColor)
     }
 

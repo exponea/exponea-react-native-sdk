@@ -77,6 +77,7 @@ describe('parameter serialization and typings', () => {
         appGroup: 'mock-app-group',
       },
       manualSessionAutoClose: true,
+      regenerateDeviceIdOnAnonymize: true,
     });
     expect(mockExponea.lastArgumentsJson).toBe(
       TestUtils.readJsonAsParams('./src/test_data/configurationComplete.json')

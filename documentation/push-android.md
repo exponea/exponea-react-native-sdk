@@ -228,6 +228,17 @@ The behavior of this callback is as follows:
   - Show the dialog, return the user's decision (`true`/`false`).
   - In case of previously granted permission, don't show the dialog return `true`.
 
+#### Notification permission and token validity
+
+On Android 13 and higher, the app can't send normal push notifications if the user hasn't granted permission—even when the token generated at app start is valid. This also applies on any Android version when the user disables notifications for the app in system settings.
+
+The SDK tracks the push token regardless of the user's notification permission. Every `notification_state` event reflects the current status in its `valid` and `description` properties:
+
+* `valid: true`, `description: "Permission granted"` — the user has granted notification permission. You can use the token to send both normal and silent push notifications.
+* `valid: false`, `description: "Permission denied"` — the user has denied (or not yet granted) notification permission, or notifications are disabled for the app in system settings. You can use the token to send silent push notifications only until the user grants permission.
+
+For more details, see [Token tracking via notification_state event](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#token-tracking-via-notification_state-event).
+
 ## Customization
 
 ### Enable deep linking

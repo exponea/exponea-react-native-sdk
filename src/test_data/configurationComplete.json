@@ -42,5 +42,6 @@
     "requirePushAuthorization": false,
     "appGroup": "mock-app-group"
   },
-  "manualSessionAutoClose": true
+  "manualSessionAutoClose": true,
+  "regenerateDeviceIdOnAnonymize": true
 }

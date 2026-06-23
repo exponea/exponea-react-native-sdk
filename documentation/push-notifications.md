@@ -165,11 +165,13 @@ allowing you to track multiple push tokens for the same customer across differen
 The SDK automatically tracks `notification_state` events in the following scenarios:
 
 - SDK initialization
-- App transitions from background to foreground
+- App transitions from background to foreground (only if notification permission status has changed since last tracking)
 - New token received from Firebase, Huawei, or APNs
 - Manual token tracking using `Exponea.trackPushToken(...)` (Android, iOS) or `Exponea.trackHmsPushToken(...)` (Huawei)
-- User anonymization via `Exponea.anonymize()`
+- User anonymization via `Exponea.anonymize()` or `Exponea.stopIntegration()`
 - Notification permission requested via `Exponea.requestPushAuthorization()`
+- OS push authorization status flips (granted ↔ denied) since the last `notification_state` event—this happens regardless of your `pushTokenTrackingFrequency` setting, so the `valid` flag always stays in sync with the user's actual permission state.
+- 30 days have passed since the last successful `notification_state` track (applies to `ON_TOKEN_CHANGE` frequency, ensuring the token stays within the validity window even when it hasn't changed).
 
 ```typescript
 Exponea.requestPushAuthorization()
@@ -183,16 +185,36 @@ Exponea.requestPushAuthorization()
 
 The frequency of `notification_state` event tracking depends on the `pushTokenTrackingFrequency` configuration property. [See SDK configuration](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
 
+> 📘 Note
+>
+> When `pushTokenTrackingFrequency` is set to `ON_TOKEN_CHANGE` (the default), the SDK also automatically refreshes the `notification_state` event every 30 days, even when the token hasn't changed.
+
+> 📘 Note
+>
+> When `pushTokenTrackingFrequency` is set to `EVERY_LAUNCH`, the SDK tracks the push token once per app launch (process start). All other SDK operations during that launch reuse this tracking, so each launch produces a single `notification_state` event.
+>
+> Some operations bypass this limit and always trigger tracking:
+> - Calling `trackPushToken()` manually.
+> - Receiving a new token from FCM, HMS, or APNs.
+> - Calling `anonymize()` or `stopIntegration()`.
+
 ### notification_state event properties
 
 | Property                  | Description                                   | Example values                                              |
 | ------------------------- | --------------------------------------------- | ----------------------------------------------------------- |
 | `push_notification_token` | Current push notification token               | Token string                                                |
-| `platform`                | Mobile platform                               | `android`, `huawei`, or `iOS`                               |
+| `platform`                | Mobile platform                               | `android`, `huawei`, or `ios`                               |
 | `valid`                   | Token validity status                         | `true` or `false`                                           |
 | `description`             | Token state description                       | `Permission granted`, `Permission denied`, or `Invalidated` |
 | `application_id`          | Application identifier from SDK configuration | Custom ID or `default-application` (default)                |
 | `device_id`               | Unique device identifier                      | UUID string                                                 |
+| `sdk_version`             | Version of the Bloomreach SDK                 | `4.1.0`                                                     |
+| `os_name`                 | Operating-system name                         | `iOS`, `Android`                                            |
+| `os_version`              | Operating-system version                      | `17.4`, `14`                                                |
+| `device_model`            | Device model name                             | `iPhone 15 Pro`, `Samsung Galaxy S21`                       |
+| `device_type`             | Device form factor                            | `mobile` or `tablet`                                        |
+| `app_version`             | Host app version                              | `1.0`, `2.3.1`                                              |
+| `sdk`                     | SDK identifier                                | `Exponea Android SDK`, `Exponea iOS SDK`                    |
 
 > 📘 Note
 >
@@ -202,11 +224,11 @@ The frequency of `notification_state` event tracking depends on the `pushTokenTr
 
 The combination of `valid` and `description` properties indicates the token's current state:
 
-| Valid | Description         | When this occurs                                                                                                                                             |
-|-------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `false` | `Invalidated`         | New token received \(old token becomes invalid\) or `Exponea.anonymize()` called                                                                     |
-| `false` | `Permission denied`   | `requirePushAuthorization` in [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration) is `true` and user denied notification permission |
-| `true`  | `Permission granted`  | Valid token tracked successfully \(all other cases\)                                                                                                         |
+| Valid   | Description          | When this occurs                                                                                                                                                                                        |
+|---------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `false` | `Invalidated`        | New token received \(old token becomes invalid\) or `Exponea.anonymize()` / `Exponea.stopIntegration()` called                                                                                          |
+| `false` | `Permission denied`  | User denied notification permission or the user disabled notifications in system settings. The `valid` flag reflects the actual OS permission state directly, regardless of `requirePushAuthorization`. |
+| `true`  | `Permission granted` | User has granted notification permission and notifications are enabled                                                                                                                                  |
 
 ### Configuring Application ID
 

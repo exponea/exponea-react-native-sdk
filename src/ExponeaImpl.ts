@@ -134,6 +134,16 @@ export const Exponea: ExponeaType = {
         "'integrationRouteMap'/'projectMapping' is not supported with 'StreamConfig' and will be ignored."
       );
     }
+    if ((config as any).requirePushAuthorization !== undefined) {
+      console.warn(
+        "[Exponea] 'requirePushAuthorization' at the root level is deprecated. Use 'ios.requirePushAuthorization' instead. It has no effect on Android."
+      );
+    }
+    if ((config as any).android?.requirePushAuthorization !== undefined) {
+      console.warn(
+        "[Exponea] 'android.requirePushAuthorization' is deprecated and has no effect on Android. Remove it from your configuration."
+      );
+    }
     const bridgePayload = migrateLegacyConfig(config, isStreamConfig);
     return NativeExponea.configure(bridgePayload, customerIdentity ?? null);
   },

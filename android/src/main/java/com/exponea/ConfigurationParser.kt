@@ -101,7 +101,6 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                 "or 'projectToken' and 'authorizationToken' for 'ProjectConfig'"
             )
         }
-        configuration.requirePushAuthorization = true
         map.forEach { entry ->
             when (entry.key) {
                 "integrationRouteMap" -> {
@@ -139,7 +138,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                 }
                 "requirePushAuthorization" ->
                     configuration.requirePushAuthorization =
-                        map.getNullSafely("requirePushAuthorization", Boolean::class, true) ?: true
+                        map.getNullSafely("requirePushAuthorization", Boolean::class, false) ?: false
                 "allowDefaultCustomerProperties" ->
                     configuration.allowDefaultCustomerProperties = entry.valueAs(Boolean::class)
                 "advancedAuthEnabled" ->
@@ -167,6 +166,8 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
                         }
                     }
                 }
+                "regenerateDeviceIdOnAnonymize" ->
+                    configuration.regenerateDeviceIdOnAnonymize = entry.valueAs(Boolean::class)
             }
         }
         return configuration
@@ -177,7 +178,7 @@ internal class ConfigurationParser(private val readableMap: ReadableMap) {
             when (entry.key) {
                 "requirePushAuthorization" ->
                     configuration.requirePushAuthorization =
-                        map.getNullSafely("requirePushAuthorization", Boolean::class, true) ?: true
+                        map.getNullSafely("requirePushAuthorization", Boolean::class, false) ?: false
                 "automaticPushNotifications" ->
                     configuration.automaticPushNotification = entry.valueAs(Boolean::class)
                 "pushIconResourceName" -> {
