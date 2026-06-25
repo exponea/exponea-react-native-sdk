@@ -33,6 +33,21 @@ Pod::Spec.new do |s|
   # uses) so wholemodule optimization is preserved for dynamic/default builds.
   # See: https://github.com/exponea/exponea-react-native-sdk/issues/138
   if ENV['USE_FRAMEWORKS'] == 'static'
-    s.pod_target_xcconfig['SWIFT_COMPILATION_MODE'] = 'incremental'
+    existing_xcconfig = s.attributes_hash['pod_target_xcconfig'] || {}
+    merged_header_search_paths = [
+      existing_xcconfig['HEADER_SEARCH_PATHS'] || '$(inherited)',
+      '"$(PODS_ROOT)/../../node_modules/react-native/ReactCommon"',
+      '"${PODS_CONFIGURATION_BUILD_DIR}/React/React.framework/Headers"',
+      '"${PODS_CONFIGURATION_BUILD_DIR}/react-native-exponea-sdk/react_native_exponea_sdk.framework/Headers"',
+      '"$(OBJECT_FILE_DIR_normal)/$(CURRENT_ARCH)"',
+      '"$(DERIVED_SOURCES_DIR)"'
+    ].compact.join(' ')
+
+    s.pod_target_xcconfig = existing_xcconfig.merge(
+      'HEADER_SEARCH_PATHS' => merged_header_search_paths,
+      'CLANG_CXX_LANGUAGE_STANDARD' => rct_cxx_language_standard(),
+      'SWIFT_COMPILATION_MODE' => 'incremental',
+      'SWIFT_OBJC_INTERFACE_HEADER_NAME' => 'react_native_exponea_sdk-Swift.h'
+    )
   end
 end
