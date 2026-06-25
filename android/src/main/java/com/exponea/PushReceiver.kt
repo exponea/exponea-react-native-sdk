@@ -46,17 +46,18 @@ class PushReceiver : BroadcastReceiver() {
         private fun sendPushOpenedEvent(openedPush: OpenedPush) {
             reactContext?.let { context ->
                 try {
-                    val map = openedPush.toWritableMap()
+                    val payload = mutableMapOf<String, Any?>("action" to openedPush.action.value)
+                    openedPush.url?.let { payload["url"] = it }
+                    openedPush.additionalData?.let { payload["additionalData"] = it }
+                    val json = ExponeaGson.instance.toJson(payload)
                     context
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                        .emit("pushOpened", map)
+                        .emit("pushOpened", json)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    // Queue if emission fails
                     pendingOpenedPush = openedPush
                 }
             } ?: run {
-                // Queue if context not ready
                 pendingOpenedPush = openedPush
             }
         }
@@ -86,7 +87,7 @@ class PushReceiver : BroadcastReceiver() {
         val additionalData = pushData?.let { data ->
             try {
                 ExponeaGson.instance.fromJson(data["attributes"], Map::class.java)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 null
             }
         }

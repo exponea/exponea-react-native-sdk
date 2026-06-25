@@ -874,23 +874,6 @@ internal fun Map<String, Any?>.toNotificationAction(): com.exponea.sdk.models.No
     )
 }
 
-// Converter for OpenedPush to WritableMap (for event emission)
-internal fun OpenedPush.toWritableMap(): WritableMap {
-    val map = Arguments.createMap()
-    map.putString("action", action.value)
-    url?.let { map.putString("url", it) }
-    additionalData?.let { data ->
-        val dataMap = Arguments.createMap()
-        data.forEach { (key, value) ->
-            if (key is String && value is String) {
-                dataMap.putString(key, value)
-            }
-        }
-        map.putMap("additionalData", dataMap)
-    }
-    return map
-}
-
 // Helper to fix number types after Gson deserialization
 // Gson converts all numbers to Double when deserializing to Map, but we want Int for whole numbers
 private fun fixNumberTypes(value: Any?): Any? {
