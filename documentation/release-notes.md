@@ -14,6 +14,19 @@ content:
 > Refer to the [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 4.0.0
+#### June 26, 2026
+* Added:
+  * Adds support for Data hub Event Streams integration with optional SDK auth token authorization.
+  * Updates the native Android SDK to version 5.2.1.
+  * Updates the native iOS SDK to version 4.2.0.
+  * Adds the `regenerateDeviceIdOnAnonymize` configuration parameter to generate a new `device_id` when calling `anonymize()`.
+  * Deprecates the top-level `requirePushAuthorization` configuration parameter in favor of `ios.requirePushAuthorization`.
+  * Updates documentation for `notification_state` event tracking and push notification configuration.
+* Fixed:
+  * Fixes Android push notification open event parsing that emitted a native object instead of a JSON string and silently dropped numeric `additionalData` fields.
+  * Fixes podspec configuration for `USE_FRAMEWORKS=static` iOS builds.
+
 ## Release Notes for 3.1.0
 #### May 13, 2026
 * Added:
