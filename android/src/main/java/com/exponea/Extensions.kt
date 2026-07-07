@@ -761,7 +761,8 @@ internal fun Map<String, Any?>.toMessageItem(): MessageItem? {
 
 internal fun Map<String, Any?>.toMessageItemAction(): MessageItemAction? {
     val source = this
-    val sourceType = MessageItemAction.Type.find(source.getNullSafely("type")) ?: return null
+    val typeKey = source.getNullSafely("type", String::class) ?: source.getNullSafely("action", String::class)
+    val sourceType = MessageItemAction.Type.find(typeKey) ?: return null
     return MessageItemAction().apply {
         type = sourceType
         title = source.getNullSafely("title")

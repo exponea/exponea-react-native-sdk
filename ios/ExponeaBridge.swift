@@ -601,21 +601,30 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         }
     }
 
-    public func markAppInboxAsRead(_ messageDict: [AnyHashable: Any]) -> Bool {
+    public func markAppInboxAsRead(
+        _ messageId: String,
+        success: @escaping (Bool) -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
         guard ExponeaBridge.exponeaInstance.isConfigured else {
             print("ExponeaBridge: SDK not configured")
-            return false
+            failure(ExponeaError.notConfigured)
+            return
         }
 
-        do {
-            let message = try TypeConverters.parseAppInboxMessage(from: messageDict as NSDictionary)
-            ExponeaSDK.Exponea.shared.markAppInboxAsRead(message) { marked in
-                print("ExponeaBridge: Message marked as read: \(marked)")
+        print("ExponeaBridge: Fetching native AppInbox message before marking as read: \(messageId)")
+        ExponeaSDK.Exponea.shared.fetchAppInboxItem(messageId) { result in
+            switch result {
+            case .success(let message):
+                print("ExponeaBridge: Marking native AppInbox message as read: \(messageId)")
+                ExponeaSDK.Exponea.shared.markAppInboxAsRead(message) { marked in
+                    print("ExponeaBridge: AppInbox message \(messageId) marked as read: \(marked)")
+                    success(marked)
+                }
+            case .failure(let error):
+                print("ExponeaBridge: Failed to fetch native AppInbox message \(messageId) before marking as read: \(error)")
+                failure(error)
             }
-            return true
-        } catch {
-            print("ExponeaBridge: Failed to parse app inbox message: \(error)")
-            return false
         }
     }
 
