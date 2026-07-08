@@ -12,14 +12,12 @@ import com.exponea.sdk.util.Logger
 import com.exponea.sdk.view.InAppContentBlockPlaceholderView
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
-import com.facebook.react.common.MapBuilder
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.uimanager.PixelUtil
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.ViewManagerDelegate
-import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.Event
 import com.facebook.react.viewmanagers.InAppContentBlocksPlaceholderManagerDelegate
 import com.facebook.react.viewmanagers.InAppContentBlocksPlaceholderManagerInterface
@@ -81,7 +79,7 @@ class InAppContentBlocksPlaceholderManager :
             putDouble("width", width.toDouble())
             putDouble("height", height.toDouble())
         }
-        val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, viewId)
+        val dispatcher = UIManagerHelper.getEventDispatcher(context)
         val surfaceId: Int = UIManagerHelper.getSurfaceId(context)
         dispatcher?.dispatchEvent(
             DimensChangedEvent(surfaceId, viewId, event)
@@ -101,10 +99,10 @@ class InAppContentBlocksPlaceholderManager :
             putString("eventType", eventType)
             putString("placeholderId", placeholderId)
             putString("contentBlock", ExponeaGson.instance.toJson(contentBlock))
-            putString("action", ExponeaGson.instance.toJson(action))
+            putString("contentBlockAction", ExponeaGson.instance.toJson(action))
             putString("errorMessage", errorMessage)
         }
-        val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, viewId)
+        val dispatcher = UIManagerHelper.getEventDispatcher(context)
         val surfaceId: Int = UIManagerHelper.getSurfaceId(context)
         dispatcher?.dispatchEvent(
             InAppContentBlockEvent(surfaceId, viewId, event)
