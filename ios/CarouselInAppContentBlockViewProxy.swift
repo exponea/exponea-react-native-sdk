@@ -248,14 +248,19 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
     }
 
     private func notifyDimensChanged(width: CGFloat, height: CGFloat) {
-        eventEmitter?.emitDimensChanged(
-            width: Double(width),
-            height: Double(height)
-        )
+        onMain { [weak self] in
+            self?.eventEmitter?.emitDimensChanged(
+                width: Double(width),
+                height: Double(height)
+            )
+        }
     }
 
     private func notifyContentBlockCarouselEvent(_ event: ContentBlockCarouselEvent) {
-        eventEmitter?.emitContentBlockEvent(data: event.toDictionary() as NSDictionary)
+        let data = event.toDictionary() as NSDictionary
+        onMain { [weak self] in
+            self?.eventEmitter?.emitContentBlockEvent(data: data)
+        }
     }
 
     private func notifyContentFilterRequest(input: [ExponeaSDK.InAppContentBlockResponse]) {
@@ -274,7 +279,10 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
             return
         }
 
-        eventEmitter?.emitDataRequest(data: ["requestType": "filter", "data": jsonString] as NSDictionary)
+        let payload: NSDictionary = ["requestType": "filter", "data": jsonString]
+        onMain { [weak self] in
+            self?.eventEmitter?.emitDataRequest(data: payload)
+        }
     }
 
     private func notifyContentSortRequest(input: [ExponeaSDK.InAppContentBlockResponse]) {
@@ -293,6 +301,9 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
             return
         }
 
-        eventEmitter?.emitDataRequest(data: ["requestType": "sort", "data": jsonString] as NSDictionary)
+        let payload: NSDictionary = ["requestType": "sort", "data": jsonString]
+        onMain { [weak self] in
+            self?.eventEmitter?.emitDataRequest(data: payload)
+        }
     }
 }

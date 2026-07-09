@@ -1112,8 +1112,9 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     }
 
     private func sendEventToJS(name: String, body: Any?) {
-        // Use RCTEventEmitter to send events to JavaScript
-        eventEmitter?.sendEvent(withName: name, body: body)
+        onMain { [weak self] in
+            self?.eventEmitter?.sendEvent(withName: name, body: body)
+        }
     }
 
     private func convertToJSONString(_ dict: [AnyHashable: Any]) throws -> String {

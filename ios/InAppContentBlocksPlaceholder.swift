@@ -92,10 +92,12 @@ public class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackTyp
     }
 
     private func notifyDimensChanged(width: CGFloat, height: CGFloat) {
-        eventEmitter?.emitDimensChanged(
-            width: Double(width),
-            height: Double(height)
-        )
+        onMain { [weak self] in
+            self?.eventEmitter?.emitDimensChanged(
+                width: Double(width),
+                height: Double(height)
+            )
+        }
     }
 
     private func notifyInAppContentBlockEvent(
@@ -137,7 +139,10 @@ public class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackTyp
             data["errorMessage"] = errorMessage
         }
 
-        eventEmitter?.emitContentBlockEvent(data: data as NSDictionary)
+        let eventData = data as NSDictionary
+        onMain { [weak self] in
+            self?.eventEmitter?.emitContentBlockEvent(data: eventData)
+        }
     }
 
     public func onMessageShown(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {
