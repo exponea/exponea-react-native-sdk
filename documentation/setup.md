@@ -25,7 +25,7 @@ The SDK is compatible with React Native 0.83.0 - 0.85.2 and requires Node.js 20.
 
 > 📘
 >
-> Refer to the [release notes](https://github.com/exponea/exponea-react-native-sdk/releases) for the latest Exponea React Native SDK release.
+> Refer to [React Native SDK release notes](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-release-notes) for the latest Exponea React Native SDK release.
 
 ### Install package
 
