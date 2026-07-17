@@ -302,6 +302,25 @@ Exponea.trackSessionStart();
 Exponea.trackSessionEnd();
 ```
 
+### Get the current customer cookie
+
+Use `Exponea.getCustomerCookie()` to retrieve the cookie that identifies the current customer being tracked. The value is available only after the SDK is initialized.
+
+By default, the SDK tracks events for an anonymous customer identified by a cookie. When you identify the customer with a hard ID, the SDK keeps using the same cookie alongside the hard ID. The cookie persists until you call:
+
+* `Exponea.anonymize()` to generate a new cookie immediately.
+* `Exponea.stopIntegration()` or `Exponea.clearLocalCustomerData(appGroup)` to remove the cookie. A new one is created only on the next SDK initialization.
+
+Use this cookie value to work with the current anonymous identity in your app, for example, to synchronize identity with a webview.
+
+#### Example
+
+```typescript
+Exponea.getCustomerCookie()
+  .then((cookie) => console.log(cookie))
+  .catch((error) => console.log(error));
+```
+
 ## Push notifications
 
 If developers [integrate push notification functionality](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications#integration) in their app, the SDK automatically tracks push notifications by default.
