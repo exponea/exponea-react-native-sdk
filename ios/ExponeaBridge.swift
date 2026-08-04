@@ -124,10 +124,7 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         }
 
         do {
-            guard let identity = try Self.parseCustomerIdentity(customerIdentity) else {
-                print("ExponeaBridge: identifyCustomer received an invalid CustomerIdentity object")
-                return false
-            }
+            let identity = try Self.parseCustomerIdentity(customerIdentity) ?? CustomerIdentity()
             let parsedProperties = try JsonDataParser.parse(dictionary: properties as NSDictionary)
             ExponeaSDK.Exponea.shared.identifyCustomer(
                 context: identity,

@@ -297,7 +297,7 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
           @Suppress("UNCHECKED_CAST")
           val props = properties.toHashMapRecursively().filterValues { it != null } as HashMap<String, Any>
           val identity = customerIdentity.toCustomerIdentity()
-              ?: throw ExponeaDataException("identifyCustomer received an invalid CustomerIdentity object")
+              ?: CustomerIdentity(customerIds = emptyMap())
           Exponea.identifyCustomer(
               customerIdentity = identity,
               properties = props.ifEmpty { null }

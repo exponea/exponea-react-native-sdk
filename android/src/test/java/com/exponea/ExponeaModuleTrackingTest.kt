@@ -19,6 +19,7 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import java.io.File
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -89,6 +90,37 @@ internal class ExponeaModuleTrackingTest {
         assertTrue(identitySlot.isCaptured)
         assertEquals(mapOf("id" to "value"), identitySlot.captured.customerIds)
         assertEquals(null, identitySlot.captured.sdkAuthToken)
+    }
+
+    @Test
+    fun `identify customer should resolve and identify customer with empty customer identity`() {
+        every { Exponea.isInitialized } returns true
+        val identitySlot = slot<CustomerIdentity>()
+        val propertiesSlot = slot<Map<String, Any>>()
+        every {
+            Exponea.identifyCustomer(
+                capture(identitySlot),
+                capture(propertiesSlot)
+            )
+        } just Runs
+        module.identifyCustomer(
+            JavaOnlyMap.of(),
+            JavaOnlyMap.of("language_app", "en"),
+            MockResolvingPromise {
+                verify(exactly = 1) {
+                    Exponea.identifyCustomer(
+                        any<CustomerIdentity>(),
+                        any<Map<String, Any>>()
+                    )
+                }
+            }
+        )
+        assertTrue(identitySlot.isCaptured)
+        assertTrue(identitySlot.captured.customerIds.isEmpty())
+        assertNull(identitySlot.captured.sdkAuthToken)
+
+        assertTrue(propertiesSlot.isCaptured)
+        assertEquals(mapOf("language_app" to "en"), propertiesSlot.captured)
     }
 
     @Test
