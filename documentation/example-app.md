@@ -9,7 +9,7 @@ content:
   excerpt: 'Build, run, and navigate the example app included with the React Native SDK'
 ---
 
-The Exponea React Native SDK includes an example application you can use as a reference implementation. You can build and run the app, test Engagement features, and compare the code and behavior of your implementation with the expected behavior and code in the example app.
+The Exponea React Native SDK includes an example application you can use as a reference implementation. You can build and run the app, test {user.mkg} features, and compare the code and behavior of your implementation with the expected behavior and code in the example app.
 
 ## Prerequisites
 
@@ -86,11 +86,11 @@ Running the app in the simulator displays the **AuthScreen**. The screen fields 
    - Enter your `Authorization token` (API key).
    - **Optional:** Enter `Advanced Auth key` to enable [customer token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#customer-token-authorization).
 3. For **Stream Config**:
-   - Enter your `Stream ID`. You can find the stream ID in the Data hub app under `Event streams` > select your stream > `Access Security`.
+   - Enter your `Stream ID`. You can find the stream ID in the {user.dh} app under **Event streams** > select your stream > **Access Security**.
    - **Optional:** Enter `JWT Key ID` and `JWT Secret` to enable local JWT token generation for testing. Both must be provided together. For more details, see [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#sdk-auth-token-authorization).
-4. Enter the `Base URL` (API base URL for the Bloomreach platform).
+4. Enter the `Base URL` (API base URL for the {user.br} platform).
 5. **Optional:** Enter a hard ID in the `Registered` field to identify the customer. Leave blank for anonymous tracking.
-6. **Optional:** Enter `Application ID` if your Engagement project supports multiple mobile apps. If you leave this blank, the SDK uses the default value `default-application`. See [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
+6. **Optional:** Enter `Application ID` if your {user.mkg} project supports multiple mobile apps. If you leave this blank, the SDK uses the default value `default-application`. See [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration).
 7. Click `Start` to [initialize the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk).
 
 The **Clear local data** button invokes `clearLocalCustomerData()` to delete all locally stored data without initializing the SDK.
@@ -118,11 +118,11 @@ The app provides several screens, accessible using the bottom navigation, to tes
 - The **In-App Content Blocks** screens displays in-app content blocks. Use placeholder IDs `example_top`, `ph_x_example_iOS`, and `example_list` in your in-app content block settings.
   > [`InAppCbScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/InAppCbScreen.tsx)
 
-Try out the different features in the app, then find the customer profile in the Engagement web app (under `Data & Assets` > `Customers`) to see the properties and events tracked by the SDK.
+Try out the different features in the app, then find the customer profile in the {user.mkg} web app (under `Data & Assets` > `Customers`) to see the properties and events tracked by the SDK.
 
-Until you use `Identify customer` in the app, the customer is tracked anonymously using a cookie soft ID. You can look up the cookie value in the logs and find the corresponding profile in the Engagement web app.
+Until you use `Identify customer` in the app, the customer is tracked anonymously using a cookie soft ID. You can look up the cookie value in the logs and find the corresponding profile in the {user.mkg} web app.
 
-Once you use `Identify customer` in the app to set the `registered` hard ID (use an email address as value), the customer is identified and can be found in Engagement web app by their email address.
+Once you use `Identify customer` in the app to set the `registered` hard ID (use an email address as value), the customer is identified and can be found in {user.mkg} web app by their email address.
 
 > 📘
 >

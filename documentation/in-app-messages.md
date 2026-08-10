@@ -11,17 +11,17 @@ content:
     using the React Native SDK
 ---
 
-The SDK enables you to display native in-app messages in your app based on definitions set up in Engagement.
+The SDK enables you to display native in-app messages in your app based on definitions set up in {user.mkg}.
 
 In-app messages work out of the box once the [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup) in your app; no development work is required. However, you can customize the behavior to meet your specific requirements.
 
 > 📘
 >
-> Refer to the [In-app messages](https://documentation.bloomreach.com/engagement/docs/in-app-messages) user guide for instructions on how to create in-app messages in the Engagement web app.
+> Refer to the [In-app messages](https://documentation.bloomreach.com/engagement/docs/in-app-messages) user guide for instructions on how to create in-app messages in the {user.mkg} web app.
 
 > 📘
 >
-> Also see [In-app messages FAQ](https://support.bloomreach.com/hc/en-us/articles/18152718785437-In-App-Messages-FAQ) at Bloomreach Support Help Center.
+> Also see [In-app messages FAQ](https://support.bloomreach.com/hc/en-us/articles/18152718785437-In-App-Messages-FAQ) at {user.br} Support Help Center.
 
 ## Tracking
 
@@ -148,16 +148,16 @@ When troubleshooting why an in-app message did not display on your device, alway
 
 #### Troubleshoot in-app messages preloading issues
 
-- The SDK requests in-app messages from the Engagement platform any time one of the following occurs:
+- The SDK requests in-app messages from the {user.mkg} platform any time one of the following occurs:
   - `Exponea.identifyCustomer` is called
   - `Exponea.anonymize` is called
   - Any event (except push notification clicked or opened, or session ends) is tracked **and** the in-app messages cache is older than 30 minutes
-- The SDK should subsequently receive a response from the Engagement platform containing all available in-app messages targeted at the current customer. The SDK preloads these messages in a local cache.
-- If you create or modify an in-app message in Engagement, typically any changes you made are reflected in the SDK after 30 minutes due to the SDK caching in-app messages. Call `Exponea.identifyCustomer` or `Exponea.anonymize` to trigger reloading so changes are reflected immediately.
+- The SDK should subsequently receive a response from the {user.mkg} platform containing all available in-app messages targeted at the current customer. The SDK preloads these messages in a local cache.
+- If you create or modify an in-app message in {user.mkg}, typically any changes you made are reflected in the SDK after 30 minutes due to the SDK caching in-app messages. Call `Exponea.identifyCustomer` or `Exponea.anonymize` to trigger reloading so changes are reflected immediately.
 - Analyze the [log messages](#log-messages) to determine whether the SDK requested and received in-app messages and preloaded your message.
 - If the SDK requested and received in-app messages but didn't preload your message:
   - The local cache may be outdated. Wait for or trigger the next preload.
-  - The current customer may not match the audience targeted by the in-app message. Verify the message's audience in Engagement.
+  - The current customer may not match the audience targeted by the in-app message. Verify the message's audience in {user.mkg}.
 
 > ❗️
 >
@@ -167,7 +167,7 @@ When troubleshooting why an in-app message did not display on your device, alway
 
 If your app is successfully requesting and receiving in-app messages but they are not displayed, consider the following:
 
-- In-app messages are triggered when an event is tracked based on conditions set up in Engagement. Once a message passes those filters, the SDK will try to present the message.
+- In-app messages are triggered when an event is tracked based on conditions set up in {user.mkg}. Once a message passes those filters, the SDK will try to present the message.
 
 - The SDK hooks into the application lifecycle.
 

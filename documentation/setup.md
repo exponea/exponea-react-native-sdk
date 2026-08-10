@@ -90,7 +90,7 @@ Now that you have installed the SDK in your project, you must import, configure,
 >
 > On Android, `stopIntegration()` clears the locally stored push notification token. After a subsequent `Exponea.configure()` call, the SDK starts without a stored token.  After each re-initialization, your `FirebaseMessagingService.onNewToken` or HMS `onNewToken` callback must call `handleNewToken` with the token your app already holds. For more details, see [Push notification token is missing after `stopIntegration()`](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-android#push-notification-token-is-missing-after-stopintegration).
 
-`integrationConfig` is the required configuration parameter. For a standard integration, use `ProjectConfig` with `projectToken`, `authorizationToken`, and `baseUrl` (credentials available in the Engagement web app under **Project settings** > **Access management** > **API**). For a [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration, use `StreamConfig` with `streamId` and an optional `baseUrl` (stream ID available in the Data hub app under **Event streams** > select your stream > **Access Security**).
+`integrationConfig` is the required configuration parameter. For a standard integration, use `ProjectConfig` with `projectToken`, `authorizationToken`, and `baseUrl` (credentials available in the {user.mkg} web app under **Project settings** > **Access management** > **API**). For a {user.dh} [event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration, use `StreamConfig` with `streamId` and an optional `baseUrl` (stream ID available in the {user.dh} app under **Event streams** > select your stream > **Access Security**).
 > 📘
 >
 > Refer to [Mobile SDKs API access management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
@@ -129,7 +129,7 @@ Exponea.configure({
 > 📘  Note
 >
 > - For details on JWT authentication, see [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#sdk-auth-token-authorization).
-> - For an overview of event stream setup, see [configure React Native SDK with JWT authentication](https://documentation.bloomreach.com/data-hub/docs/configure-react-native-sdk-with-jwt-authentication) in the Data hub documentation.
+> - For an overview of event stream setup, see [configure React Native SDK with JWT authentication](https://documentation.bloomreach.com/data-hub/docs/configure-react-native-sdk-with-jwt-authentication) in the {user.dh} documentation.
 
 ### Initialize with customer identity
 
@@ -156,7 +156,7 @@ Exponea.configure(
 
 ### Configure application ID
 
-**Multiple mobile apps:** If your Engagement project supports multiple mobile apps, specify the `applicationId` in your configuration. This helps distinguish between different apps in your project.
+**Multiple mobile apps:** If your {user.mkg} project supports multiple mobile apps, specify the `applicationId` in your configuration. This helps distinguish between different apps in your project.
 
 ```typescript
 Exponea.configure({
@@ -166,9 +166,9 @@ Exponea.configure({
 }).catch(error => console.log(error))
 ```
 
-Make sure your `applicationId` value matches exactly Application ID configured in your Bloomreach Engagement under **Project Settings > Campaigns > Channels > Push Notifications.**
+Make sure your `applicationId` value matches exactly Application ID configured in your {user.mkg} under **Project Settings > Campaigns > Channels > Push Notifications.**
 
-**Single mobile app:** If your Engagement project supports only one app, you can skip the `applicationId` configuration. The SDK will automatically use the default value "default-application".
+**Single mobile app:** If your {user.mkg} project supports only one app, you can skip the `applicationId` configuration. The SDK will automatically use the default value "default-application".
 
 ### Configure the SDK only once
 
@@ -646,4 +646,4 @@ Exponea.setLogLevel(LogLevel.VERBOSE);
 
 ### Data flushing
 
-Read [Data flushing](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-data-flushing) to learn more about how the SDK uploads data to the Engagement API and how to customize this behavior.
+Read [Data flushing](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-data-flushing) to learn more about how the SDK uploads data to the {user.mkg} API and how to customize this behavior.

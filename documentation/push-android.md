@@ -13,7 +13,7 @@ The React Native SDK relies on the [native Android SDK](https://documentation.bl
 
 > 👍
 >
-> The SDK provides a push setup self-check feature to help developers successfully set up push notifications. The self-check will try to track the push token, request the Engagement backend to send a silent push to the device, and check if the app is ready to open push notifications.
+> The SDK provides a push setup self-check feature to help developers successfully set up push notifications. The self-check will try to track the push token, request the {user.mkg} backend to send a silent push to the device, and check if the app is ready to open push notifications.
 >
 > To enable the setup check, call `Exponea.checkPushSetup()` **before** [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize-the-sdk):
 > ❗️Important
@@ -37,15 +37,15 @@ Exponea Android SDK supports the following integrations:
 
 ### Standard (Firebase) integration
 
-To be able to send [Push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications) from the Engagement platform and receive them in your app on Android devices, you must:
+To be able to send [Push notifications for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications) from the {user.mkg} platform and receive them in your app on Android devices, you must:
 
 1. Set up a Firebase project.
 2. Implement Firebase messaging in your app.
-3. Configure the Firebase Cloud Messaging integration in the Engagement web app.
+3. Configure the Firebase Cloud Messaging integration in the {user.mkg} web app.
 
 > 👍
 >
-> Please note that with Google deprecating and removing the FCM legacy API in June 2024, Bloomreach Engagement is now using Firebase HTTP v1 API. Refer to [Firebase upgrade to HTTP v1 API](https://support.bloomreach.com/hc/en-us/articles/18931691055133-Firebase-upgrade-to-HTTP-v1-API) at the Bloomreach Support Help Center for upgrade information.
+> Please note that with Google deprecating and removing the FCM legacy API in June 2024, {user.mkg} is now using Firebase HTTP v1 API. Refer to [Firebase upgrade to HTTP v1 API](https://support.bloomreach.com/hc/en-us/articles/18931691055133-Firebase-upgrade-to-HTTP-v1-API) at the {user.br} Support Help Center for upgrade information.
 
 #### Set up Firebase
 
@@ -131,17 +131,17 @@ Next, you must create and register a service that extends `FirebaseMessagingServ
 >
 > If your app re-initializes the SDK by calling `Exponea.configure()` after `stopIntegration()`, the SDK clears the stored push token and can't recover it automatically. Your `onNewToken` callback must call `ExponeaModule.Companion.handleNewToken(context, token)` (FCM) or `ExponeaModule.Companion.handleHmsNewToken(context, token)` (HMS) with the token your app already holds, after each re-initialization. For more details, see [Push notification token is missing after `stopIntegration()`](#push-notification-token-is-missing-after-stopintegration).
 
-#### Configure the Firebase Cloud Messaging integration in Engagement
+#### Configure the Firebase Cloud Messaging integration in {user.mkg}
 
-Follow the instructions in [Configure the Firebase Cloud Messaging integration in Engagement](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase#configure-the-firebase-cloud-messaging-integration-in-engagement) for the Android SDK.
+Follow the instructions in [Configure the Firebase Cloud Messaging integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase#configure-the-firebase-cloud-messaging-integration-in-engagement) in {user.mkg} for the Android SDK.
 
 ### Huawei integration
 
-To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/android-sdk-push-notifications) from the Engagement platform and receive them in your app on Huawei devices, you must:
+To be able to send [push notifications](https://documentation.bloomreach.com/engagement/docs/android-sdk-push-notifications) from the {user.mkg} platform and receive them in your app on Huawei devices, you must:
 
 1. Set up Huawei Mobile Services (HMS)
 2. Implement HMS in your app.
-3. Configure the Huawei Push Service integration in the Engagement web app.
+3. Configure the Huawei Push Service integration in the {user.mkg} web app.
 
 #### Set up Huawei Mobile Services
 
@@ -202,9 +202,9 @@ Next, you must create and register a service that extends `HmsMessagingService`.
 >
 > The methods `ExponeaModule.handleNewHmsToken` and `ExponeaModule.handleRemoteMessage` can be used before SDK initialization if a previous initialization was done. In such a case, each method will track events with the configuration of the last initialization. Consider initializing the SDK in `Application::onCreate` to make sure a fresh configuration is applied in case of an application update.
 
-#### Configure the Huawei Push Service integration in Engagement
+#### Configure the Huawei Push Service integration in {user.mkg}
 
-Follow the instructions in [Configure the Huawei Push Service integration in Engagement](https://documentation.bloomreach.com/engagement/docs/android-sdk-huawei#configure-the-huawei-push-service-integration-in-engagement) for the Android SDK.
+Follow the instructions in [Configure the Huawei Push Service integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-huawei#configure-the-huawei-push-service-integration-in-engagement) in {user.mkg} for the Android SDK.
 
 ### Request notification permission
 

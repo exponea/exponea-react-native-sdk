@@ -9,17 +9,17 @@ content:
   excerpt: Enable push notifications in your app using the React Native SDK
 ---
 
-Engagement enables sending push notifications to your app users using [scenarios](https://documentation.bloomreach.com/engagement/docs/scenarios-1). The mobile application handles the push message using the SDK and renders the notification on the customer's device.
+{user.mkg} enables sending push notifications to your app users using [scenarios](https://documentation.bloomreach.com/engagement/docs/scenarios-1). The mobile application handles the push message using the SDK and renders the notification on the customer's device.
 
 Push notifications can also be silent, used only to update the app’s interface or trigger some background task.
 
 > 📘
 >
-> Refer to [Mobile push notifications](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) to learn how to create push notifications in the Engagement web app.
+> Refer to [Mobile push notifications](https://documentation.bloomreach.com/engagement/docs/mobile-push-notifications#creating-a-new-notification) to learn how to create push notifications in the {user.mkg} web app.
 
 > 📘
 >
-> Also see [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at Bloomreach Support Help Center.
+> Also see [Mobile push notifications FAQ](https://support.bloomreach.com/hc/en-us/articles/18152713374877-Mobile-Push-Notifications-FAQ) at {user.br} Support Help Center.
 
 ## Integration
 
@@ -90,7 +90,7 @@ We recommend registering the listener as soon as possible to ensure proper appli
 
 If the provided native `ExponeaModule.Companion.handleRemoteMessage` (Android) and `ExponeaNotificationService().process` (iOS) methods don't fit the requirements of your app, or you decide to disable automatic push notifications, you must handle push notifications and process their payload yourself.
 
-Notification payloads are generated from (possibly complex) scenarios in the Engagement platform and contain all data for Android, iOS and web platforms. Therefore, the payload itself can be complex.
+Notification payloads are generated from (possibly complex) scenarios in the {user.mkg} platform and contain all data for Android, iOS and web platforms. Therefore, the payload itself can be complex.
 
 Notification payloads use a JSON data structure.
 
@@ -208,7 +208,7 @@ The frequency of `notification_state` event tracking depends on the `pushTokenTr
 | `description`             | Token state description                       | `Permission granted`, `Permission denied`, or `Invalidated` |
 | `application_id`          | Application identifier from SDK configuration | Custom ID or `default-application` (default)                |
 | `device_id`               | Unique device identifier                      | UUID string                                                 |
-| `sdk_version`             | Version of the Bloomreach SDK                 | `4.1.0`                                                     |
+| `sdk_version`             | Version of the {user.br} SDK                 | `4.1.0`                                                     |
 | `os_name`                 | Operating-system name                         | `iOS`, `Android`                                            |
 | `os_version`              | Operating-system version                      | `17.4`, `14`                                                |
 | `device_model`            | Device model name                             | `iPhone 15 Pro`, `Samsung Galaxy S21`                       |
@@ -239,12 +239,12 @@ The combination of `valid` and `description` properties indicates the token's cu
 > ❗️Important
 >
 > The SDK can automatically generate `notification_state` events,
-> but your Engagement project must have event creation enabled. If your project uses custom event schemas
+> but your {user.mkg} project must have event creation enabled. If your project uses custom event schemas
 > or restricts event creation, add `notification_state` to the list of allowed events. Otherwise, push token registration will fail silently.
 
 ### Verifying token tracking
 
-You can verify that tokens are being tracked correctly in the Bloomreach Engagement web application:
+You can verify that tokens are being tracked correctly in the {user.mkg} web application:
 
 1. Navigate to Data & Assets > Customers
 2. Locate the customer profile

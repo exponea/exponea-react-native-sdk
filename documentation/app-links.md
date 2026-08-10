@@ -11,7 +11,7 @@ content:
     Native SDK
 ---
 
-Android App Links and iOS Universal Links allow the links you send through Engagement to open directly in your mobile application without any redirects that would hinder your users' experience.
+Android App Links and iOS Universal Links allow the links you send through {user.mkg} to open directly in your mobile application without any redirects that would hinder your users' experience.
 
 For details on how App Links and Universal Links work and how they can improve your users' experience, refer to the [Universal Links](https://documentation.bloomreach.com/engagement/docs/universal-link) section in the Campaigns documentation.
 
@@ -21,7 +21,7 @@ This page describes the steps required to track incoming App Links and Universal
 
 Before you can track incoming links using the SDK, you must set up your application to be able to process said links. Follow the instructions in [Linking](https://reactnative.dev/docs/linking) in the official React Native documentation.
 
-Once your app is able to process incoming links, you can use the SDK to track them to Engagement following the instructions for [Android](#android) and [iOS](#ios) below.
+Once your app is able to process incoming links, you can use the SDK to track them to {user.mkg} following the instructions for [Android](#android) and [iOS](#ios) below.
 
 > 👍
 >
@@ -29,7 +29,7 @@ Once your app is able to process incoming links, you can use the SDK to track th
 
 ### Android
 
-To track Android App Links to Engagement, you must add two methods to `android/app/src/main/java/com/exponea/example/MainActivity.java` that will respond to incoming intents:
+To track Android App Links to {user.mkg}, you must add two methods to `android/app/src/main/java/com/exponea/example/MainActivity.java` that will respond to incoming intents:
 
 ```java
 package com.exponea.example;
@@ -73,7 +73,7 @@ public class MainActivity extends ReactActivity {
 
 ### iOS
 
-To track iOS Universal Links to Engagement, you must add an `application:continueUserActivity:restorationHandler` function to your `AppDelegate.m` file.
+To track iOS Universal Links to {user.mkg}, you must add an `application:continueUserActivity:restorationHandler` function to your `AppDelegate.m` file.
 
 #### With ExponeaRNAppDelegate
 

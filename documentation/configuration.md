@@ -22,13 +22,13 @@ The following parameters are specified in an `Configuration` object. Refer to [s
 - `integrationConfig` **(required in new integrations)**
 
   - Use this property to set your integration configuration.
-  - Use `ProjectConfig` to set up integration with a standard Engagement project, or `StreamConfig` to set up [Data hub event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration.
+  - Use `ProjectConfig` to set up integration with a standard {user.mkg} project, or `StreamConfig` to set up {user.dh} [event stream](https://documentation.bloomreach.com/data-hub/docs/event-streams) integration.
   - `ProjectConfig` fields:
-    - `projectToken` **(required)**: your Engagement project token, found in the Engagement web app under **Project settings** > **Access management** > **API**
-    - `authorizationToken` **(required)**: your Engagement public API key; must be a **public** key (see [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management))
+    - `projectToken` **(required)**: your {user.mkg} project token, found in the {user.mkg} web app under **Project settings** > **Access management** > **API**
+    - `authorizationToken` **(required)**: your {user.mkg} public API key; must be a **public** key (see [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management))
     - `baseUrl`: API base URL; defaults to `https://api.exponea.com`
   - `StreamConfig` fields:
-    - `streamId` **(required)**: your Data Hub stream ID, found in the Data Hub app under **Event streams** > select your stream > **Access Security**
+    - `streamId` **(required)**: your {user.dh} stream ID, found in the {user.dh} app under **Event streams** > select your stream > **Access Security**
     - `baseUrl`: base URL override for the stream endpoint; defaults to `https://api.exponea.com`
   - The two modes are mutually exclusive; you can't provide both `projectToken` and `streamId` in the same `integrationConfig`.
   - Example with `ProjectConfig`:
@@ -49,22 +49,22 @@ The following parameters are specified in an `Configuration` object. Refer to [s
 
 - `projectToken` **(deprecated — use `integrationConfig` with `ProjectConfig` instead)**
 
-  - Your project token. You can find this in the Engagement web app under **Project settings** > **Access management** > **API**.
+  - Your project token. You can find this in the {user.mkg} web app under **Project settings** > **Access management** > **API**.
 
 - `authorizationToken` **(deprecated — use `integrationConfig` with `ProjectConfig` instead)**
 
-  - Your Engagement API key.
-  - The token must be an Engagement **public** key. See [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
-  - For more information, refer to [Engagement API documentation](https://documentation.bloomreach.com/engagement/reference/welcome#access-keys).
+  - Your {user.mkg} API key.
+  - The token must be an {user.mkg} **public** key. See [Mobile SDKs API Access Management](https://documentation.bloomreach.com/engagement/docs/mobile-sdks-api-access-management) for details.
+  - For more information, refer to {user.mkg} [API documentation](https://documentation.bloomreach.com/engagement/reference/welcome#access-keys).
 
 - `baseUrl` **(deprecated — use `integrationConfig` with `ProjectConfig` instead)**
 
-  - Your API base URL which can be found in the Engagement web app under **Project settings** > **Access management** > **API**.
+  - Your API base URL which can be found in the {user.mkg} web app under **Project settings** > **Access management** > **API**.
   - Default value `https://api.exponea.com`.
   - If you have custom base URL, you must set this property.
 
 - `integrationRouteMap`
-  - To track specific events to additional Engagement projects, define a mapping between event types and `ProjectConfig` objects.
+  - To track specific events to additional {user.mkg} projects, define a mapping between event types and `ProjectConfig` objects.
   - The SDK always tracks each event to the default project and any projects it's mapped to.
   - **Applies only when `integrationConfig` is a `ProjectConfig`.** Ignored for `StreamConfig`.
   - Example:
@@ -80,7 +80,7 @@ The following parameters are specified in an `Configuration` object. Refer to [s
     ```
 
 - `projectMapping` **(deprecated — use `integrationRouteMap` with `ProjectConfig` instead)**
-  - If you need to track some events to a different Engagement project, you can define a mapping between event types and Engagement projects.
+  - If you need to track some events to a different {user.mkg} project, you can define a mapping between event types and {user.mkg} projects.
   - The SDK always tracks each event to the default project and any projects it's mapped to.
   - Example:
     ```typescript
@@ -121,7 +121,7 @@ The following parameters are specified in an `Configuration` object. Refer to [s
 
 - `pushTokenTrackingFrequency`
 
-  - Indicates the frequency with which the SDK should track the push notification token to Engagement.
+  - Indicates the frequency with which the SDK should track the push notification token to {user.mkg}.
   - Default value: `ON_TOKEN_CHANGE`
   - Possible values:
     - `ON_TOKEN_CHANGE` - tracks the push token if it differs from a previously tracked one. The SDK also automatically refreshes the `notification_state` event every 30 days, even when the token hasn't changed.
@@ -136,7 +136,7 @@ The following parameters are specified in an `Configuration` object. Refer to [s
 
 - `advancedAuthEnabled`
 
-  - If set, advanced authorization is used for communication with the Engagement APIs listed in [Customer token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#customer-token-authorization).
+  - If set, advanced authorization is used for communication with the {user.mkg} APIs listed in [Customer token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#customer-token-authorization).
   - Refer to the [authorization documentation](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization) for details.
   - **Only applicable when `integrationConfig` is a `ProjectConfig`.** If set to `true` with a `StreamConfig` integration, the SDK logs a warning and ignores the setting. For stream-based integrations, refer to [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#sdk-auth-token-authorization).
 
@@ -149,10 +149,10 @@ The following parameters are specified in an `Configuration` object. Refer to [s
   - Default value: `true`
 - `applicationId`
 
-  - This `applicationId` defines a unique identifier for the mobile app within the Engagement project. Change this value only if your Engagement project contains and supports multiple mobile apps.
+  - This `applicationId` defines a unique identifier for the mobile app within the {user.mkg} project. Change this value only if your {user.mkg} project contains and supports multiple mobile apps.
   - This identifier distinguishes between different apps in the same project.
-  - Your `applicationId` value must be the same as the one defined in your Engagement project settings.
-  - If your Engagement project supports only one app, skip the `applicationId` configuration. The SDK will use the default value automatically.
+  - Your `applicationId` value must be the same as the one defined in your {user.mkg} project settings.
+  - If your {user.mkg} project supports only one app, skip the `applicationId` configuration. The SDK will use the default value automatically.
   - Must be in a specific format, see rules:
     - Starts with one or more lowercase letters or digits
     - Additional words are separated by single hyphens or dots
@@ -184,7 +184,7 @@ The following parameters are specified in an `AndroidConfiguration` object. Refe
 
 - `automaticPushNotifications`
 
-  - By default, the SDK will set up a Firebase service and try to process push notifications sent from the Engagement platform automatically. You can opt out by setting this to `false`.
+  - By default, the SDK will set up a Firebase service and try to process push notifications sent from the {user.mkg} platform automatically. You can opt out by setting this to `false`.
   - Default value: `true`
 
 - `pushIcon`

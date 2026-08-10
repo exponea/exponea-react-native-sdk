@@ -20,11 +20,11 @@ You can configure the inbox to receive messages from multiple projects by settin
 >
 > When using a `StreamConfig` integration, set a valid SDK auth token via `setSdkAuthToken()` or by including it in `CustomerIdentity`. Without a valid token, fetch and mark-as-read requests fails with an authentication error. For more details, see [SDK auth token authorization](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization#sdk-auth-token-authorization).
 
-Refer to the [App Inbox](https://documentation.bloomreach.com/engagement/docs/app-inbox) documentation for information on creating and sending App Inbox messages in the Engagement web app.
+Refer to the [App Inbox](https://documentation.bloomreach.com/engagement/docs/app-inbox) documentation for information on creating and sending App Inbox messages in the {user.mkg} web app.
 
 > 👍
 >
-> App Inbox is a separate module that can be enabled on request in your Engagement account by your Bloomreach CSM.
+> App Inbox is a separate module that can be enabled on request in your {user.mkg} account by your {user.br} CSM.
 
 ## Integrate the App Inbox
 

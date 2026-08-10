@@ -17,7 +17,7 @@ content:
 ## Release Notes for 4.0.0
 #### June 26, 2026
 * Added:
-  * Adds support for Data hub Event Streams integration with optional SDK auth token authorization.
+  * Adds support for {user.dh} event streams integration with optional SDK auth token authorization.
   * Updates the native Android SDK to version 5.2.1.
   * Updates the native iOS SDK to version 4.2.0.
   * Adds the `regenerateDeviceIdOnAnonymize` configuration parameter to generate a new `device_id` when calling `anonymize()`.
