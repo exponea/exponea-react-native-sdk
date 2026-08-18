@@ -80,6 +80,25 @@ export {
   HttpLoggingLevel,
 } from './Configuration';
 
+/**
+ * The `code` value carried on the Error rejected by {@link Exponea.flushData} when an in-flight
+ * flush on iOS does not settle within the wrapper's bounded retry window. Match against the
+ * `code` field of the caught error instead of comparing message strings.
+ *
+ * Example:
+ * ```ts
+ * try {
+ *   await Exponea.flushData();
+ * } catch (e) {
+ *   if ((e as { code?: string }).code === ExponeaFlushTimeoutErrorCode) {
+ *     // The native iOS SDK still had a flush in progress when our retry window expired.
+ *     // The pending events will still be uploaded by the next automatic flush cycle.
+ *   }
+ * }
+ * ```
+ */
+export const ExponeaFlushTimeoutErrorCode = 'ExponeaFlushTimeoutError';
+
 // Interface C: Combines A (Turbo Module) and B (Listeners)
 
 /**
@@ -477,7 +496,16 @@ export interface ExponeaType {
   getLogLevel(): Promise<LogLevel>;
   /** Sets LogLevel for native SDK. */
   setLogLevel(level: LogLevel): Promise<void>;
-  /** Flushes data to Exponea backend. Only usable in MANUAL FlushMode */
+  /**
+   * Flushes pending events to Exponea backend.
+   *
+   * Resolves once the in-flight flush settles. On iOS, if another flush is already running
+   * (e.g. an IDENTIFY-triggered auto-flush in IMMEDIATE mode), the wrapper polls until that
+   * flush completes (bounded ~10s). If the wait exceeds the bound, the Promise rejects with
+   * an error whose `code` equals {@link ExponeaFlushTimeoutErrorCode}. On Android the native
+   * SDK already queues callers against the in-flight flush, so the same wait is provided by
+   * the platform.
+   */
   flushData(): Promise<void>;
 
   // ============================================================================

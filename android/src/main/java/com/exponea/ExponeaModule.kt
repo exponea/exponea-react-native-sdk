@@ -560,9 +560,19 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
 
   override fun markAppInboxAsRead(message: ReadableMap, promise: Promise) = requireInitialized(promise) {
       catchAndReject(promise) {
-          val messageItem = message.toMessageItem()
-          Exponea.markAppInboxAsRead(messageItem) { success ->
-              promise.resolve(success)
+          val messageData = message.toHashMapRecursively().toMessageItem()
+          if (messageData == null) {
+              promise.resolve(false)
+              return@catchAndReject
+          }
+          Exponea.fetchAppInboxItem(messageId = messageData.id) { nativeMessage ->
+              if (nativeMessage == null) {
+                  promise.resolve(false)
+                  return@fetchAppInboxItem
+              }
+              Exponea.markAppInboxAsRead(nativeMessage) { success ->
+                  promise.resolve(success)
+              }
           }
       }
   }

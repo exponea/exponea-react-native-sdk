@@ -188,7 +188,6 @@
 				C63E0E7D004BB651E6421773 /* ExponeaExampleTests.swift */,
 				18F64F9027F94E578E40C4BA /* Info.plist */,
 			);
-			name = ExponeaExampleTests;
 			path = ExponeaExampleTests;
 			sourceTree = SOURCE_ROOT;
 		};

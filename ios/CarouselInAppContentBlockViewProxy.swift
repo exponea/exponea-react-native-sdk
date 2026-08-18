@@ -168,45 +168,18 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
         contentBlock: ExponeaSDK.InAppContentBlockResponse,
         action: ExponeaSDK.InAppContentBlockAction
     ) {
-        print("[ExponeaSDK] Carousel onActionClickedSafari called")
-        print("[ExponeaSDK] PlaceholderId: \(placeholderId)")
-        print("[ExponeaSDK] Action URL: \(action.url ?? "nil")")
-        print("[ExponeaSDK] Action type: \(action.type)")
-        print("[ExponeaSDK] overrideDefaultBehavior: \(overrideDefaultBehavior)")
-
         notifyContentBlockCarouselEvent(.onActionClicked(
             placeholderId: placeholderId,
             contentBlock: contentBlock,
             action: action
         ))
 
-        // Open URL if not overriding default behavior
-        if !overrideDefaultBehavior {
-            print("[ExponeaSDK] Not overriding default behavior, will attempt to open URL")
-            if let urlString = action.url {
-                print("[ExponeaSDK] URL string: \(urlString)")
-                if let url = URL(string: urlString) {
-                    print("[ExponeaSDK] Valid URL created: \(url)")
-                    DispatchQueue.main.async {
-                        let canOpen = UIApplication.shared.canOpenURL(url)
-                        print("[ExponeaSDK] Can open URL: \(canOpen)")
-                        if canOpen {
-                            print("[ExponeaSDK] Opening URL...")
-                            UIApplication.shared.open(url, options: [:]) { success in
-                                print("[ExponeaSDK] URL opened successfully: \(success)")
-                            }
-                        } else {
-                            print("[ExponeaSDK] Cannot open URL - may need URL scheme whitelist in Info.plist")
-                        }
-                    }
-                } else {
-                    print("[ExponeaSDK] Failed to create URL from string: \(urlString)")
+        if !overrideDefaultBehavior, let urlString = action.url, let url = URL(string: urlString) {
+            onMain {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:])
                 }
-            } else {
-                print("[ExponeaSDK] No URL in action")
             }
-        } else {
-            print("[ExponeaSDK] Default behavior is overridden, not opening URL")
         }
     }
 
@@ -248,14 +221,19 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
     }
 
     private func notifyDimensChanged(width: CGFloat, height: CGFloat) {
-        eventEmitter?.emitDimensChanged(
-            width: Double(width),
-            height: Double(height)
-        )
+        // emitDimensChanged triggers a React Native layout pass — must be on the main thread.
+        let w = Double(width), h = Double(height)
+        onMain { [weak self] in
+            self?.eventEmitter?.emitDimensChanged(width: w, height: h)
+        }
     }
 
     private func notifyContentBlockCarouselEvent(_ event: ContentBlockCarouselEvent) {
-        eventEmitter?.emitContentBlockEvent(data: event.toDictionary() as NSDictionary)
+        // emitContentBlockEvent crosses the JS bridge — must be on the main thread.
+        let dict = event.toDictionary() as NSDictionary
+        onMain { [weak self] in
+            self?.eventEmitter?.emitContentBlockEvent(data: dict)
+        }
     }
 
     private func notifyContentFilterRequest(input: [ExponeaSDK.InAppContentBlockResponse]) {
@@ -267,14 +245,16 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
             return body
         })
 
-        // Serialize array to JSON string
         guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonStrings),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to serialize filter request")
             return
         }
 
-        eventEmitter?.emitDataRequest(data: ["requestType": "filter", "data": jsonString] as NSDictionary)
+        let payload: NSDictionary = ["requestType": "filter", "data": jsonString]
+        onMain { [weak self] in
+            self?.eventEmitter?.emitDataRequest(data: payload)
+        }
     }
 
     private func notifyContentSortRequest(input: [ExponeaSDK.InAppContentBlockResponse]) {
@@ -286,13 +266,15 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
             return body
         })
 
-        // Serialize array to JSON string
         guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonStrings),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to serialize sort request")
             return
         }
 
-        eventEmitter?.emitDataRequest(data: ["requestType": "sort", "data": jsonString] as NSDictionary)
+        let payload: NSDictionary = ["requestType": "sort", "data": jsonString]
+        onMain { [weak self] in
+            self?.eventEmitter?.emitDataRequest(data: payload)
+        }
     }
 }

@@ -261,6 +261,13 @@ describe('parameter serialization and typings', () => {
     expect(mockExponea.lastArgumentsJson).toBe('[]');
   });
 
+  test('ExponeaFlushTimeoutErrorCode is the stable public string', async () => {
+    // The constant is part of the public API: user code matches against this string in catch
+    // blocks. Changing it is a breaking change; this test guards against an accidental change.
+    const { ExponeaFlushTimeoutErrorCode } = await import('../index');
+    expect(ExponeaFlushTimeoutErrorCode).toBe('ExponeaFlushTimeoutError');
+  });
+
   test('trackEvent', () => {
     mockExponea.trackEvent('my-event-name', { key: 'value' });
     expect(mockExponea.lastArgumentsJson).toBe(

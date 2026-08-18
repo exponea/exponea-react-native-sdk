@@ -188,8 +188,10 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
 - (void)flushData:(RCTPromiseResolveBlock)resolve
            reject:(RCTPromiseRejectBlock)reject
 {
-    [_exponeaBridge flushDataWithCompletion:^{
+    [_exponeaBridge flushDataWithSuccess:^{
         resolve([NSNull null]);
+    } failure:^(NSError * error) {
+        reject(@"ExponeaFlushTimeoutError", error.localizedDescription, error);
     }];
 }
 
@@ -586,6 +588,33 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
 
 // MARK: - App Inbox Methods
 
+// Converts a TurboModule AppInboxMessage struct to an NSDictionary the Swift bridge can
+// consume. Optional fields are only set when the JS payload provided them, mirroring how
+// inAppMessageToDictionary: works for in-app messages. Kept as an instance method to follow
+// the same convention as the existing
+// inAppMessageToDictionary: / convertButtonStyle: helpers in this file (no public header export).
+- (NSDictionary *)appInboxMessageToDictionary:(const JS::NativeExponea::AppInboxMessage &)message
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    if (message.id_()) { dict[@"id"] = message.id_(); }
+    if (message.type()) { dict[@"type"] = message.type(); }
+    if (message.is_read().has_value()) { dict[@"is_read"] = @(message.is_read().value()); }
+    if (message.create_time().has_value()) { dict[@"create_time"] = @(message.create_time().value()); }
+    if (message.content()) { dict[@"content"] = message.content(); }
+    return dict;
+}
+
+// Converts a TurboModule AppInboxAction struct to an NSDictionary the Swift bridge can
+// consume. All fields are optional on the JS side, so each is guarded.
+- (NSDictionary *)appInboxActionToDictionary:(const JS::NativeExponea::AppInboxAction &)action
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    if (action.action()) { dict[@"action"] = action.action(); }
+    if (action.title()) { dict[@"title"] = action.title(); }
+    if (action.url()) { dict[@"url"] = action.url(); }
+    return dict;
+}
+
 - (void)fetchAppInbox:(RCTPromiseResolveBlock)resolve
                reject:(RCTPromiseRejectBlock)reject
 {
@@ -608,19 +637,28 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
     }];
 }
 
-- (void)markAppInboxAsRead:(NSDictionary *)message
+- (void)markAppInboxAsRead:(JS::NativeExponea::AppInboxMessage &)message
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge markAppInboxAsRead:message];
-    resolve(@(success));
+    if (!message.id_().length) {
+        resolve(@NO);
+        return;
+    }
+    [_exponeaBridge markAppInboxAsRead:[self appInboxMessageToDictionary:message]
+                               success:^(BOOL marked) {
+        resolve(@(marked));
+    } failure:^(NSError *error) {
+        resolve(@NO);
+    }];
 }
 
-- (void)trackAppInboxOpened:(NSDictionary *)message
+- (void)trackAppInboxOpened:(JS::NativeExponea::AppInboxMessage &)message
                     resolve:(RCTPromiseResolveBlock)resolve
                      reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxOpened:message considerConsent:YES];
+    BOOL success = [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
+                                       considerConsent:YES];
     if (success) {
         resolve([NSNull null]);
     } else {
@@ -628,11 +666,12 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
     }
 }
 
-- (void)trackAppInboxOpenedWithoutTrackingConsent:(NSDictionary *)message
+- (void)trackAppInboxOpenedWithoutTrackingConsent:(JS::NativeExponea::AppInboxMessage &)message
                                           resolve:(RCTPromiseResolveBlock)resolve
                                            reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxOpened:message considerConsent:NO];
+    BOOL success = [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
+                                       considerConsent:NO];
     if (success) {
         resolve([NSNull null]);
     } else {
@@ -640,14 +679,14 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
     }
 }
 
-- (void)trackAppInboxClick:(NSDictionary *)action
-                   message:(NSDictionary *)message
+- (void)trackAppInboxClick:(JS::NativeExponea::AppInboxAction &)action
+                   message:(JS::NativeExponea::AppInboxMessage &)message
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxClick:action
-                                              message:message
-                                       considerConsent:YES];
+    BOOL success = [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
+                                              message:[self appInboxMessageToDictionary:message]
+                                      considerConsent:YES];
     if (success) {
         resolve([NSNull null]);
     } else {
@@ -655,14 +694,14 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
     }
 }
 
-- (void)trackAppInboxClickWithoutTrackingConsent:(NSDictionary *)action
-                                         message:(NSDictionary *)message
+- (void)trackAppInboxClickWithoutTrackingConsent:(JS::NativeExponea::AppInboxAction &)action
+                                         message:(JS::NativeExponea::AppInboxMessage &)message
                                          resolve:(RCTPromiseResolveBlock)resolve
                                           reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxClick:action
-                                              message:message
-                                       considerConsent:NO];
+    BOOL success = [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
+                                              message:[self appInboxMessageToDictionary:message]
+                                      considerConsent:NO];
     if (success) {
         resolve([NSNull null]);
     } else {

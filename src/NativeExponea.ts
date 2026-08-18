@@ -184,7 +184,15 @@ export interface Spec extends TurboModule {
   /** Sets a Stream JWT auth token used by Stream/Data Hub integrations. */
   setSdkAuthToken(token: string): Promise<void>;
 
-  /** Flushes data to Exponea backend. Only usable in MANUAL FlushMode */
+  /**
+   * Flushes pending events to Exponea backend.
+   *
+   * Resolves once the in-flight flush settles. On iOS, if another flush is already running
+   * (e.g. an IDENTIFY-triggered auto-flush in IMMEDIATE mode), the wrapper polls until that
+   * flush completes (bounded ~10s). If the wait exceeds the bound, the Promise rejects with
+   * `code === 'ExponeaFlushTimeoutError'`. On Android the native SDK already queues callers
+   * against the in-flight flush, so the same wait is provided by the platform.
+   */
   flushData(): Promise<void>;
 
   /** Tracks custom event to Exponea backend */

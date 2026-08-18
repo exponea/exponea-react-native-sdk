@@ -467,10 +467,67 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     }
 
     // MARK: - Data Flushing
-    public func flushData(completion: @escaping () -> Void) {
-        ExponeaSDK.Exponea.shared.flushData(completion: { _ in
-            completion()
-        })
+
+    // Cap and cadence for the .flushAlreadyInProgress retry loop. Picked to keep total wait
+    // bounded so a JS `await flushData()` cannot hang indefinitely while still allowing a
+    // normal IDENTIFY-triggered auto-flush + small backend round-trip to complete first.
+    private static let flushAlreadyInProgressMaxWait: TimeInterval = 10.0
+    private static let flushAlreadyInProgressPollInterval: TimeInterval = 0.25
+
+    /// Flushes pending events to Exponea. The completion fires exactly once.
+    ///
+    /// The native iOS SDK returns `FlushResult.flushAlreadyInProgress` immediately when another
+    /// flush is already running (typically an IDENTIFY-triggered auto-flush in IMMEDIATE mode).
+    /// If we forward that to the JS Promise as plain success, the caller's `await flushData()`
+    /// resolves while the real upload is still in flight — the next operation (fetchAppInbox,
+    /// trackSessionStart, …) then races the still-running flush. We instead poll until the
+    /// in-flight flush completes (or another terminal `FlushResult` arrives), bounded by
+    /// `flushAlreadyInProgressMaxWait` seconds. On timeout we fail the promise with a typed
+    /// error so callers can react instead of silently observing stale state.
+    ///
+    /// This is a wrapper-side workaround. The longer-term fix is for the iOS SDK to queue caller
+    /// completions against the in-flight flush (the Android SDK already does this); tracked
+    /// separately. Once that lands the polling loop can be removed.
+    public func flushData(
+        success: @escaping () -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
+        flushDataWithRetry(deadline: Date().addingTimeInterval(ExponeaBridge.flushAlreadyInProgressMaxWait),
+                           success: success,
+                           failure: failure)
+    }
+
+    private func flushDataWithRetry(
+        deadline: Date,
+        success: @escaping () -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
+        // Strong-capture `self` intentionally. The completion fires within one poll interval
+        // (~250 ms) and is owned by the native SDK / dispatch queue, so there is no retain
+        // cycle. Keeping the bridge alive until the retry settles is required by the JS
+        // Promise contract: dropping the callback (the previous `[weak self]` early-return)
+        // would leak the unresolved promise on bridge teardown.
+        ExponeaSDK.Exponea.shared.flushData { result in
+            switch result {
+            case .flushAlreadyInProgress:
+                if Date() >= deadline {
+                    failure(ExponeaError.flushAlreadyInProgressTimeout)
+                    return
+                }
+                let pollInterval = ExponeaBridge.flushAlreadyInProgressPollInterval
+                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + pollInterval) {
+                    self.flushDataWithRetry(deadline: deadline, success: success, failure: failure)
+                }
+            case .success, .noInternetConnection, .error:
+                // .noInternetConnection and .error are reported as success at the wrapper level
+                // to preserve the pre-existing public Promise<void> contract; the native SDK
+                // will retry on its own cadence and detailed diagnostics remain in the iOS logs.
+                // Surfacing them as JS rejections would be a breaking change tracked separately.
+                success()
+            @unknown default:
+                success()
+            }
+        }
     }
 
     // MARK: - Segmentation & Utilities
@@ -598,21 +655,35 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         }
     }
 
-    public func markAppInboxAsRead(_ messageDict: [AnyHashable: Any]) -> Bool {
+    /// Marks the App Inbox message as read by first fetching the canonical native `MessageItem`
+    /// (which carries `syncToken` and `customerIds` required by the native SDK) and then
+    /// forwarding it to `markAppInboxAsRead`.
+    public func markAppInboxAsRead(
+        _ messageDict: [AnyHashable: Any],
+        success: @escaping (Bool) -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
         guard ExponeaBridge.exponeaInstance.isConfigured else {
-            print("ExponeaBridge: SDK not configured")
-            return false
+            failure(ExponeaError.notConfigured)
+            return
         }
-
-        do {
-            let message = try TypeConverters.parseAppInboxMessage(from: messageDict as NSDictionary)
-            ExponeaSDK.Exponea.shared.markAppInboxAsRead(message) { marked in
-                print("ExponeaBridge: Message marked as read: \(marked)")
+        guard let messageId = messageDict["id"] as? String, !messageId.isEmpty else {
+            success(false)
+            return
+        }
+        ExponeaSDK.Exponea.shared.fetchAppInboxItem(messageId) { [weak self] result in
+            guard self != nil else {
+                success(false)
+                return
             }
-            return true
-        } catch {
-            print("ExponeaBridge: Failed to parse app inbox message: \(error)")
-            return false
+            switch result {
+            case .success(let nativeMessage):
+                ExponeaSDK.Exponea.shared.markAppInboxAsRead(nativeMessage) { marked in
+                    success(marked)
+                }
+            case .failure:
+                success(false)
+            }
         }
     }
 
@@ -1109,8 +1180,13 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     }
 
     private func sendEventToJS(name: String, body: Any?) {
-        // Use RCTEventEmitter to send events to JavaScript
-        eventEmitter?.sendEvent(withName: name, body: body)
+        // RCTEventEmitter.sendEvent must be called from the main thread.
+        // SDK delegate callbacks (in-app messages, segmentation, push) can fire on
+        // background threads, so we hop to main unconditionally here rather than
+        // auditing every individual call-site.
+        onMain {
+            self.eventEmitter?.sendEvent(withName: name, body: body)
+        }
     }
 
     private func convertToJSONString(_ dict: [AnyHashable: Any]) throws -> String {

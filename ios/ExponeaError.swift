@@ -17,6 +17,11 @@ public enum ExponeaError: LocalizedError {
     case fetchError(description: String)
     case generalError(_ message: String)
     case invalidValue(for: String)
+    // Raised by the wrapper-side flushData retry loop when the iOS SDK keeps returning
+    // .flushAlreadyInProgress past the bounded wait window. Surfaced to JS as
+    // ExponeaFlushTimeoutError so callers can distinguish "in-flight flush did not settle"
+    // from a normal flush completion.
+    case flushAlreadyInProgressTimeout
 
     public var errorDescription: String? {
         switch self {
@@ -36,6 +41,8 @@ public enum ExponeaError: LocalizedError {
             return "Exponea SDK is not configured. Check logs for details."
         case .invalidValue(let detail):
             return "Invalid value: \(detail)"
+        case .flushAlreadyInProgressTimeout:
+            return "flushData timed out: another flush was in progress and did not finish within the wrapper retry window."
         }
     }
 }

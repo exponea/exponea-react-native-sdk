@@ -761,7 +761,10 @@ internal fun Map<String, Any?>.toMessageItem(): MessageItem? {
 
 internal fun Map<String, Any?>.toMessageItemAction(): MessageItemAction? {
     val source = this
-    val sourceType = MessageItemAction.Type.find(source.getNullSafely("type")) ?: return null
+    // App Inbox action payloads use the "action" key on iOS and historically used "type"
+    // on Android. Accept either so cross-platform payloads resolve correctly.
+    val rawType: String? = source.getNullSafely("type") ?: source.getNullSafely("action")
+    val sourceType = MessageItemAction.Type.find(rawType) ?: return null
     return MessageItemAction().apply {
         type = sourceType
         title = source.getNullSafely("title")

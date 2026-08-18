@@ -92,10 +92,11 @@ public class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackTyp
     }
 
     private func notifyDimensChanged(width: CGFloat, height: CGFloat) {
-        eventEmitter?.emitDimensChanged(
-            width: Double(width),
-            height: Double(height)
-        )
+        // emitDimensChanged triggers a React Native layout pass — must be on the main thread.
+        let w = Double(width), h = Double(height)
+        onMain { [weak self] in
+            self?.eventEmitter?.emitDimensChanged(width: w, height: h)
+        }
     }
 
     private func notifyInAppContentBlockEvent(
@@ -105,39 +106,32 @@ public class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackTyp
         action: ExponeaSDK.InAppContentBlockAction?,
         errorMessage: String?
     ) {
-        // Serialize content block to JSON string
+        // Serialise on the calling (potentially background) thread; the actual bridge
+        // call is deferred to the main thread where RCTEventEmitter expects to run.
         let contentBlockJson: String? = contentBlock.flatMap { cb in
             guard let data = try? JSONEncoder().encode(cb),
-                  let json = String(data: data, encoding: .utf8) else {
-                return nil
-            }
+                  let json = String(data: data, encoding: .utf8) else { return nil }
             return json
         }
 
-        // Serialize action to JSON string
         let actionJson: String? = action.flatMap { act in
             guard let data = try? JSONEncoder().encode(act),
-                  let json = String(data: data, encoding: .utf8) else {
-                return nil
-            }
+                  let json = String(data: data, encoding: .utf8) else { return nil }
             return json
         }
 
-        var data: [String: Any] = [
+        var payload: [String: Any] = [
             "eventType": eventType,
             "placeholderId": placeholderId
         ]
-        if let contentBlockJson = contentBlockJson {
-            data["contentBlock"] = contentBlockJson
-        }
-        if let actionJson = actionJson {
-            data["contentBlockAction"] = actionJson
-        }
-        if let errorMessage = errorMessage {
-            data["errorMessage"] = errorMessage
-        }
+        if let contentBlockJson { payload["contentBlock"] = contentBlockJson }
+        if let actionJson { payload["contentBlockAction"] = actionJson }
+        if let errorMessage { payload["errorMessage"] = errorMessage }
 
-        eventEmitter?.emitContentBlockEvent(data: data as NSDictionary)
+        let dict = payload as NSDictionary
+        onMain { [weak self] in
+            self?.eventEmitter?.emitContentBlockEvent(data: dict)
+        }
     }
 
     public func onMessageShown(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {

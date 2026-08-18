@@ -26,12 +26,25 @@ Pod::Spec.new do |s|
 
   install_modules_dependencies(s)
 
-  # install_modules_dependencies sets SWIFT_COMPILATION_MODE=wholemodule for static library builds.
-  # In wholemodule mode Xcode does not declare the Swift-generated ObjC header as an explicit build
-  # task output, so ObjC files can compile before it exists ('react_native_exponea_sdk-Swift.h'
-  # not found). Switch to incremental only when USE_FRAMEWORKS=static (the same env var React Native
-  # uses) so wholemodule optimization is preserved for dynamic/default builds.
+  # Static-framework (USE_FRAMEWORKS=static) builds need extra wiring on top of what
+  # install_modules_dependencies(s) provides. Three concrete issues are addressed below:
+  #
+  # 1. install_modules_dependencies sets SWIFT_COMPILATION_MODE=wholemodule for static library
+  #    builds. In wholemodule mode Xcode does not declare the Swift-generated ObjC header as an
+  #    explicit build task output, so ObjC files can compile before it exists
+  #    ('react_native_exponea_sdk-Swift.h' not found). Switch to incremental only for static
+  #    builds so wholemodule optimization is preserved for dynamic/default builds.
+  # 2. We re-assign pod_target_xcconfig to layer our overrides; doing so naively would drop
+  #    React Native's clang C++ language standard (set by install_modules_dependencies) and
+  #    misalign us with the rest of the RN graph. Re-apply rct_cxx_language_standard() so the
+  #    target stays in sync.
+  # 3. ObjC sources import "react_native_exponea_sdk-Swift.h" but Xcode does not always expose
+  #    the generated header path on static-framework builds. We pin the header name explicitly
+  #    and append the React Native + codegen + product framework header search paths for both
+  #    Debug and Release configurations. Existing HEADER_SEARCH_PATHS are preserved.
+  #
   # See: https://github.com/exponea/exponea-react-native-sdk/issues/138
+  # CocoaPods exposes pod_target_xcconfig as a writer; the matching reader is attributes_hash.
   if ENV['USE_FRAMEWORKS'] == 'static'
     existing_xcconfig = s.attributes_hash['pod_target_xcconfig'] || {}
     merged_header_search_paths = [
