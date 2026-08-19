@@ -69,6 +69,7 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
             ExponeaBridge.exponeaInstance.configure(with: configuration, authContext: authContext)
 
             if ExponeaBridge.exponeaInstance.isConfigured {
+                ExponeaBridge.exponeaInstance.pushNotificationsDelegate = self
                 ExponeaBridge.exponeaInstance.inAppMessagesDelegate = self
                 success()
             } else {
@@ -1030,6 +1031,19 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     }
 
     // MARK: - Enum Converters
+    private func pushActionToString(_ action: ExponeaNotificationActionType) -> String {
+        switch action {
+        case .none, .openApp, .selfCheck:
+            return "app"
+        case .deeplink:
+            return "deeplink"
+        case .browser:
+            return "web"
+        @unknown default:
+            return "app"
+        }
+    }
+
     private func flushModeToString(_ mode: FlushingMode) -> String {
         switch mode {
         case .immediate: return "IMMEDIATE"
@@ -1227,6 +1241,29 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         case "VERBOSE": return .verbose
         default: throw ExponeaError.invalidValue(for: "LogLevel: \(string)")
         }
+    }
+}
+
+// MARK: - PushNotificationManagerDelegate
+extension ExponeaBridge: PushNotificationManagerDelegate {
+    public func pushNotificationOpened(
+        with action: ExponeaNotificationActionType,
+        value: String?,
+        extraData: [AnyHashable: Any]?
+    ) {
+        var openedPush: [AnyHashable: Any] = ["action": pushActionToString(action)]
+        if let value = value {
+            openedPush["url"] = value
+        }
+        if let extraData = extraData {
+            openedPush["additionalData"] = extraData
+        }
+        emitPushOpenedEvent(openedPush)
+    }
+
+    public func silentPushNotificationReceived(extraData: [AnyHashable: Any]?) {
+        guard let extraData = extraData else { return }
+        emitPushReceivedEvent(extraData)
     }
 }
 
