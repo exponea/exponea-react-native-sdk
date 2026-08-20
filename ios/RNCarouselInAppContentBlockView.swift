@@ -12,6 +12,11 @@ import ExponeaSDK
 class RNCarouselInAppContentBlockView: CarouselInAppContentBlockView {
 
     private let contentSelector: BridgedContentBlockSelector
+    /// Monotonic id for each `filterContentBlocks` invocation so overlapping
+    /// initial/full reload cycles cannot share sort-applied state.
+    private var filterCycle = 0
+    /// Sort-applied flag for the continuation currently running on the main stack.
+    private var sortWasAppliedForContinuation = false
 
     init(
         placeholderId: String,
@@ -60,25 +65,35 @@ class RNCarouselInAppContentBlockView: CarouselInAppContentBlockView {
         guard let continueCallback else {
             return
         }
+        filterCycle += 1
+        let cycle = filterCycle
         super.filterContentBlocks(
             placeholder: placeholder,
             continueCallback: { [weak self] loadedContentBlocks in
                 guard let self else {
-                    continueCallback(loadedContentBlocks)
                     return
                 }
-                let filteredContentBlocks = contentSelector.filterContentBlocks(loadedContentBlocks)
-                continueCallback(filteredContentBlocks)
+                contentSelector.filterAndSortContentBlocksAsync(loadedContentBlocks) { [weak self] selectedContentBlocks, sortApplied in
+                    guard let self else {
+                        return
+                    }
+                    guard cycle == self.filterCycle else {
+                        return
+                    }
+                    // `sortContentBlocks` runs synchronously inside `continueCallback`.
+                    self.sortWasAppliedForContinuation = sortApplied
+                    continueCallback(selectedContentBlocks)
+                    self.sortWasAppliedForContinuation = false
+                }
             },
             expiredCompletion: expiredCompletion
         )
     }
+
     override func sortContentBlocks(data: [StaticReturnData]) -> [StaticReturnData] {
-        let contentBlocksToSort = data.compactMap { $0.message }
-        let sortedContentBlocks = contentSelector.sortContentBlocks(contentBlocksToSort)
-        let sortedStaticData = sortedContentBlocks.compactMap { sortedContentBlock in
-            data.first { $0.message?.id == sortedContentBlock.id }
+        guard sortWasAppliedForContinuation else {
+            return super.sortContentBlocks(data: data)
         }
-        return sortedStaticData
+        return data
     }
 }

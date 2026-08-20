@@ -36,8 +36,8 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
     @objc public var customFilterActive: Bool = false {
         didSet {
             if customFilterActive {
-                bridgedContentSelector.filterRequestFn = { data in
-                    self.notifyContentFilterRequest(input: data)
+                bridgedContentSelector.filterRequestFn = { data, token in
+                    self.notifyContentFilterRequest(input: data, token: token)
                 }
             } else {
                 bridgedContentSelector.filterRequestFn = nil
@@ -47,8 +47,8 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
     @objc public var customSortActive: Bool = false {
         didSet {
             if customSortActive {
-                bridgedContentSelector.sortRequestFn = { data in
-                    self.notifyContentSortRequest(input: data)
+                bridgedContentSelector.sortRequestFn = { data, token in
+                    self.notifyContentSortRequest(input: data, token: token)
                 }
             } else {
                 bridgedContentSelector.sortRequestFn = nil
@@ -90,23 +90,45 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
     // Called from ComponentView to handle filter response
     @objc public func handleFilterResponse(_ jsonString: String) {
         guard let data = jsonString.data(using: .utf8),
-              let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [String] else {
+              let json = try? JSONSerialization.jsonObject(with: data) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to parse filter response")
             return
         }
+        var token: String?
+        let jsonArray: [String]
+        if let payload = json as? [String: Any], let data = payload["data"] as? [String] {
+            token = payload["token"] as? String
+            jsonArray = data
+        } else if let array = json as? [String] {
+            jsonArray = array
+        } else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to parse filter response payload")
+            return
+        }
         let dataArray = parseInAppContentBlockResponses(jsonArray)
-        bridgedContentSelector.onContentFilterResponse(dataArray)
+        bridgedContentSelector.onContentFilterResponse(dataArray, token: token)
     }
 
     // Called from ComponentView to handle sort response
     @objc public func handleSortResponse(_ jsonString: String) {
         guard let data = jsonString.data(using: .utf8),
-              let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [String] else {
+              let json = try? JSONSerialization.jsonObject(with: data) else {
             ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to parse sort response")
             return
         }
+        var token: String?
+        let jsonArray: [String]
+        if let payload = json as? [String: Any], let data = payload["data"] as? [String] {
+            token = payload["token"] as? String
+            jsonArray = data
+        } else if let array = json as? [String] {
+            jsonArray = array
+        } else {
+            ExponeaSDK.Exponea.logger.log(.error, message: "InAppCbCarousel: Failed to parse sort response payload")
+            return
+        }
         let dataArray = parseInAppContentBlockResponses(jsonArray)
-        bridgedContentSelector.onContentSortResponse(dataArray)
+        bridgedContentSelector.onContentSortResponse(dataArray, token: token)
     }
 
     private func parseInAppContentBlockResponses(_ source: [String]) -> [InAppContentBlockResponse] {
@@ -215,6 +237,7 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
     }
 
     private func destroyPreviousCarouselInstance() {
+        bridgedContentSelector.cancelPendingRequests()
         currentCarouselInstance?.release()
         currentCarouselInstance = nil
         self.subviews.forEach { $0.removeFromSuperview() }
@@ -236,7 +259,7 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
         }
     }
 
-    private func notifyContentFilterRequest(input: [ExponeaSDK.InAppContentBlockResponse]) {
+    private func notifyContentFilterRequest(input: [ExponeaSDK.InAppContentBlockResponse], token: String) {
         let jsonStrings = input.compactMap({ contentBlock in
             guard let data = try? JSONEncoder().encode(contentBlock),
                   let body = String(data: data, encoding: .utf8) else {
@@ -251,13 +274,13 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
             return
         }
 
-        let payload: NSDictionary = ["requestType": "filter", "data": jsonString]
+        let payload: NSDictionary = ["requestType": "filter|\(token)", "data": jsonString]
         onMain { [weak self] in
             self?.eventEmitter?.emitDataRequest(data: payload)
         }
     }
 
-    private func notifyContentSortRequest(input: [ExponeaSDK.InAppContentBlockResponse]) {
+    private func notifyContentSortRequest(input: [ExponeaSDK.InAppContentBlockResponse], token: String) {
         let jsonStrings = input.compactMap({ contentBlock in
             guard let data = try? JSONEncoder().encode(contentBlock),
                   let body = String(data: data, encoding: .utf8) else {
@@ -272,7 +295,7 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
             return
         }
 
-        let payload: NSDictionary = ["requestType": "sort", "data": jsonString]
+        let payload: NSDictionary = ["requestType": "sort|\(token)", "data": jsonString]
         onMain { [weak self] in
             self?.eventEmitter?.emitDataRequest(data: payload)
         }

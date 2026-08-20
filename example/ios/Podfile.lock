@@ -1,8 +1,8 @@
 PODS:
   - AnyCodable-FlightSchool (0.4.0)
-  - ExponeaSDK (4.2.0):
+  - ExponeaSDK (4.3.0):
     - SwiftSoup (< 3.0, >= 2.7.6)
-  - ExponeaSDK-Notifications (4.2.0)
+  - ExponeaSDK-Notifications (4.3.0)
   - FBLazyVector (0.85.2)
   - hermes-engine (250829098.0.10):
     - hermes-engine/Pre-built (= 250829098.0.10)
@@ -1368,7 +1368,7 @@ PODS:
     - ReactNativeDependencies
   - react-native-exponea-sdk (4.0.0):
     - AnyCodable-FlightSchool (= 0.4.0)
-    - ExponeaSDK (= 4.2.0)
+    - ExponeaSDK (= 4.3.0)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1939,7 +1939,7 @@ PODS:
   - Yoga (0.0.0)
 
 DEPENDENCIES:
-  - ExponeaSDK-Notifications (= 4.2.0)
+  - ExponeaSDK-Notifications (= 4.3.0)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2188,10 +2188,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
-  ExponeaSDK: 61d0efafde6ba7e0568ffce475a507d45962d3c5
-  ExponeaSDK-Notifications: 7edca6bb4942e07f7798f94b1907924fef43d990
+  ExponeaSDK: bb135577b3eae733d0f08e46fea1a1476b6f78a4
+  ExponeaSDK-Notifications: b11db8d3edef301146577f2b6ad4f7a2050ed7fb
   FBLazyVector: 26fd21c75314e101f280d401e97f27d54f3f7064
-  hermes-engine: f4c4351e89562b890eb35705ab9e64044cd6cfb9
+  hermes-engine: 8806c0807777c186a89942858289daa7f2331635
   RCTDeprecation: c7a2768f905d76ca6d2cfefb26e4349eacbdfca3
   RCTRequired: 5e502c3553cfbed090a991c444448da452fb752e
   RCTSwiftUI: 5ce3ccbdc58b78cc4ebbaace01709ec22d58e131
@@ -2228,7 +2228,7 @@ SPEC CHECKSUMS:
   React-logger: 2c87840a9f6322a1226d0df337d9662f44ea6094
   React-Mapbuffer: 1fc10d873f00aa895836c316a9737ce7d43875ce
   React-microtasksnativemodule: 85ac7286ff84e8fc8e1956233748b8d4b2a6dcea
-  react-native-exponea-sdk: f77fa84795b4bef616c6ba313746b27e1f2a9e9c
+  react-native-exponea-sdk: ff7bdc617e7274fee15d3fd9f0662ea1c951f24c
   react-native-safe-area-context: 91a90d98c310adcc90a511e5aeb6046d7c19d885
   React-NativeModulesApple: 993744f42aab769eb02bf5d256b6767c546d0bb5
   React-networking: 251bfddc651caca5e3039d1afa1d2eca890d0c56
@@ -2270,6 +2270,6 @@ SPEC CHECKSUMS:
   SwiftSoup: 959c9ac70d7053fbf476341bfac90ab228523f2a
   Yoga: 04bb4bfeb02c0000b940c1e6e89e856cd8de5a71
 
-PODFILE CHECKSUM: 31f5a6db6a9f1003f011d8efec1efc0bbda00f61
+PODFILE CHECKSUM: 3d883e67f52a2a4b7fa81d9684828082b73fe442
 
 COCOAPODS: 1.15.2

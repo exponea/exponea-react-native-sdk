@@ -3,6 +3,7 @@ import { type ViewProps } from 'react-native';
 import ContentBlockCarouselViewNativeComponent, {
   Commands,
 } from './ContentBlockCarouselViewNativeComponent';
+import { resolveContentBlockDataRequest } from './ContentBlockDataRequest';
 import type {
   InAppContentBlock,
   InAppContentBlockAction,
@@ -86,7 +87,6 @@ export default function ContentBlockCarouselView(
           onMessagesChanged?.(count, blocks);
           break;
         case 'onNoMessageFound':
-          console.log('[ContentBlockCarouselView] Calling onNoMessageFound');
           onNoMessageFound?.(placeholderId);
           break;
         case 'onError':
@@ -125,28 +125,20 @@ export default function ContentBlockCarouselView(
   const handleDataRequest = useCallback(
     (event: any) => {
       const { requestType, data } = event.nativeEvent;
-      const dataArray: string[] = JSON.parse(data);
-      const blocks: InAppContentBlock[] = dataArray.map((json: string) =>
-        JSON.parse(json)
+      const result = resolveContentBlockDataRequest(
+        requestType,
+        data,
+        filterContentBlocks,
+        sortContentBlocks
       );
 
-      if (requestType === 'filter' && filterContentBlocks) {
-        const filtered = filterContentBlocks(blocks);
-        const jsonStrings = filtered.map((b) => JSON.stringify(b));
+      if (result.requestKind === 'filter' && result.responsePayload) {
         if (componentRef.current) {
-          Commands.filterResponse(
-            componentRef.current,
-            JSON.stringify(jsonStrings)
-          );
+          Commands.filterResponse(componentRef.current, result.responsePayload);
         }
-      } else if (requestType === 'sort' && sortContentBlocks) {
-        const sorted = sortContentBlocks(blocks);
-        const jsonStrings = sorted.map((b) => JSON.stringify(b));
+      } else if (result.requestKind === 'sort' && result.responsePayload) {
         if (componentRef.current) {
-          Commands.sortResponse(
-            componentRef.current,
-            JSON.stringify(jsonStrings)
-          );
+          Commands.sortResponse(componentRef.current, result.responsePayload);
         }
       }
     },
