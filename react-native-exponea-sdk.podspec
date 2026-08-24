@@ -24,6 +24,10 @@ Pod::Spec.new do |s|
   s.dependency "ExponeaSDK", "4.3.0"
   s.dependency "AnyCodable-FlightSchool", "0.4.0"
 
+  s.test_spec "Tests" do |test_spec|
+    test_spec.source_files = "ios/Tests/*.{swift,m,mm}"
+  end
+
   install_modules_dependencies(s)
 
   # Static-framework (USE_FRAMEWORKS=static) builds need extra wiring on top of what
