@@ -14,6 +14,20 @@ content:
 > Refer to the [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
 ## Release Notes
+## Release Notes for 4.1.0
+#### August 25, 2026
+* Added:
+  * Updates the native Android SDK to version 5.3.0.
+  * Updates the native iOS SDK to version 4.3.0.
+  * Adds the `Exponea.customerCookie` documentation with usage examples.
+* Fixed:
+  * Fixes the JSON parser to properly handle nested maps and arrays in event properties.
+  * Fixes carousel content block sort and reload race conditions on iOS.
+  * Fixes iOS push notification listeners not being restored after SDK reinitialization.
+  * Fixes App Inbox TurboModule bridging issues, a race condition in `flushData()`, and event delivery to the main thread on iOS.
+  * Fixes `identifyCustomer` rejecting empty `CustomerIdentity` objects.
+  * Fixes the Android `InAppContentBlocksPlaceholder.onActionClicked` delivering an undefined action object instead of a properly parsed action.
+
 ## Release Notes for 4.0.0
 #### June 26, 2026
 * Added:
