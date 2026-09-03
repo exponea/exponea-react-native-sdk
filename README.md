@@ -1,10 +1,10 @@
 # React Native Exponea SDK
 
-React Native Exponea SDK allows your application to interact with the [Bloomreach Engagement](https://www.bloomreach.com/) Customer Data & Experience Platform. Engagement empowers B2C marketers to raise conversion rates, improve acquisition ROI, and maximize customer lifetime value.
+React Native Exponea SDK allows your application to interact with the [Bloomreach Marketing](https://www.bloomreach.com/) Customer Data & Experience Platform. Marketing empowers B2C marketers to raise conversion rates, improve acquisition ROI, and maximize customer lifetime value.
 
 The SDK is implemented in Typescript as a wrapper around [native Android SDK](https://github.com/exponea/exponea-android-sdk) and [native iOS SDK](https://github.com/exponea/exponea-ios-sdk). It is compatible with React Native 0.83.0 - 0.85.2.
 
-> Bloomreach Engagement was formerly known as Exponea. For backward compatibility, the Exponea name continues to be used in the React Native SDK.
+> Bloomreach Marketing was formerly known as Exponea. For backward compatibility, the Exponea name continues to be used in the React Native SDK.
 
 ## Getting started
 
@@ -64,5 +64,5 @@ If facing any issues, look for **Troubleshooting** section in the respective doc
 
 ## Support
 
-Are you a Bloomreach customer and dealing with some issues on mobile SDK? You can reach the official Engagement Support [via these recommended ways](https://documentation.bloomreach.com/engagement/docs/engagement-support#contacting-the-support).
+Are you a Bloomreach customer and dealing with some issues on mobile SDK? You can reach the official Marketing Support [via these recommended ways](https://documentation.bloomreach.com/engagement/docs/engagement-support#contacting-the-support).
 Note that Github repository issues and PRs will also be considered but with the lowest priority and without guaranteed output.

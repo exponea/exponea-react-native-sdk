@@ -7,7 +7,7 @@ parent:
   uri: react-native-sdk
 content:
   excerpt: >-
-    Display in-app personalization based on definitions set up in Engagement
+    Display in-app personalization based on definitions set up in Marketing
     using the React Native SDK
 ---
 
