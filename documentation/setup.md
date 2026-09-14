@@ -70,6 +70,24 @@ android {
     }
 ```
 
+#### Android Auto Backup and SDK SharedPreferences
+
+The React Native SDK relies on the [native Android SDK](https://documentation.bloomreach.com/engagement/docs/android-sdk) to persist data in dedicated SharedPreferences files, for example `EXPONEA_PREFERENCES.xml` and `EXPONEA_PUSH_TOKEN.xml`. The native SDK ships with default Android Auto Backup rules that exclude only the push token and short-lived authentication data from backup.
+
+If your app doesn't define its own backup rules, the SDK defaults apply automatically. No additional action required.
+
+If your app defines its own backup rules, or you want to exclude SDK SharedPreferences from Auto Backup, configure them in your React Native project's Android host app:
+
+- `android/app/src/main/AndroidManifest.xml`
+- `android/app/src/main/res/xml/backup_rules.xml` (API 30 and below)
+- `android/app/src/main/res/xml/data_extraction_rules.xml` (API 31 and above)
+
+> 📘
+>
+> For XML examples and default backup behavior, follow the instructions in [Android Auto Backup and SDK SharedPreferences](https://documentation.bloomreach.com/engagement/docs/android-sdk-setup#android-auto-backup-and-sdk-sharedpreferences) in the native Android SDK documentation.
+>
+> If you get a build error such as `Manifest merger failed` for `fullBackupContent` or `dataExtractionRules`, see [Build error "Manifest merger failed"](https://documentation.bloomreach.com/engagement/docs/android-sdk-setup#build-error-manifest-merger-failed) in the native Android SDK documentation.
+
 ## Initialize the SDK
 
 Now that you have installed the SDK in your project, you must import, configure, and initialize the SDK in your application code.
