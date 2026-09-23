@@ -190,19 +190,15 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
         contentBlock: ExponeaSDK.InAppContentBlockResponse,
         action: ExponeaSDK.InAppContentBlockAction
     ) {
+        // Default behaviour (opening deeplinks/universal links/browser URLs) is left to the native
+        // SDK, which reads `overrideDefaultBehavior` from this proxy at click time. Opening the URL
+        // here too would navigate twice whenever the default behaviour is active. Matches Android,
+        // where `MutableContentBlockCarouselCallback` only forwards the event.
         notifyContentBlockCarouselEvent(.onActionClicked(
             placeholderId: placeholderId,
             contentBlock: contentBlock,
             action: action
         ))
-
-        if !overrideDefaultBehavior, let urlString = action.url, let url = URL(string: urlString) {
-            onMain {
-                if UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url, options: [:])
-                }
-            }
-        }
     }
 
     public func onHeightUpdate(placeholderId: String, height: CGFloat) {

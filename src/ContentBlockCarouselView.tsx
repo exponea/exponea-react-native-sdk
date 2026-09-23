@@ -49,7 +49,7 @@ export default function ContentBlockCarouselView(
     maxMessagesCount,
     scrollDelay,
     overrideDefaultBehavior = false,
-    trackActions = false,
+    trackActions = true,
     filterContentBlocks,
     sortContentBlocks,
     onMessageShown,

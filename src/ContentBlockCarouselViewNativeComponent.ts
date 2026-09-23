@@ -47,7 +47,7 @@ export interface ContentBlockCarouselViewNativeProps extends ViewProps {
   maxMessagesCount?: Int32;
   scrollDelay?: Int32;
   overrideDefaultBehavior?: WithDefault<boolean, false>;
-  trackActions?: WithDefault<boolean, false>;
+  trackActions?: WithDefault<boolean, true>;
 
   // Internal flags (set by wrapper component)
   customFilterActive?: WithDefault<boolean, false>;

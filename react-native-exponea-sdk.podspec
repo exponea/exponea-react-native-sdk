@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.private_header_files = "ios/**/*.h"
 
   s.dependency "React-Core"
-  s.dependency "ExponeaSDK", "4.3.0"
+  s.dependency "ExponeaSDK", "5.0.0"
   s.dependency "AnyCodable-FlightSchool", "0.4.0"
 
   s.test_spec "Tests" do |test_spec|
