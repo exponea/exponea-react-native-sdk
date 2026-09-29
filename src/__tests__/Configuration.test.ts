@@ -470,7 +470,8 @@ test('configure warns and uses integrationRouteMap when both projectMapping and 
 test('configure renames legacy projectMapping to integrationRouteMap for native', async () => {
   const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-  await Exponea.configure({
+  // Frozen input also guards against mutating the caller's configuration.
+  const config: Configuration = Object.freeze({
     projectToken: PROJECT_TOKEN,
     authorizationToken: AUTH_TOKEN,
     projectMapping: {
@@ -482,7 +483,9 @@ test('configure renames legacy projectMapping to integrationRouteMap for native'
         },
       ],
     },
-  } as any);
+  });
+
+  await Exponea.configure(config);
 
   expect(warnSpy).toHaveBeenCalledWith(
     "'projectMapping' is deprecated. Use 'integrationRouteMap' with 'ProjectConfig' instead."
@@ -595,6 +598,11 @@ test('configure warns when StreamConfig is used with advancedAuthEnabled', async
   expect(warnSpy).toHaveBeenCalledWith(
     "'advancedAuthEnabled' is not supported with 'StreamConfig' and will be ignored."
   );
+  expect(mockConfigure).toHaveBeenCalledTimes(1);
+  expect(mockConfigure).toHaveBeenCalledWith(
+    { integrationConfig: { streamId: STREAM_ID } },
+    null
+  );
   warnSpy.mockRestore();
 });
 
@@ -608,10 +616,46 @@ test('configure warns when StreamConfig is used with integrationRouteMap', async
         { projectToken: PROJECT_TOKEN, authorizationToken: AUTH_TOKEN },
       ],
     },
+    applicationId: 'my-app',
+    automaticSessionTracking: false,
+    ios: { requirePushAuthorization: false },
   });
 
   expect(warnSpy).toHaveBeenCalledWith(
     "'integrationRouteMap'/'projectMapping' is not supported with 'StreamConfig' and will be ignored."
+  );
+  expect(mockConfigure).toHaveBeenCalledTimes(1);
+  expect(mockConfigure).toHaveBeenCalledWith(
+    {
+      integrationConfig: { streamId: STREAM_ID },
+      applicationId: 'my-app',
+      automaticSessionTracking: false,
+      ios: { requirePushAuthorization: false },
+    },
+    null
+  );
+  warnSpy.mockRestore();
+});
+
+test('configure ignores legacy projectMapping with StreamConfig', async () => {
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await Exponea.configure({
+    integrationConfig: { streamId: STREAM_ID },
+    projectMapping: {
+      [EventType.BANNER]: [
+        { projectToken: PROJECT_TOKEN, authorizationToken: AUTH_TOKEN },
+      ],
+    },
+  });
+
+  expect(warnSpy).toHaveBeenCalledWith(
+    "'integrationRouteMap'/'projectMapping' is not supported with 'StreamConfig' and will be ignored."
+  );
+  expect(mockConfigure).toHaveBeenCalledTimes(1);
+  expect(mockConfigure).toHaveBeenCalledWith(
+    { integrationConfig: { streamId: STREAM_ID } },
+    null
   );
   warnSpy.mockRestore();
 });
@@ -631,6 +675,21 @@ test('configure does not warn when ProjectConfig is used with advancedAuthEnable
   const called = mockConfigure.mock.lastCall![0] as any;
   expect(called.advancedAuthEnabled).toBe(true);
   warnSpy.mockRestore();
+});
+
+test('configure preserves advancedAuthEnabled false with ProjectConfig', async () => {
+  const config: Configuration = {
+    integrationConfig: {
+      projectToken: PROJECT_TOKEN,
+      authorizationToken: AUTH_TOKEN,
+    },
+    advancedAuthEnabled: false,
+  };
+
+  await Exponea.configure(config);
+
+  expect(mockConfigure).toHaveBeenCalledTimes(1);
+  expect(mockConfigure).toHaveBeenCalledWith(config, null);
 });
 
 test('configure warns when root-level requirePushAuthorization is set', async () => {

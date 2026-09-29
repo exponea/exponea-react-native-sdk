@@ -3,6 +3,7 @@ rm -rdf node_modules
 rm -rdf android/build
 rm -rdf ios/Pods
 rm -rdf ios/build
+rm -rdf coverage
 rm -rdf example/.yarn/cache
 rm -rdf example/node_modules
 rm -rdf example/android/build

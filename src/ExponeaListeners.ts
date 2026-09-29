@@ -245,24 +245,6 @@ export class ExponeaListeners {
     sdkAuthErrorCallback = null;
     NativeExponea.onSdkAuthErrorCallbackRemove();
   }
-
-  /**
-   * Internal method for testing: simulates an in-app message action event.
-   * This method is used by tests to simulate native events without a real native module.
-   *
-   * @internal
-   * @param eventDataString - JSON string containing the action data
-   */
-  static handleInAppMessageAction(eventDataString: string): void {
-    if (inAppMessageCallback) {
-      try {
-        const action = JSON.parse(eventDataString);
-        handleInAppMessageAction(action, inAppMessageCallback);
-      } catch (e) {
-        console.error('Failed to parse inAppAction event', e);
-      }
-    }
-  }
 }
 
 // Types for Interface B

@@ -295,7 +295,3 @@ export const Exponea: ExponeaType = {
   removeSdkAuthErrorCallback: () =>
     ExponeaListeners.removeSdkAuthErrorCallback(),
 };
-
-// Add internal testing method (not part of public API)
-(Exponea as any).handleInAppMessageAction = (eventDataString: string) =>
-  ExponeaListeners.handleInAppMessageAction(eventDataString);

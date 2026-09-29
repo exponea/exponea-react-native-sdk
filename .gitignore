@@ -87,3 +87,6 @@ nitrogen/
 
 # Swift Package Manager build artifacts
 ios/.build/
+
+# Coverage reports
+coverage/

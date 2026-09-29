@@ -1,15 +1,7 @@
-import { NativeEventEmitter } from 'react-native';
+import { emitNativeEvent } from './NativeEventTestUtils';
 import Exponea, { SdkAuthErrorCode } from '../index';
 import type { SdkAuthError } from '../index';
 import NativeExponea from '../NativeExponea';
-
-// Drives the real `sdkAuthError` listener registered at module load in
-// ExponeaListeners.ts (native -> JS path), via the mocked NativeEventEmitter.
-function emitSdkAuthError(data: string): void {
-  (
-    NativeEventEmitter as unknown as { emit: (e: string, d: string) => void }
-  ).emit('sdkAuthError', data);
-}
 
 describe('SDK auth error callback', () => {
   afterEach(() => {
@@ -21,7 +13,8 @@ describe('SDK auth error callback', () => {
     const received: SdkAuthError[] = [];
     Exponea.setSdkAuthErrorCallback((error) => received.push(error));
 
-    emitSdkAuthError(
+    emitNativeEvent(
+      'sdkAuthError',
       JSON.stringify({
         errorCode: 'TOKEN_EXPIRED',
         customerIds: { registered: 'test@example.com' },
@@ -39,7 +32,8 @@ describe('SDK auth error callback', () => {
     const received: SdkAuthError[] = [];
     Exponea.setSdkAuthErrorCallback((error) => received.push(error));
 
-    emitSdkAuthError(
+    emitNativeEvent(
+      'sdkAuthError',
       JSON.stringify({ errorCode: 'TOKEN_ABOUT_TO_EXPIRE', customerIds: {} })
     );
 
@@ -53,7 +47,8 @@ describe('SDK auth error callback', () => {
     Exponea.setSdkAuthErrorCallback(callback);
     Exponea.removeSdkAuthErrorCallback();
 
-    emitSdkAuthError(
+    emitNativeEvent(
+      'sdkAuthError',
       JSON.stringify({ errorCode: 'TOKEN_REJECTED', customerIds: {} })
     );
 
@@ -65,7 +60,9 @@ describe('SDK auth error callback', () => {
     Exponea.setSdkAuthErrorCallback(callback);
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    expect(() => emitSdkAuthError('not-valid-json')).not.toThrow();
+    expect(() =>
+      emitNativeEvent('sdkAuthError', 'not-valid-json')
+    ).not.toThrow();
 
     expect(callback).not.toHaveBeenCalled();
     expect(errorSpy).toHaveBeenCalled();

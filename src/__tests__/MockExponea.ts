@@ -25,6 +25,7 @@ import {
 import { InAppMessageActionDef } from '../InAppMessageActionDef';
 import type Configuration from '../Configuration';
 import { TestUtils } from './TestUtils';
+import { emitNativeEvent } from './NativeEventTestUtils';
 import Exponea from '../index';
 
 TestUtils.mockExponeaNative();
@@ -438,7 +439,7 @@ export class MockExponea implements ExponeaType {
   simulateEmit(eventName: string, eventData: string) {
     switch (eventName) {
       case 'inAppAction':
-        (Exponea as any).handleInAppMessageAction(eventData);
+        emitNativeEvent(eventName, eventData);
         break;
       default:
         fail('Unsupported emit event: ' + eventName);
