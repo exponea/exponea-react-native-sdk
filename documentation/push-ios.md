@@ -67,78 +67,65 @@ In Xcode, select your application target, and on the `Signing & Capabilities` ta
 
 For your application to be able to respond to push notification-related events, its `AppDelegate` must implement several methods (see the [native iOS SDK documentation](https://documentation.bloomreach.com/engagement/docs/ios-sdk-push-notifications#step-3-implement-application-delegate-methods) for details).
 
-[`ExponeaRNAppDelegate.m`](https://github.com/exponea/exponea-react-native-sdk/blob/main/ios/ExponeaRNAppDelegate.m) in the React Native SDK provides default implementations of these methods. We recommend that you extend `ExponeaRNAppDelegate` in your `AppDelegate`.
+> ❗️
+>
+> The SDK version 3.0.0 removes the `ExponeaRNAppDelegate` base class that your `AppDelegate` was expected to extend. Implement the delegate methods directly, as shown below. If you are updating from 2.x, refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-from-version-2xx-to-3xx).
 
-1. Open `AppDelegate.h` and replace the contents with the following:
-
-   ```swift
-   #import <React/RCTBridgeDelegate.h>
-   #import <UIKit/UIKit.h>
-   #import <ExponeaRNAppDelegate.h>
-
-   @interface AppDelegate : ExponeaRNAppDelegate<RCTBridgeDelegate>
-   @end
-   ```
-
-2. Open `AppDelegate.m` and add a super call to `didFinishLaunchingWithOptions`:
-   ```swift
-     - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-     {
-       ...
-       [super application:application didFinishLaunchingWithOptions:launchOptions];
-     return YES;
-   }
-   ```
-
-If, for some reason, you don't want to or are not able to extend `ExponeaRNAppDelegate`, for example because you are using `RCTAppDelegate` introduced in React Native 0.71, import `ExponeaRNAppDelegate.h` in `AppDelegate.m` and copy over the methods and add calls to Exponea to the existing methods. You must set the `UNUserNotificationCenter` delegate and code for processing notifications to `didFinishLaunchingWithOptions`. Your implementation of `AppDelegate` should look like this:
+Open `AppDelegate.swift` and implement the following. A complete reference implementation is available in the example app's [`AppDelegate.swift`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/ios/ExponeaExample/AppDelegate.swift).
 
 ```swift
-#import <ExponeaRNAppDelegate.h>
+import ExponeaSDK
+import UserNotifications
 
-@implementation AppDelegate
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-...
-// Set UNUserNotificationCenter delegate
-[UNUserNotificationCenter currentNotificationCenter].delegate = self;
-...
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+    // Set the UNUserNotificationCenter delegate
+    UNUserNotificationCenter.current().delegate = self
+    ...
+    return true
+  }
+
+  // MARK: - Push notification token
+
+  func application(
+    _ application: UIApplication,
+    didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+  ) {
+    Exponea.shared.handlePushNotificationToken(deviceToken: deviceToken)
+  }
+
+  // MARK: - Remote notification
+
+  func application(
+    _ application: UIApplication,
+    didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+    fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
+  ) {
+    Exponea.shared.handlePushNotificationOpened(userInfo: userInfo)
+    completionHandler(.newData)
+  }
+
+  // MARK: - UNUserNotificationCenterDelegate
+
+  func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    didReceive response: UNNotificationResponse,
+    withCompletionHandler completionHandler: @escaping () -> Void
+  ) {
+    Exponea.shared.handlePushNotificationOpened(response: response)
+    completionHandler()
+  }
 }
-
-- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
-restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
-{
-// call Exponea continueUserActivity method
-[Exponea continueUserActivity: userActivity];
-...
-}
-
-...
-
-// Methods copied from ExponeaRNAppDelegate
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-  [Exponea handlePushNotificationToken: deviceToken];
-}
-
-- (void)application:(UIApplication *)application
-      didReceiveRemoteNotification:(NSDictionary *)userInfo
-      fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
-  [Exponea handlePushNotificationOpenedWithUserInfo:userInfo];
-  completionHandler(UIBackgroundFetchResultNewData);
-}
-
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-      didReceiveNotificationResponse:(UNNotificationResponse *)response
-      withCompletionHandler:(void (^)(void))completionHandler
-{
-  [Exponea handlePushNotificationOpenedWithResponse: response];
-  completionHandler();
-}
-
-@end
 ```
+
+> 📘
+>
+> Implement these methods explicitly even if you use another SDK that swizzles the same methods. Both the iOS SDK and SDKs such as Firebase chain onto an existing implementation, so providing a real one keeps the call chain predictable. Refer to [Coexistence with Firebase and other push SDKs](#coexistence-with-firebase-and-other-push-sdks).
 
 ### Step 3: Configure app group
 
@@ -643,6 +630,29 @@ Create new folders for the **Notification Service Extension** and the **Notifica
 
 - [ ] Check that push notifications with images and buttons sent from {user.mkg} are correctly displayed on your device. Push delivery tracking should work.
 - [ ] If you don't see buttons in the expanded push notification, the content extension is **not** running. Double check `UNNotificationExtensionCategory` in `Info.plist` - notice the placement inside `NSExtensionAttributes`. Check that the `iOS Deployment Target` is the same for the extensions and the main app.
+
+### Coexistence with Firebase and other push SDKs
+
+The React Native SDK works alongside other SDKs that handle push notifications, such as `@react-native-firebase/messaging`. No opt-out or special configuration is required on either side.
+
+**How it works:**
+* The native iOS SDK doesn't take ownership of `UNUserNotificationCenter.delegate`. Instead, it observes the property and swizzles `userNotificationCenter:didReceiveNotificationResponse:` on whichever class is currently set as the delegate, reapplying the swizzle if the delegate changes. It only installs its own delegate when none is set. Every swizzle the SDK installs calls the original implementation first, then runs the SDK's own handler.
+* Firebase works the same way: `@react-native-firebase/messaging` registers as a `GULAppDelegateSwizzler` interceptor, and its `UNUserNotificationCenter` category forwards to the previously set delegate.
+
+**Initialization order:**
+* Initialize Firebase before {user.mkg}. This happens by default in a React Native app: Firebase initializes natively in `application:didFinishLaunchingWithOptions:`, while `Exponea.configure()` is called from JavaScript and therefore runs afterward. Keep the `Exponea.configure()` call in JavaScript — moving it into native launch code breaks this ordering.
+
+> ❗️
+>
+> Don't set `FirebaseAppDelegateProxyEnabled` to `NO` in `Info.plist`. It disables Firebase's own APNs token plumbing and has no effect on {user.mkg} push notifications.
+
+The SDK's `automaticPushNotificationTracking` native flag isn't exposed through the React Native configuration and is always enabled. Because the SDK chains onto existing implementations rather than replacing them, you can leave it enabled without conflict.
+
+**Notification service extensions.** iOS invokes only one Notification Service Extension per notification. If your app needs both {user.mkg} rich push notifications and Firebase's `FIRMessagingExtensionHelper`, call both from the same single extension target — you can't split them across separate extensions per vendor.
+
+> 📘
+>
+> If you also use `expo-notifications`, a third component competes for the notification center delegate. Test cold start, background, and foreground notification opens once all components are integrated.
 
 ### Retrieve push notification token manually
 

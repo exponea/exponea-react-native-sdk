@@ -297,71 +297,8 @@ function withExponeaAndroidManifest(config) {
   });
 }
 
-// Update ios/MyApp/AppDelegate.mm or ios/MyApp/AppDelegate.swift
+// Update ios/MyApp/AppDelegate.swift
 function withExponeaAppDelegate(config) {
-  const modifyAppDelegateForObjectiveC = (cfg) => {
-    const { modResults } = cfg;
-    const { contents } = modResults;
-    const lines = contents.split('\n');
-
-    const importIndex = lines.findIndex((line) =>
-      /^#import "AppDelegate.h"/.test(line)
-    );
-    const didFinishLaunchingIndex = lines.findIndex((line) =>
-      /return \[super application:application didFinishLaunchingWithOptions:launchOptions\]/.test(
-        line
-      )
-    );
-    const continueUserActivityIndex = lines.findIndex((line) =>
-      /return \[super application:application continueUserActivity:userActivity restorationHandler:restorationHandler\]/.test(
-        line
-      )
-    );
-    const didRegisterForRemoteNotificationsWithDeviceTokenIndex =
-      lines.findIndex((line) =>
-        /return \[super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken\]/.test(
-          line
-        )
-      );
-    const didReceiveRemoteNotificationIndex = lines.findIndex((line) =>
-      /return \[super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler\]/.test(
-        line
-      )
-    );
-    const endIndex = lines.findIndex((line) => /@end/.test(line));
-
-    modResults.contents = [
-      ...lines.slice(0, importIndex),
-      `#import <ExponeaRNAppDelegate.h>
-  #import <UserNotifications/UserNotifications.h>`,
-      ...lines.slice(importIndex, didFinishLaunchingIndex),
-      `  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-    center.delegate = self;`,
-      ...lines.slice(didFinishLaunchingIndex, continueUserActivityIndex),
-      `  [Exponea continueUserActivity: userActivity];`,
-      ...lines.slice(
-        continueUserActivityIndex,
-        didRegisterForRemoteNotificationsWithDeviceTokenIndex
-      ),
-      `  [Exponea handlePushNotificationToken: deviceToken];`,
-      ...lines.slice(
-        didRegisterForRemoteNotificationsWithDeviceTokenIndex,
-        didReceiveRemoteNotificationIndex
-      ),
-      `  [Exponea handlePushNotificationOpenedWithUserInfo:userInfo];`,
-      ...lines.slice(didReceiveRemoteNotificationIndex, endIndex),
-      `- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-      didReceiveNotificationResponse:(UNNotificationResponse *)response
-      withCompletionHandler:(void (^)(void))completionHandler
-  {
-    [Exponea handlePushNotificationOpenedWithResponse: response];
-    completionHandler();
-  }`,
-      ...lines.slice(endIndex),
-    ].join('\n');
-
-    return cfg;
-  };
   const modifyAppDelegateForSwift = (cfg) => {
     let contents = cfg.modResults.contents;
     // Step 1: import ExponeaSDK
@@ -501,11 +438,13 @@ function withExponeaAppDelegate(config) {
     return cfg;
   };
   return withAppDelegate(config, (cfg) => {
-    if (cfg.modResults.language === 'swift') {
-      return modifyAppDelegateForSwift(cfg);
-    } else {
-      return modifyAppDelegateForObjectiveC(cfg);
+    if (cfg.modResults.language !== 'swift') {
+      throw new Error(
+        'react-native-exponea-sdk requires a Swift AppDelegate. ' +
+          'Objective-C AppDelegates are no longer supported.'
+      );
     }
+    return modifyAppDelegateForSwift(cfg);
   });
 }
 

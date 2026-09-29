@@ -73,41 +73,29 @@ public class MainActivity extends ReactActivity {
 
 ### iOS
 
-To track iOS Universal Links to {user.mkg}, you must add an `application:continueUserActivity:restorationHandler` function to your `AppDelegate.m` file.
+To track iOS Universal Links to {user.mkg}, implement `application(_:continue:restorationHandler:)` in your `AppDelegate.swift` file and track the campaign click.
 
-#### With ExponeaRNAppDelegate
+> ❗️
+>
+> The SDK version 3.0.0 removes the `ExponeaRNAppDelegate` base class that handled this through a `super` call. Track the campaign click directly, as shown below.
 
-If you have [push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-notifications) set up and your `AppDelegate` already extends `ExponeaRNAppDelegate`, it is sufficient to call the super method and the SDK will take care of the rest.
+```swift
+import ExponeaSDK
 
-```objc
-- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
- restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
-{
-[super application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
-  return [RCTLinkingManager
-          application:application
-          continueUserActivity:userActivity
-          restorationHandler:restorationHandler];
-}
-```
+func application(
+  _ application: UIApplication,
+  continue userActivity: NSUserActivity,
+  restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+) -> Bool {
+  if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+     let url = userActivity.webpageURL {
+    Exponea.shared.trackCampaignClick(url: url, timestamp: nil)
+  }
 
-#### Without ExponeaRNAppDelegate
-
-If you don't use the `ExponeaRNAppDelegate`, you must call the processing method directly.
-
-```objc
-#import <ExponeaRNAppDelegate.h>
-
-...
-...
-
-- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
- restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
-{
-  [Exponea continueUserActivity:userActivity];
-  return [RCTLinkingManager
-          application:application
-          continueUserActivity:userActivity
-          restorationHandler:restorationHandler];
+  return RCTLinkingManager.application(
+    application,
+    continue: userActivity,
+    restorationHandler: restorationHandler
+  )
 }
 ```
