@@ -30,10 +30,25 @@ public class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackTyp
     private var currentPlaceholderInstance: StaticInAppContentBlockView?
     private var currentOriginalBehavior: InAppContentBlockCallbackType?
 
+    // Restores freshly-initialized state so a Fabric-recycled view reloads on its next mount
+    @objc public func resetForRecycle() {
+        // didSet tears down the current content block view
+        placeholderId = nil
+        overrideDefaultBehavior = false
+    }
+
+    // Disconnects the outgoing view; an in-flight load (e.g. the fade-in animation) can outlive it
+    // and must not emit events into this wrapper, which Fabric may have recycled for another mount
+    private func releaseCurrentPlaceholderInstance() {
+        currentPlaceholderInstance?.behaviourCallback = DetachedInAppContentBlockCallback()
+        currentPlaceholderInstance?.contentReadyCompletion = nil
+        currentPlaceholderInstance = nil
+        currentOriginalBehavior = nil
+    }
+
     private func setPlaceholderId(_ newPlaceholderId: String?) {
         guard ExponeaSDK.Exponea.shared.isConfigured else {
-            currentPlaceholderInstance = nil
-            currentOriginalBehavior = nil
+            releaseCurrentPlaceholderInstance()
             currentPlaceholderId = nil
             self.subviews.forEach { $0.removeFromSuperview() }
             return
@@ -48,6 +63,7 @@ public class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackTyp
             return
         }
         currentPlaceholderId = newPlaceholderId
+        releaseCurrentPlaceholderInstance()
         if let newPlaceholderId = newPlaceholderId {
             currentPlaceholderInstance = StaticInAppContentBlockView(placeholder: newPlaceholderId, deferredLoad: true)
             currentPlaceholderInstance?.contentReadyCompletion = { [weak self] _ in
@@ -67,9 +83,6 @@ public class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackTyp
             }
             currentOriginalBehavior = currentPlaceholderInstance?.behaviourCallback
             currentPlaceholderInstance?.behaviourCallback = self
-        } else {
-            currentPlaceholderInstance = nil
-            currentOriginalBehavior = nil
         }
         self.subviews.forEach { $0.removeFromSuperview() }
         ExponeaSDK.Exponea.logger.log(
@@ -231,4 +244,22 @@ public class InAppContentBlocksPlaceholder: UIView, InAppContentBlockCallbackTyp
             )
         }
     }
+}
+
+// Swallows callbacks from a released content block view
+private struct DetachedInAppContentBlockCallback: InAppContentBlockCallbackType {
+    func onMessageShown(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {}
+    func onNoMessageFound(placeholderId: String) {}
+    func onError(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse?, errorMessage: String) {}
+    func onCloseClicked(placeholderId: String, contentBlock: ExponeaSDK.InAppContentBlockResponse) {}
+    func onActionClicked(
+        placeholderId: String,
+        contentBlock: ExponeaSDK.InAppContentBlockResponse,
+        action: ExponeaSDK.InAppContentBlockAction
+    ) {}
+    func onActionClickedSafari(
+        placeholderId: String,
+        contentBlock: ExponeaSDK.InAppContentBlockResponse,
+        action: ExponeaSDK.InAppContentBlockAction
+    ) {}
 }

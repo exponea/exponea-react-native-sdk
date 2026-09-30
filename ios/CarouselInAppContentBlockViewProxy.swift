@@ -56,6 +56,18 @@ public class CarouselInAppContentBlockViewProxy: UIView, DefaultContentBlockCaro
         }
     }
 
+    // Restores freshly-initialized state so a Fabric-recycled view reloads on its next mount
+    @objc public func resetForRecycle() {
+        destroyPreviousCarouselInstance()
+        placeholderId = nil
+        maxMessagesCount = nil
+        scrollDelay = nil
+        overrideDefaultBehavior = false
+        trackActions = true
+        customFilterActive = false
+        customSortActive = false
+    }
+
     @objc public func setPlaceholderId(_ newPlaceholderId: String?) {
         placeholderId = newPlaceholderId
         recreateCarouselViewIfNeeded()

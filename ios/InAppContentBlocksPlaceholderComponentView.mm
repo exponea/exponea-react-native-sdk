@@ -50,6 +50,16 @@ using namespace facebook::react;
     [super updateProps:props oldProps:oldProps];
 }
 
+- (void)prepareForRecycle
+{
+    [super prepareForRecycle];
+    // Fabric keeps _props across recycling; without a reset, remounting with the same
+    // placeholderId is not detected as a change and the content block never reloads
+    static const auto defaultProps = std::make_shared<const InAppContentBlocksPlaceholderProps>();
+    _props = defaultProps;
+    [_view resetForRecycle];
+}
+
 #pragma mark - InAppContentBlocksPlaceholderEventEmitter
 
 - (void)emitDimensChangedWithWidth:(double)width height:(double)height
