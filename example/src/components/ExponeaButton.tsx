@@ -1,11 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 
 interface ExponeaButtonProps {
   compact?: boolean;
   disabled?: boolean;
   title: string;
   onPress: () => void;
+  secondary?: boolean;
+  warn?: boolean;
+  style?: StyleProp<ViewStyle>;
+  testID?: string;
 }
 
 export default function ExponeaButton(
@@ -14,15 +24,23 @@ export default function ExponeaButton(
   return (
     <TouchableOpacity
       disabled={props.disabled}
+      testID={props.testID}
       style={[
         styles.container,
+        props.secondary ? styles.secondary : null,
+        props.warn ? styles.warn : null,
         props.disabled ? styles.disabledContainer : null,
         props.compact ? styles.compactContainer : null,
+        props.style,
       ]}
       onPress={props.onPress}
     >
       <Text
-        style={[styles.label, props.disabled ? styles.disabledLabel : null]}
+        style={[
+          styles.label,
+          props.disabled ? styles.disabledLabel : null,
+          props.warn ? styles.warnText : null,
+        ]}
       >
         {props.title}
       </Text>
@@ -32,9 +50,8 @@ export default function ExponeaButton(
 
 const styles = StyleSheet.create({
   container: {
-    height: 45,
-    margin: 10,
-    padding: 10,
+    height: 40,
+    margin: 5,
     backgroundColor: '#ffd500',
     borderRadius: 5,
     alignItems: 'center',
@@ -43,8 +60,6 @@ const styles = StyleSheet.create({
   compactContainer: {
     height: 30,
     margin: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
   },
   disabledContainer: {
     backgroundColor: '#0000001F',
@@ -56,5 +71,20 @@ const styles = StyleSheet.create({
   },
   disabledLabel: {
     color: '#00000061',
+  },
+  secondary: {
+    backgroundColor: '#ffffff',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: '#000000',
+  },
+  warn: {
+    backgroundColor: '#ffffff',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: '#ba0404',
+  },
+  warnText: {
+    color: '#ba0404',
   },
 });

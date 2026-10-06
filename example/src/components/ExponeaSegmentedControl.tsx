@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, Pressable } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface Option<T extends string> {
   label: string;
+  testID?: string;
   value: T;
 }
 
@@ -24,6 +25,7 @@ export default function ExponeaSegmentedControl<T extends string>(
         return (
           <Pressable
             key={option.value}
+            testID={option.testID}
             style={[
               styles.segment,
               isActive && styles.segmentActive,

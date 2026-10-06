@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, Alert, View, ScrollView } from 'react-native';
-import ExponeaButton from '../components/ExponeaButton';
-import ExponeaModal from './ExponeaModal';
-import PropertyEditor from './PropertyEditor';
-import { fetchRecommendations } from 'react-native-exponea-sdk';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import type { RecommendationOptions } from 'react-native-exponea-sdk';
-import ExponeaInput from './ExponeaInput';
-import ExponeaPicker from './ExponeaPicker';
-import ListEditor from './ListEditor';
+import { fetchRecommendations } from 'react-native-exponea-sdk';
+
+import { AutomationIds } from '@/automation/AutomationIds';
+import ExponeaButton from '@/components/ExponeaButton';
+import ExponeaContainer from '@/components/ExponeaContainer';
+import ExponeaInput from '@/components/ExponeaInput';
+import ExponeaModal from '@/components/ExponeaModal';
 
 interface FetchRecommendationsModalProps {
   visible: boolean;
@@ -18,12 +18,10 @@ export default function FetchRecommendationsModal(
   props: FetchRecommendationsModalProps
 ): React.ReactElement {
   const [id, setId] = React.useState('');
-  const [fillWithRandom, setFillWithRandom] = React.useState(true);
+  const fillWithRandom = true;
   const [size, setSize] = React.useState('');
   const [items, setItems] = React.useState({});
-  const [noTrack, setNoTrack] = React.useState<boolean | 'undefined'>(
-    'undefined'
-  );
+  const noTrack: boolean | 'undefined' = 'undefined';
   const [whitelist, setWhitelist] = React.useState<Array<string>>([]);
   const onFetchRecommendations = () => {
     const options: RecommendationOptions = {
@@ -50,54 +48,31 @@ export default function FetchRecommendationsModal(
       );
   };
   return (
-    <ExponeaModal visible={props.visible} onClose={props.onClose}>
-      <Text style={styles.title}>Fetch recommendations</Text>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContainer}
-      >
-        <Text style={styles.subtitle}>Id</Text>
+    <ExponeaModal
+      visible={props.visible}
+      onClose={props.onClose}
+      closeButtonTestID={AutomationIds.RECOMMENDATION_DIALOG_CANCEL}
+    >
+      <View style={styles.content}>
+        <Text style={styles.title}>Fetch recommendations</Text>
+      </View>
+      <ExponeaContainer style={styles.container}>
         <View style={styles.inputContainer}>
           <ExponeaInput
             compact
             placeholder="Recommendation id"
             value={id}
             onChangeText={setId}
+            style={styles.fullWidthInput}
+            testID={AutomationIds.RECOMMENDATION_ID}
           />
         </View>
-        <Text style={styles.subtitle}>Fill with random</Text>
-        <ExponeaPicker<boolean>
-          width={100}
-          value={fillWithRandom}
-          setValue={setFillWithRandom}
-          options={{ true: true, false: false }}
-        />
-        <Text style={styles.subtitle}>Size (optional)</Text>
-        <View style={styles.inputContainer}>
-          <ExponeaInput
-            compact
-            placeholder="Recommendation size"
-            value={size}
-            onChangeText={setSize}
-          />
-        </View>
-        <Text style={styles.subtitle}>Items (optional)</Text>
-        <PropertyEditor properties={items} onChange={setItems} />
-        <Text style={styles.subtitle}>Don't track (optional)</Text>
-        <ExponeaPicker<boolean | 'undefined'>
-          width={140}
-          value={noTrack}
-          setValue={setNoTrack}
-          options={{ undefined: 'undefined', true: true, false: false }}
-        />
-        <Text style={styles.subtitle}>
-          Catalog attributes whitelist (optional)
-        </Text>
-        <ListEditor values={whitelist} onChange={setWhitelist} />
-      </ScrollView>
+      </ExponeaContainer>
       <ExponeaButton
         title="Fetch recommendation"
         onPress={onFetchRecommendations}
+        disabled={id === ''}
+        testID={AutomationIds.RECOMMENDATION_DIALOG_FETCH}
       />
     </ExponeaModal>
   );
@@ -112,15 +87,31 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginTop: 10,
   },
+  required: {
+    color: 'red',
+  },
+  divider: {
+    marginVertical: 8,
+    width: '100%',
+    height: 1,
+    backgroundColor: '#ddd',
+  },
+  container: {
+    width: '100%',
+    marginHorizontal: 0,
+  },
   inputContainer: {
-    width: 200,
+    width: '100%',
+    flexDirection: 'row',
+    flexGrow: 1,
   },
-  scrollView: {
+  content: {
     alignSelf: 'stretch',
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  scrollViewContainer: {
     alignItems: 'center',
+    width: '100%',
+  },
+  fullWidthInput: {
+    flex: 1,
+    marginHorizontal: 0,
   },
 });

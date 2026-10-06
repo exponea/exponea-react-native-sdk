@@ -90,4 +90,4 @@ export const Commands = codegenNativeCommands<NativeCommands>({
 // Component spec
 export default codegenNativeComponent<ContentBlockCarouselViewNativeProps>(
   'ContentBlockCarouselView'
-);
+) as HostComponent<ContentBlockCarouselViewNativeProps>;

@@ -530,7 +530,7 @@ When requesting permission in your mobile app, make sure your requests are clear
 
 You may use system dialog or in-app messages for that purpose.
 
-![](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/Documentation/images/gdpr-dialog-example.png)
+![](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/gdpr-dialog-example.png)
 
 In the case of the in-app message dialog, you can customize [In-app message action callback](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-messages#customize-in-app-message-actions) to handle the user's decision about allowing or denying tracking permission.
 

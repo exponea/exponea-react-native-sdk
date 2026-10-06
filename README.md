@@ -2,7 +2,9 @@
 
 React Native Exponea SDK allows your application to interact with the [Bloomreach Marketing](https://www.bloomreach.com/) Customer Data & Experience Platform. Marketing empowers B2C marketers to raise conversion rates, improve acquisition ROI, and maximize customer lifetime value.
 
-The SDK is implemented in Typescript as a wrapper around [native Android SDK](https://github.com/exponea/exponea-android-sdk) and [native iOS SDK](https://github.com/exponea/exponea-ios-sdk). It is compatible with React Native 0.83.0 - 0.85.2.
+The SDK is implemented in Typescript as a wrapper around [native Android SDK](https://github.com/exponea/exponea-android-sdk) and [native iOS SDK](https://github.com/exponea/exponea-ios-sdk). It is compatible with React Native 0.83.0 - 0.87.0.
+
+Expo SDK 57 development builds are supported through the packaged config plugin. Expo Go is not supported. See [Expo setup](documentation/expo.md).
 
 > Bloomreach Marketing was formerly known as Exponea. For backward compatibility, the Exponea name continues to be used in the React Native SDK.
 

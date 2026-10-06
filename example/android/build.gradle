@@ -1,23 +1,25 @@
 buildscript {
     ext {
-        buildToolsVersion = "36.0.0"
+        buildToolsVersion = "37.0.0"
         minSdkVersion = 24
-        compileSdkVersion = 36
+        compileSdkVersion = 37
         targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.1.20"
+        kotlinVersion = "2.2.0"
     }
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://developer.huawei.com/repo/' }
+        maven { url = 'https://developer.huawei.com/repo/' }
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.8.0")
+        // Huawei's agcp plugin needs an explicit AGP version here
+        // keep it in sync with React Native's gradle plugin
+        classpath("com.android.tools.build:gradle:9.2.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
         classpath("com.google.gms:google-services:4.4.2")
-        classpath("com.huawei.agconnect:agcp:1.5.2.300")
+        classpath("com.huawei.agconnect:agcp:1.9.6.300")
     }
 }
 

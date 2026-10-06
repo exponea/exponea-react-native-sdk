@@ -294,4 +294,8 @@ export const Exponea: ExponeaType = {
     ExponeaListeners.setSdkAuthErrorCallback(callback),
   removeSdkAuthErrorCallback: () =>
     ExponeaListeners.removeSdkAuthErrorCallback(),
+  registerLoggerCallback: (callback) =>
+    ExponeaListeners.registerLoggerCallback(callback),
+  unregisterLoggerCallback: (callback) =>
+    ExponeaListeners.unregisterLoggerCallback(callback),
 };

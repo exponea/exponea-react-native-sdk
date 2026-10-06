@@ -1,11 +1,14 @@
 import React from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { StyleProp, StyleSheet, TextInput, TextStyle } from 'react-native';
 
 interface ExponeaInputProps {
   compact?: boolean;
+  editable?: boolean;
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
+  style?: StyleProp<TextStyle>;
+  testID?: string;
 }
 
 export default function ExponeaInput(
@@ -13,7 +16,14 @@ export default function ExponeaInput(
 ): React.ReactElement {
   return (
     <TextInput
-      style={[styles.input, props.compact ? styles.compactInput : null]}
+      testID={props.testID}
+      style={[
+        styles.input,
+        props.compact ? styles.compactInput : null,
+        props.editable === false ? styles.disabledInput : null,
+        props.style,
+      ]}
+      editable={props.editable}
       value={props.value}
       onChangeText={props.onChangeText}
       placeholder={props.placeholder}
@@ -36,5 +46,9 @@ const styles = StyleSheet.create({
     height: 30,
     margin: 5,
     padding: 5,
+  },
+  disabledInput: {
+    backgroundColor: '#f4f4f4',
+    color: '#666',
   },
 });

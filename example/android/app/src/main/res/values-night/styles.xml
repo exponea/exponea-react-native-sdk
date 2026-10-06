@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- App Inbox: the native SDK hardcodes a dark (#262626) color for empty/error status titles,
+         which is unreadable on the dark background -->
+    <style name="AppInboxEmptyStatusTitle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing" tools:targetApi="lollipop">0.01</item>
+        <item name="android:textColor">#E5E5E5</item>
+    </style>
+
+    <style name="AppInboxErrorStatusTitle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing" tools:targetApi="lollipop">0.01</item>
+        <item name="android:textColor">#E5E5E5</item>
+    </style>
+
+</resources>

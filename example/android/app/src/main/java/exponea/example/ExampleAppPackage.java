@@ -2,6 +2,7 @@ package exponea.example;
 
 import androidx.annotation.NonNull;
 import exponea.example.module.CustomerTokenStorageModule;
+import exponea.example.module.TokenTrackerModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
@@ -14,7 +15,8 @@ public class ExampleAppPackage implements com.facebook.react.ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(@NonNull final ReactApplicationContext reactApplicationContext) {
         return Arrays.asList(
-                new CustomerTokenStorageModule()
+                new CustomerTokenStorageModule(),
+                new TokenTrackerModule(reactApplicationContext)
         );
     }
 

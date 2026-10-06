@@ -17,7 +17,7 @@ The Exponea React Native SDK can be installed in your app using [yarn](https://y
 >
 > **SDK version 3.0.0 and higher** requires React Native's [New Architecture (TurboModules)](https://reactnative.dev/docs/turbo-modules). If your app still uses the old architecture (JavaScript Bridge), you must migrate before upgrading. Refer to the [React Native New Architecture migration guide](https://reactnative.dev/docs/new-architecture-intro) and the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-from-version-2xx-to-3xx) for details.
 
-The SDK is compatible with React Native 0.83.0 - 0.85.2 and requires Node.js 20.19.4 or higher.
+The SDK is compatible with React Native 0.83.0 - 0.87.0 and requires Node.js `^22.13.0`, `^24.3.0`, or `>=26.0.0`.
 
 > ❗️
 >
@@ -539,7 +539,7 @@ module.exports = withExponea;
 
 > 🚧
 >
-> The example config plugin has been tested with Expo 50 and Expo 53. The native files are modified using find/replace logic; using a different Expo version might require some tweaking.
+> The example config plugin has been tested with Expo 57. The native files are modified using find/replace logic; using a different Expo version might require some tweaking.
 
 > 🚧
 >
@@ -600,6 +600,28 @@ You can set the log level at runtime as follows:
 ```typescript
 Exponea.setLogLevel(LogLevel.VERBOSE);
 ```
+
+### Logger callbacks
+
+On Android, you can also receive every log entry emitted by the native SDK. Keep the same callback reference to unregister it when it is no longer needed.
+
+```typescript
+import Exponea, {
+  registerLoggerCallback,
+  unregisterLoggerCallback,
+} from 'react-native-exponea-sdk';
+
+const logger = ({ level, message, throwable }) => {
+  console.log(`[${level}] ${message}`, throwable);
+};
+
+registerLoggerCallback(logger);
+// Or: Exponea.registerLoggerCallback(logger);
+
+unregisterLoggerCallback(logger);
+```
+
+Each callback receives a `LoggerEvent` with `level`, `message`, and an optional `throwable` stack trace as a string. You can register multiple callbacks. On iOS, registering and removing callbacks has no effect because the pinned native SDK doesn't expose a logger observer API.
 
 ### Data flushing
 

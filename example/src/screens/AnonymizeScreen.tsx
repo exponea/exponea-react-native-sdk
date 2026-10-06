@@ -1,37 +1,38 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import ExponeaButton from '../components/ExponeaButton';
-import AnonymizeModal from '../components/AnonymizeModal';
 import Exponea from 'react-native-exponea-sdk';
-import ExponeaModal from '../components/ExponeaModal';
-import { AppStateContext } from '../App';
-import SdkSetupState from '../util/SdkSetupState';
+
+import { AppStateContext } from '@/App';
+import { AutomationIds } from '@/automation/AutomationIds';
+import AnonymizeModal from '@/components/AnonymizeModal';
+import ExponeaButton from '@/components/ExponeaButton';
+import ExponeaContainer from '@/components/ExponeaContainer';
+import ExponeaModal from '@/components/ExponeaModal';
+import SdkSetupState from '@/util/SdkSetupState';
 
 export default function AnonymizeScreen(): React.ReactElement {
   const [anonymizeModalVisible, setAnonymizeModalVisible] = useState(false);
-  const { returnToAuth } = useContext(AppStateContext);
+  const {
+    refreshCustomerCookie,
+    returnToAuth,
+    sdkConfigured,
+    validateSdkState,
+  } = useContext(AppStateContext);
   const [showingStopIntegration, setShowingStopIntegration] =
     React.useState(false);
-  const [sdkConfigured, setSdkConfigured] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const configured = await Exponea.isConfigured();
-      setSdkConfigured(configured);
-    })();
-  }, []);
+  const closeStopIntegration = () => setShowingStopIntegration(false);
 
   return (
     <View style={styles.container}>
       <AnonymizeModal
         visible={anonymizeModalVisible}
         onClose={() => setAnonymizeModalVisible(false)}
+        onSuccess={refreshCustomerCookie}
       />
       <ExponeaModal
         visible={showingStopIntegration}
-        onClose={() => {
-          setShowingStopIntegration(false);
-        }}
+        onClose={closeStopIntegration}
       >
         <Text style={styles.title}>SDK stopped!</Text>
         <Text style={styles.subtitle}>
@@ -43,35 +44,46 @@ export default function AnonymizeScreen(): React.ReactElement {
         <Text style={styles.subtitle}>
           You may 'Continue' in using app without initialised SDK.
         </Text>
-        <ExponeaButton title="Back to Auth" onPress={returnToAuth} />
+        <ExponeaButton
+          title="Back to Auth"
+          onPress={returnToAuth}
+          testID={AutomationIds.STOP_BACK_TO_AUTH}
+        />
         <ExponeaButton
           title="Continue"
-          onPress={() => {
-            setShowingStopIntegration(false);
-          }}
+          testID={AutomationIds.STOP_CONTINUE}
+          onPress={closeStopIntegration}
         />
       </ExponeaModal>
 
-      <ExponeaButton
-        title="Anonymize"
-        onPress={() => setAnonymizeModalVisible(true)}
-        disabled={!sdkConfigured}
-      />
-      <ExponeaButton
-        title="Stop Integration"
-        onPress={async () => {
-          try {
-            if (await Exponea.isConfigured()) {
-              SdkSetupState.reset();
-              await Exponea.stopIntegration();
+      <ExponeaContainer
+        title={'Anonymize'}
+        hint={'Clears local customer data and starts a new anonymous session.'}
+      >
+        <ExponeaButton
+          title="Anonymize"
+          onPress={() => setAnonymizeModalVisible(true)}
+          disabled={!sdkConfigured}
+          testID={AutomationIds.ANONYMIZE}
+        />
+        <ExponeaButton
+          warn
+          title="Stop Integration"
+          testID={AutomationIds.STOP_INTEGRATION}
+          onPress={async () => {
+            try {
+              if (await Exponea.isConfigured()) {
+                SdkSetupState.reset();
+                await Exponea.stopIntegration();
+              }
+            } catch (e) {
+              console.error(`Failed to stop SDK: ${e}`);
             }
-          } catch (e) {
-            console.error(`Failed to stop SDK: ${e}`);
-          }
-          setShowingStopIntegration(true);
-          setSdkConfigured(await Exponea.isConfigured());
-        }}
-      />
+            await validateSdkState();
+            setShowingStopIntegration(true);
+          }}
+        />
+      </ExponeaContainer>
     </View>
   );
 }
@@ -79,8 +91,9 @@ export default function AnonymizeScreen(): React.ReactElement {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    padding: 20,
   },
   title: {
     fontSize: 24,

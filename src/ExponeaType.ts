@@ -21,7 +21,11 @@ export type {
   InAppContentBlockAction,
 } from './NativeExponea';
 
-export type { InAppMessageCallbackImpl as InAppMessageCallback } from './ExponeaListeners';
+export type {
+  InAppMessageCallbackImpl as InAppMessageCallback,
+  LoggerCallback,
+  LoggerEvent,
+} from './ExponeaListeners';
 export { SegmentationDataCallback } from './ExponeaListeners';
 
 // Re-export enums (these are values, not just types)

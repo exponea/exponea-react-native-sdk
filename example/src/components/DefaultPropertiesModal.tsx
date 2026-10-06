@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   ScrollView,
   StyleSheet,
   Text,
   View,
-  ActivityIndicator,
 } from 'react-native';
 import {
   getDefaultProperties,
-  setDefaultProperties,
   type JsonObject,
+  setDefaultProperties,
 } from 'react-native-exponea-sdk';
-import ExponeaModal from './ExponeaModal';
-import ExponeaButton from './ExponeaButton';
-import PropertyEditor from './PropertyEditor';
+
+import ExponeaButton from '@/components/ExponeaButton';
+import ExponeaModal from '@/components/ExponeaModal';
+import PropertyEditor from '@/components/PropertyEditor';
 
 interface DefaultPropertiesModalProps {
   visible: boolean;
@@ -40,8 +41,8 @@ export default function DefaultPropertiesModal(
 
   const loadCurrentProperties = async () => {
     try {
-      const props = await getDefaultProperties();
-      setCurrentProperties(props);
+      const defaultProperties = await getDefaultProperties();
+      setCurrentProperties(defaultProperties);
       setCurrentPropertiesLoaded(true);
     } catch (error) {
       Alert.alert('Error', `Failed to get default properties: ${error}`);

@@ -19,7 +19,7 @@ You can strategically position placeholders for in-app content blocks within you
 >
 > Refer to the [In-app content blocks](https://documentation.bloomreach.com/engagement/docs/in-app-content-blocks) user guide for instructions on how to create in-app content blocks in {user.mkg}.
 
-![In-app content blocks in the example app](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/Documentation/images/app-content-blocks.png)
+![In-app content blocks in the example app](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/in-app-content-blocks.png)
 
 ## Integration of a placeholder view
 

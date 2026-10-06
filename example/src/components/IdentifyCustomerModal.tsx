@@ -7,11 +7,13 @@ import {
   Text,
 } from 'react-native';
 import { identifyCustomer } from 'react-native-exponea-sdk';
-import ExponeaModal from './ExponeaModal';
-import ExponeaButton from './ExponeaButton';
-import PropertyEditor from './PropertyEditor';
-import LocalJwtTokenGenerator from '../util/LocalJwtTokenGenerator';
-import SdkSetupState from '../util/SdkSetupState';
+
+import { AutomationIds } from '@/automation/AutomationIds';
+import ExponeaButton from '@/components/ExponeaButton';
+import ExponeaModal from '@/components/ExponeaModal';
+import PropertyEditor from '@/components/PropertyEditor';
+import LocalJwtTokenGenerator from '@/util/LocalJwtTokenGenerator';
+import SdkSetupState from '@/util/SdkSetupState';
 
 interface IdentifyCustomerModalProps {
   visible: boolean;
@@ -60,24 +62,43 @@ export default function IdentifyCustomerModal(
   };
 
   return (
-    <ExponeaModal visible={props.visible} onClose={props.onClose}>
+    <ExponeaModal
+      visible={props.visible}
+      onClose={props.onClose}
+      closeButtonTestID={AutomationIds.IDENTIFY_CANCEL}
+    >
       <ScrollView style={styles.scrollView}>
         <Text style={styles.title}>Identify customer</Text>
 
         <Text style={styles.subtitle}>Hard Ids</Text>
-        <PropertyEditor properties={ids} onChange={setIds} />
+        <PropertyEditor
+          properties={ids}
+          onChange={setIds}
+          addButtonTestID={AutomationIds.IDENTIFY_HARD_ID_ADD}
+          keyInputTestID={AutomationIds.IDENTIFY_HARD_ID_KEY}
+          valueInputTestID={AutomationIds.IDENTIFY_HARD_ID_VALUE}
+        />
 
         <Text style={styles.subtitle}>Properties</Text>
-        <PropertyEditor properties={properties} onChange={setProperties} />
+        <PropertyEditor
+          properties={properties}
+          onChange={setProperties}
+          addButtonTestID={AutomationIds.IDENTIFY_ADD_ATTR}
+          keyInputTestID={AutomationIds.IDENTIFY_ATTR_NAME}
+          propertiesJsonTestID={AutomationIds.IDENTIFY_ATTRS_JSON}
+          valueInputTestID={AutomationIds.IDENTIFY_ATTR_VALUE}
+        />
 
         <ExponeaButton
           title="Identify customer"
           onPress={() => handleIdentify(false)}
+          testID={AutomationIds.IDENTIFY}
         />
         {props.isStreamMode && (
           <ExponeaButton
             title="Identify with auth token"
             onPress={() => handleIdentify(true)}
+            testID={AutomationIds.IDENTIFY_AUTH}
           />
         )}
       </ScrollView>

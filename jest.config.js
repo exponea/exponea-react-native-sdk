@@ -9,6 +9,7 @@ module.exports = {
           verbatimModuleSyntax: false,
           noUnusedParameters: false,
           noUnusedLocals: false,
+          types: ['jest'],
         },
       },
     ],
@@ -22,5 +23,5 @@ module.exports = {
     '<rootDir>/example/node_modules',
     '<rootDir>/lib/',
   ],
-  preset: 'react-native',
+  preset: '@react-native/jest-preset',
 };

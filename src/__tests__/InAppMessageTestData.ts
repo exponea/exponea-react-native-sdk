@@ -16,7 +16,7 @@ export class InAppMessageTestData {
   }): InAppMessage {
     let payload: JsonObject | undefined;
     let payloadHtml: string | undefined;
-    if (options?.messageType == 'freeform') {
+    if (options?.messageType === 'freeform') {
       payloadHtml =
         '<html>' +
         '<head>' +
@@ -164,7 +164,7 @@ export class InAppMessageTestData {
       close_timeout: options?.timeout,
       payload: payload,
       payload_html: payloadHtml,
-      is_html: options?.messageType == 'freeform',
+      is_html: options?.messageType === 'freeform',
       is_rich_text: options?.isRichText ?? false,
     };
   }

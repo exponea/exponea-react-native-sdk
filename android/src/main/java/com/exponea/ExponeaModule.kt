@@ -15,6 +15,7 @@ import com.exponea.sdk.models.CustomerRecommendationOptions
 import com.exponea.sdk.models.EventType
 import com.exponea.sdk.models.ExponeaConfigurationOverrides
 import com.exponea.sdk.models.IntegrationConfig
+import com.exponea.sdk.models.LoggerCallback
 import com.exponea.sdk.models.ProjectConfig
 import com.exponea.sdk.models.SdkAuthCallback
 import com.exponea.sdk.models.SdkAuthError
@@ -53,6 +54,17 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
   private var pushReceivedListenerSet = false
   // Hold received push data until pushReceivedListener is set in JS
   private var pendingReceivedPushData: Map<String, Any>? = null
+  private var loggerCallbackRegistered = false
+  private val loggerCallback = object : LoggerCallback {
+      override fun onLog(level: Logger.Level, message: String, throwable: Throwable?) {
+          val payload = JSONObject().apply {
+              put("level", if (level == Logger.Level.DEBUG) "DBG" else level.name)
+              put("message", message)
+              throwable?.let { put("throwable", it.stackTraceToString()) }
+          }
+          sendEvent("logger", payload.toString())
+      }
+  }
 
   override fun getName(): String {
     return NAME
@@ -330,6 +342,25 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
 
   override fun onSdkAuthErrorCallbackRemove() {
       Exponea.sdkAuthCallback = null
+  }
+
+  override fun registerLoggerCallback() {
+      if (!loggerCallbackRegistered) {
+          Exponea.registerLoggerCallback(loggerCallback)
+          loggerCallbackRegistered = true
+      }
+  }
+
+  override fun unregisterLoggerCallback() {
+      if (loggerCallbackRegistered) {
+          Exponea.unregisterLoggerCallback(loggerCallback)
+          loggerCallbackRegistered = false
+      }
+  }
+
+  override fun invalidate() {
+      unregisterLoggerCallback()
+      super.invalidate()
   }
 
   override fun flushData(promise: Promise) = requireInitialized(promise) {

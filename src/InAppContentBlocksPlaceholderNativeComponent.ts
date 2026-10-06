@@ -11,6 +11,7 @@ import type {
 } from 'react-native/Libraries/Types/CodegenTypes';
 
 import { codegenNativeComponent } from 'react-native';
+import type { HostComponent } from 'react-native';
 
 // Event payload types
 type DimensChangedEvent = Readonly<{
@@ -41,4 +42,4 @@ export interface InAppContentBlocksPlaceholderNativeProps extends ViewProps {
 
 export default codegenNativeComponent<InAppContentBlocksPlaceholderNativeProps>(
   'InAppContentBlocksPlaceholder'
-);
+) as HostComponent<InAppContentBlocksPlaceholderNativeProps>;

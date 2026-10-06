@@ -13,6 +13,7 @@ import type {
   ExponeaProject,
   CustomerIdentity,
   SdkAuthError,
+  LoggerCallback,
   IntegrationConfig,
   ProjectConfig,
 } from '../index';
@@ -131,6 +132,14 @@ export class MockExponea implements ExponeaType {
   }
 
   removeSdkAuthErrorCallback(): void {
+    this.lastArgumentsJson = JSON.stringify([], withoutNulls);
+  }
+
+  registerLoggerCallback(_callback: LoggerCallback): void {
+    this.lastArgumentsJson = JSON.stringify([], withoutNulls);
+  }
+
+  unregisterLoggerCallback(_callback: LoggerCallback): void {
     this.lastArgumentsJson = JSON.stringify([], withoutNulls);
   }
 

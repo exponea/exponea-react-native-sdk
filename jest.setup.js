@@ -13,6 +13,8 @@ jest.mock('react-native', () => {
     onInAppMessageCallbackRemove: jest.fn(),
     onSdkAuthErrorCallbackSet: jest.fn(),
     onSdkAuthErrorCallbackRemove: jest.fn(),
+    registerLoggerCallback: jest.fn(),
+    unregisterLoggerCallback: jest.fn(),
     addListener: jest.fn(),
     removeListeners: jest.fn(),
   };

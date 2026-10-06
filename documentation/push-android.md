@@ -79,7 +79,7 @@ Next, you must create and register a service that extends `FirebaseMessagingServ
 
 1. Create the service:
 
-   ```kotlin
+   ```java
    import android.app.NotificationManager;
    import android.content.Context;
    import androidx.annotation.NonNull;
@@ -129,7 +129,12 @@ Next, you must create and register a service that extends `FirebaseMessagingServ
 
 > ❗️
 >
-> If your app re-initializes the SDK by calling `Exponea.configure()` after `stopIntegration()`, the SDK clears the stored push token and can't recover it automatically. Your `onNewToken` callback must call `ExponeaModule.Companion.handleNewToken(context, token)` (FCM) or `ExponeaModule.Companion.handleHmsNewToken(context, token)` (HMS) with the token your app already holds, after each re-initialization. For more details, see [Push notification token is missing after `stopIntegration()`](#push-notification-token-is-missing-after-stopintegration).
+> If your app re-initializes the SDK by calling `Exponea.configure()` after `stopIntegration()`, the SDK clears the stored push token and can't recover it automatically. After each re-initialization, your `onNewToken` callback must pass the token your app already holds to the SDK:
+>
+> - For FCM, call `ExponeaModule.Companion.handleNewToken(context, token)`.
+> - For HMS, call `ExponeaModule.Companion.handleNewHmsToken(context, token)`.
+>
+> Learn more in [Push notification token is missing after `stopIntegration()`](#push-notification-token-is-missing-after-stopintegration).
 
 #### Configure the Firebase Cloud Messaging integration in {user.mkg}
 
@@ -153,7 +158,7 @@ Next, you must create and register a service that extends `HmsMessagingService`.
 
 1. Create the service:
 
-   ```kotlin
+   ```java
    import android.app.NotificationManager;
    import android.content.Context;
    import androidx.annotation.NonNull;
@@ -214,10 +219,14 @@ The SDK already registers the `POST_NOTIFICATIONS` permission.
 
 The runtime permission dialog to ask the user to grant the permission must be triggered from your application. You may use SDK API for that purpose:
 
-```dart
-_plugin.requestPushAuthorization()
-.then((accepted) => print("User has ${accepted ? 'accepted': 'rejected'} push notifications."))
-.catchError((error) => print('Error: $error'));
+```typescript
+Exponea.requestPushAuthorization()
+  .then((accepted) => {
+    console.log(
+      `User has ${accepted ? 'accepted' : 'rejected'} push notifications.`
+    );
+  })
+  .catch((error) => console.log(error.message));
 ```
 
 The behavior of this callback is as follows:
@@ -296,14 +305,14 @@ If battery optimization is on for devices running MIUI, it can make push notific
 
 `Exponea.stopIntegration()` clears the locally stored push notification token. After a subsequent `Exponea.configure()` call, the SDK starts without a stored token—even though the device may still hold a valid token received earlier from the push service.
 
-After `stopIntegration()` and a subsequent `Exponea.configure()`, your `FirebaseMessagingService.onNewToken` or HMS `onNewToken` callback must call `handleNewToken` or `handleHmsNewToken` again with the token your app already holds:
+After `stopIntegration()` and a subsequent `Exponea.configure()`, your `FirebaseMessagingService.onNewToken` or HMS `onNewToken` callback must call `handleNewToken` or `handleNewHmsToken` again with the token your app already holds:
 
 ```kotlin
 // FCM
 ExponeaModule.Companion.handleNewToken(getApplicationContext(), token)
 
 // HMS
-ExponeaModule.Companion.handleHmsNewToken(getApplicationContext(), token)
+ExponeaModule.Companion.handleNewHmsToken(getApplicationContext(), token)
 ```
 
 > 📘

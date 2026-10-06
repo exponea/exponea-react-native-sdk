@@ -15,13 +15,13 @@ The Exponea React Native SDK includes an example application you can use as a re
 
 You must have the following software installed to be able to build and run the example app:
 
-- [Node](https://nodejs.org/en)
+- [Node](https://nodejs.org/en) 22.13.0 or higher within 22.x, 24.3.0 or higher within 24.x, or 26.0.0 or higher
 - [Yarn](https://yarnpkg.com/)
 - [React Native CLI](https://github.com/react-native-community/cli)
 - [Watchman](https://facebook.github.io/watchman/)
 - [Git](https://git-scm.com/)
 - [Android Studio](https://developer.android.com/studio) with a virtual or physical device set up to run the app on Android
-- [Xcode](https://developer.apple.com/xcode/) and [CocoaPods](https://cocoapods.org/) with a virtual or physical device set up to run the app on iOS
+- [Xcode](https://developer.apple.com/xcode/) 26 or higher and [CocoaPods](https://cocoapods.org/) with a virtual or physical device set up to run the app on iOS
 
 > 👍
 >
@@ -69,7 +69,7 @@ You must have the following software installed to be able to build and run the e
       ```shell
       react-native run-android --mode=GmsDebug
       ```
-      Alternatively, use `--mode=HmsDebug` for Huawei devices without GooglePlay services but with HMS Core. For React Native version <0.73, use `--variant` instead of `--mode`, see [#2026](https://github.com/react-native-community/cli/pull/2026).
+      Alternatively, use `--mode=HmsDebug` for Huawei devices without GooglePlay services but with HMS Core.
 
 > 📘
 >
@@ -97,26 +97,29 @@ The **Clear local data** button invokes `clearLocalCustomerData()` to delete all
 
 > [`AuthScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/AuthScreen.tsx)
 
-The app provides several screens, accessible using the bottom navigation, to test the different SDK features:
+The app includes several screens that you can open from the bottom navigation to test SDK features. The header on every screen contains an SDK status indicator that turns green when the SDK is initialized; a button that opens the **SDK Logs** overlay, where you can filter by log level; the {user.br} logo, which opens an overview of the current SDK configuration.
+- The **Fetching** screen enables you to fetch consents, recommendations, and segments. It also contains the App Inbox button.
 
-- The **Tracking** screen enables you to test tracking of different events and properties, as well as open the app inbox. The `Identify customer` and `Track event` buttons open modals to enter test data.
+  > [`FetchingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/FetchingScreen.tsx) > [`FetchRecommendationsModal.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/FetchRecommendationsModal.tsx)
+
+- The **Tracking** screen enables you to identify the customer, track custom events, payments, and page views, and test push notification tracking.
+  - The `Identify customer` and `Track Custom Event` buttons open modals where you enter test data.
+  - The `Track Custom Event` modal includes presets for triggering in-app message test campaigns.
+  - In the **Stream Config** section, the `Set auth token` button sets a locally generated SDK auth token for the identified customer.
 
   > [`TrackingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/TrackingScreen.tsx) > [`IdentifyCustomerModal.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/IdentifyCustomerModal.tsx) > [`TrackEventModal.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/TrackEventModal.tsx)
 
-- The **Fetching** screen enables you to fetch consents, recommendations, and segments.
+- The **Flushing** screen lets you read and change the flush mode, flush period, and log level, and trigger a manual data flush.
 
-  > [`FetchingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/FetchingScreen.tsx)
+  > [`FlushingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/FlushingScreen.tsx)
 
-- The **Flushing** screen lets you trigger a manual data flush, anonymize the current customer, and stop the SDK integration. The `Anonymize` button opens a modal where you can optionally enter new project configuration parameters.
+- The **Anonymize** screen lets you anonymize the current customer and stop the SDK integration. The `Anonymize` button opens a modal where you can optionally enter new project configuration parameters.
 
-  > [`FlushingScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/FlushingScreen.tsx) > [AnonymizeModal.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/AnonymizeModal.tsx)
+  > [`AnonymizeScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/AnonymizeScreen.tsx) > [`AnonymizeModal.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/AnonymizeModal.tsx)
 
-- The **Config** screen enables you to configure default properties to track with any event. The `Default properties` button opens a modal that lists the current default properties and enables you to enter new ones.
+- The **In-app CB** screen displays in-app content blocks. Use placeholder IDs `example_top`, `example_list`, and `ph_x_example_iOS` (iOS) or `ph_x_example_Android` (Android) in your in-app content block settings. Turn on **Show Carousels** to display carousel content blocks with placeholder IDs `example_carousel_ios` (iOS) or `example_carousel_and` (Android).
 
-  > [TrackingScreen.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/TrackingScreen.tsx) > [DefaultPropertiesModal.tsx](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/components/DefaultPropertiesModal.tsx)
-
-- The **In-App Content Blocks** screens displays in-app content blocks. Use placeholder IDs `example_top`, `ph_x_example_iOS`, and `example_list` in your in-app content block settings.
-  > [`InAppCbScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/InAppCbScreen.tsx)
+  > [`InAppCbScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/InAppCbScreen.tsx) > [`CarouselScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/CarouselScreen.tsx)
 
 Try out the different features in the app, then find the customer profile in the {user.mkg} web app (under `Data & Assets` > `Customers`) to see the properties and events tracked by the SDK.
 
@@ -128,7 +131,9 @@ Once you use `Identify customer` in the app to set the `registered` hard ID (use
 >
 > Refer to [Customer identification](https://documentation.bloomreach.com/engagement/docs/customer-identification) for more information on soft IDs and hard IDs.
 
-![Example app screens](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native.png)
+![Example app Fetching and Tracking screens with Identify customer and Track Event modals](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native.png)
+
+![Example app Flushing, Anonymize and In-app CB screens](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native-2.png)
 
 ## Troubleshooting
 

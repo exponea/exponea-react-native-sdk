@@ -1,0 +1,44 @@
+{
+  "fill" : {
+    "solid" : "display-p3:0.97291,0.83770,0.28223,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "blend-mode" : "normal",
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "display-p3:0.97291,0.83770,0.28223,1.00000"
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "display-p3:0.83922,0.83922,0.83922,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "image-name" : "br-logo.svg",
+          "name" : "br-logo"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : [
+      "iOS"
+    ]
+  }
+}

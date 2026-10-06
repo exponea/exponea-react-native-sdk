@@ -76,7 +76,10 @@ static ExponeaComponentViewProvider *ExponeaFabricProvider = nil;
 
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"pushOpened", @"pushReceived", @"inAppAction", @"newSegments", @"sdkAuthError"];
+  // `logger` is subscribed to by the JavaScript event bridge on both
+  // platforms. The iOS SDK does not emit logger events, but it must still be
+  // declared here so RCTEventEmitter accepts that subscription.
+  return @[@"pushOpened", @"pushReceived", @"inAppAction", @"newSegments", @"sdkAuthError", @"logger"];
 }
 
 + (BOOL)requiresMainQueueSetup
@@ -270,6 +273,16 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
 - (void)onSdkAuthErrorCallbackRemove
 {
     [_exponeaBridge onSdkAuthErrorCallbackRemove];
+}
+
+// The pinned iOS SDK has no logger observer API. Keep the React Native API
+// cross-platform by accepting registrations as no-ops.
+- (void)registerLoggerCallback
+{
+}
+
+- (void)unregisterLoggerCallback
+{
 }
 
 - (void)trackEvent:(NSString *)eventName

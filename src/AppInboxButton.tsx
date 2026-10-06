@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import type { ViewProps } from 'react-native';
 import AppInboxButtonNativeComponent from './AppInboxButtonNativeComponent';
 
@@ -80,7 +80,13 @@ export default function AppInboxButton(
 ): React.ReactElement {
   return (
     <View style={props.style}>
-      <AppInboxButtonNativeComponent {...props} style={{ flex: 1 }} />
+      <AppInboxButtonNativeComponent {...props} style={styles.nativeButton} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  nativeButton: {
+    flex: 1,
+  },
+});

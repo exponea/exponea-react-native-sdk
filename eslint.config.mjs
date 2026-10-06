@@ -2,6 +2,7 @@ import { fixupConfigRules } from '@eslint/compat';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import prettier from 'eslint-plugin-prettier';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import { defineConfig } from 'eslint/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,6 +22,13 @@ export default defineConfig([
     rules: {
       'react/react-in-jsx-scope': 'off',
       'prettier/prettier': 'error',
+    },
+  },
+  {
+    files: ['example/**/*.{ts,tsx}'],
+    plugins: { 'simple-import-sort': simpleImportSort },
+    rules: {
+      'simple-import-sort/imports': 'error',
     },
   },
   {
@@ -46,6 +54,12 @@ export default defineConfig([
     },
   },
   {
-    ignores: ['node_modules/', 'lib/', 'android/build/'],
+    ignores: [
+      'node_modules/',
+      'lib/',
+      'android/build/',
+      '**/.expo/',
+      '**/expo-env.d.ts',
+    ],
   },
 ]);

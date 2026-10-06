@@ -1,0 +1,4 @@
+<resources>
+    <!-- Light status bar icons on dark backgrounds -->
+    <bool name="light_system_bars">false</bool>
+</resources>

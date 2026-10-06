@@ -1,11 +1,16 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import ExponeaButton from './ExponeaButton';
-import ExponeaInput from './ExponeaInput';
+import { StyleSheet, Text, View } from 'react-native';
+
+import ExponeaButton from '@/components/ExponeaButton';
+import ExponeaInput from '@/components/ExponeaInput';
 
 interface PropertyEditorProps {
   properties: Record<string, string>;
   onChange: (properties: Record<string, string>) => void;
+  addButtonTestID?: string;
+  keyInputTestID?: string;
+  propertiesJsonTestID?: string;
+  valueInputTestID?: string;
 }
 
 export default function PropertyEditor(
@@ -24,30 +29,34 @@ export default function PropertyEditor(
 
   return (
     <View style={styles.container}>
-      <PropertyList properties={props.properties} />
       <View style={styles.addRow}>
-        <View style={styles.inputContainer}>
-          <ExponeaInput
-            compact
-            placeholder="key"
-            value={addingKey}
-            onChangeText={setAddingKey}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ExponeaInput
-            compact
-            placeholder="value"
-            value={addingValue}
-            onChangeText={setAddingValue}
-          />
-        </View>
+        <ExponeaInput
+          compact
+          placeholder="key"
+          value={addingKey}
+          onChangeText={setAddingKey}
+          testID={props.keyInputTestID}
+        />
+        <ExponeaInput
+          compact
+          placeholder="value"
+          value={addingValue}
+          onChangeText={setAddingValue}
+          testID={props.valueInputTestID}
+        />
         <ExponeaButton
           compact
           disabled={addingKey === ''}
           title="Add"
           onPress={onAdd}
+          testID={props.addButtonTestID}
         />
+        {props.properties && Object.keys(props.properties).length > 0 && (
+          <PropertyList
+            properties={props.properties}
+            testID={props.propertiesJsonTestID}
+          />
+        )}
       </View>
     </View>
   );
@@ -55,28 +64,13 @@ export default function PropertyEditor(
 
 function PropertyList(props: {
   properties: Record<string, string>;
+  testID?: string;
 }): React.ReactElement {
   return (
-    <View>
-      {Object.keys(props.properties).map((key) => (
-        <Property
-          key={key}
-          propertyKey={key}
-          propertyValue={props.properties[key] ?? ''}
-        />
-      ))}
-    </View>
-  );
-}
-
-function Property(props: {
-  propertyKey: string;
-  propertyValue: string;
-}): React.ReactElement {
-  return (
-    <View style={styles.property}>
-      <Text style={styles.propertyKey}>{props.propertyKey}:</Text>
-      <Text style={styles.propertyValue}>{props.propertyValue}</Text>
+    <View style={styles.propertyView}>
+      <Text testID={props.testID}>
+        {JSON.stringify(props.properties, null, 2)}
+      </Text>
     </View>
   );
 }
@@ -84,31 +78,15 @@ function Property(props: {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginTop: 5,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    borderWidth: 1,
-    padding: 10,
-    borderColor: '#ddd',
-    borderRadius: 5,
   },
   addRow: {
-    flexDirection: 'row',
-    width: '100%',
+    flexDirection: 'column',
   },
-  propertyKey: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginRight: 5,
-  },
-  propertyValue: {
-    fontSize: 16,
-  },
-  inputContainer: {
-    flex: 1,
-  },
-  property: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+  propertyView: {
+    backgroundColor: '#f4f4f4',
+    padding: 5,
+    marginHorizontal: 5,
+    borderColor: '#d8d8d8',
+    borderWidth: 1,
   },
 });

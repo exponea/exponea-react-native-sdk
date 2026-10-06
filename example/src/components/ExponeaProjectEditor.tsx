@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import type { ExponeaProject } from 'react-native-exponea-sdk';
-import ExponeaButton from './ExponeaButton';
-import ExponeaInput from './ExponeaInput';
+
+import ExponeaButton from '@/components/ExponeaButton';
+import ExponeaInput from '@/components/ExponeaInput';
 
 interface ExponeaProjectEditorProps {
   value: ExponeaProject | undefined;

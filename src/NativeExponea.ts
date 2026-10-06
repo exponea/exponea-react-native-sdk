@@ -162,6 +162,12 @@ export interface Spec extends TurboModule {
   /** Sets LogLevel for native SDK. */
   setLogLevel(loggerLevel: LogLevel): Promise<void>;
 
+  /** Starts forwarding native SDK log events to JavaScript. */
+  registerLoggerCallback(): void;
+
+  /** Stops forwarding native SDK log events to JavaScript. */
+  unregisterLoggerCallback(): void;
+
   /** Get default properties tracked with every event (JSON string) */
   getDefaultProperties(): Promise<string>;
 

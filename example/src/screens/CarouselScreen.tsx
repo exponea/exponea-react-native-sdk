@@ -1,8 +1,12 @@
-/* eslint-disable react-native/no-inline-styles */
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
-import { ContentBlockCarouselView } from 'react-native-exponea-sdk';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ContentBlockCarouselView,
+  type InAppContentBlock,
+} from 'react-native-exponea-sdk';
+
+import { AutomationIds } from '@/automation/AutomationIds';
+import ExponeaContainer from '@/components/ExponeaContainer';
 
 export default function CarouselScreen(): React.ReactElement {
   const [carouselStatus, setCarouselStatus] = React.useState({
@@ -16,97 +20,133 @@ export default function CarouselScreen(): React.ReactElement {
     Platform.OS === 'ios'
       ? 'iOS Carousel: example_carousel_ios'
       : 'Android Carousel: example_carousel_and';
-  const navigation = useNavigation();
-  React.useEffect(() => {
-    navigation.setOptions({
-      title: 'Carousel',
-      headerShown: true,
-      headerBackTitle: 'Back',
-    });
-  }, [navigation]);
+
+  const handleMessageShown = React.useCallback(
+    (
+      _placeholderId: string,
+      cb: { name?: string },
+      index: number,
+      count: number
+    ) => {
+      setCarouselStatus({
+        name: cb.name ?? '',
+        index,
+        count,
+      });
+    },
+    []
+  );
+
+  const handleMessagesChanged = React.useCallback(
+    (count: number, cbs: unknown[]) => {
+      if (cbs.length === 0) {
+        setCarouselStatus({
+          name: '',
+          index: -1,
+          count,
+        });
+      }
+    },
+    []
+  );
+
+  const handleNoMessageFound = React.useCallback((placeholderId: string) => {
+    console.log(`Carousel ${placeholderId} is empty`);
+  }, []);
+
+  const handleCarouselError = React.useCallback(
+    (placeholderId: string, _cb: unknown, errorMessage: string) => {
+      console.log(`Carousel ${placeholderId} error: ${errorMessage}`);
+    },
+    []
+  );
+
+  const handleCloseClicked = React.useCallback(
+    (placeholderId: string, cb: unknown) => {
+      console.log('MESSAGE CLOSE CLICKED');
+      console.log(
+        `Message ${typeof cb} has been closed in carousel ${placeholderId}`
+      );
+    },
+    []
+  );
+
+  const handleActionClicked = React.useCallback(
+    (placeholderId: string, _cb: unknown, action: { name?: string }) => {
+      console.log(
+        `Action ${action.name} has been clicked in carousel ${placeholderId}`
+      );
+    },
+    []
+  );
+
+  const filterContentBlocks = React.useCallback(
+    (source: InAppContentBlock[]): InAppContentBlock[] =>
+      source.filter(
+        (item) => item.name?.toLowerCase().includes('discarded') ?? false
+      ),
+    []
+  );
+
+  const sortContentBlocks = React.useCallback(
+    (source: InAppContentBlock[]): InAppContentBlock[] => [...source].reverse(),
+    []
+  );
+
   return (
-    <View style={styles.container}>
-      <Text>Default Carousel: example_carousel</Text>
-      <ContentBlockCarouselView
-        style={{
-          width: '100%',
-        }}
-        placeholderId={'example_carousel'}
-        onMessageShown={(_placeholderId, cb, index, count) => {
-          setCarouselStatus({
-            name: cb.name,
-            index: index,
-            count: count,
-          });
-        }}
-        onMessagesChanged={(count, cbs) => {
-          if (cbs.length === 0) {
-            setCarouselStatus({
-              name: '',
-              index: -1,
-              count: count,
-            });
-          }
-        }}
-        onNoMessageFound={(placeholderId) => {
-          console.log(`Carousel ${placeholderId} is empty`);
-        }}
-        onError={(placeholderId, cb, errorMessage) => {
-          console.log(`Carousel ${placeholderId} error: ${errorMessage}`);
-        }}
-        onCloseClicked={(placeholderId, cb) => {
-          console.log(`MESSAGE CLOSE CLICKED`);
-          console.log(
-            `Message ${typeof cb} has been closed in carousel ${placeholderId}`
-          );
-        }}
-        onActionClicked={(placeholderId, cb, action) => {
-          console.log(
-            `Action ${action.name} has been clicked in carousel ${placeholderId}`
-          );
-        }}
-        overrideDefaultBehavior={false}
-        trackActions={true}
-      />
-      <Text>
-        Showing {carouselStatus.name} as {carouselStatus.index + 1} of{' '}
-        {carouselStatus.count}
-      </Text>
+    <ScrollView style={styles.container}>
+      <ExponeaContainer hint={'Default Carousel: example_carousel'}>
+        <View testID={AutomationIds.CB_CAROUSEL_DEFAULT}>
+          <ContentBlockCarouselView
+            style={styles.carousel}
+            placeholderId={'example_carousel'}
+            onMessageShown={handleMessageShown}
+            onMessagesChanged={handleMessagesChanged}
+            onNoMessageFound={handleNoMessageFound}
+            onError={handleCarouselError}
+            onCloseClicked={handleCloseClicked}
+            onActionClicked={handleActionClicked}
+            overrideDefaultBehavior={false}
+            trackActions={true}
+          />
+        </View>
+        <Text testID={AutomationIds.CAROUSEL_STATUS}>
+          Showing {carouselStatus.name} as {carouselStatus.index + 1} of{' '}
+          {carouselStatus.count}
+        </Text>
+      </ExponeaContainer>
 
-      <Text>Customized Carousel: example_carousel</Text>
-      <ContentBlockCarouselView
-        style={{
-          width: '100%',
-        }}
-        placeholderId={'example_carousel'}
-        scrollDelay={10}
-        maxMessagesCount={5}
-        filterContentBlocks={(source) => {
-          return source.filter(
-            (item) => item.name?.toLowerCase().indexOf('discarded') >= 0
-          );
-        }}
-        sortContentBlocks={(source) => {
-          return source.reverse();
-        }}
-      />
-
-      <Text>{platformSpecificPlaceholderTitle}</Text>
-      <ContentBlockCarouselView
-        style={{
-          width: '100%',
-        }}
-        placeholderId={platformSpecificPlaceholderId}
-      />
-    </View>
+      <ExponeaContainer hint={'Customized Carousel: example_carousel'}>
+        <View testID={AutomationIds.CB_CAROUSEL_FILTERED}>
+          <ContentBlockCarouselView
+            style={styles.carousel}
+            placeholderId={'example_carousel'}
+            scrollDelay={10}
+            maxMessagesCount={5}
+            filterContentBlocks={filterContentBlocks}
+            sortContentBlocks={sortContentBlocks}
+          />
+        </View>
+      </ExponeaContainer>
+      <ExponeaContainer hint={platformSpecificPlaceholderTitle}>
+        <View testID={AutomationIds.CB_CAROUSEL_PLATFORM}>
+          <ContentBlockCarouselView
+            style={styles.carousel}
+            placeholderId={platformSpecificPlaceholderId}
+          />
+        </View>
+      </ExponeaContainer>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
-    paddingTop: 12,
+    paddingRight: 10,
     backgroundColor: '#eee',
+  },
+  carousel: {
+    width: '100%',
   },
 });

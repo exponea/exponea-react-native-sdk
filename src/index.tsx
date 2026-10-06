@@ -1,5 +1,9 @@
 import { Exponea } from './ExponeaImpl';
-import type { InAppMessageCallbackImpl } from './ExponeaListeners';
+import type {
+  InAppMessageCallbackImpl,
+  LoggerCallback,
+  LoggerEvent,
+} from './ExponeaListeners';
 import { SegmentationDataCallback } from './ExponeaListeners';
 import { FlushMode, LogLevel } from './NativeExponea';
 import type {
@@ -58,6 +62,8 @@ export type {
   InAppContentBlock,
   InAppContentBlockAction,
   InAppMessageCallbackImpl as InAppMessageCallback,
+  LoggerCallback,
+  LoggerEvent,
   CustomerIdentity,
   SdkAuthError,
 };
@@ -496,6 +502,11 @@ export interface ExponeaType {
   getLogLevel(): Promise<LogLevel>;
   /** Sets LogLevel for native SDK. */
   setLogLevel(level: LogLevel): Promise<void>;
+  /** Registers a callback for native SDK log events. Android only; iOS is a no-op. */
+  registerLoggerCallback(callback: LoggerCallback): void;
+  /** Unregisters a previously registered logger callback. */
+  unregisterLoggerCallback(callback: LoggerCallback): void;
+  /** Flushes data to Exponea backend. Only usable in MANUAL FlushMode */
   /**
    * Flushes pending events to Exponea backend.
    *
@@ -639,6 +650,8 @@ export const getFlushPeriod = Exponea.getFlushPeriod;
 export const setFlushPeriod = Exponea.setFlushPeriod;
 export const getLogLevel = Exponea.getLogLevel;
 export const setLogLevel = Exponea.setLogLevel;
+export const registerLoggerCallback = Exponea.registerLoggerCallback;
+export const unregisterLoggerCallback = Exponea.unregisterLoggerCallback;
 export const flushData = Exponea.flushData;
 export const setPushOpenedListener = Exponea.setPushOpenedListener;
 export const removePushOpenedListener = Exponea.removePushOpenedListener;

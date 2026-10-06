@@ -45,6 +45,8 @@ export class TestUtils {
                 onPushReceivedListenerSet: jest.fn(),
                 onPushReceivedListenerRemove: jest.fn(),
                 onInAppMessageCallbackRemove: jest.fn(),
+                registerLoggerCallback: jest.fn(),
+                unregisterLoggerCallback: jest.fn(),
                 addListener: jest.fn(),
                 removeListeners: jest.fn(),
               }

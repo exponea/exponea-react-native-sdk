@@ -7,12 +7,12 @@
  * handleDeeplinkDestination executes the side-effects for a resolved Screen.
  */
 
+import { Screen } from '@/screens/Screens';
 import {
-  resolveDeeplinkDestination,
-  handleDeeplinkDestination,
   type DeeplinkHandlerDeps,
-} from '../src/util/deeplink';
-import { Screen } from '../src/screens/Screens';
+  handleDeeplinkDestination,
+  resolveDeeplinkDestination,
+} from '@/util/deeplink';
 
 // ---------------------------------------------------------------------------
 // Shared helper: build a fresh set of mocked deps for each test
@@ -28,6 +28,7 @@ function makeDeps(
     ),
     navigate: jest.fn(),
     returnToAuth: jest.fn(),
+    markSdkStopped: jest.fn(),
   };
 }
 
@@ -202,6 +203,10 @@ describe('handleDeeplinkDestination', () => {
 
       await Promise.resolve(); // flush microtask queue
 
+      expect(deps.markSdkStopped).toHaveBeenCalledTimes(1);
+      expect(
+        (deps.markSdkStopped as jest.Mock).mock.invocationCallOrder[0]
+      ).toBeLessThan((deps.navigate as jest.Mock).mock.invocationCallOrder[0]);
       expect(deps.navigate).toHaveBeenCalledWith(Screen.Fetching);
       expect(deps.returnToAuth).not.toHaveBeenCalled();
     });
@@ -247,6 +252,39 @@ describe('handleDeeplinkDestination', () => {
       await Promise.resolve();
 
       expect(deps.navigate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('stop failures', () => {
+    test('logs a rejected stop-and-continue without navigating', async () => {
+      const error = jest.spyOn(console, 'error').mockImplementation();
+      const deps = makeDeps('reject');
+
+      handleDeeplinkDestination(Screen.StopAndContinue, deps);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(error).toHaveBeenCalledWith(
+        expect.stringContaining('Failed to stop SDK')
+      );
+      expect(deps.navigate).not.toHaveBeenCalled();
+      expect(deps.markSdkStopped).not.toHaveBeenCalled();
+      expect(deps.returnToAuth).not.toHaveBeenCalled();
+    });
+
+    test('logs a rejected stop-and-restart without returning to auth', async () => {
+      const error = jest.spyOn(console, 'error').mockImplementation();
+      const deps = makeDeps('reject');
+
+      handleDeeplinkDestination(Screen.StopAndRestart, deps);
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(error).toHaveBeenCalledWith(
+        expect.stringContaining('Failed to stop SDK')
+      );
+      expect(deps.navigate).not.toHaveBeenCalled();
+      expect(deps.returnToAuth).not.toHaveBeenCalled();
     });
   });
 

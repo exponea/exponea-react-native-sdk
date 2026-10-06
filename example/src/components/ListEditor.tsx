@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import ExponeaButton from '../components/ExponeaButton';
-import ExponeaInput from '../components/ExponeaInput';
+import { StyleSheet, Text, View } from 'react-native';
+
+import ExponeaButton from '@/components/ExponeaButton';
+import ExponeaInput from '@/components/ExponeaInput';
 
 interface ListEditorProps {
   values: Array<string>;
@@ -18,21 +19,21 @@ export default function ListEditor(props: ListEditorProps): React.ReactElement {
   };
   return (
     <View style={styles.container}>
-      {props.values.map((value) => (
-        <Text key={value} style={styles.item}>
-          {value}
-        </Text>
-      ))}
       <View style={styles.addRow}>
-        <View style={styles.inputContainer}>
-          <ExponeaInput
-            compact
-            placeholder="value"
-            value={addingValue}
-            onChangeText={setAddingValue}
-          />
-        </View>
+        <ExponeaInput
+          compact
+          placeholder="value"
+          value={addingValue}
+          onChangeText={setAddingValue}
+        />
         <ExponeaButton compact title="Add" onPress={onAdd} />
+        {props.values.length > 0 && (
+          <View style={styles.propertyView}>
+            {props.values.map((value) => (
+              <Text key={value}>{value}</Text>
+            ))}
+          </View>
+        )}
       </View>
     </View>
   );
@@ -41,22 +42,17 @@ export default function ListEditor(props: ListEditorProps): React.ReactElement {
 const styles = StyleSheet.create({
   container: {
     marginTop: 5,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    borderWidth: 1,
-    padding: 10,
     borderColor: '#ddd',
-    borderRadius: 5,
   },
   addRow: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     width: '100%',
   },
-  inputContainer: {
-    flex: 1,
-  },
-  item: {
-    textAlign: 'center',
-    fontSize: 16,
+  propertyView: {
+    backgroundColor: '#f4f4f4',
+    padding: 5,
+    marginHorizontal: 5,
+    borderColor: '#d8d8d8',
+    borderWidth: 1,
   },
 });

@@ -1,15 +1,34 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { clearLocalCustomerData } from 'react-native-exponea-sdk';
-import ExponeaButton from '../components/ExponeaButton';
-import ExponeaInput from '../components/ExponeaInput';
-import ExponeaSegmentedControl from '../components/ExponeaSegmentedControl';
-import type { ProjectConfigParams, StreamConfigParams } from '../App';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import type { ProjectConfigParams, StreamConfigParams } from '@/App';
+import { AutomationIds } from '@/automation/AutomationIds';
+import ExponeaButton from '@/components/ExponeaButton';
+import ExponeaInput from '@/components/ExponeaInput';
+import ExponeaSegmentedControl from '@/components/ExponeaSegmentedControl';
 
 interface AuthScreenProps {
   onStart: (params: ProjectConfigParams | StreamConfigParams) => void;
 }
+
+const AUTH_MODE_OPTIONS: Array<{
+  label: string;
+  testID: string;
+  value: 'project' | 'stream';
+}> = [
+  {
+    label: 'Project Config',
+    testID: AutomationIds.AUTH_MODE_PROJECT,
+    value: 'project',
+  },
+  {
+    label: 'Stream Config',
+    testID: AutomationIds.AUTH_MODE_STREAM,
+    value: 'stream',
+  },
+];
 
 export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
   const [mode, setMode] = useState<'project' | 'stream'>('project');
@@ -61,13 +80,14 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      <Text style={styles.title} testID={AutomationIds.AUTH_TITLE}>
+        Bloomreach
+      </Text>
+      <Text style={styles.subtext}>SDK Configuration</Text>
       <ScrollView>
         <View style={styles.form}>
           <ExponeaSegmentedControl
-            options={[
-              { label: 'Project Config', value: 'project' },
-              { label: 'Stream Config', value: 'stream' },
-            ]}
+            options={AUTH_MODE_OPTIONS}
             value={mode}
             onChange={setMode}
           />
@@ -78,16 +98,19 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
                 value={projectToken}
                 onChangeText={setProjectToken}
                 placeholder="Project token"
+                testID={AutomationIds.AUTH_PROJECT_TOKEN}
               />
               <ExponeaInput
                 value={authorizationToken}
                 onChangeText={setAuthorizationToken}
                 placeholder="Authorization token"
+                testID={AutomationIds.AUTH_AUTHORIZATION_TOKEN}
               />
               <ExponeaInput
                 value={advancedAuthKey}
                 onChangeText={setAdvancedAuthKey}
                 placeholder="Advanced Auth key (optional)"
+                testID={AutomationIds.AUTH_ADVANCED_AUTH}
               />
             </>
           ) : (
@@ -96,16 +119,19 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
                 value={streamId}
                 onChangeText={setStreamId}
                 placeholder="Stream ID"
+                testID={AutomationIds.AUTH_STREAM_ID}
               />
               <ExponeaInput
                 value={jwtKeyId}
                 onChangeText={setJwtKeyId}
                 placeholder="JWT Key ID (optional)"
+                testID={AutomationIds.AUTH_JWT_KEY_ID}
               />
               <ExponeaInput
                 value={jwtSecret}
                 onChangeText={setJwtSecret}
                 placeholder="JWT Secret (optional)"
+                testID={AutomationIds.AUTH_JWT_SECRET}
               />
             </>
           )}
@@ -114,24 +140,30 @@ export default function AuthScreen(props: AuthScreenProps): React.ReactElement {
             value={registeredId}
             onChangeText={setRegisteredId}
             placeholder="Registered (optional)"
+            testID={AutomationIds.AUTH_REGISTERED_ID}
           />
           <ExponeaInput
             value={baseUrl}
             onChangeText={setBaseUrl}
             placeholder="Base URL"
+            testID={AutomationIds.AUTH_API_URL}
           />
           <ExponeaInput
             value={applicationId}
             placeholder="Application ID (optional)"
             onChangeText={setApplicationId}
+            testID={AutomationIds.AUTH_APPLICATION_ID}
           />
           <ExponeaButton
             disabled={buttonDisabled}
             title="Start"
             onPress={handleStart}
+            testID={AutomationIds.AUTH_START}
           />
           <ExponeaButton
             title="Clear local data"
+            secondary
+            testID={AutomationIds.AUTH_CLEAR_LOCAL_DATA}
             onPress={async () => {
               try {
                 await clearLocalCustomerData(APP_GROUP);
@@ -154,5 +186,17 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: 10,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingTop: 10,
+  },
+  subtext: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingTop: 10,
   },
 });

@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
 import {
   anonymize,
   getCustomerCookie,
   type ProjectConfig,
 } from 'react-native-exponea-sdk';
-import ExponeaModal from './ExponeaModal';
-import ExponeaButton from './ExponeaButton';
-import ExponeaInput from './ExponeaInput';
-import SdkSetupState from '../util/SdkSetupState';
+
+import { AutomationIds } from '@/automation/AutomationIds';
+import ExponeaButton from '@/components/ExponeaButton';
+import ExponeaInput from '@/components/ExponeaInput';
+import ExponeaModal from '@/components/ExponeaModal';
+import SdkSetupState from '@/util/SdkSetupState';
 
 interface AnonymizeModalProps {
   visible: boolean;
@@ -16,14 +18,17 @@ interface AnonymizeModalProps {
   onSuccess?: () => void;
 }
 
-export default function AnonymizeModal(
-  props: AnonymizeModalProps
-): React.ReactElement {
+export default function AnonymizeModal({
+  visible,
+  onClose,
+  onSuccess,
+}: AnonymizeModalProps): React.ReactElement {
   const [projectToken, setProjectToken] = useState('');
   const [authorizationToken, setAuthorizationToken] = useState('');
   const [baseUrl, setBaseUrl] = useState('');
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleAnonymize = async () => {
+  const handleAnonymize = useCallback(async () => {
     try {
       const oldCookie = await getCustomerCookie();
 
@@ -41,52 +46,67 @@ export default function AnonymizeModal(
 
       const newCookie = await getCustomerCookie();
 
-      Alert.alert(
-        'Success',
+      setSuccessMessage(
         `Customer anonymized\n\nOld cookie: ${oldCookie}\nNew cookie: ${newCookie}`
       );
 
       setProjectToken('');
       setAuthorizationToken('');
       setBaseUrl('');
-      props.onClose();
-      if (props.onSuccess) {
-        props.onSuccess();
+      onClose();
+      if (onSuccess) {
+        onSuccess();
       }
     } catch (error) {
       Alert.alert('Error', `Failed to anonymize: ${error}`);
     }
-  };
+  }, [authorizationToken, baseUrl, projectToken, onClose, onSuccess]);
 
   return (
-    <ExponeaModal visible={props.visible} onClose={props.onClose}>
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.title}>Anonymize customer</Text>
+    <>
+      <ExponeaModal visible={visible} onClose={onClose}>
+        <ScrollView style={styles.scrollView}>
+          <Text style={styles.title}>Anonymize customer</Text>
 
-        <Text style={styles.subtitle}>New Exponea project (optional)</Text>
-        <Text style={styles.description}>
-          Leave empty to anonymize without switching projects
+          <Text style={styles.subtitle}>New Exponea project (optional)</Text>
+          <Text style={styles.description}>
+            Leave empty to anonymize without switching projects
+          </Text>
+
+          <ExponeaInput
+            placeholder="Project token"
+            value={projectToken}
+            onChangeText={setProjectToken}
+          />
+          <ExponeaInput
+            placeholder="Authorization token"
+            value={authorizationToken}
+            onChangeText={setAuthorizationToken}
+          />
+          <ExponeaInput
+            placeholder="Base URL (optional)"
+            value={baseUrl}
+            onChangeText={setBaseUrl}
+          />
+
+          <ExponeaButton title="Anonymize customer" onPress={handleAnonymize} />
+        </ScrollView>
+      </ExponeaModal>
+      <ExponeaModal
+        visible={successMessage !== null}
+        onClose={() => setSuccessMessage(null)}
+      >
+        <Text style={styles.title} testID={AutomationIds.ANONYMIZED_TITLE}>
+          Success
         </Text>
-
-        <ExponeaInput
-          placeholder="Project token"
-          value={projectToken}
-          onChangeText={setProjectToken}
+        <Text style={styles.successMessage}>{successMessage}</Text>
+        <ExponeaButton
+          title="OK"
+          testID={AutomationIds.ANONYMIZED_OK}
+          onPress={() => setSuccessMessage(null)}
         />
-        <ExponeaInput
-          placeholder="Authorization token"
-          value={authorizationToken}
-          onChangeText={setAuthorizationToken}
-        />
-        <ExponeaInput
-          placeholder="Base URL (optional)"
-          value={baseUrl}
-          onChangeText={setBaseUrl}
-        />
-
-        <ExponeaButton title="Anonymize customer" onPress={handleAnonymize} />
-      </ScrollView>
-    </ExponeaModal>
+      </ExponeaModal>
+    </>
   );
 }
 
@@ -111,5 +131,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 10,
+  },
+  successMessage: {
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });

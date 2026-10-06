@@ -7,6 +7,7 @@ import type {
   Segment,
 } from './NativeExponea';
 import type { SdkAuthError } from './SdkAuthError';
+import { LogLevel } from './NativeExponea';
 
 // Internal listener storage (JavaScript-side)
 let pushOpenedListener: ((openedPush: OpenedPush) => void) | null = null;
@@ -26,6 +27,7 @@ let segmentationCallbackSequence = 0;
 // Shared by concurrent stopIntegration() calls until the native stop settles.
 let pendingIntegrationStop: Promise<void> | null = null;
 let sdkAuthErrorCallback: ((error: SdkAuthError) => void) | null = null;
+const loggerCallbacks = new Set<LoggerCallback>();
 
 // Event emitter setup (listens to native events)
 // For TurboModules in new architecture, pass the native module instance
@@ -129,6 +131,46 @@ eventEmitter.addListener('sdkAuthError', (data: any) => {
     sdkAuthErrorCallback(JSON.parse(data));
   } catch (e) {
     console.error('Failed to parse sdkAuthError event', e);
+  }
+});
+
+eventEmitter.addListener('logger', (data: any) => {
+  let event: LoggerEvent;
+  try {
+    const payload = JSON.parse(data);
+    if (
+      !payload ||
+      typeof payload !== 'object' ||
+      typeof payload.level !== 'string' ||
+      typeof payload.message !== 'string' ||
+      (payload.throwable !== undefined && typeof payload.throwable !== 'string')
+    ) {
+      throw new Error('Invalid logger event payload');
+    }
+
+    const level = payload.level === 'DEBUG' ? LogLevel.DBG : payload.level;
+    if (!Object.values(LogLevel).includes(level)) {
+      throw new Error(`Unknown logger level: ${payload.level}`);
+    }
+
+    event = {
+      level: level as LogLevel,
+      message: payload.message,
+      ...(payload.throwable === undefined
+        ? {}
+        : { throwable: payload.throwable }),
+    };
+  } catch (e) {
+    console.error('Failed to parse logger event', e);
+    return;
+  }
+
+  for (const callback of loggerCallbacks) {
+    try {
+      callback(event);
+    } catch (e) {
+      console.error('Logger callback failed', e);
+    }
   }
 });
 
@@ -355,6 +397,44 @@ export class ExponeaListeners {
     sdkAuthErrorCallback = null;
     NativeExponea.onSdkAuthErrorCallbackRemove();
   }
+
+  /**
+   * Registers a callback to receive log events from the native SDK.
+   * The same callback can be registered only once.
+   */
+  static registerLoggerCallback(callback: LoggerCallback): void {
+    const hadCallbacks = loggerCallbacks.size > 0;
+    loggerCallbacks.add(callback);
+    if (!hadCallbacks && loggerCallbacks.size > 0) {
+      NativeExponea.registerLoggerCallback();
+    }
+  }
+
+  /** Unregisters a previously registered logger callback. */
+  static unregisterLoggerCallback(callback: LoggerCallback): void {
+    const removed = loggerCallbacks.delete(callback);
+    if (removed && loggerCallbacks.size === 0) {
+      NativeExponea.unregisterLoggerCallback();
+    }
+  }
+
+  /**
+   * Internal method for testing: simulates an in-app message action event.
+   * This method is used by tests to simulate native events without a real native module.
+   *
+   * @internal
+   * @param eventDataString - JSON string containing the action data
+   */
+  static handleInAppMessageAction(eventDataString: string): void {
+    if (inAppMessageCallback) {
+      try {
+        const action = JSON.parse(eventDataString);
+        handleInAppMessageAction(action, inAppMessageCallback);
+      } catch (e) {
+        console.error('Failed to parse inAppAction event', e);
+      }
+    }
+  }
 }
 
 // Types for Interface B
@@ -376,6 +456,16 @@ export interface InAppMessageCallbackImpl {
   ) => void;
   inAppMessageShown: (message: InAppMessage) => void;
 }
+
+/** A log entry emitted by the native SDK. */
+export interface LoggerEvent {
+  level: LogLevel;
+  message: string;
+  throwable?: string;
+}
+
+/** Callback invoked for every native SDK log entry. */
+export type LoggerCallback = (event: LoggerEvent) => void;
 
 /**
  * Callback handler for customer segmentation data updates.

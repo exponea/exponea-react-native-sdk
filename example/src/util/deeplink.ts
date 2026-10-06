@@ -1,5 +1,5 @@
-import { Screen } from '../screens/Screens';
-import SdkSetupState from './SdkSetupState';
+import { Screen } from '@/screens/Screens';
+import SdkSetupState from '@/util/SdkSetupState';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -16,6 +16,8 @@ export type DeeplinkHandlerDeps = {
   navigate: (screen: Screen) => void;
   /** Return the user to the Auth / configuration screen. */
   returnToAuth: () => void;
+  /** Update React state after the native SDK has stopped. */
+  markSdkStopped: () => void;
 };
 
 // ---------------------------------------------------------------------------
@@ -70,12 +72,23 @@ export function handleDeeplinkDestination(
 ): void {
   switch (target) {
     case Screen.StopAndContinue:
-      SdkSetupState.reset();
-      deps.stopIntegration().then(() => deps.navigate(Screen.Fetching));
+      deps
+        .stopIntegration()
+        .then(() => {
+          SdkSetupState.reset();
+          deps.markSdkStopped();
+          deps.navigate(Screen.Fetching);
+        })
+        .catch((error) => console.error(`Failed to stop SDK: ${error}`));
       break;
     case Screen.StopAndRestart:
-      SdkSetupState.reset();
-      deps.stopIntegration().then(() => deps.returnToAuth());
+      deps
+        .stopIntegration()
+        .then(() => {
+          SdkSetupState.reset();
+          deps.returnToAuth();
+        })
+        .catch((error) => console.error(`Failed to stop SDK: ${error}`));
       break;
     default:
       deps.navigate(target);

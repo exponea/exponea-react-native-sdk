@@ -1,21 +1,23 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   FlatList,
   Image,
   Platform,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from 'react-native';
-import icon1 from '../img/ic_dialog_map.png';
-import icon2 from '../img/ic_media_route.png';
-import icon3 from '../img/ic_menu_search.png';
-import icon4 from '../img/ic_star.png';
-import {
-  ContentBlockCarouselView,
-  InAppContentBlocksPlaceholder,
-} from 'react-native-exponea-sdk';
+import { InAppContentBlocksPlaceholder } from 'react-native-exponea-sdk';
+
+import { AutomationIds } from '@/automation/AutomationIds';
+import ExponeaContainer from '@/components/ExponeaContainer';
+import icon1 from '@/img/ic_dialog_map.png';
+import icon2 from '@/img/ic_media_route.png';
+import icon3 from '@/img/ic_menu_search.png';
+import icon4 from '@/img/ic_star.png';
+import CarouselScreen from '@/screens/CarouselScreen';
 
 interface ProductsViewModel {
   icon: string;
@@ -24,18 +26,22 @@ interface ProductsViewModel {
   showAd: boolean;
 }
 
+const CONTAINER_ROWS = [0, 1, 2] as const;
+
 export default function InAppCbScreen(): React.ReactElement {
-  const [carouselStatus, setCarouselStatus] = React.useState({
-    index: -1,
-    count: 0,
-    name: '',
-  });
-  const [] = React.useState(false);
   const platformSpecificPlaceholderId =
     Platform.OS === 'ios' ? 'ph_x_example_iOS' : 'ph_x_example_Android';
-  function generateProducts(): ProductsViewModel[] {
+
+  const productsArray = useMemo((): ProductsViewModel[] => {
     const result: ProductsViewModel[] = [];
     const contentBlockFrequency = 5;
+    const prodIcons = [icon1, icon2, icon3, icon4];
+    const prodDescriptions = [
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod',
+      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium',
+      'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit',
+      'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore',
+    ];
     for (let i = 1; i < 1000; i++) {
       if (
         i % contentBlockFrequency === 0 &&
@@ -52,14 +58,7 @@ export default function InAppCbScreen(): React.ReactElement {
         continue;
       }
       // show product item
-      const prodIcons = [icon1, icon2, icon3, icon4];
       const prodIcon = prodIcons[Math.floor(Math.random() * prodIcons.length)];
-      const prodDescriptions = [
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod',
-        'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium',
-        'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit',
-        'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore',
-      ];
       const prodDescription =
         prodDescriptions[Math.floor(Math.random() * prodDescriptions.length)];
       result.push({
@@ -70,8 +69,8 @@ export default function InAppCbScreen(): React.ReactElement {
       } as ProductsViewModel);
     }
     return result;
-  }
-  const productsArray = generateProducts();
+  }, []);
+
   const renderItem = useCallback(({ item }: { item: ProductsViewModel }) => {
     if (item.showAd) {
       return (
@@ -106,8 +105,8 @@ export default function InAppCbScreen(): React.ReactElement {
             <Text>{item.title}</Text>
             <Text
               style={{
-                paddingRight: 24,
                 textAlign: 'justify',
+                marginRight: 50,
               }}
             >
               {item.description}
@@ -117,101 +116,108 @@ export default function InAppCbScreen(): React.ReactElement {
       );
     }
   }, []);
+
+  const renderContainer = useCallback(
+    ({ item }: { item: number }) => {
+      switch (item) {
+        case 0:
+          return (
+            <ExponeaContainer
+              childrenContainerStyle={styles.subContainer}
+              hint={'Placeholder: example_top'}
+              testID={AutomationIds.CB_PLACEHOLDER_EXAMPLE_TOP}
+            >
+              <InAppContentBlocksPlaceholder
+                style={{
+                  width: '100%',
+                }}
+                placeholderId={'example_top'}
+              />
+            </ExponeaContainer>
+          );
+        case 1:
+          return (
+            <ExponeaContainer
+              childrenContainerStyle={styles.subContainer}
+              hint={`Placeholder: ${platformSpecificPlaceholderId}`}
+              testID={AutomationIds.CB_PLACEHOLDER_EXAMPLE_PLATFORM}
+            >
+              <InAppContentBlocksPlaceholder
+                style={{
+                  width: '100%',
+                }}
+                placeholderId={platformSpecificPlaceholderId}
+              />
+            </ExponeaContainer>
+          );
+        default:
+          return (
+            <ExponeaContainer
+              childrenContainerStyle={styles.subContainer}
+              hint={'Inline placeholder: example_list (every 5th row)'}
+              testID={AutomationIds.CB_PLACEHOLDER_EXAMPLE_LIST}
+            >
+              <FlatList
+                removeClippedSubviews={true}
+                maxToRenderPerBatch={5}
+                updateCellsBatchingPeriod={200}
+                initialNumToRender={1}
+                windowSize={3}
+                data={productsArray}
+                renderItem={renderItem}
+              />
+            </ExponeaContainer>
+          );
+      }
+    },
+    [platformSpecificPlaceholderId, productsArray, renderItem]
+  );
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
   return (
     <View style={styles.container}>
-      <Text>Default Carousel: example_carousel</Text>
-      <ContentBlockCarouselView
-        style={{
-          width: '100%',
-        }}
-        placeholderId={'example_carousel'}
-        onMessageShown={(_placeholderId, cb, index, count) => {
-          setCarouselStatus({
-            name: cb.name,
-            index: index,
-            count: count,
-          });
-        }}
-        onMessagesChanged={(count, cbs) => {
-          if (cbs.length == 0) {
-            setCarouselStatus({
-              name: '',
-              index: -1,
-              count: count,
-            });
-          }
-        }}
-        onNoMessageFound={(placeholderId) => {
-          console.log(`Carousel ${placeholderId} is empty`);
-        }}
-        onError={(placeholderId, cb, errorMessage) => {
-          console.log(`Carousel ${placeholderId} error: ${errorMessage}`);
-        }}
-        onCloseClicked={(placeholderId, cb) => {
-          console.log(`MESSAGE CLOSE CLICKED`);
-          console.log(
-            `Message ${typeof cb} has been closed in carousel ${placeholderId}`
-          );
-        }}
-        onActionClicked={(placeholderId, cb, action) => {
-          console.log(
-            `Action ${action.name} has been clicked in carousel ${placeholderId}`
-          );
-        }}
-        overrideDefaultBehavior={false}
-        trackActions={true}
-        filterContentBlocks={(source) => {
-          console.log(`Before custom CBs filtering ${source.length}`);
-          let filtered = source.filter((item) => {
-            return item.name?.toLowerCase().indexOf('discarded') < 0;
-          });
-          console.log(`After custom CBs filtering = ${filtered.length}`);
-          return filtered;
-        }}
-        sortContentBlocks={(source) => {
-          console.log(`Before custom CBs sorting ${JSON.stringify(source)}`);
-          let sorted = source.reverse();
-          console.log(`After custom CBs sorting ${JSON.stringify(sorted)}`);
-          return sorted;
-        }}
-      />
-      <Text>
-        Showing {carouselStatus.name} as {carouselStatus.index + 1} of{' '}
-        {carouselStatus.count}
-      </Text>
-      <Text>Placeholder: example_top</Text>
-      <InAppContentBlocksPlaceholder
-        style={{
-          width: '100%',
-        }}
-        placeholderId={'example_top'}
-      />
-      <Text>Placeholder: {platformSpecificPlaceholderId}</Text>
-      <InAppContentBlocksPlaceholder
-        style={{
-          width: '100%',
-        }}
-        placeholderId={platformSpecificPlaceholderId}
-      />
-      <Text>Products (Placeholder: example_list)</Text>
-      <FlatList
-        removeClippedSubviews={true}
-        maxToRenderPerBatch={5}
-        updateCellsBatchingPeriod={200}
-        initialNumToRender={1}
-        windowSize={3}
-        data={productsArray}
-        renderItem={renderItem}
-      />
+      <ExponeaContainer childrenContainerStyle={styles.top}>
+        <Text>Show Carousels</Text>
+        <Switch
+          testID={AutomationIds.TOGGLE_CAROUSELS}
+          trackColor={{ false: '#ffd500', true: '#ffd500' }}
+          thumbColor="#f4f3f4"
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
+      </ExponeaContainer>
+
+      {!isEnabled ? (
+        <FlatList
+          data={CONTAINER_ROWS}
+          renderItem={renderContainer}
+          maxToRenderPerBatch={5}
+          updateCellsBatchingPeriod={200}
+          initialNumToRender={3}
+          windowSize={3}
+        />
+      ) : (
+        <CarouselScreen />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  top: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     padding: 12,
-    paddingTop: 12,
     backgroundColor: '#eee',
+  },
+  subContainer: {
+    paddingRight: 10,
   },
 });

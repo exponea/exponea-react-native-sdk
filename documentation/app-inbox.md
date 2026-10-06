@@ -34,7 +34,7 @@ You can integrate the App Inbox through a button provided by the SDK, which open
 <AppInboxButton />
 ```
 
-![App Inbox button](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/Documentation/images/app-inbox-button.png)
+![App Inbox button](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/app-inbox-button.png)
 
 You can add the button anywhere in your app.
 
@@ -69,7 +69,7 @@ The SDK fetches and displays the App Inbox automatically as follows:
    - A button for each action in the message that opens a browser link or invokes a universal link. No button is displayed for an action that opens the current app.
 5. Call `Exponea.trackAppInboxClick` automatically when the user clicks a button in the message detail view.
 
-![App Inbox messages list view and message detail view](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/Documentation/images/app-inbox-react-native.png)
+![App Inbox messages list view and message detail view](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/app-inbox-react-native.png)
 
 > ❗️
 >
