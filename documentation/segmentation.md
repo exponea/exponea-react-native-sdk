@@ -95,7 +95,9 @@ When a segmentation data reload is triggered, the process waits 5 seconds before
 
 ### Callback behavior
 
-The SDK allows you to register multiple `SegmentationDataCallback` instances for multiple categories or for the same category. You may register a callback with the SDK anytime (before and after initialization). Callback instances remain active until the application terminates or until you unregister the callback.
+The SDK allows you to register multiple `SegmentationDataCallback` instances for multiple categories or for the same category. Each registered instance is handled independently, including its own `includeFirstLoad` evaluation, even if it shares a category with another instance. You may register a callback with the SDK anytime (before and after initialization). Callback instances remain active until you unregister the callback, until [`stopIntegration()`](#callbacks-after-stopping-the-sdk) completes, or until the application terminates.
+
+Registering an instance that is already registered has no effect. To start a new subscription with the same instance (for example to receive the first load again), unregister it first and register it again.
 
 The callback behavior follows the following principles:
 
@@ -111,7 +113,7 @@ The callback behavior follows the following principles:
 
 ### Deregister a callback
 
-Deregistration of a callback instance is up to the developer. If you don't deregister a callback instance, the SDK will keep it active until the application terminates.
+Deregistration of a callback instance is up to the developer. If you don't deregister a callback instance, the SDK will keep it active until `stopIntegration()` completes or the application terminates. Deregistering one instance doesn't affect other instances registered for the same category.
 
 > ❗️
 >
@@ -131,6 +133,20 @@ Exponea.unregisterSegmentationDataCallback(segmentCallbackInstance);
 ```
 
 Deregistering a callback is effective immediately.
+
+### Register callbacks after you stop the SDK
+
+The native SDKs remove all segmentation callbacks when the integration stops, and the React Native SDK does the same. When `Exponea.stopIntegration()` completes successfully, the SDK releases all registered `SegmentationDataCallback` instances before the returned Promise resolves. This includes instances registered while the stop was still in progress. Initializing the SDK again doesn't restore them.
+
+To receive segmentation updates after you initialize the SDK again, register the callbacks again. You can reuse the original callback instances, and you can register them before or after calling `Exponea.configure()`:
+
+```typescript
+await Exponea.stopIntegration();
+// Later, when your application initializes the SDK again:
+Exponea.registerSegmentationDataCallback(segmentCallbackInstance);
+await Exponea.configure(configuration);
+
+If stopIntegration() is rejected, for example because the SDK isn't initialized, the registered callbacks stay active.
 
 ### Listen to multiple segmentation categories
 

@@ -238,37 +238,28 @@ internal class ExponeaModuleTest {
 
     @Test
     fun `should register segmentation callback`() {
-        val exposingCategory = "discovery"
-        val includeFirstLoad = false
-        module.registerSegmentationDataCallback(exposingCategory, includeFirstLoad, MockResolvingPromise {
-            assertNotNull(it.result)
-            assertTrue(it.result is String)
-            assertTrue((it.result as String).isNotBlank())
-        })
-        assertEquals(1, module.segmentationDataCallbacks.size)
-        assertEquals(exposingCategory, module.segmentationDataCallbacks[0].exposingCategory)
-        assertEquals(includeFirstLoad, module.segmentationDataCallbacks[0].includeFirstLoad)
+        module.onSegmentationCallbackSet("cb-1", "discovery", false)
+        val registered = module.segmentationCallbacksById["cb-1"]
+        assertNotNull(registered)
+        assertEquals("cb-1", registered.instanceId)
+        assertEquals("discovery", registered.exposingCategory)
+        assertEquals(false, registered.includeFirstLoad)
+        verify { Exponea.registerSegmentationDataCallback(registered) }
     }
 
     @Test
     fun `should unregister segmentation callback successfully`() {
-        val exposingCategory = "discovery"
-        val includeFirstLoad = false
-        var callbackInstanceId: String? = null
-        module.registerSegmentationDataCallback(exposingCategory, includeFirstLoad, MockResolvingPromise {
-            callbackInstanceId = it.result as String
-        })
-        assertNotNull(callbackInstanceId)
-        module.unregisterSegmentationDataCallback(callbackInstanceId, MockResolvingPromise {
-            assertEquals(MockPromise.PromiseStatus.fulfilled, it.status)
-        })
+        module.onSegmentationCallbackSet("cb-1", "discovery", false)
+        val registered = module.segmentationCallbacksById.getValue("cb-1")
+        module.onSegmentationCallbackRemove("cb-1")
+        assertTrue(module.segmentationCallbacksById.isEmpty())
+        verify { Exponea.unregisterSegmentationDataCallback(registered) }
     }
 
     @Test
-    fun `should failed while unregistering of non-existing segmentation callback`() {
-        module.unregisterSegmentationDataCallback("non-existing-id", MockRejectingPromise {
-            assertEquals(MockPromise.PromiseStatus.rejected, it.status)
-        })
+    fun `should ignore unregistering of non-existing segmentation callback`() {
+        module.onSegmentationCallbackRemove("non-existing-id")
+        verify(exactly = 0) { Exponea.unregisterSegmentationDataCallback(any()) }
     }
 
     @Test

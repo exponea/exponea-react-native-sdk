@@ -12,7 +12,19 @@ import type { SdkAuthError } from './SdkAuthError';
 let pushOpenedListener: ((openedPush: OpenedPush) => void) | null = null;
 let pushReceivedListener: ((data: any) => void) | null = null;
 let inAppMessageCallback: InAppMessageCallbackImpl | null = null;
-let segmentationCallbacks: Map<string, SegmentationDataCallback> = new Map();
+// Segmentation registrations keyed by an internal callback ID. Every registered
+// SegmentationDataCallback instance owns exactly one native callback, so several
+// instances may observe the same category while native evaluates `includeFirstLoad`
+// for each of them independently.
+const segmentationCallbacks = new Map<string, SegmentationDataCallback>();
+// Prefix shared by IDs issued during this JS runtime, so IDs never repeat across
+// stop/re-register cycles and a reload cannot collide with stale native entries.
+const segmentationCallbackIdPrefix = `${Date.now().toString(36)}-${Math.random()
+  .toString(36)
+  .slice(2, 8)}`;
+let segmentationCallbackSequence = 0;
+// Shared by concurrent stopIntegration() calls until the native stop settles.
+let pendingIntegrationStop: Promise<void> | null = null;
 let sdkAuthErrorCallback: ((error: SdkAuthError) => void) | null = null;
 
 // Event emitter setup (listens to native events)
@@ -54,16 +66,62 @@ eventEmitter.addListener('inAppAction', (data: any) => {
 });
 
 eventEmitter.addListener('newSegments', (data: any) => {
+  let payload: any;
   try {
-    const payload = JSON.parse(data);
-    const callback = segmentationCallbacks.get(payload.category);
-    if (callback) {
-      callback.onNewData(payload.segments);
-    }
+    payload = JSON.parse(data);
   } catch (e) {
     console.error('Failed to parse newSegments event', e);
+    return;
+  }
+  // Events are addressed to the registration that produced them. Events for IDs
+  // that were unregistered meanwhile (or released by stopIntegration) are dropped.
+  const callback = segmentationCallbacks.get(payload?.callbackId);
+  if (!callback || callback.exposingCategory !== payload.category) {
+    return;
+  }
+  try {
+    callback.onNewData(payload.segments);
+  } catch (e) {
+    console.error(
+      'Segmentation callback failed to handle newSegments event',
+      e
+    );
   }
 });
+
+function findSegmentationCallbackId(
+  callback: SegmentationDataCallback
+): string | undefined {
+  for (const [callbackId, registered] of segmentationCallbacks) {
+    if (registered === callback) {
+      return callbackId;
+    }
+  }
+  return undefined;
+}
+
+function nextSegmentationCallbackId(): string {
+  segmentationCallbackSequence += 1;
+  return `${segmentationCallbackIdPrefix}-${segmentationCallbackSequence}`;
+}
+
+/**
+ * Native SDKs drop all segmentation callbacks when the integration stops, so the
+ * JS registrations are released as well. The native removal is repeated here for
+ * every known ID to also cover registrations that reached native after it finished
+ * its own cleanup but before this promise handler ran; native ignores unknown IDs.
+ */
+function releaseSegmentationCallbacksAfterStop(): void {
+  const callbackIds = Array.from(segmentationCallbacks.keys());
+  segmentationCallbacks.clear();
+  callbackIds.forEach((callbackId) => {
+    try {
+      NativeExponea.onSegmentationCallbackRemove(callbackId);
+    } catch (e) {
+      console.error('Failed to release segmentation callback after stop', e);
+    }
+  });
+}
 
 eventEmitter.addListener('sdkAuthError', (data: any) => {
   if (!sdkAuthErrorCallback) return;
@@ -195,6 +253,9 @@ export class ExponeaListeners {
   /**
    * Registers a callback to receive customer segmentation data updates.
    * The callback will be invoked when segments for the specified category change.
+   * Multiple callbacks may be registered for the same category; each of them gets
+   * its own native registration and `includeFirstLoad` handling. Registering an
+   * instance that is already registered has no effect.
    *
    * @param callback - SegmentationDataCallback instance with category and update handler
    *
@@ -209,24 +270,73 @@ export class ExponeaListeners {
   static registerSegmentationDataCallback(
     callback: SegmentationDataCallback
   ): void {
-    segmentationCallbacks.set(callback.exposingCategory, callback);
-    // Notify native to start observing this category
-    NativeExponea.onSegmentationCallbackSet(
-      callback.exposingCategory,
-      callback.includeFirstLoad
-    );
+    if (findSegmentationCallbackId(callback) !== undefined) {
+      return;
+    }
+    const callbackId = nextSegmentationCallbackId();
+    // Store before notifying native so an immediate first-load event is delivered.
+    segmentationCallbacks.set(callbackId, callback);
+    try {
+      NativeExponea.onSegmentationCallbackSet(
+        callbackId,
+        callback.exposingCategory,
+        callback.includeFirstLoad
+      );
+    } catch (e) {
+      segmentationCallbacks.delete(callbackId);
+      throw e;
+    }
   }
 
   /**
    * Unregisters a previously registered segmentation data callback.
+   * Other callbacks registered for the same category stay active.
+   * Unregistering an instance that is not registered has no effect.
    *
    * @param callback - The same SegmentationDataCallback instance that was registered
    */
   static unregisterSegmentationDataCallback(
     callback: SegmentationDataCallback
   ): void {
-    segmentationCallbacks.delete(callback.exposingCategory);
-    NativeExponea.onSegmentationCallbackRemove(callback.exposingCategory);
+    const callbackId = findSegmentationCallbackId(callback);
+    if (callbackId === undefined) {
+      return;
+    }
+    segmentationCallbacks.delete(callbackId);
+    NativeExponea.onSegmentationCallbackRemove(callbackId);
+  }
+
+  /**
+   * Stops the native integration. On success all segmentation callback
+   * registrations are released, mirroring the native SDKs which drop their
+   * segmentation callbacks when the integration stops. Callbacks registered
+   * before the stop settles are released too; register them again afterwards
+   * (before or after the next `configure()`) to resume updates. A failed stop
+   * keeps all registrations intact. Concurrent calls share one native stop.
+   *
+   * @internal Called by `Exponea.stopIntegration()`; not part of the public API.
+   */
+  static stopIntegration(): Promise<void> {
+    if (pendingIntegrationStop) {
+      return pendingIntegrationStop;
+    }
+    let nativeStop: Promise<void>;
+    try {
+      nativeStop = Promise.resolve(NativeExponea.stopIntegration());
+    } catch (e) {
+      nativeStop = Promise.reject(e);
+    }
+    const stop: Promise<void> = nativeStop
+      .then(() => {
+        releaseSegmentationCallbacksAfterStop();
+      })
+      .finally(() => {
+        if (pendingIntegrationStop === stop) {
+          pendingIntegrationStop = null;
+        }
+      });
+    pendingIntegrationStop = stop;
+    return stop;
   }
 
   /**

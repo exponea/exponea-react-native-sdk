@@ -261,7 +261,7 @@ export const Exponea: ExponeaType = {
     NativeExponea.getSegments(exposingCategory, force) as Promise<
       Array<Segment>
     >,
-  stopIntegration: () => NativeExponea.stopIntegration(),
+  stopIntegration: () => ExponeaListeners.stopIntegration(),
   clearLocalCustomerData: (appGroup) =>
     NativeExponea.clearLocalCustomerData(appGroup),
 

@@ -35,8 +35,13 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     private var inAppOverrideDefaultBehavior: Bool = false
     private var inAppTrackActions: Bool = true
 
-    // Segmentation callback storage keyed by category name
-    private var segmentationCallbacksByCategory: [String: SegmentCallbackData] = [:]
+    // Native segmentation callbacks keyed by the registration ID issued by JavaScript.
+    // Every JS SegmentationDataCallback registration owns exactly one native callback,
+    // so several registrations may observe the same category while the native SDK
+    // evaluates `includeFirstLoad` for each of them independently.
+    private var segmentationCallbacksById: [String: SegmentCallbackData] = [:]
+    // Serializes registration changes with the asynchronous stopIntegration() completion.
+    private let segmentationCallbacksLock = NSLock()
 
     // Event emitter reference for sending events to JavaScript
     public weak var eventEmitter: RCTEventEmitter?
@@ -563,7 +568,13 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
             failure(ExponeaError.notConfigured)
             return
         }
-        ExponeaSDK.Exponea.shared.stopIntegration { success() }
+        ExponeaSDK.Exponea.shared.stopIntegration {
+            // The native SDK drops all segmentation callbacks while stopping. Release the
+            // bridge wrappers only once the stop completed, so a stop that does not finish
+            // keeps registrations intact. Removing an already removed callback is a no-op.
+            self.removeAllSegmentationCallbacks()
+            success()
+        }
     }
 
     // MARK: - SDK Auth Token (Stream / Data Hub JWT)
@@ -1092,10 +1103,7 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         inAppTrackActions = true
     }
 
-    public func onSegmentationCallbackSet(category: String, includeFirstLoad: Bool) {
-        if let existing = segmentationCallbacksByCategory[category] {
-            SegmentationManager.shared.removeCallback(callbackData: existing)
-        }
+    public func onSegmentationCallbackSet(callbackId: String, category: String, includeFirstLoad: Bool) {
         let callbackData = SegmentCallbackData(
             category: SegmentCategory(type: category, data: []),
             isIncludeFirstLoad: includeFirstLoad
@@ -1104,16 +1112,36 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
             let segmentsArray = segments.map { segment -> [String: Any] in
                 ["id": segment.id, "segmentation_id": segment.segmentationId]
             }
-            self.emitNewSegments(category: category, segments: segmentsArray)
+            self.emitNewSegments(callbackId: callbackId, category: category, segments: segmentsArray)
         }
-        segmentationCallbacksByCategory[category] = callbackData
+        segmentationCallbacksLock.lock()
+        defer { segmentationCallbacksLock.unlock() }
+        if let existing = segmentationCallbacksById.updateValue(callbackData, forKey: callbackId) {
+            SegmentationManager.shared.removeCallback(callbackData: existing)
+        }
         SegmentationManager.shared.addCallback(callbackData: callbackData)
     }
 
-    public func onSegmentationCallbackRemove(category: String) {
-        guard let callbackData = segmentationCallbacksByCategory[category] else { return }
+    public func onSegmentationCallbackRemove(callbackId: String) {
+        segmentationCallbacksLock.lock()
+        defer { segmentationCallbacksLock.unlock() }
+        guard let callbackData = segmentationCallbacksById.removeValue(forKey: callbackId) else { return }
         SegmentationManager.shared.removeCallback(callbackData: callbackData)
-        segmentationCallbacksByCategory.removeValue(forKey: category)
+    }
+
+    /// Number of native segmentation callbacks currently owned by this bridge.
+    public func registeredSegmentationCallbacksCount() -> Int {
+        segmentationCallbacksLock.lock()
+        defer { segmentationCallbacksLock.unlock() }
+        return segmentationCallbacksById.count
+    }
+
+    public func removeAllSegmentationCallbacks() {
+        segmentationCallbacksLock.lock()
+        defer { segmentationCallbacksLock.unlock() }
+        let callbacks = Array(segmentationCallbacksById.values)
+        segmentationCallbacksById.removeAll()
+        callbacks.forEach { SegmentationManager.shared.removeCallback(callbackData: $0) }
     }
 
     // MARK: - Event Emission Methods
@@ -1183,8 +1211,10 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         return dict
     }
 
-    private func emitNewSegments(category: String, segments: [[AnyHashable: Any]]) {
+    private func emitNewSegments(callbackId: String, category: String, segments: [[AnyHashable: Any]]) {
+        // Addressed to the JS registration that produced the update.
         let payload: [AnyHashable: Any] = [
+            "callbackId": callbackId,
             "category": category,
             "segments": segments
         ]

@@ -43,10 +43,12 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
         constructor(message: String, cause: Throwable) : super(message, cause)
     }
 
-  // Storage for segmentation data callbacks
-  internal val segmentationDataCallbacks = java.util.concurrent.CopyOnWriteArrayList<ReactNativeSegmentationDataCallback>()
-  private val segmentationCallbacksByCategory =
+  // Native segmentation callbacks keyed by the registration ID issued by JavaScript.
+  // Every JS SegmentationDataCallback registration owns exactly one native callback.
+  internal val segmentationCallbacksById =
       java.util.concurrent.ConcurrentHashMap<String, ReactNativeSegmentationDataCallback>()
+  // Serializes registration changes with the asynchronous stopIntegration() completion.
+  private val segmentationCallbacksLock = Any()
 
   private var pushReceivedListenerSet = false
   // Hold received push data until pushReceivedListener is set in JS
@@ -130,14 +132,13 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
 
   override fun stopIntegration(promise: Promise) = requireInitialized(promise) {
       catchAndReject(promise) {
-          // Unregister bridge-side segmentation callbacks before stopping
-          for (callback in segmentationDataCallbacks) {
-              Exponea.unregisterSegmentationDataCallback(callback)
+          Exponea.stopIntegration {
+              // The native SDK drops all segmentation callbacks while stopping. Release the
+              // bridge wrappers only once the stop completed, so a stop that does not finish
+              // keeps registrations intact. Unregistering an already removed callback is a no-op.
+              removeAllSegmentationCallbacks()
+              promise.resolve(null)
           }
-          segmentationDataCallbacks.clear()
-          segmentationCallbacksByCategory.clear()
-
-          Exponea.stopIntegration { promise.resolve(null) }
       }
   }
 
@@ -905,96 +906,53 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
   }
 
   // ============================================================================
-  // Segmentation Callback Management (New Architecture)
+  // Segmentation Callback Management
   // ============================================================================
 
-  override fun onSegmentationCallbackSet(category: String, includeFirstLoad: Boolean) {
-      val existing = segmentationCallbacksByCategory.remove(category)
-      if (existing != null) {
-          Exponea.unregisterSegmentationDataCallback(existing)
-          segmentationDataCallbacks.remove(existing)
-      }
+  override fun onSegmentationCallbackSet(callbackId: String, category: String, includeFirstLoad: Boolean) {
       val segmentationDataCallback = ReactNativeSegmentationDataCallback(
+          callbackId,
           category,
           includeFirstLoad
-      ) { _, segments ->
-          sendNewSegmentsData(category, segments)
-      }
-      Exponea.registerSegmentationDataCallback(segmentationDataCallback)
-      segmentationDataCallbacks.add(segmentationDataCallback)
-      segmentationCallbacksByCategory[category] = segmentationDataCallback
-  }
-
-  override fun onSegmentationCallbackRemove(category: String) {
-      val existing = segmentationCallbacksByCategory.remove(category) ?: return
-      Exponea.unregisterSegmentationDataCallback(existing)
-      segmentationDataCallbacks.remove(existing)
-  }
-
-  // ============================================================================
-  // Segmentation Callback Management (Not in TurboModule spec - called from JS)
-  // ============================================================================
-
-  /**
-   * Registers a segmentation data callback for a specific category.
-   * Returns the callback instanceId to JavaScript for later unregistration.
-   */
-  fun registerSegmentationDataCallback(
-      exposingCategory: String,
-      includeFirstLoad: Boolean,
-      promise: Promise
-  ) = catchAndReject(promise) {
-      val segmentationDataCallback = ReactNativeSegmentationDataCallback(
-          exposingCategory,
-          includeFirstLoad
       ) { callbackInstance, segments ->
-          sendNewSegmentsDataLegacy(callbackInstance, segments)
+          sendNewSegmentsData(callbackInstance, segments)
       }
-      Exponea.registerSegmentationDataCallback(segmentationDataCallback)
-      segmentationDataCallbacks.add(segmentationDataCallback)
-      promise.resolve(segmentationDataCallback.instanceId)
+      synchronized(segmentationCallbacksLock) {
+          segmentationCallbacksById.put(callbackId, segmentationDataCallback)?.let { existing ->
+              Exponea.unregisterSegmentationDataCallback(existing)
+          }
+          Exponea.registerSegmentationDataCallback(segmentationDataCallback)
+      }
+  }
+
+  override fun onSegmentationCallbackRemove(callbackId: String) {
+      synchronized(segmentationCallbacksLock) {
+          val existing = segmentationCallbacksById.remove(callbackId) ?: return
+          Exponea.unregisterSegmentationDataCallback(existing)
+      }
+  }
+
+  private fun removeAllSegmentationCallbacks() {
+      synchronized(segmentationCallbacksLock) {
+          val callbacks = segmentationCallbacksById.values.toList()
+          segmentationCallbacksById.clear()
+          callbacks.forEach { Exponea.unregisterSegmentationDataCallback(it) }
+      }
   }
 
   /**
-   * Unregisters a segmentation data callback by its instanceId.
+   * Emits segmentation data to JavaScript, addressed to the registration that produced it.
    */
-  fun unregisterSegmentationDataCallback(
-      callbackInstanceId: String,
-      promise: Promise
-  ) = catchAndReject(promise) {
-      val segmentationCallbackToRemove = segmentationDataCallbacks.find { it.instanceId == callbackInstanceId }
-      if (segmentationCallbackToRemove == null) {
-          promise.reject(
-              ExponeaInvalidUsageException(
-                  "Segmentation callback $callbackInstanceId has not been found"
-              )
-          )
-          return@catchAndReject
-      }
-      Exponea.unregisterSegmentationDataCallback(segmentationCallbackToRemove)
-      segmentationDataCallbacks.remove(segmentationCallbackToRemove)
-      promise.resolve(null)
-  }
-
-  /**
-   * Helper method to emit segmentation data to JavaScript.
-   */
-  private fun sendNewSegmentsDataLegacy(callbackInstance: ReactNativeSegmentationDataCallback, segments: List<com.exponea.sdk.models.Segment>) {
+  private fun sendNewSegmentsData(
+      callbackInstance: ReactNativeSegmentationDataCallback,
+      segments: List<com.exponea.sdk.models.Segment>
+  ) {
       val dataMap = mapOf(
           "callbackId" to callbackInstance.instanceId,
-          "data" to segments
-      )
-      reactApplicationContext
-          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-          ?.emit(callbackInstance.eventEmitterKey, ExponeaGson.instance.toJson(dataMap))
-  }
-
-  private fun sendNewSegmentsData(category: String, segments: List<com.exponea.sdk.models.Segment>) {
-      val dataMap = mapOf(
-          "category" to category,
+          "category" to callbackInstance.exposingCategory,
           "segments" to segments
       )
-      sendEvent("newSegments", ExponeaGson.instance.toJson(dataMap))
+      sendEvent(callbackInstance.eventEmitterKey, ExponeaGson.instance.toJson(dataMap))
   }
 
   companion object {

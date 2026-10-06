@@ -388,10 +388,20 @@ export interface Spec extends TurboModule {
   /** Notify native that in-app message callback is removed */
   onInAppMessageCallbackRemove(): void;
 
-  /** Notify native that segmentation callback is set */
-  onSegmentationCallbackSet(category: string, includeFirstLoad: boolean): void;
-  /** Notify native that segmentation callback is removed */
-  onSegmentationCallbackRemove(category: string): void;
+  /**
+   * Notify native that a segmentation callback is registered.
+   * Each JS registration owns one native callback identified by `callbackId`,
+   * so several callbacks may observe the same category with independent
+   * `includeFirstLoad` handling. Native emits `newSegments` events carrying
+   * the `callbackId` of the registration that produced them.
+   */
+  onSegmentationCallbackSet(
+    callbackId: string,
+    category: string,
+    includeFirstLoad: boolean
+  ): void;
+  /** Notify native that the segmentation callback with `callbackId` is removed */
+  onSegmentationCallbackRemove(callbackId: string): void;
 
   /** Notify native that the SDK auth error callback is set */
   onSdkAuthErrorCallbackSet(): void;

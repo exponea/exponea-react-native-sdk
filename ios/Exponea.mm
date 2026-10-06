@@ -940,15 +940,16 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
     [_exponeaBridge onInAppMessageCallbackRemove];
 }
 
-- (void)onSegmentationCallbackSet:(NSString *)category
+- (void)onSegmentationCallbackSet:(NSString *)callbackId
+                         category:(NSString *)category
                  includeFirstLoad:(BOOL)includeFirstLoad
 {
-    [_exponeaBridge onSegmentationCallbackSetWithCategory:category includeFirstLoad:includeFirstLoad];
+    [_exponeaBridge onSegmentationCallbackSetWithCallbackId:callbackId category:category includeFirstLoad:includeFirstLoad];
 }
 
-- (void)onSegmentationCallbackRemove:(NSString *)category
+- (void)onSegmentationCallbackRemove:(NSString *)callbackId
 {
-    [_exponeaBridge onSegmentationCallbackRemoveWithCategory:category];
+    [_exponeaBridge onSegmentationCallbackRemoveWithCallbackId:callbackId];
 }
 
 // MARK: - AppInboxStyle Conversion Helpers

@@ -516,6 +516,8 @@ If the SDK is already running, invoking of this method also:
 
 After invoking the `stopIntegration()` method, the SDK will drop any API method invocation until you [initialize the SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#initialize_the_sdk) again.
 
+A successful `stopIntegration()` call also removes all registered [segmentation callbacks](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-segmentation#callbacks-after-stopping-the-sdk), matching the behavior of the native SDKs. To keep receiving segmentation updates after you reinitialize the SDK, register the callbacks again.
+
 ### Use cases
 
 Correct usage of `stopIntegration()` method depends on the use case so consider all scenarios.
