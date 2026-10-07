@@ -57,6 +57,10 @@ pod install
 
 The minimum supported iOS version for the SDK is 15.1. You may need to change the iOS version on the first line of your `ios/Podfile` to `platform :ios, '15.1'`, or higher.
 
+> 📘 UIScene lifecycle
+>
+> Apps built with the iOS 27 SDK must adopt the UIKit scene-based lifecycle (`UIApplicationSceneManifest`). Under UIScene, UIKit delivers universal links to your `SceneDelegate`, and you must start React Native from it. Push notification handling stays in your `AppDelegate`. For more information, see [Universal links for iOS](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-links#ios) and the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-to-version-420-or-higher).
+
 ### Android setup
 
 The minimum supported Android API level for the SDK is 24. You may need to set or update `minSdkVersion` in `android/app/build.gradle` to `24` or higher:
@@ -433,6 +437,39 @@ function withExponeaAppDelegate(config) {
         }
       );
     }
+    // Step 7: Track universal links. ExpoAppDelegate forwards user activities to this
+    // override in both the legacy AppDelegate and the UIScene lifecycle (Expo SDK 58+).
+    const continueActivityRegexp =
+      /(func application\([^\)]*?continue userActivity[\s\S]*?\)\s*-> Bool\s*{)([\s\S]*?)(\n  })/m;
+    if (!continueActivityRegexp.test(contents)) {
+      contents = contents.replace(
+        /\n}\s*$/m,
+        `\n  public override func application(
+    _ application: UIApplication,
+    continue userActivity: NSUserActivity,
+    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+  ) -> Bool {
+    return super.application(application, continue: userActivity, restorationHandler: restorationHandler)
+  }
+  \n}`
+      );
+    }
+    if (
+      continueActivityRegexp.test(contents) &&
+      !contents.includes('Exponea.shared.handleUniversalLink(userActivity)')
+    ) {
+      contents = contents.replace(
+        continueActivityRegexp,
+        (match, funcDef, body, funcEnd) => {
+          return (
+            funcDef +
+            '\n    Exponea.shared.handleUniversalLink(userActivity)' +
+            body +
+            funcEnd
+          );
+        }
+      );
+    }
 
     cfg.modResults.contents = contents;
     return cfg;
@@ -539,7 +576,21 @@ module.exports = withExponea;
 
 > 🚧
 >
-> The example config plugin has been tested with Expo 57. The native files are modified using find/replace logic; using a different Expo version might require some tweaking.
+> The example config plugin is tested with Expo 57. The plugin modifies native files using find/replace logic, so other Expo versions might need some tweaking. Universal link tracking under the UIScene lifecycle (step 7) relies on the `SceneDelegate` that Expo SDK 58 or later generates, as described below.
+
+> 📘 UIScene lifecycle
+>
+> Starting with Expo SDK 58, `npx expo prebuild` generates a `SceneDelegate` (a subclass of `ExpoAppSceneDelegate`) and the `UIApplicationSceneManifest` that the iOS 27 SDK requires.
+>
+> `ExpoAppSceneDelegate` does the following:
+>
+> * Starts React Native
+> * Forwards links to React Native `Linking`
+> * Routes user activities back to your `AppDelegate` overrides
+>
+> As a result, the plugin's `application(_:continue:restorationHandler:)` patch (step 7) tracks universal links in both lifecycles. Push notification handling stays in your `AppDelegate`.
+>
+> If you replace the generated `SceneDelegate` with your own implementation, track universal links there as described in [Universal links for iOS](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-links#ios). For details, see the [Expo iOS scene life cycle guide](https://github.com/expo/fyi/blob/main/ios-scene-lifecycle.md).
 
 > 🚧
 >

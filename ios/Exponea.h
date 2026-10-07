@@ -18,6 +18,8 @@
 
 /// Tracks a universal link campaign click.
 /// Call from application:continueUserActivity:restorationHandler: in your AppDelegate.
+/// Legacy AppDelegate lifecycle only: under UIScene, UIKit doesn't call this AppDelegate method
+/// for universal links. Subclass ExponeaSceneDelegate in a Swift SceneDelegate instead.
 + (void)continueUserActivity:(NSUserActivity *)userActivity;
 
 @end

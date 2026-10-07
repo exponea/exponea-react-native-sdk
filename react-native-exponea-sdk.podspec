@@ -26,6 +26,8 @@ Pod::Spec.new do |s|
 
   s.test_spec "Tests" do |test_spec|
     test_spec.source_files = "ios/Tests/*.{swift,m,mm}"
+    # CocoaPods' generated test Info.plist omits CFBundleExecutable, which xctest needs to load the bundle
+    test_spec.info_plist = { "CFBundleExecutable" => "$(EXECUTABLE_NAME)" }
   end
 
   install_modules_dependencies(s)

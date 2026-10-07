@@ -123,9 +123,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 }
 ```
 
+> 📘 UIScene lifecycle
+>
+> Push notification handling stays in your `AppDelegate` when your app adopts the UIScene lifecycle (`UIApplicationSceneManifest` in `Info.plist`). Keep these methods there, and keep setting the `UNUserNotificationCenter` delegate in `application(_:didFinishLaunchingWithOptions:)`. Universal links are the exception: under UIScene, UIKit delivers them to your `SceneDelegate`. Learn more in [Universal links for iOS](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-links#ios).
+
 > 📘
 >
-> Implement these methods explicitly even if you use another SDK that swizzles the same methods. Both the iOS SDK and SDKs such as Firebase chain onto an existing implementation, so providing a real one keeps the call chain predictable. Refer to [Coexistence with Firebase and other push SDKs](#coexistence-with-firebase-and-other-push-sdks).
+> Implement these methods even if another SDK, such as Firebase, swizzles the same methods. Both the iOS SDK and SDKs such as Firebase chain onto an existing implementation, so providing a real implementation keeps the call chain predictable. For more information, see [Coexistence with Firebase and other push SDKs](#coexistence-with-firebase-and-other-push-sdks).
 
 ### Step 3: Configure app group
 

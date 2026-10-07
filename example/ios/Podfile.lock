@@ -1274,6 +1274,30 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
+  - react-native-exponea-sdk/Tests (4.1.0):
+    - AnyCodable-FlightSchool (= 0.4.0)
+    - ExponeaSDK (= 5.0.0)
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-bridging
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - react-native-safe-area-context (5.10.1):
     - hermes-engine
     - RCTRequired
@@ -1849,6 +1873,7 @@ DEPENDENCIES:
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - React-mutationobservernativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/mutationobserver`)
   - react-native-exponea-sdk (from `../..`)
+  - react-native-exponea-sdk/Tests (from `../..`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-networking (from `../node_modules/react-native/ReactCommon/react/networking`)
@@ -2133,7 +2158,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: acf4ac61f163f15ced7dfad7308957816b2d7abd
   React-microtasksnativemodule: 512d9f7c6b66574d90832a6b10b6102d4a8fdf30
   React-mutationobservernativemodule: 2c5abeb9a4ae316ba6d9420ef8d9baa81faa9d56
-  react-native-exponea-sdk: f8ebe914209de3d6f2ef2e8720dd51425f27afcb
+  react-native-exponea-sdk: 359a0584f0de2c8c4c6a40d4f4290ca84f52f4ff
   react-native-safe-area-context: f2bf5d3db254014a48910436c4a58ab0c4e2fe1f
   React-NativeModulesApple: 22b2f3e1538ceb1aab1ab182ccb0666ea2ec36ad
   React-networking: b58b3098d4a626f88bbaeaf6bf5e67b18ff39089
@@ -2178,6 +2203,6 @@ SPEC CHECKSUMS:
   SwiftSoup: 959c9ac70d7053fbf476341bfac90ab228523f2a
   Yoga: d1c536142c5ff8ec8cd856ab2a7c227a1d875c8e
 
-PODFILE CHECKSUM: 7c0cf30c6eb70b37574843345f7c133ede954506
+PODFILE CHECKSUM: bf10ad48c3f44bce3fd3fd6de97914637856e647
 
 COCOAPODS: 1.16.2

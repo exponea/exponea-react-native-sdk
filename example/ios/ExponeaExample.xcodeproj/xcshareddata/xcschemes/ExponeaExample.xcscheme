@@ -38,6 +38,16 @@
                ReferencedContainer = "container:ExponeaExample.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0CC5E4258E211B93CE2C2B66B2432C2E"
+               BuildableName = "react-native-exponea-sdk-Unit-Tests.xctest"
+               BlueprintName = "react-native-exponea-sdk-Unit-Tests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

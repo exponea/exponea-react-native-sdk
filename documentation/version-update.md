@@ -11,6 +11,31 @@ content:
 
 This guide will help you upgrade your Exponea SDK to the latest major version.
 
+## Update to version 4.2.0 or higher
+
+Version 4.2.0 updates the native iOS SDK to version 5.0.0, which adds support for the UIKit scene-based lifecycle (UIScene). Apple requires the UIScene lifecycle for apps built with the iOS 27 SDK. Apps that don't adopt it won't launch. Apps built with an older SDK keep working without changes.
+
+> ❗️
+>
+> If you add `UIApplicationSceneManifest` to your `Info.plist` without the changes below, your app launches, but the SDK no longer tracks universal link campaign clicks and the JavaScript `Linking` API doesn't receive links.
+
+### 1. Native iOS SDK 5.0.0
+
+The native iOS SDK 5.0.0 raises its minimum iOS deployment target to 15.0 for Xcode 27 compatibility. The React Native SDK still requires iOS 15.1 or higher. After you update, run `pod install` in your `ios` folder.
+
+### 2. UIScene lifecycle adoption
+
+To migrate your app to the UIScene lifecycle:
+
+1. Add `UIApplicationSceneManifest` to your `Info.plist` with a `UIWindowSceneSessionRoleApplication` configuration that points to your `SceneDelegate` (`$(PRODUCT_MODULE_NAME).SceneDelegate`).
+2. Create a `SceneDelegate` that subclasses `ExponeaSceneDelegate` from the native iOS SDK, and call `super` from `scene(_:willConnectTo:options:)` and `scene(_:continue:)`. This tracks universal links on cold and warm launch.
+3. Move the `UIWindow` creation and `startReactNative(withModuleName:in:launchOptions:)` from `application(_:didFinishLaunchingWithOptions:)` to `scene(_:willConnectTo:options:)`. Pass `ExponeaSceneHandler.launchOptions(from: connectionOptions)` as `launchOptions` so that `Linking.getInitialURL()` returns the launch URL on cold launch.
+4. Forward links to `RCTLinkingManager` from `scene(_:continue:)` (universal links) and `scene(_:openURLContexts:)` (custom URL schemes).
+5. Keep push notification handling in your `AppDelegate`, including setting the `UNUserNotificationCenter` delegate in `application(_:didFinishLaunchingWithOptions:)`.
+6. If you keep `application(_:continue:restorationHandler:)` in your `AppDelegate`, call `Exponea.shared.handleUniversalLink(_:)` and return `true` after your code handles the link. Otherwise, the SDK tracks universal links opened from in-app messages and content blocks twice.
+
+For code samples, see [Universal links for iOS](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-links#ios). For a complete implementation, see the example app's [`SceneDelegate.swift`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/ios/ExponeaExample/SceneDelegate.swift).
+
 ## Update from version 2.x.x to 3.x.x
 
 Version 3.0.0 is a major release that rewrites the SDK to use React Native's [TurboModules](https://reactnative.dev/docs/turbo-modules) architecture. The public API is almost fully compatible with version 2.x.x, with a few breaking changes that may require minor code adjustments. Before upgrading, review the following changes and requirements.

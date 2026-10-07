@@ -7,8 +7,7 @@ import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-  var window: UIWindow?
-
+  // React Native is started from SceneDelegate (UIScene lifecycle)
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 
@@ -23,15 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     reactNativeDelegate = delegate
     reactNativeFactory = factory
 
+    // Push notification handling stays on AppDelegate under UIScene
     UNUserNotificationCenter.current().delegate = self
-
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    factory.startReactNative(
-      withModuleName: "ExponeaExample",
-      in: window,
-      launchOptions: launchOptions
-    )
 
     return true
   }
@@ -75,26 +67,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     completionHandler([.banner, .list, .sound])
   }
 
-  // MARK: - Universal Links
+  // MARK: - Universal Links (legacy AppDelegate lifecycle)
 
+  /// Legacy path for apps without `UIApplicationSceneManifest`. UIKit doesn't call this for
+  /// system-delivered universal links under UIScene (see SceneDelegate), but the SDK still calls it
+  /// first for universal links opened from in-app messages and content blocks.
+  /// Return `true` once handled, otherwise the SDK falls back to the scene delegate and tracks again.
   func application(
     _ application: UIApplication,
     continue userActivity: NSUserActivity,
     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
   ) -> Bool {
-    if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-       let url = userActivity.webpageURL {
-      Exponea.shared.trackCampaignClick(url: url, timestamp: nil)
-    }
-
-    return RCTLinkingManager.application(
+    let tracked = Exponea.shared.handleUniversalLink(userActivity)
+    let linked = RCTLinkingManager.application(
       application,
       continue: userActivity,
       restorationHandler: restorationHandler
     )
+    return linked || tracked
   }
 
-  // MARK: - Custom URL Schemes
+  // MARK: - Custom URL Schemes (legacy AppDelegate lifecycle, see SceneDelegate for UIScene)
 
   func application(
     _ application: UIApplication,

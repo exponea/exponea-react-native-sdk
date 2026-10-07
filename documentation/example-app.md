@@ -121,6 +121,10 @@ The app includes several screens that you can open from the bottom navigation to
 
   > [`InAppCbScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/InAppCbScreen.tsx) > [`CarouselScreen.tsx`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/src/screens/CarouselScreen.tsx)
 
+> 📘
+>
+> On iOS, the example app uses the UIScene lifecycle. React Native starts from [`SceneDelegate.swift`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/ios/ExponeaExample/SceneDelegate.swift), which also tracks universal links and forwards links to React Native `Linking`. [`AppDelegate.swift`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/ios/ExponeaExample/AppDelegate.swift) handles push notifications.
+
 Try out the different features in the app, then find the customer profile in the {user.mkg} web app (under `Data & Assets` > `Customers`) to see the properties and events tracked by the SDK.
 
 Until you use `Identify customer` in the app, the customer is tracked anonymously using a cookie soft ID. You can look up the cookie value in the logs and find the corresponding profile in the {user.mkg} web app.

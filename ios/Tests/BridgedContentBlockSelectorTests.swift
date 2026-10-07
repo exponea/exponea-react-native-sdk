@@ -1,7 +1,7 @@
 import ExponeaSDK
 import XCTest
 
-@testable import BridgedContentBlockSelector
+@testable import react_native_exponea_sdk
 
 final class BridgedContentBlockSelectorTests: XCTestCase {
 

@@ -17,6 +17,9 @@ if linkage != nil
 end
 
 target 'ExponeaExample' do
+  # Declared before autolinking (which skips already-declared pods) to enable the SDK unit tests in ios/Tests
+  pod 'react-native-exponea-sdk', :path => '../..', :testspecs => ['Tests']
+
   config = use_native_modules!
 
   use_react_native!(
