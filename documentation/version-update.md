@@ -36,6 +36,12 @@ To migrate your app to the UIScene lifecycle:
 
 For code samples, see [Universal links for iOS](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-links#ios). For a complete implementation, see the example app's [`SceneDelegate.swift`](https://github.com/exponea/exponea-react-native-sdk/blob/main/example/ios/ExponeaExample/SceneDelegate.swift).
 
+### 3. iOS push notification tracking requires `AppDelegate` calls
+
+The SDK no longer enables the native iOS SDK's automatic push notification tracking through method swizzling. In versions 4.0.0 to 4.1.0, swizzling ran alongside the required `AppDelegate` calls, so the SDK tracked every push notification open twice and ran the push notification action twice.
+
+The SDK now tracks push notification tokens and opens only through the `Exponea.shared.handlePushNotificationToken` and `Exponea.shared.handlePushNotificationOpened` calls in your `AppDelegate`. These calls have been required since version 3.0.0. If your app doesn't make them yet, add them as described in [iOS push notifications](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-push-ios#step-2-implement-application-delegate-methods). Without them, the SDK doesn't track push notification tokens or opens.
+
 ## Update from version 2.x.x to 3.x.x
 
 Version 3.0.0 is a major release that rewrites the SDK to use React Native's [TurboModules](https://reactnative.dev/docs/turbo-modules) architecture. The public API is almost fully compatible with version 2.x.x, with a few breaking changes that may require minor code adjustments. Before upgrading, review the following changes and requirements.

@@ -129,7 +129,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
 > 📘
 >
-> Implement these methods even if another SDK, such as Firebase, swizzles the same methods. Both the iOS SDK and SDKs such as Firebase chain onto an existing implementation, so providing a real implementation keeps the call chain predictable. For more information, see [Coexistence with Firebase and other push SDKs](#coexistence-with-firebase-and-other-push-sdks).
+> These methods are required. The React Native SDK doesn't swizzle application delegate methods, so it tracks push notification tokens and opens only through these calls. Implement them even if another SDK that swizzles the same methods, such as Firebase, is installed. For more information, see [Coexistence with Firebase and other push SDKs](#coexistence-with-firebase-and-other-push-sdks).
 
 ### Step 3: Configure app group
 
@@ -640,17 +640,14 @@ Create new folders for the **Notification Service Extension** and the **Notifica
 The React Native SDK works alongside other SDKs that handle push notifications, such as `@react-native-firebase/messaging`. No opt-out or special configuration is required on either side.
 
 **How it works:**
-* The native iOS SDK doesn't take ownership of `UNUserNotificationCenter.delegate`. Instead, it observes the property and swizzles `userNotificationCenter:didReceiveNotificationResponse:` on whichever class is currently set as the delegate, reapplying the swizzle if the delegate changes. It only installs its own delegate when none is set. Every swizzle the SDK installs calls the original implementation first, then runs the SDK's own handler.
-* Firebase works the same way: `@react-native-firebase/messaging` registers as a `GULAppDelegateSwizzler` interceptor, and its `UNUserNotificationCenter` category forwards to the previously set delegate.
-
-**Initialization order:**
-* Initialize Firebase before {user.mkg}. This happens by default in a React Native app: Firebase initializes natively in `application:didFinishLaunchingWithOptions:`, while `Exponea.configure()` is called from JavaScript and therefore runs afterward. Keep the `Exponea.configure()` call in JavaScript — moving it into native launch code breaks this ordering.
+* The React Native SDK disables the native iOS SDK's automatic push notification tracking. It doesn't swizzle any `UIApplicationDelegate` or `UNUserNotificationCenterDelegate` methods, and it doesn't take ownership of `UNUserNotificationCenter.delegate`. The SDK tracks push notification tokens and opens only through the `Exponea.shared.handlePushNotificationToken` and `Exponea.shared.handlePushNotificationOpened` calls in your `AppDelegate`. For more information, see [Step 2: Implement application delegate methods](#step-2-implement-application-delegate-methods).
+* `@react-native-firebase/messaging` registers as a `GULAppDelegateSwizzler` interceptor, and its `UNUserNotificationCenter` category forwards to the previously set delegate. Your `AppDelegate` methods therefore still run, and the SDK tracks each {user.mkg} push notification open exactly once.
 
 > ❗️
 >
 > Don't set `FirebaseAppDelegateProxyEnabled` to `NO` in `Info.plist`. It disables Firebase's own APNs token plumbing and has no effect on {user.mkg} push notifications.
 
-The SDK's `automaticPushNotificationTracking` native flag isn't exposed through the React Native configuration and is always enabled. Because the SDK chains onto existing implementations rather than replacing them, you can leave it enabled without conflict.
+The React Native configuration doesn't expose the native `automaticPushNotificationTracking` flag, so it's always disabled. Call `Exponea.shared.handlePushNotificationOpened` only once per notification open. If you also call it from another delegate or a Firebase callback, the SDK tracks the open twice and runs the push notification action twice.
 
 **Notification service extensions.** iOS invokes only one Notification Service Extension per notification. If your app needs both {user.mkg} rich push notifications and Firebase's `FIRMessagingExtensionHelper`, call both from the same single extension target — you can't split them across separate extensions per vendor.
 

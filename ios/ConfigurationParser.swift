@@ -71,42 +71,6 @@ public class ConfigurationParser {
         )
     }
 
-    public func parsePushNotificationTracking() throws -> ExponeaSDK.Exponea.PushNotificationTracking {
-        var appGroup = ""
-        if let iosDictionary: NSDictionary = try? dictionary.getOptionalSafely(property: "ios") {
-            appGroup = try iosDictionary.getOptionalSafely(property: "appGroup") ?? appGroup
-        }
-        var frequency: TokenTrackFrequency?
-        if let frequencyString: String = try dictionary.getOptionalSafely(property: "pushTokenTrackingFrequency") {
-            switch frequencyString {
-            case "ON_TOKEN_CHANGE": frequency = .onTokenChange
-            case "EVERY_LAUNCH": frequency = .everyLaunch
-            case "DAILY": frequency = .daily
-            default: throw ExponeaDataError.invalidValue(for: "pushTokenTrackingFrequency")
-            }
-        }
-        var requirePushAuthorization = true
-        if let iosDictionary: NSDictionary = try? dictionary.getOptionalSafely(property: "ios"),
-           let iosValue: Bool = try? iosDictionary.getOptionalSafely(property: "requirePushAuthorization") {
-            requirePushAuthorization = iosValue
-        } else if let rootValue: Bool = try? dictionary.getOptionalSafely(property: "requirePushAuthorization") {
-            requirePushAuthorization = rootValue
-        }
-        // else keep default true
-        if let frequency = frequency {
-            return ExponeaSDK.Exponea.PushNotificationTracking.enabled(
-                appGroup: appGroup,
-                requirePushAuthorization: requirePushAuthorization,
-                tokenTrackFrequency: frequency
-            )
-        } else {
-            return ExponeaSDK.Exponea.PushNotificationTracking.enabled(
-                appGroup: appGroup,
-                requirePushAuthorization: requirePushAuthorization
-            )
-        }
-    }
-
     public func parseSessionTracking() throws -> ExponeaSDK.Exponea.AutomaticSessionTracking {
         let automaticSessionTracking: Bool
             = try dictionary.getOptionalSafely(property: "automaticSessionTracking") ?? true
@@ -168,7 +132,7 @@ public class ConfigurationParser {
             integrationConfig = try parseProjectSettings(integrationConfigDict: integrationConfigDict)
         }
 
-        // Push notification flat fields (mirrors parsePushNotificationTracking logic)
+        // Push notification flat fields
         var appGroup: String? = nil
         var requirePushAuthorization: Bool? = nil
         var tokenTrackFrequency: TokenTrackFrequency? = nil
@@ -196,6 +160,9 @@ public class ConfigurationParser {
             inAppContentBlocksPlaceholders: try parseInAppContentBlocksPlaceholders(),
             sessionTimeout: try dictionary.getOptionalSafely(property: "sessionTimeout"),
             automaticSessionTracking: try dictionary.getOptionalSafely(property: "automaticSessionTracking"),
+            // The integration must call `handlePushNotificationOpened`/`handlePushNotificationToken` from its
+            // AppDelegate. Native swizzling would track every push open a second time on top of those calls.
+            automaticPushNotificationTracking: false,
             requirePushAuthorization: requirePushAuthorization,
             tokenTrackFrequency: tokenTrackFrequency,
             flushEventMaxRetries: try dictionary.getOptionalSafely(property: "flushMaxRetries"),
