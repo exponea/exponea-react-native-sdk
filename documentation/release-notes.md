@@ -13,7 +13,24 @@ content:
 >
 > Refer to the [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
-## Release Notes
+## Release Notes for 4.2.0
+#### October 08, 2026
+* Added:
+  * Adds support for React Native 0.87.
+  * Updates the native Android SDK to version 5.4.0.
+  * Updates the native iOS SDK to version 5.0.0, which raises the native SDK's minimum iOS deployment target to 15.0. The React Native SDK still requires iOS 15.1 or higher.
+  * Adds support for the iOS UIScene lifecycle, including the `ExponeaSceneHandler` helper for passing launch options from a `SceneDelegate`. Apple requires the UIScene lifecycle for apps built with the iOS 27 SDK. For migration instructions, see the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-to-version-420-or-higher).
+  * Adds the `registerLoggerCallback` and `unregisterLoggerCallback` methods to receive native SDK logs in JavaScript. These methods work on Android only and have no effect on iOS.
+  * Adds a new example app.
+  * Adds documentation for Android Auto Backup rules to the setup guide.
+* Fixed:
+  * Fixes iOS push notification opens being tracked twice and push notification actions running twice. The SDK now tracks push notification tokens and opens only through the required `AppDelegate` calls. For details, see the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-to-version-420-or-higher).
+  * Fixes `registerSegmentationDataCallback` to allow multiple callbacks for the same category, and `unregisterSegmentationDataCallback` to remove the correct callback instance.
+  * Fixes iOS in-app content blocks and carousels not reloading after the component is remounted.
+  * Fixes the iOS content block carousel ignoring `overrideDefaultBehavior`.
+  * Fixes outdated `ExponeaRNAppDelegate` references in the iOS documentation.
+
+
 ## Release Notes for 4.1.0
 #### August 25, 2026
 * Added:
