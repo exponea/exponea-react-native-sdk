@@ -13,6 +13,12 @@ content:
 >
 > Refer to the [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
+## Release Notes
+## Release Notes for 4.2.1
+#### October 14, 2026
+* Fixed:
+  * Fixes an Android build failure when the app uses React Native 0.83 or 0.84.
+
 ## Release Notes for 4.2.0
 #### October 08, 2026
 * Added:
@@ -29,7 +35,6 @@ content:
   * Fixes iOS in-app content blocks and carousels not reloading after the component is remounted.
   * Fixes the iOS content block carousel ignoring `overrideDefaultBehavior`.
   * Fixes outdated `ExponeaRNAppDelegate` references in the iOS documentation.
-
 
 ## Release Notes for 4.1.0
 #### August 25, 2026
