@@ -1,3 +1,6 @@
 *.pbxproj -text
 # specific for windows script files
 *.bat text eol=crlf
+# shell scripts must keep LF so they run from Git Bash / WSL on Windows
+*.sh text eol=lf
+gradlew text eol=lf

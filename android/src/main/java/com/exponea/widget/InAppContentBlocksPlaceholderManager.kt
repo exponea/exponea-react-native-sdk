@@ -79,7 +79,7 @@ class InAppContentBlocksPlaceholderManager :
             putDouble("width", width.toDouble())
             putDouble("height", height.toDouble())
         }
-        val dispatcher = UIManagerHelper.getEventDispatcher(context)
+        val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, viewId)
         val surfaceId: Int = UIManagerHelper.getSurfaceId(context)
         dispatcher?.dispatchEvent(
             DimensChangedEvent(surfaceId, viewId, event)
@@ -102,7 +102,7 @@ class InAppContentBlocksPlaceholderManager :
             putString("contentBlockAction", ExponeaGson.instance.toJson(action))
             putString("errorMessage", errorMessage)
         }
-        val dispatcher = UIManagerHelper.getEventDispatcher(context)
+        val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, viewId)
         val surfaceId: Int = UIManagerHelper.getSurfaceId(context)
         dispatcher?.dispatchEvent(
             InAppContentBlockEvent(surfaceId, viewId, event)
