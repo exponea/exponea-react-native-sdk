@@ -6,6 +6,7 @@ import type {
 } from './ExponeaListeners';
 import { SegmentationDataCallback } from './ExponeaListeners';
 import { FlushMode, LogLevel } from './NativeExponea';
+import type { RuntimeInAppContentBlockController as RuntimeICBControllerType } from './RuntimeInAppContentBlockController';
 import type {
   OpenedPush,
   InAppMessage,
@@ -40,8 +41,17 @@ export { default as ContentBlockCarouselView } from './ContentBlockCarouselView'
 export type { AppInboxButtonProps } from './AppInboxButton';
 export type { InAppContentBlocksPlaceholderProps } from './InAppContentBlocksPlaceholder';
 export type { ContentBlockCarouselViewProps } from './ContentBlockCarouselView';
+export {
+  InAppContentBlockAvailability,
+  InAppContentBlockInvalidateMode,
+} from './RuntimeInAppContentBlockController';
 
 // Export types
+export type {
+  RuntimeInAppContentBlockController,
+  InAppContentBlockAvailabilityDecision,
+} from './RuntimeInAppContentBlockController';
+
 export type {
   OpenedPush,
   InAppMessage,
@@ -268,6 +278,18 @@ export interface ExponeaType {
     customerIdentity?: CustomerIdentity
   ): Promise<void>;
   isConfigured(): Promise<boolean>;
+
+  /**
+   * Runtime controller for In-App Content Blocks.
+   *
+   * - null while the SDK is not configured
+   * - available after successful configure()
+   * - the same instance when configure() is called again while configured
+   * - remains available across identifyCustomer() / anonymize()
+   * - null after successful stopIntegration()
+   * - a fresh controller is created by a configure() that follows stopIntegration()
+   */
+  readonly inAppContentBlocksController: RuntimeICBControllerType | null;
 
   // Customer
   /** Resolves to cookie of the current customer */

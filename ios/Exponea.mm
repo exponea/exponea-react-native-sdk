@@ -921,6 +921,70 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
     }
 }
 
+// In-app Content Block controller methods prefetch(), availability(), invalidate()
+
+- (void)runtimeICBPrefetch:(NSArray<NSString *> *)ids
+                deadlineMs:(NSNumber *)deadlineMs
+                   resolve:(RCTPromiseResolveBlock)resolve
+                    reject:(RCTPromiseRejectBlock)reject
+{
+    [_exponeaBridge
+        runtimeICBPrefetchWithIds:ids
+        deadlineMs:deadlineMs
+        success:^(NSDictionary *result) {
+            resolve(result);
+        }
+        failure:^(NSError *error) {
+            reject(
+                error.userInfo[@"runtimeInAppContentBlockControllerErrorCode"] ?: @"RuntimeInAppContentBlockControllerError",
+                error.localizedDescription,
+                error
+            );
+        }];
+}
+
+- (void)runtimeICBAvailability:(NSString *)placeholderId
+                    deadlineMs:(double)deadlineMs
+                       resolve:(RCTPromiseResolveBlock)resolve
+                        reject:(RCTPromiseRejectBlock)reject
+{
+    [_exponeaBridge
+        runtimeICBAvailabilityWithId:placeholderId
+        deadlineMs:deadlineMs
+        success:^(NSDictionary *result) {
+            resolve(result);
+        }
+        failure:^(NSError *error) {
+            reject(
+                error.userInfo[@"runtimeInAppContentBlockControllerErrorCode"] ?: @"RuntimeInAppContentBlockControllerError",
+                error.localizedDescription,
+                error
+            );
+        }];
+}
+
+- (void)runtimeICBInvalidate:(NSArray<NSString *> *)ids
+                      reason:(NSString *)reason
+                        mode:(NSString *)mode
+                     resolve:(RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+{
+    [_exponeaBridge
+        runtimeICBInvalidateWithIds:ids
+        reason:reason
+        mode:mode
+        success:^{
+            resolve([NSNull null]);
+        }
+        failure:^(NSError *error) {
+            reject(
+                error.userInfo[@"runtimeInAppContentBlockControllerErrorCode"] ?: @"RuntimeInAppContentBlockControllerError",
+                error.localizedDescription,
+                error
+            );
+        }];
+}
+
 // Listener lifecycle methods for JavaScript event emitter integration
 - (void)onPushOpenedListenerSet
 {

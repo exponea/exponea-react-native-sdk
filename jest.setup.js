@@ -3,6 +3,9 @@ jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native');
 
   const mockModule = {
+    // Read synchronously at module load by ExponeaImpl to decide whether a
+    // RuntimeICBController exists; default to "not configured".
+    isConfigured: jest.fn(() => false),
     onInAppMessageCallbackSet: jest.fn(),
     onSegmentationCallbackSet: jest.fn(),
     onSegmentationCallbackRemove: jest.fn(),

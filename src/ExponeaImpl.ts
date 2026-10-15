@@ -2,6 +2,10 @@ import NativeExponea from './NativeExponea';
 import type { Segment, JsonObject, ExponeaProject } from './NativeExponea';
 import { ExponeaListeners } from './ExponeaListeners';
 import type { ExponeaType } from './index';
+import {
+  RuntimeInAppContentBlockControllerImpl,
+  type RuntimeInAppContentBlockController,
+} from './RuntimeInAppContentBlockController';
 import type Configuration from './Configuration';
 import type { IntegrationConfig, ProjectConfig } from './Configuration';
 import type EventType from './EventType';
@@ -73,11 +77,33 @@ const anonymize: ExponeaType['anonymize'] = (
   );
 };
 
+let runtimeICBController: RuntimeInAppContentBlockControllerImpl | null =
+  NativeExponea.isConfigured()
+    ? new RuntimeInAppContentBlockControllerImpl()
+    : null;
+
+// Called after every successful native configure(). Android resolves a repeated
+// configure() while the SDK is already running (iOS rejects it), so an existing
+// facade is kept: references the app holds must stay valid until stopIntegration().
+function ensureRuntimeICBController(): void {
+  if (runtimeICBController === null) {
+    runtimeICBController = new RuntimeInAppContentBlockControllerImpl();
+  }
+}
+
+function clearRuntimeICBController(): void {
+  runtimeICBController?.deactivate();
+  runtimeICBController = null;
+}
+
 /**
  * Implementation of the Exponea SDK public API.
  * Combines Interface A (Turbo Module methods) and Interface B (Listener methods).
  */
 export const Exponea: ExponeaType = {
+  get inAppContentBlocksController(): RuntimeInAppContentBlockController | null {
+    return runtimeICBController;
+  },
   // Interface A implementations (delegate to Turbo Module)
   configure: (config, customerIdentity?: CustomerIdentity) => {
     const hasLegacy = config.projectToken !== undefined;
@@ -145,7 +171,12 @@ export const Exponea: ExponeaType = {
       );
     }
     const bridgePayload = migrateLegacyConfig(config, isStreamConfig);
-    return NativeExponea.configure(bridgePayload, customerIdentity ?? null);
+    return NativeExponea.configure(
+      bridgePayload,
+      customerIdentity ?? null
+    ).then(() => {
+      ensureRuntimeICBController();
+    });
   },
   isConfigured: () => Promise.resolve(NativeExponea.isConfigured()),
   getCustomerCookie: () => NativeExponea.getCustomerCookie(),
@@ -256,12 +287,14 @@ export const Exponea: ExponeaType = {
     NativeExponea.trackInAppContentBlockError(params),
   trackInAppContentBlockErrorWithoutTrackingConsent: (params) =>
     NativeExponea.trackInAppContentBlockErrorWithoutTrackingConsent(params),
-
   getSegments: (exposingCategory, force) =>
     NativeExponea.getSegments(exposingCategory, force) as Promise<
       Array<Segment>
     >,
-  stopIntegration: () => ExponeaListeners.stopIntegration(),
+  // The controller is cleared inside the shared stop so concurrent callers get
+  // the same Promise and the cleanup runs once per native stop.
+  stopIntegration: () =>
+    ExponeaListeners.stopIntegration(clearRuntimeICBController),
   clearLocalCustomerData: (appGroup) =>
     NativeExponea.clearLocalCustomerData(appGroup),
 

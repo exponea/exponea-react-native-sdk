@@ -1250,7 +1250,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-exponea-sdk (4.1.0):
+  - react-native-exponea-sdk (4.2.0):
     - AnyCodable-FlightSchool (= 0.4.0)
     - ExponeaSDK (= 5.0.0)
     - hermes-engine
@@ -1274,7 +1274,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-exponea-sdk/Tests (4.1.0):
+  - react-native-exponea-sdk/Tests (4.2.0):
     - AnyCodable-FlightSchool (= 0.4.0)
     - ExponeaSDK (= 5.0.0)
     - hermes-engine
@@ -2158,7 +2158,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: acf4ac61f163f15ced7dfad7308957816b2d7abd
   React-microtasksnativemodule: 512d9f7c6b66574d90832a6b10b6102d4a8fdf30
   React-mutationobservernativemodule: 2c5abeb9a4ae316ba6d9420ef8d9baa81faa9d56
-  react-native-exponea-sdk: 359a0584f0de2c8c4c6a40d4f4290ca84f52f4ff
+  react-native-exponea-sdk: 0b1260398edf01a81a2c37af811090511aa804f0
   react-native-safe-area-context: f2bf5d3db254014a48910436c4a58ab0c4e2fe1f
   React-NativeModulesApple: 22b2f3e1538ceb1aab1ab182ccb0666ea2ec36ad
   React-networking: b58b3098d4a626f88bbaeaf6bf5e67b18ff39089
@@ -2205,4 +2205,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: bf10ad48c3f44bce3fd3fd6de97914637856e647
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0

@@ -28,6 +28,15 @@ export type {
 } from './ExponeaListeners';
 export { SegmentationDataCallback } from './ExponeaListeners';
 
+export type {
+  RuntimeInAppContentBlockController,
+  InAppContentBlockAvailabilityDecision,
+} from './RuntimeInAppContentBlockController';
+
+export {
+  InAppContentBlockAvailability,
+  InAppContentBlockInvalidateMode,
+} from './RuntimeInAppContentBlockController';
 // Re-export enums (these are values, not just types)
 export { FlushMode, LogLevel, InAppMessageActionType } from './NativeExponea';
 export { default as EventType } from './EventType';

@@ -1009,6 +1009,191 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         }
     }
 
+    // MARK: In-App Content Block controller methods - ICB control availability(), invalidate(), prefetch()
+
+    private func runtimeInAppContentBlockControllerError(code: String, message: String) -> NSError {
+        NSError(
+            domain: "ExponeaRuntimeInAppContentBlockController",
+            code: 1,
+            userInfo: [
+                NSLocalizedDescriptionKey: message,
+                "runtimeInAppContentBlockControllerErrorCode": code
+            ]
+        )
+    }
+
+    // Static so the controller completions below need no `self` capture. Dropping a
+    // completion (the former `[weak self]` early return) would leave the JS Promise
+    // unsettled; see the strong-capture rationale in `flushDataWithRetry`.
+    private static func runtimeICBAvailabilityValue(
+        _ availability: InAppContentBlockAvailability
+    ) -> String {
+        switch availability {
+        case .ready:
+            return "ready"
+
+        case .loading:
+            return "loading"
+
+        case .empty:
+            return "empty"
+
+        @unknown default:
+            // Preserve one RN contract for any new native
+            // non-terminal availability state.
+            return "loading"
+        }
+    }
+
+    @objc(
+        runtimeICBPrefetchWithIds:
+        deadlineMs:
+        success:
+        failure:
+    )
+    public func runtimeICBPrefetch(
+        ids: [String],
+        deadlineMs: NSNumber?,
+        success: @escaping (NSDictionary) -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
+        guard let controller =
+            ExponeaBridge.exponeaInstance
+                .inAppContentBlocksController
+        else {
+            failure(runtimeInAppContentBlockControllerError(
+                code: "RuntimeInAppContentBlockControllerUnavailable",
+                message: "RuntimeInAppContentBlockController is unavailable because the Exponea SDK is not configured."
+            ))
+            return
+        }
+
+        // RN uses milliseconds as deadline units,
+        // thus 1000 division here for iOS TimeInterval
+        let deadlineSeconds =
+            deadlineMs.map {
+                $0.doubleValue / 1000.0
+            }
+
+        controller.prefetch(
+            ids: ids,
+            deadline: deadlineSeconds
+        ) { result in
+            let mapped =
+                result.mapValues {
+                    Self.runtimeICBAvailabilityValue($0)
+                }
+
+            DispatchQueue.main.async {
+                success(mapped as NSDictionary)
+            }
+        }
+    }
+
+    @objc(
+        runtimeICBAvailabilityWithId:
+        deadlineMs:
+        success:
+        failure:
+    )
+    public func runtimeICBAvailability(
+        id: String,
+        deadlineMs: Double,
+        success: @escaping (NSDictionary) -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
+        guard let controller =
+            ExponeaBridge.exponeaInstance
+                .inAppContentBlocksController
+        else {
+            failure(runtimeInAppContentBlockControllerError(
+                code: "RuntimeInAppContentBlockControllerUnavailable",
+                message: "RuntimeInAppContentBlockController is unavailable because the Exponea SDK is not configured."
+            ))
+            return
+        }
+
+        controller.availability(
+            id: id,
+            deadline: deadlineMs / 1000.0
+        ) { decision in
+            switch decision {
+            case .resolved(let availability):
+                success([
+                    "status": "resolved",
+                    "availability":
+                        Self.runtimeICBAvailabilityValue(
+                            availability
+                        )
+                ])
+
+            case .timedOut:
+                success([
+                    "status": "timedOut"
+                ])
+
+            @unknown default:
+                success([
+                    "status": "timedOut"
+                ])
+            }
+        }
+    }
+
+    @objc(
+        runtimeICBInvalidateWithIds:
+        reason:
+        mode:
+        success:
+        failure:
+    )
+    public func runtimeICBInvalidate(
+        ids: [String],
+        reason: String,
+        mode: String,
+        success: @escaping () -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
+        guard let controller =
+            ExponeaBridge.exponeaInstance
+                .inAppContentBlocksController
+        else {
+            failure(runtimeInAppContentBlockControllerError(
+                code: "RuntimeInAppContentBlockControllerUnavailable",
+                message: "RuntimeInAppContentBlockController is unavailable because the Exponea SDK is not configured."
+            ))
+            return
+        }
+
+        let nativeMode:
+            InAppContentBlockInvalidateMode
+
+        switch mode.lowercased() {
+        case "eager":
+            nativeMode = .eager
+
+        case "lazy":
+            nativeMode = .lazy
+
+        default:
+            failure(
+                runtimeInAppContentBlockControllerError(
+                    code: "RuntimeInAppContentBlockControllerInvalidMode",
+                    message: "Unknown RuntimeInAppContentBlockController invalidate mode: \(mode)"
+                )
+            )
+            return
+        }
+
+        controller.invalidate(
+            ids: ids,
+            reason: reason,
+            mode: nativeMode
+        )
+
+        success()
+    }
+
     private func parseDictionary(_ value: Any?) -> NSDictionary? {
         if let dict = value as? NSDictionary {
             return dict

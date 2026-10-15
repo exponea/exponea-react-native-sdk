@@ -103,16 +103,231 @@ The SDK automatically tracks `banner` events for in-app content blocks with the 
 
 The SDK can only display an in-app content block after it has been fully loaded (including its content, any images, and its height). Therefore, the in-app content block may only show in the app after a delay.
 
-You may prefetch in-app content blocks for specific placeholders to make them display as soon as possible.
+You can hide this delay by warming the content for specific placeholders before the user reaches the screen that renders them. Use `Exponea.inAppContentBlocksController.prefetch()`, described in [Control in-app content blocks at runtime](#control-in-app-content-blocks-at-runtime) below. It is the only runtime prefetch API; the existing `InAppContentBlocksPlaceholder` and `ContentBlockCarouselView` components still own rendering and tracking.
 
 ```typescript
 import Exponea from 'react-native-exponea-sdk';
 
-Exponea.configure({
-  // ... your configuration
-  inAppContentBlockPlaceholdersAutoLoad: ['placeholder_1'],
-}).catch((error) => console.log(error));
+// Call this as soon as the destination screen (and its placeholder IDs) is known,
+// for example when the user taps a navigation item.
+await Exponea.inAppContentBlocksController?.prefetch(['placeholder_1']);
 ```
+
+Alternatively, if the placeholder IDs are static, you can let the SDK load them right after initialization by listing them in the `inAppContentBlockPlaceholdersAutoLoad` [configuration parameter](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration). The runtime controller is the better choice whenever IDs depend on navigation, customer identity, or CMS layout.
+
+### Control in-app content blocks at runtime
+
+`Exponea.inAppContentBlocksController` is a runtime controller for in-app content blocks. It lets you warm content before navigation, make a time-bounded rendering decision, and evict content you know has changed. The controller loads content in the background; the existing placeholder and carousel components still own rendering and tracking.
+
+The controller is `null` while the SDK is not configured:
+
+- `null` before `configure()`
+- available after a successful `configure()`
+- the same instance when `configure()` is called again while the SDK is already configured
+- the same instance across `identifyCustomer()` and `anonymize()` (the native SDK resets its cache on a customer change, so prefetch again afterwards)
+- `null` after a successful `stopIntegration()`
+- a fresh instance from a `configure()` that follows `stopIntegration()`
+
+Always read `Exponea.inAppContentBlocksController` when you need it instead of keeping a long-lived reference. A reference kept across `stopIntegration()` rejects every call.
+
+```typescript
+import Exponea from 'react-native-exponea-sdk';
+
+const controller = Exponea.inAppContentBlocksController;
+if (!controller) {
+  // SDK is not configured; render your fallback.
+  return;
+}
+```
+
+#### Which API to use
+
+| API                              | Use it when                                                                                      | Result                                                                                                   |
+| -------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `prefetch(ids, deadlineMs?)`     | The IDs for a future screen are already known and content should be warmed before navigation.    | `Promise` of a map from distinct ID to `InAppContentBlockAvailability` (`ready`, `empty`, or `loading`). |
+| `availability(id, deadlineMs)`   | The current screen must decide whether to render one placement or a fallback within a deadline.  | `Promise` of `{ status: 'resolved', availability: 'ready' \| 'empty' }` or `{ status: 'timedOut' }`.     |
+| `invalidate(ids, reason, mode?)` | The content of a placement changed in {user.mkg} and the cached version must not be shown again. | `Promise<void>` that resolves once the native controller accepted the request.                           |
+
+`prefetch` accepts multiple placeholder IDs and deduplicates repeated IDs. It is the normal choice for hiding loading time before a user reaches a screen. `availability` is deliberately single-ID because it represents one UI decision. All three methods return a `Promise` and reject if the native SDK is not configured.
+
+#### Handle errors
+
+Runtime methods reject their Promises with `Error` objects. Known error codes are consistent across the JavaScript wrapper and the iOS and Android bridges:
+
+| Error code                                      | Meaning                                                                                                                                               |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RuntimeInAppContentBlockControllerUnavailable` | The native controller is unavailable because the SDK is not configured, or the JavaScript controller instance was deactivated by `stopIntegration()`. |
+| `RuntimeInAppContentBlockControllerInvalidMode` | The bridge received an unsupported invalidation mode. Use `InAppContentBlockInvalidateMode.EAGER` or `.LAZY`.                                         |
+| `RuntimeInAppContentBlockControllerError`       | An unexpected native failure occurred. Native error details are preserved.                                                                            |
+
+A deactivated instance remains unusable even after configuring the SDK again. Obtain a new instance from `Exponea.inAppContentBlocksController` after configuration succeeds. Reading a `null` controller is not itself an error; optional chaining skips the operation.
+
+```typescript
+import Exponea from 'react-native-exponea-sdk';
+
+const controller = Exponea.inAppContentBlocksController;
+if (controller) {
+  try {
+    await controller.prefetch(['example_list']);
+  } catch (error: unknown) {
+    const code =
+      typeof error === 'object' && error !== null && 'code' in error
+        ? error.code
+        : undefined;
+    if (code === 'RuntimeInAppContentBlockControllerUnavailable') {
+      // Show your fallback. Obtain a fresh controller after configuration.
+    } else {
+      console.warn('Content block prefetch failed', error);
+    }
+  }
+}
+```
+
+An availability timeout is a `{ status: 'timedOut' }` decision, not a Promise rejection. An `empty` availability result is also a normal result.
+
+#### Warm content before navigation
+
+Start prefetching as soon as the destination or its layout is known. Once an ID is `ready`, mount the corresponding `InAppContentBlocksPlaceholder` (or `ContentBlockCarouselView`) to use the warmed content. Prefetching reduces loading work, but display eligibility, rendering, and layout still apply; it does not guarantee immediate display.
+
+```typescript
+import Exponea, {
+  InAppContentBlockAvailability,
+} from 'react-native-exponea-sdk';
+
+async function openProductList(): Promise<void> {
+  const results = await Exponea.inAppContentBlocksController?.prefetch(
+    ['example_list'],
+    2000
+  );
+  if (results?.example_list === InAppContentBlockAvailability.READY) {
+    // Content is warmed; mount the placeholder on the destination screen.
+    // Display eligibility, rendering, and layout still apply.
+  }
+  navigation.navigate('ProductList');
+}
+```
+
+The deadline is optional. Without one, the `Promise` waits for final states (`ready` or `empty`). With a deadline, every ID that has not resolved by that time is reported as a snapshot: `loading` on iOS and `empty` on Android. In both cases the value is temporary, not proof that no campaign exists. The background request continues and may warm the cache later. Do not use a deadline-bound `prefetch` result as the sole UI fallback decision; use `availability` for that.
+
+#### Make a bounded rendering decision
+
+Use `availability` where waiting too long would make the screen feel slow and a fallback is acceptable.
+
+```typescript
+import Exponea, {
+  InAppContentBlockAvailability,
+} from 'react-native-exponea-sdk';
+
+const decision = await Exponea.inAppContentBlocksController?.availability(
+  'example_list',
+  2000
+);
+
+if (decision?.status === 'resolved') {
+  if (decision.availability === InAppContentBlockAvailability.READY) {
+    setShowContentBlock(true); // mount <InAppContentBlocksPlaceholder placeholderId="example_list" />
+  } else {
+    setShowContentBlock(false); // 'empty': load completed without renderable content
+  }
+} else {
+  setShowContentBlock(false); // 'timedOut' or SDK not configured: show your own fallback
+}
+```
+
+`resolved` with `empty` means the load completed without renderable content. `timedOut` means only that this caller stopped waiting. It does not cancel the load, so a later `availability` call or a placeholder mount can use content that finishes loading afterwards. A resolved decision never carries `loading`.
+
+#### Calling both APIs for the same ID
+
+Calling the following methods together is safe:
+
+```typescript
+const controller = Exponea.inAppContentBlocksController;
+controller?.prefetch(['example_list'], 2000);
+const decision = await controller?.availability('example_list', 2000);
+```
+
+They share one in-flight load for `example_list`; they do not create two initial requests. Each `Promise` still resolves exactly once with its own result type. Use this pairing only when the screen needs both proactive warming and a deadline-based UI fallback. In most flows, prefetch before navigation is enough.
+
+A deadline of zero or a negative value returns immediately: `availability` resolves `timedOut`, while `prefetch` returns cached terminal states and the snapshot value for other IDs. Both still start or continue warming the cache in the background.
+
+#### Prefetch after identifying the customer
+
+Content block eligibility depends on the customer. The native SDK resets its runtime cache when the customer changes, so a prefetch issued before `identifyCustomer()` resolves may be evaluated for the previous (anonymous) customer. Order the calls as follows:
+
+```typescript
+import Exponea from 'react-native-exponea-sdk';
+
+await Exponea.identifyCustomer({ registered: 'user@example.com' });
+// The controller instance is unchanged, only its cache was reset.
+await Exponea.inAppContentBlocksController?.prefetch([
+  'home_banner',
+  'home_list',
+]);
+```
+
+The same applies after `anonymize()`.
+
+#### Invalidate changed content
+
+`invalidate(ids, reason, mode)` evicts the cached content of the given placements and, in the default `InAppContentBlockInvalidateMode.EAGER` mode, immediately starts a fresh load. `InAppContentBlockInvalidateMode.LAZY` only evicts; the next `prefetch`, `availability`, or placeholder load fetches the content. The `reason` is a local diagnostic label written to verbose logs only; it is never persisted or sent over the network. Unknown IDs are accepted and start loading.
+
+```typescript
+import Exponea, {
+  InAppContentBlockInvalidateMode,
+} from 'react-native-exponea-sdk';
+
+await Exponea.inAppContentBlocksController?.invalidate(
+  ['example_list'],
+  'content updated in CMS',
+  InAppContentBlockInvalidateMode.EAGER
+);
+```
+
+> ❗️
+>
+> Do not call `invalidate` to acknowledge or consume a successful prefetch. Calling it right after a `ready` result discards the warmed content and triggers another request. Use it only when the placement's source content has changed.
+
+##### Refresh a mounted placeholder after invalidate
+
+The controller only evicts and reloads cached content. It does not refresh an `InAppContentBlocksPlaceholder` or `ContentBlockCarouselView` that is already mounted; that view keeps showing the content it loaded. To display the refreshed content, remount the view by changing its React `key`, which creates a new native view that loads the invalidated placement again. The example app's runtime lab uses the same pattern.
+
+```typescript
+import React, { useState } from 'react';
+import Exponea, { InAppContentBlocksPlaceholder } from 'react-native-exponea-sdk';
+
+function PromoBanner(): React.ReactElement {
+  const [bannerKey, setBannerKey] = useState(0);
+
+  async function onPromoCodeApplied(): Promise<void> {
+    await Exponea.inAppContentBlocksController?.invalidate(
+      ['promo_banner'],
+      'promo code applied'
+    );
+    // A new key mounts a new native view, which loads the fresh content.
+    setBannerKey((current) => current + 1);
+  }
+
+  return (
+    <InAppContentBlocksPlaceholder
+      key={bannerKey}
+      placeholderId="promo_banner"
+      style={{ width: '100%' }}
+    />
+  );
+}
+```
+
+A remount briefly resets the placeholder height and tracks a new `show` event for the content block. Content that is mounted for the first time after `invalidate` needs no special handling.
+
+#### Try the runtime controller in the example app
+
+Open the in-app content blocks screen and select **Runtime Control**. The **Basic** tab contains the existing placeholder and carousel examples. The runtime lab accepts comma-separated or newline-separated placeholder IDs and a deadline in milliseconds, and records method results and placeholder events in a log that you can share.
+
+The **happy path** and **post-login CMS** scenarios prefetch and then mount placeholders to display eligible content. React Native starts loading automatically when a placeholder mounts. Other scenarios exercise prefetch, availability, eager or lazy invalidation, and customer lifecycle changes without mounting new placeholders. Blocks already mounted in the lab remain mounted during those scenarios; happy path and post-login replace them when mounting new views. Switching away from the runtime tab unmounts the lab.
+
+Identity scenarios change the SDK customer to `user_a`, `user_b`, or an anonymous customer. The timeout scenario uses a 1ms deadline, but a sufficiently fast response may still resolve within that time. Check the actual decision in the log.
+
+The last placeholder IDs and deadline are retained across tab and screen changes during the current JavaScript app session. Restarting or reloading the app resets them; logs and mounted views are not retained across lab unmounts.
 
 ### Handle carousel presentation status
 
