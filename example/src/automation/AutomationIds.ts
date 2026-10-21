@@ -106,6 +106,7 @@ export const AvailableAutomationIds = {
   CB_RUNTIME_PREFETCH: 'btn_cb_runtime_prefetch',
   CB_RUNTIME_AVAILABILITY: 'btn_cb_runtime_availability',
   CB_RUNTIME_INVALIDATE: 'btn_cb_runtime_invalidate',
+  CB_RUNTIME_LOGOUT: 'btn_cb_runtime_logout',
   CB_RUNTIME_STATUS: 'lbl_cb_runtime_status',
 
   LOGS_COPY: 'btn_logs_copy',

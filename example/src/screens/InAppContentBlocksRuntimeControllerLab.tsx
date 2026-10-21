@@ -47,7 +47,11 @@ const SCENARIO_BUTTONS: {
       'identity switch',
       'lazy invalidate',
     ] as const
-  ).map((name) => ({ name, title: name, testID: undefined })),
+  ).map((name) => ({
+    name,
+    title: name,
+    testID: name === 'logout' ? AutomationIds.CB_RUNTIME_LOGOUT : undefined,
+  })),
 ];
 type ScenarioName =
   | 'prefetch'
