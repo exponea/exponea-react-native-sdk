@@ -30,7 +30,8 @@
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
-    "!**/.*"
+    "!**/.*",
+    "!**/AGENTS.md"
   ],
   "scripts": {
     "example": "yarn workspace react-native-exponea-sdk-example",
