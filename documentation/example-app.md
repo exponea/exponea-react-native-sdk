@@ -139,6 +139,25 @@ Once you use `Identify customer` in the app to set the `registered` hard ID (use
 
 ![Example app Flushing, Anonymize and In-app CB screens](https://raw.githubusercontent.com/exponea/exponea-react-native-sdk/main/documentation/images/example-app-react-native-2.png)
 
+## Expo example app
+
+The repository also includes `example_expo`, a source-only mirror of the example app for Expo SDK 57 development builds. It demonstrates the packaged config plugin. Expo support is experimental. Expo Go isn't supported because the SDK contains native code. For requirements and plugin options, see [Expo support](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-expo).
+
+The Expo example pins React Native 0.86.3 for Expo SDK 57, and the bare React Native example pins 0.87.0. Keep each app's dependencies aligned with its build setup.
+
+After you install the repository dependencies with `yarn`, complete these steps from the repository root:
+
+1. For Android push, add `google-services.json` to `example_expo`, registered for `com.bloomreach.sdk.example.expo`. The bare example's file uses a different package name and can't be reused.
+2. For iOS push, configure Apple signing, the app group, and APNs for `com.bloomreach.sdk.example.expo`. You need `GoogleService-Info.plist` only if you also configure Firebase on iOS.
+3. Run `yarn example_expo prebuild`.
+4. Run `yarn example_expo ios` or `yarn example_expo android`.
+
+The app can run without push credentials. For details, see the [Expo example README](https://github.com/exponea/exponea-react-native-sdk/blob/main/example_expo/README.md).
+
+> 📘
+>
+> Git ignores the generated `example_expo/ios` and `example_expo/android` folders. After you change plugin options, re-run prebuild instead of editing the folders by hand.
+
 ## Troubleshooting
 
 If you encounter any issues running the example app, the following may help:

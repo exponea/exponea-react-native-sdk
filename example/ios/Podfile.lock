@@ -1250,7 +1250,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-exponea-sdk (4.2.0):
+  - react-native-exponea-sdk (4.2.1):
     - AnyCodable-FlightSchool (= 0.4.0)
     - ExponeaSDK (= 5.0.0)
     - hermes-engine
@@ -1274,7 +1274,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-exponea-sdk/Tests (4.2.0):
+  - react-native-exponea-sdk/Tests (4.2.1):
     - AnyCodable-FlightSchool (= 0.4.0)
     - ExponeaSDK (= 5.0.0)
     - hermes-engine
@@ -1769,7 +1769,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNScreens (4.28.0):
+  - RNScreens (4.30.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1791,9 +1791,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNScreens/common (= 4.28.0)
+    - RNScreens/common (= 4.30.0)
     - Yoga
-  - RNScreens/common (4.28.0):
+  - RNScreens/common (4.30.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2158,7 +2158,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: acf4ac61f163f15ced7dfad7308957816b2d7abd
   React-microtasksnativemodule: 512d9f7c6b66574d90832a6b10b6102d4a8fdf30
   React-mutationobservernativemodule: 2c5abeb9a4ae316ba6d9420ef8d9baa81faa9d56
-  react-native-exponea-sdk: 0b1260398edf01a81a2c37af811090511aa804f0
+  react-native-exponea-sdk: 54122434188e6e10fc31fb9e87220626bd9f88e6
   react-native-safe-area-context: f2bf5d3db254014a48910436c4a58ab0c4e2fe1f
   React-NativeModulesApple: 22b2f3e1538ceb1aab1ab182ccb0666ea2ec36ad
   React-networking: b58b3098d4a626f88bbaeaf6bf5e67b18ff39089
@@ -2198,7 +2198,7 @@ SPEC CHECKSUMS:
   ReactNativeDependencies: ec5530432d8191b38e278117d498aaff05ea9d6f
   RNCPicker: ec68d66db9b3dae7563bdd5f13bdadee1ac90eba
   RNGestureHandler: f1976ee206660832241a6802c866bc4b019be94d
-  RNScreens: e74022be58c534b74dca872ebbb38c4ce8d5d80c
+  RNScreens: cffc1add7f801ca6a13eef6b112052e0cd74b26b
   SocketRocket: 37aec555668fb852ec12e3c0de59a86ca58f0871
   SwiftSoup: 959c9ac70d7053fbf476341bfac90ab228523f2a
   Yoga: d1c536142c5ff8ec8cd856ab2a7c227a1d875c8e

@@ -3,15 +3,17 @@
 ## 1. Scope
 
 This repository ships `react-native-exponea-sdk` through npm/Yarn, wrapping the native Android SDK (Maven) and iOS SDK (CocoaPods) for React Native integrators.
+It also ships an experimental Expo config plugin: `app.plugin.js` (registered as `package.json#expo`) with iOS notification-extension templates in `plugin/`. `expo` is an optional peer dependency.
 
 Nested instruction files add rules for their directory:
 
-| File                                   | Covers                                                    |
-| -------------------------------------- | --------------------------------------------------------- |
-| [src/AGENTS.md](src/AGENTS.md)         | TypeScript API, TurboModule/Fabric contracts, Jest        |
-| [android/AGENTS.md](android/AGENTS.md) | Kotlin adapter, push receiver, native views, Gradle tests |
-| [ios/AGENTS.md](ios/AGENTS.md)         | Objective-C++/Swift adapter, Fabric, CocoaPods/XCTest     |
-| [example/AGENTS.md](example/AGENTS.md) | Integration app, native build/test hosts, credentials     |
+| File                                             | Covers                                                        |
+| ------------------------------------------------ | ------------------------------------------------------------- |
+| [src/AGENTS.md](src/AGENTS.md)                   | TypeScript API, TurboModule/Fabric contracts, Jest            |
+| [android/AGENTS.md](android/AGENTS.md)           | Kotlin adapter, push receiver, native views, Gradle tests     |
+| [ios/AGENTS.md](ios/AGENTS.md)                   | Objective-C++/Swift adapter, Fabric, CocoaPods/XCTest         |
+| [example/AGENTS.md](example/AGENTS.md)           | Integration app, native build/test hosts, credentials         |
+| [example_expo/AGENTS.md](example_expo/AGENTS.md) | Expo development-build app, config plugin checks, mirror sync |
 
 The wrapped native SDKs are pinned in `android/build.gradle` and `react-native-exponea-sdk.podspec`. Their behavior at those pins is the contract this wrapper exposes.
 
@@ -32,7 +34,8 @@ yarn build                                                     # ESM JavaScript 
 
 ```bash
 yarn test --runInBand --watchman=false                          # root TypeScript suite
-yarn test:examples --runInBand --watchman=false                 # example's separate Jest suite
+yarn test:examples --runInBand --watchman=false                 # Jest suites of both example apps
+yarn verify:expo                                                # Expo app, config plugin, package and mirror checks
 (cd example/android && ./gradlew :react-native-exponea-sdk:testDebugUnitTest)
 # iOS XCTest: use a concrete simulator and the wrapper test bundle; see ios/AGENTS.md.
 ```
@@ -50,11 +53,11 @@ python3 scripts/check-agent-guides.py                           # local links an
 - Node 25 and newer ship without corepack, so `yarn` is not on PATH. Switch to the `.nvmrc` version, or run `node .yarn/releases/yarn-*.cjs <args>` in place of `yarn <args>`. `engines` excludes Node 25, but nothing enforces it.
 - `pod install` needs the Ruby and Bundler versions recorded in `example/Gemfile.lock`; there is no `.ruby-version`, and the macOS system Ruby fails. It rewrites `example/ios/Podfile.lock`: restore that file unless the task is a release or dependency update.
 - No build/test CI is checked in: `.github/workflows` only uploads `documentation/` to ReadMe. Run the checks above locally.
-- `yarn test` covers `src/` only. Both Jest configurations use `@react-native/jest-preset`; root TypeScript tests also use ts-jest.
-- `yarn android`/`yarn ios` delegate to `example`; `yarn example start` starts Metro.
-- `example` is the sole configured Yarn workspace. Do not infer support from an untracked sample directory.
+- `yarn test` covers `src/` only, including the config plugin tests in `src/__tests__/app-plugin.test.ts`. The root and `example` Jest configurations use `@react-native/jest-preset`, `example_expo` uses the `react-native` preset; root TypeScript tests also use ts-jest.
+- `yarn android`/`yarn ios` delegate to `example`; `yarn example start` starts Metro. `yarn example_expo <script>` runs the Expo app's scripts.
+- `example` and `example_expo` are the configured Yarn workspaces. `example_expo` mirrors `example`; see its guide. Do not infer support from an untracked sample directory.
 - `yarn format` rewrites the whole repo. Format only changed files with `yarn exec prettier --write path/to/file`.
-- Toolchain versions live in `.nvmrc`, `package.json`, `.yarnrc.yml`, `yarn.lock`, `example/package.json`, `example/Gemfile{,.lock}`, both Android Gradle projects and the example Gradle wrapper, root podspec and example Xcode project; read them there.
+- Toolchain versions live in `.nvmrc`, `package.json`, `.yarnrc.yml`, `yarn.lock`, `example/package.json`, `example_expo/package.json` (Expo SDK and its React Native version), `example/Gemfile{,.lock}`, both Android Gradle projects and the example Gradle wrapper, root podspec and example Xcode project; read them there.
 
 ## 3. Public API stability
 
@@ -100,7 +103,7 @@ python3 scripts/check-agent-guides.py                           # local links an
 ## 6. Testing and verification
 
 - Frameworks: Jest/ts-jest, JUnit4 + MockK/Robolectric, XCTest.
-- Shared mocks/fixtures live in `jest.setup.js`, `src/__tests__/`, `src/test_data/`, `android/src/test/` and `example/__mocks__/`.
+- Shared mocks/fixtures live in `jest.setup.js`, `src/__tests__/`, `src/test_data/`, `android/src/test/` and `example/__mocks__/` (mirrored into `example_expo/__mocks__/`).
 - Stub SDK and network effects. Never configure a live customer project in automated tests.
 - Add characterization tests before changing shared managers, lifecycle, identity or cache.
 
@@ -113,9 +116,10 @@ What to run before calling a change done:
 | Android / iOS adapter | Above if JS/spec affected; platform tests and example build from the nested guide                                           |
 | Public API            | Full root + example Jest, lint/typecheck, `yarn build`, declaration/spec diff, both native builds and affected native tests |
 | Build / packaging     | Above + `yarn pack --dry-run`; inspect the file list; GMS/HMS and iOS default/static-framework builds                       |
+| Expo plugin / app     | `yarn verify:expo`; plugin or app config changes also need prebuild and `yarn verify:expo-prebuild` (see the Expo guide)    |
 
 - Already failing on `develop`. Compare against these before and after your change; do not fix them in an unrelated task:
-  - `yarn typecheck` reports errors only in `src/__tests__/` and `example/`, mostly untyped Jest globals and the example's `@/` alias, which the root `tsconfig.json` lacks. Compare per-file error counts before and after. SDK sources outside tests are clean: the library gate `yarn exec tsc -p tsconfig.build.json --noEmit` excludes `example/` and `src/__tests__/` and must pass.
+  - `yarn typecheck` reports errors only in `src/__tests__/`, `example/` and `example_expo/` (the same errors as in the mirrored `example/` files), mostly untyped Jest globals and the examples' `@/` alias, which the root `tsconfig.json` lacks. Compare per-file error counts before and after. SDK sources outside tests are clean: the library gate `yarn exec tsc -p tsconfig.build.json --noEmit` excludes `example/`, `example_expo/` and `src/__tests__/` and must pass.
   - `yarn example exec tsc --noEmit` reports errors in `example/__tests__/App.test.tsx`, `example/src/screens/InAppCbScreen.tsx` and two `src/*NativeComponent.ts` imports of `react-native/Libraries/Types/CodegenTypes`.
 - For Android peer-version compatibility, run `yarn test:android-compat` (lowest supported minor) or pass a minor/exact version. This rewrites dependency/build inputs and installs packages before restoring them; use a clean checkout. See the Android guide for prerequisites and options.
 - Verify nonzero native test discovery; a build alone is not test coverage.
@@ -133,17 +137,18 @@ What to run before calling a change done:
 - Keep front matter (`title`, `slug`, `category`, `parent`, `content`) and `{user.*}` merge tags intact.
 - Keep the runtime content-block semantics in `documentation/in-app-content-blocks.md` and the `RuntimeInAppContentBlockController.ts` JSDoc aligned with both native adapters.
 - Keep `documentation/version-update.md`, `app-links.md` and `push-ios.md` aligned with `ExponeaSceneHandler`, `ConfigurationParser`, `ExponeaPushHandler` and the example delegates.
+- Keep `documentation/expo.md` (requirements, push setup, plugin options) aligned with `app.plugin.js` and `example_expo/`.
 - The release script does not regenerate `example/ios/Podfile.lock`, which records the wrapper version. Regenerate it with `pod install` after the bump; never hand-edit it.
-- Native upgrades touch `android/build.gradle`, `example/android/app/build.gradle`, the root podspec, `example/ios/Podfile` notification-extension pins and the regenerated lockfile.
-- The npm `files` allowlist includes `src`, `android` and `ios`. `!**/AGENTS.md` keeps nested guides (and the copy `yarn build` writes to `lib/`) out of the package; check `yarn pack --dry-run` after adding files there.
+- Native upgrades touch `android/build.gradle`, `example/android/app/build.gradle`, the root podspec, `example/ios/Podfile` notification-extension pins, the regenerated lockfile and the expected coordinates in `scripts/verify-expo-prebuild.js`. The config plugin reads the Android SDK pin from `android/build.gradle` and pins its iOS extension pods to the `ExponeaSDK` version in the root podspec.
+- The npm `files` allowlist includes `src`, `android`, `ios`, `plugin` and `app.plugin.js`; `scripts/verify-expo-package.js` asserts the last two. `!**/AGENTS.md` keeps nested guides (and the copy `yarn build` writes to `lib/`) out of the package; check `yarn pack --dry-run` after adding files there.
 
 ## 9. Generated code
 
 Never hand-edit generated or vendored output: `lib/`, `node_modules/`, `example/node_modules/`, `example/ios/Pods/`, `ios/generated/`, `android/generated/`, `**/build/`, `.gradle/`, `.yarn/releases/`.
+In `example_expo/`, `android/`, `ios/` and `.expo/` are prebuild output and must never be committed; `src/`, `__tests__/`, `__mocks__/` and `types/` are synced copies of `example/` (edit `example/`, then run `yarn sync:expo-example`).
 
 ## 10. Gotchas
 
 - The shared iOS scheme must resolve `react-native-exponea-sdk-Unit-Tests` after pod regeneration. The placeholder `ExponeaExampleTests` alone does not cover the wrapper.
 - Watchman may fail in headless/restricted sessions; use `--watchman=false` for Jest. Do not run `cleanCache.sh` routinely: it clears shared Xcode DerivedData and Watchman state.
-- `README.md` advertises an Expo plugin and links `documentation/expo.md`, but neither is tracked in this branch. Check package exports/files before claiming Expo support; other task branches can differ.
 - Root lint/format/tsconfig discovery can include extra local directories. Diagnose file discovery first; the example's `@/` aliases require its own `tsconfig.json` and TypeScript check.

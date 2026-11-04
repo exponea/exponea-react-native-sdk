@@ -60,6 +60,7 @@ cd example/android
 - `PushReceiver` and module storage each retain only the latest pending push, not a lossless queue.
   - Preserve background entry points and cold-start replay.
   - The example's flavor-specific `TokenTracker` helpers are host code, not library exports.
+  - The `MessageService` that the Expo config plugin generates calls `ExponeaModule.Companion.handleRemoteMessage` and `handleNewToken` (see `app.plugin.js`). Keep their signatures; verify changes with `yarn example_expo prebuild --no-install` and `yarn verify:expo-prebuild`.
 - Runtime ICB methods:
   - Use the native controller.
   - Convert millisecond deadlines to `Long`.

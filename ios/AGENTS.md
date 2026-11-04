@@ -4,7 +4,8 @@ Apply the root guide as well. Paths below are relative to the repository root.
 
 - Native dependency/deployment owners: root podspec, `example/ios/Podfile{,.lock}` and example Xcode project. Ruby tools: `example/Gemfile{,.lock}`.
 - Check the core SDK and both notification-extension pins together.
-- The podspec minimum and example deployment target are separate settings.
+- The podspec minimum and example deployment target are separate settings. The Expo config plugin sets a third one for its extension targets (`IPHONEOS_DEPLOYMENT_TARGET` in `app.plugin.js`).
+- For Expo apps, the config plugin adds its own notification-extension targets from `plugin/ios/` (with `ExponeaSDK-Notifications` pods pinned to the podspec's `ExponeaSDK` version) and patches the Expo-generated Swift `AppDelegate`. Changes to the `example/ios` extensions or push forwarding don't reach Expo apps; update `plugin/ios/` and `app.plugin.js` separately.
 
 ## Commands
 

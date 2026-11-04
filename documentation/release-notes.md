@@ -15,67 +15,79 @@ content:
 
 ## Release Notes
 ## Release Notes for 4.2.1
+
 #### October 14, 2026
-* Fixed:
-  * Fixes an Android build failure when the app uses React Native 0.83 or 0.84.
+
+- Fixed:
+  - Fixes an Android build failure when the app uses React Native 0.83 or 0.84.
 
 ## Release Notes for 4.2.0
+
 #### October 08, 2026
-* Added:
-  * Adds support for React Native 0.87.
-  * Updates the native Android SDK to version 5.4.0.
-  * Updates the native iOS SDK to version 5.0.0, which raises the native SDK's minimum iOS deployment target to 15.0. The React Native SDK still requires iOS 15.1 or higher.
-  * Adds support for the iOS UIScene lifecycle, including the `ExponeaSceneHandler` helper for passing launch options from a `SceneDelegate`. Apple requires the UIScene lifecycle for apps built with the iOS 27 SDK. For migration instructions, see the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-to-version-420-or-higher).
-  * Adds the `registerLoggerCallback` and `unregisterLoggerCallback` methods to receive native SDK logs in JavaScript. These methods work on Android only and have no effect on iOS.
-  * Adds a new example app.
-  * Adds documentation for Android Auto Backup rules to the setup guide.
-* Fixed:
-  * Fixes iOS push notification opens being tracked twice and push notification actions running twice. The SDK now tracks push notification tokens and opens only through the required `AppDelegate` calls. For details, see the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-to-version-420-or-higher).
-  * Fixes `registerSegmentationDataCallback` to allow multiple callbacks for the same category, and `unregisterSegmentationDataCallback` to remove the correct callback instance.
-  * Fixes iOS in-app content blocks and carousels not reloading after the component is remounted.
-  * Fixes the iOS content block carousel ignoring `overrideDefaultBehavior`.
-  * Fixes outdated `ExponeaRNAppDelegate` references in the iOS documentation.
+
+- Added:
+  - Adds support for React Native 0.87.
+  - Updates the native Android SDK to version 5.4.0.
+  - Updates the native iOS SDK to version 5.0.0, which raises the native SDK's minimum iOS deployment target to 15.0. The React Native SDK still requires iOS 15.1 or higher.
+  - Adds support for the iOS UIScene lifecycle, including the `ExponeaSceneHandler` helper for passing launch options from a `SceneDelegate`. Apple requires the UIScene lifecycle for apps built with the iOS 27 SDK. For migration instructions, see the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-to-version-420-or-higher).
+  - Adds the `registerLoggerCallback` and `unregisterLoggerCallback` methods to receive native SDK logs in JavaScript. These methods work on Android only and have no effect on iOS.
+  - Adds a new example app.
+  - Adds documentation for Android Auto Backup rules to the setup guide.
+- Fixed:
+  - Fixes iOS push notification opens being tracked twice and push notification actions running twice. The SDK now tracks push notification tokens and opens only through the required `AppDelegate` calls. For details, see the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-to-version-420-or-higher).
+  - Fixes `registerSegmentationDataCallback` to allow multiple callbacks for the same category, and `unregisterSegmentationDataCallback` to remove the correct callback instance.
+  - Fixes iOS in-app content blocks and carousels not reloading after the component is remounted.
+  - Fixes the iOS content block carousel ignoring `overrideDefaultBehavior`.
+  - Fixes outdated `ExponeaRNAppDelegate` references in the iOS documentation.
 
 ## Release Notes for 4.1.0
+
 #### August 25, 2026
-* Added:
-  * Updates the native Android SDK to version 5.3.0.
-  * Updates the native iOS SDK to version 4.3.0.
-  * Adds the `Exponea.customerCookie` documentation with usage examples.
-* Fixed:
-  * Fixes the JSON parser to properly handle nested maps and arrays in event properties.
-  * Fixes carousel content block sort and reload race conditions on iOS.
-  * Fixes iOS push notification listeners not being restored after SDK reinitialization.
-  * Fixes App Inbox TurboModule bridging issues, a race condition in `flushData()`, and event delivery to the main thread on iOS.
-  * Fixes `identifyCustomer` rejecting empty `CustomerIdentity` objects.
-  * Fixes the Android `InAppContentBlocksPlaceholder.onActionClicked` delivering an undefined action object instead of a properly parsed action.
+
+- Added:
+  - Updates the native Android SDK to version 5.3.0.
+  - Updates the native iOS SDK to version 4.3.0.
+  - Adds the `Exponea.customerCookie` documentation with usage examples.
+- Fixed:
+  - Fixes the JSON parser to properly handle nested maps and arrays in event properties.
+  - Fixes carousel content block sort and reload race conditions on iOS.
+  - Fixes iOS push notification listeners not being restored after SDK reinitialization.
+  - Fixes App Inbox TurboModule bridging issues, a race condition in `flushData()`, and event delivery to the main thread on iOS.
+  - Fixes `identifyCustomer` rejecting empty `CustomerIdentity` objects.
+  - Fixes the Android `InAppContentBlocksPlaceholder.onActionClicked` delivering an undefined action object instead of a properly parsed action.
 
 ## Release Notes for 4.0.0
+
 #### June 26, 2026
-* Added:
-  * Adds support for {user.dh} event streams integration with optional SDK auth token authorization.
-  * Updates the native Android SDK to version 5.2.1.
-  * Updates the native iOS SDK to version 4.2.0.
-  * Adds the `regenerateDeviceIdOnAnonymize` configuration parameter to generate a new `device_id` when calling `anonymize()`.
-  * Deprecates the top-level `requirePushAuthorization` configuration parameter in favor of `ios.requirePushAuthorization`.
-  * Updates documentation for `notification_state` event tracking and push notification configuration.
-* Fixed:
-  * Fixes Android push notification open event parsing that emitted a native object instead of a JSON string and silently dropped numeric `additionalData` fields.
-  * Fixes podspec configuration for `USE_FRAMEWORKS=static` iOS builds.
+
+- Added:
+  - Adds support for {user.dh} event streams integration with optional SDK auth token authorization.
+  - Updates the native Android SDK to version 5.2.1.
+  - Updates the native iOS SDK to version 4.2.0.
+  - Adds the `regenerateDeviceIdOnAnonymize` configuration parameter to generate a new `device_id` when calling `anonymize()`.
+  - Deprecates the top-level `requirePushAuthorization` configuration parameter in favor of `ios.requirePushAuthorization`.
+  - Updates documentation for `notification_state` event tracking and push notification configuration.
+- Fixed:
+  - Fixes Android push notification open event parsing that emitted a native object instead of a JSON string and silently dropped numeric `additionalData` fields.
+  - Fixes podspec configuration for `USE_FRAMEWORKS=static` iOS builds.
 
 ## Release Notes for 3.1.0
+
 #### May 13, 2026
-* Added:
-  * Adds `allowWebViewCookies` configuration parameter for Android to control cookie usage in WebViews.
-  * Adds support for React Native 0.85.2.
-* Fixed:
-  * Fixes iOS App Inbox returning undefined for message timestamps and content fields in the TurboModule architecture.
-  * Fixes iOS App Inbox button not responding to taps.
-  * Fixes build error in Expo managed workflow with static library builds.
-  * Fixes in-app message tracking, missing enum exports, and TurboModule compatibility.
+
+- Added:
+  - Adds `allowWebViewCookies` configuration parameter for Android to control cookie usage in WebViews.
+  - Adds support for React Native 0.85.2.
+- Fixed:
+  - Fixes iOS App Inbox returning undefined for message timestamps and content fields in the TurboModule architecture.
+  - Fixes iOS App Inbox button not responding to taps.
+  - Fixes build error in Expo managed workflow with static library builds.
+  - Fixes in-app message tracking, missing enum exports, and TurboModule compatibility.
 
 ## Release Notes for 3.0.0
+
 #### April 13, 2026
+
 - Breaking:
   - Complete SDK rewrite using React Native's [TurboModules](https://reactnative.dev/docs/turbo-modules) architecture. Requires React Native 0.82 or higher and the New Architecture enabled in your app. Refer to the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update#update-from-version-2xx-to-3xx) for migration instructions.
   - `LogLevel.DEBUG` wire value changed from `'DEBUG'` to `'DBG'` to avoid iOS `#define DEBUG` preprocessor conflict. Code using the `LogLevel.DEBUG` enum constant is unaffected; only code that hardcodes the string `'DEBUG'` must be updated.
@@ -88,16 +100,18 @@ content:
   - `requestIosPushAuthorization()` is deprecated. Use `requestPushAuthorization()` instead.
 
 ## Release Notes for 2.7.0
+
 #### March 16, 2026
-* Added:
-  * Updates native Android SDK to version 4.10.0.
-  * Updates native iOS SDK to version 3.11.0.
-  * Updates Example App's universal and app links to new domain.
-  * Adds requirePushAuthorization parameter for Android configuration function.
-  * Adds support for React Native 0.81.6.
-  * Enables precompiled headers for iOS to speed up builds.
-* Fixed:
-  * Fixes carousel sorting by adding default function when custom function isn't provided.
+
+- Added:
+  - Updates native Android SDK to version 4.10.0.
+  - Updates native iOS SDK to version 3.11.0.
+  - Updates Example App's universal and app links to new domain.
+  - Adds requirePushAuthorization parameter for Android configuration function.
+  - Adds support for React Native 0.81.6.
+  - Enables precompiled headers for iOS to speed up builds.
+- Fixed:
+  - Fixes carousel sorting by adding default function when custom function isn't provided.
 
 ## Release Notes for 2.6.0
 

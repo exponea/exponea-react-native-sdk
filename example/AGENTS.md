@@ -2,7 +2,8 @@
 
 Apply the root guide as well. Commands run from the repository root unless noted. Paths in "Structure and lifecycle" are relative to `example/`; elsewhere they are relative to the repository root. Keep `example/README.md` and `documentation/example-app.md` aligned with screen/flow changes.
 
-- `example` is the sole Yarn workspace and consumes the local SDK with `workspace:*`; Metro resolution lives in `example/metro.config.js`.
+- `example` is a Yarn workspace and consumes the local SDK with `workspace:*`; Metro resolution lives in `example/metro.config.js`.
+- `example/{src,__tests__,__mocks__,types}` are the source of truth for the mirrored copies in `example_expo/`. After changing them, run `yarn sync:expo-example` and `yarn verify:expo` (see [the Expo guide](../example_expo/AGENTS.md)). Port changes to the native helpers (`CustomerTokenStorage`, `TokenTracker`, `ExampleAuthProvider`) to `example_expo/plugins/native/` by hand.
 - Do not switch to a published dependency to hide a local build failure, or treat untracked sample directories as supported workspaces.
 - Install with root `yarn install --immutable`; there is one workspace lockfile. Do not create an example npm lockfile.
 - Toolchain owners: `.nvmrc`, root Node engines, `example/package.json`, Android Gradle project, `example/Gemfile{,.lock}`, Podfile and Xcode project.
@@ -41,6 +42,7 @@ yarn example exec tsc --noEmit
 ```
 
 - `example/jest.config.js` selects `@react-native/jest-preset` and `example/__mocks__/react-native-exponea-sdk.js`.
+- `yarn test:examples` runs this suite and its mirrored copy in `example_expo/`.
 - Root Jest discovers only `src/`. Example tests do not prove native rendering or push delivery.
 
 ## Android checks
