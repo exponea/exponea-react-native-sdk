@@ -1022,6 +1022,20 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         )
     }
 
+    // Bridging NSArray straight to [String] traps on a non-string element, so the
+    // cast is checked and malformed ids reject instead. The JS facade validates
+    // first; this keeps the bridge safe for callers that bypass it.
+    private func runtimeICBIds(_ rawIds: [Any], failure: (Error) -> Void) -> [String]? {
+        guard let ids = rawIds as? [String] else {
+            failure(runtimeInAppContentBlockControllerError(
+                code: "RuntimeInAppContentBlockControllerError",
+                message: "RuntimeInAppContentBlockController ids must be an array of strings."
+            ))
+            return nil
+        }
+        return ids
+    }
+
     // Static so the controller completions below need no `self` capture. Dropping a
     // completion (the former `[weak self]` early return) would leave the JS Promise
     // unsettled; see the strong-capture rationale in `flushDataWithRetry`.
@@ -1052,7 +1066,7 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         failure:
     )
     public func runtimeICBPrefetch(
-        ids: [String],
+        ids rawIds: [Any],
         deadlineMs: NSNumber?,
         success: @escaping (NSDictionary) -> Void,
         failure: @escaping (Error) -> Void
@@ -1065,6 +1079,10 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
                 code: "RuntimeInAppContentBlockControllerUnavailable",
                 message: "RuntimeInAppContentBlockController is unavailable because the Exponea SDK is not configured."
             ))
+            return
+        }
+
+        guard let ids = runtimeICBIds(rawIds, failure: failure) else {
             return
         }
 
@@ -1148,7 +1166,7 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         failure:
     )
     public func runtimeICBInvalidate(
-        ids: [String],
+        ids rawIds: [Any],
         reason: String,
         mode: String,
         success: @escaping () -> Void,
@@ -1162,6 +1180,10 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
                 code: "RuntimeInAppContentBlockControllerUnavailable",
                 message: "RuntimeInAppContentBlockController is unavailable because the Exponea SDK is not configured."
             ))
+            return
+        }
+
+        guard let ids = runtimeICBIds(rawIds, failure: failure) else {
             return
         }
 

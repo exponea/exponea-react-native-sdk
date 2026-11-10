@@ -77,10 +77,9 @@ const anonymize: ExponeaType['anonymize'] = (
   );
 };
 
-let runtimeICBController: RuntimeInAppContentBlockControllerImpl | null =
-  NativeExponea.isConfigured()
-    ? new RuntimeInAppContentBlockControllerImpl()
-    : null;
+// Created lazily: importing the SDK must not call into native, and the native SDK
+// may be configured by host code after the JS bundle has loaded.
+let runtimeICBController: RuntimeInAppContentBlockControllerImpl | null = null;
 
 // Called after every successful native configure(). Android resolves a repeated
 // configure() while the SDK is already running (iOS rejects it), so an existing
@@ -102,6 +101,9 @@ function clearRuntimeICBController(): void {
  */
 export const Exponea: ExponeaType = {
   get inAppContentBlocksController(): RuntimeInAppContentBlockController | null {
+    if (runtimeICBController === null && NativeExponea.isConfigured()) {
+      ensureRuntimeICBController();
+    }
     return runtimeICBController;
   },
   // Interface A implementations (delegate to Turbo Module)

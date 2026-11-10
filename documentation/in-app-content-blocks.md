@@ -154,11 +154,11 @@ if (!controller) {
 
 Runtime methods reject their Promises with `Error` objects. Known error codes are consistent across the JavaScript wrapper and the iOS and Android bridges:
 
-| Error code                                      | Meaning                                                                                                                                              |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `RuntimeInAppContentBlockControllerUnavailable` | The native controller is unavailable because the SDK isn't configured or because `stopIntegration()` deactivated the JavaScript controller instance. |
-| `RuntimeInAppContentBlockControllerInvalidMode` | The bridge received an unsupported invalidation mode. Use `InAppContentBlockInvalidateMode.EAGER` or `.LAZY`.                                        |
-| `RuntimeInAppContentBlockControllerError`       | An unexpected native failure occurred. Native error details are preserved.                                                                           |
+| Error code                                      | Meaning                                                                                                                                                              |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RuntimeInAppContentBlockControllerUnavailable` | The native controller is unavailable because the SDK isn't configured or because `stopIntegration()` deactivated the JavaScript controller instance.                 |
+| `RuntimeInAppContentBlockControllerInvalidMode` | The bridge received an unsupported invalidation mode. Use `InAppContentBlockInvalidateMode.EAGER` or `.LAZY`.                                                        |
+| `RuntimeInAppContentBlockControllerError`       | An argument is invalid (IDs aren't strings, or a deadline isn't a number or is `NaN`), or an unexpected native failure occurred. Native error details are preserved. |
 
 A deactivated instance remains unusable even after you configure the SDK again. Get a new instance from `Exponea.inAppContentBlocksController` after configuration succeeds. Reading a `null` controller isn't an error, and optional chaining skips the operation.
 

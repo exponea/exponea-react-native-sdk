@@ -350,4 +350,115 @@ describe('controller lifecycle', () => {
       expect(isolated.inAppContentBlocksController).toBeNull();
     });
   });
+
+  test('importing the SDK does not call native isConfigured()', () => {
+    jest.isolateModules(() => {
+      const native = require('../NativeExponea').default;
+      native.isConfigured.mockClear();
+      require('../ExponeaImpl');
+
+      expect(native.isConfigured).not.toHaveBeenCalled();
+    });
+  });
+
+  test('appears once host code configures the native SDK after import', () => {
+    jest.isolateModules(() => {
+      const native = require('../NativeExponea').default;
+      native.isConfigured.mockReturnValue(false);
+      const { Exponea: isolated } = require('../ExponeaImpl');
+      expect(isolated.inAppContentBlocksController).toBeNull();
+
+      native.isConfigured.mockReturnValue(true);
+      const controller = isolated.inAppContentBlocksController;
+      expect(controller).not.toBeNull();
+      expect(isolated.inAppContentBlocksController).toBe(controller);
+    });
+  });
+});
+
+describe('input validation', () => {
+  const invalidIds: Array<[string, unknown]> = [
+    ['a number element', ['ok', 123]],
+    ['a null element', [null]],
+    ['a non-array', 'example_top'],
+  ];
+
+  test.each(invalidIds)(
+    'prefetch rejects ids with %s without calling native',
+    async (_, ids) => {
+      const controller = await configuredController();
+
+      await expect(controller.prefetch(ids as string[])).rejects.toMatchObject({
+        code: 'RuntimeInAppContentBlockControllerError',
+      });
+      expect(nativePrefetch).not.toHaveBeenCalled();
+    }
+  );
+
+  test.each(invalidIds)(
+    'invalidate rejects ids with %s without calling native',
+    async (_, ids) => {
+      const controller = await configuredController();
+
+      await expect(
+        controller.invalidate(ids as string[], 'reason')
+      ).rejects.toMatchObject({
+        code: 'RuntimeInAppContentBlockControllerError',
+      });
+      expect(nativeInvalidate).not.toHaveBeenCalled();
+    }
+  );
+
+  test('prefetch rejects a NaN deadline without calling native', async () => {
+    const controller = await configuredController();
+
+    await expect(
+      controller.prefetch(['example_top'], NaN)
+    ).rejects.toMatchObject({
+      code: 'RuntimeInAppContentBlockControllerError',
+    });
+    expect(nativePrefetch).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['NaN', NaN],
+    ['a string', '200'],
+    ['undefined', undefined],
+  ])(
+    'availability rejects a %s deadline without calling native',
+    async (_, deadline) => {
+      const controller = await configuredController();
+
+      await expect(
+        controller.availability('example_top', deadline as number)
+      ).rejects.toMatchObject({
+        code: 'RuntimeInAppContentBlockControllerError',
+      });
+      expect(nativeAvailability).not.toHaveBeenCalled();
+    }
+  );
+
+  test.each([
+    ['a number', 123],
+    ['null', null],
+  ])('availability rejects %s id without calling native', async (_, id) => {
+    const controller = await configuredController();
+
+    await expect(
+      controller.availability(id as unknown as string, 200)
+    ).rejects.toMatchObject({
+      code: 'RuntimeInAppContentBlockControllerError',
+    });
+    expect(nativeAvailability).not.toHaveBeenCalled();
+  });
+
+  test('infinite deadlines are passed through', async () => {
+    const controller = await configuredController();
+
+    await controller.prefetch(['example_top'], Infinity);
+    await controller.availability('example_top', Infinity);
+
+    expect(nativePrefetch).toHaveBeenCalledWith(['example_top'], Infinity);
+    expect(nativeAvailability).toHaveBeenCalledWith('example_top', Infinity);
+  });
 });

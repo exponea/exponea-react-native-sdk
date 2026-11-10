@@ -45,8 +45,8 @@ export type InAppContentBlockAvailabilityDecision =
  *
  * Rejections use `Error` objects. Known bridge error codes are
  * `RuntimeInAppContentBlockControllerUnavailable`, `RuntimeInAppContentBlockControllerInvalidMode`, and
- * `RuntimeInAppContentBlockControllerError` for unexpected native failures. Native error details
- * are preserved. Availability timeouts are decisions, not rejections.
+ * `RuntimeInAppContentBlockControllerError` for invalid arguments and unexpected native failures.
+ * Native error details are preserved. Availability timeouts are decisions, not rejections.
  *
  * Rendering and tracking remain owned by
  * InAppContentBlocksPlaceholder and ContentBlockCarouselView.
@@ -62,7 +62,9 @@ export interface RuntimeInAppContentBlockController {
    * Treat such a value as temporary, not as a final no-content decision;
    * the background load continues and warms the cache.
    *
-   * A deadline of zero or less returns the snapshot immediately.
+   * A deadline of zero or less returns the snapshot immediately. Ids that
+   * are not an array of strings, or a deadline that is not a number or is
+   * NaN, reject with `RuntimeInAppContentBlockControllerError`.
    */
   prefetch(
     ids: string[],
@@ -77,6 +79,9 @@ export interface RuntimeInAppContentBlockController {
    * the underlying fetch; a later call or a placeholder mount can use content
    * that finishes loading afterwards. A deadline of zero or less resolves
    * `timedOut` immediately while still starting the load.
+   *
+   * An id that is not a string, or a deadline that is not a number or is NaN,
+   * rejects with `RuntimeInAppContentBlockControllerError`.
    */
   availability(
     id: string,
@@ -93,6 +98,9 @@ export interface RuntimeInAppContentBlockController {
    *
    * The Promise means the invalidation request was accepted by the
    * native controller. It does not mean an eager reload has finished.
+   *
+   * Ids that are not an array of strings reject with
+   * `RuntimeInAppContentBlockControllerError`.
    */
   invalidate(
     ids: string[],
@@ -120,6 +128,39 @@ export class RuntimeInAppContentBlockControllerImpl implements RuntimeInAppConte
     this.active = false;
   }
 
+  // Malformed input is rejected here so both platforms behave the same: iOS would
+  // otherwise trap on a non-string id, and a NaN deadline means "no deadline" to
+  // iOS prefetch but "deadline 0" on Android.
+  private static invalidArgument(message: string): Error {
+    return Object.assign(new Error(message), {
+      code: 'RuntimeInAppContentBlockControllerError',
+    });
+  }
+
+  private static assertIds(ids: unknown): void {
+    if (!Array.isArray(ids) || ids.some((id) => typeof id !== 'string')) {
+      throw RuntimeInAppContentBlockControllerImpl.invalidArgument(
+        'RuntimeInAppContentBlockController ids must be an array of strings.'
+      );
+    }
+  }
+
+  private static assertId(id: unknown): void {
+    if (typeof id !== 'string') {
+      throw RuntimeInAppContentBlockControllerImpl.invalidArgument(
+        'RuntimeInAppContentBlockController id must be a string.'
+      );
+    }
+  }
+
+  private static assertDeadline(deadlineMs: unknown): void {
+    if (typeof deadlineMs !== 'number' || Number.isNaN(deadlineMs)) {
+      throw RuntimeInAppContentBlockControllerImpl.invalidArgument(
+        'RuntimeInAppContentBlockController deadlineMs must be a number.'
+      );
+    }
+  }
+
   private assertActive(): void {
     if (!this.active) {
       throw Object.assign(
@@ -136,6 +177,10 @@ export class RuntimeInAppContentBlockControllerImpl implements RuntimeInAppConte
     deadlineMs?: number
   ): Promise<Record<string, InAppContentBlockAvailability>> {
     this.assertActive();
+    RuntimeInAppContentBlockControllerImpl.assertIds(ids);
+    if (deadlineMs !== undefined) {
+      RuntimeInAppContentBlockControllerImpl.assertDeadline(deadlineMs);
+    }
 
     return (await NativeExponea.runtimeICBPrefetch(ids, deadlineMs)) as Record<
       string,
@@ -148,6 +193,8 @@ export class RuntimeInAppContentBlockControllerImpl implements RuntimeInAppConte
     deadlineMs: number
   ): Promise<InAppContentBlockAvailabilityDecision> {
     this.assertActive();
+    RuntimeInAppContentBlockControllerImpl.assertId(id);
+    RuntimeInAppContentBlockControllerImpl.assertDeadline(deadlineMs);
 
     return (await NativeExponea.runtimeICBAvailability(
       id,
@@ -161,6 +208,7 @@ export class RuntimeInAppContentBlockControllerImpl implements RuntimeInAppConte
     mode: InAppContentBlockInvalidateMode = InAppContentBlockInvalidateMode.EAGER
   ): Promise<void> {
     this.assertActive();
+    RuntimeInAppContentBlockControllerImpl.assertIds(ids);
 
     await NativeExponea.runtimeICBInvalidate(ids, reason, mode);
   }
