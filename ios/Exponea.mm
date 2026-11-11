@@ -670,26 +670,26 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
                     resolve:(RCTPromiseResolveBlock)resolve
                      reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
-                                       considerConsent:YES];
-    if (success) {
+    [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
+                        considerConsent:YES
+                                success:^{
         resolve([NSNull null]);
-    } else {
-        reject(@"ExponeaError", @"Failed to track app inbox opened", nil);
-    }
+    } failure:^(NSError *error) {
+        reject(@"ExponeaError", @"Failed to track app inbox opened", error);
+    }];
 }
 
 - (void)trackAppInboxOpenedWithoutTrackingConsent:(JS::NativeExponea::AppInboxMessage &)message
                                           resolve:(RCTPromiseResolveBlock)resolve
                                            reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
-                                       considerConsent:NO];
-    if (success) {
+    [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
+                        considerConsent:NO
+                                success:^{
         resolve([NSNull null]);
-    } else {
-        reject(@"ExponeaError", @"Failed to track app inbox opened without consent", nil);
-    }
+    } failure:^(NSError *error) {
+        reject(@"ExponeaError", @"Failed to track app inbox opened without consent", error);
+    }];
 }
 
 - (void)trackAppInboxClick:(JS::NativeExponea::AppInboxAction &)action
@@ -697,14 +697,14 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
-                                              message:[self appInboxMessageToDictionary:message]
-                                      considerConsent:YES];
-    if (success) {
+    [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
+                               message:[self appInboxMessageToDictionary:message]
+                       considerConsent:YES
+                               success:^{
         resolve([NSNull null]);
-    } else {
-        reject(@"ExponeaError", @"Failed to track app inbox click", nil);
-    }
+    } failure:^(NSError *error) {
+        reject(@"ExponeaError", @"Failed to track app inbox click", error);
+    }];
 }
 
 - (void)trackAppInboxClickWithoutTrackingConsent:(JS::NativeExponea::AppInboxAction &)action
@@ -712,14 +712,14 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
                                          resolve:(RCTPromiseResolveBlock)resolve
                                           reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
-                                              message:[self appInboxMessageToDictionary:message]
-                                      considerConsent:NO];
-    if (success) {
+    [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
+                               message:[self appInboxMessageToDictionary:message]
+                       considerConsent:NO
+                               success:^{
         resolve([NSNull null]);
-    } else {
-        reject(@"ExponeaError", @"Failed to track app inbox click without consent", nil);
-    }
+    } failure:^(NSError *error) {
+        reject(@"ExponeaError", @"Failed to track app inbox click without consent", error);
+    }];
 }
 
 // MARK: - In-App Message Tracking Methods
