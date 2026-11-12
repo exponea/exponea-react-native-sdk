@@ -179,11 +179,17 @@ Rich push notifications can contain images and buttons. To enable this functiona
 
 For each extension, follow the instructions in [Notification extensions](https://documentation.bloomreach.com/engagement/docs/ios-sdk-notification-extensions) in the native iOS SDK documentation to set it up correctly to use the Exponea Notification Service included in the iOS SDK.
 
+> 🚧
+>
+> The React Native SDK installs the native iOS SDK through CocoaPods. In the native guide, follow the CocoaPods steps instead of the Swift Package Manager steps. Also add `ExponeaSDK-Notifications` to your extension targets in `ios/Podfile`. The native guide recommends migrating to Swift Package Manager, but keep using CocoaPods in a React Native app.
+>
+> An upcoming release is planned to include the native iOS SDK in the npm package and to install `ExponeaSDK-Notifications` from there. Updating to that release requires a one-time change to these `Podfile` lines. The [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) will describe the change.
+
 Calling the `ExponeaNotificationContentService.didReceive()` method will enhance the notification body with the image and actions delivered within the `UNNotification` payload. Notification actions shown by `ExponeaNotificationContentService` are registered with configurations to open your application with required information and handle campaign clicks automatically.
 
 > ⚠️ **Important**
 >
-> The `ExponeaSDK-Notifications` pod version must match the core iOS SDK version used by `react-native-exponea-sdk`. A mismatch won't break notification display but will silently prevent `delivered` status from being tracked in {user.br}. Check the current core SDK version in the [React Native SDK changelog](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-release-notes).
+> The `ExponeaSDK-Notifications` pod version must match the core iOS SDK version used by `react-native-exponea-sdk`. CocoaPods doesn't warn you when the two versions differ. A mismatch doesn't break notification display, but the SDK silently stops tracking `delivered` status in {user.br}. When you update the React Native SDK, check `ExponeaSDK` in `ios/Podfile.lock` and update `ExponeaSDK-Notifications` in your extension targets to the same version.
 
 #### Checklist:
 

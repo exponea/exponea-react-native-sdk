@@ -43,6 +43,16 @@ Optionally, you can specify version constraints as `react-native-exponea-sdk@<ve
 
 ### iOS setup
 
+> 🚧 Including the native iOS SDK in the npm package is planned for an upcoming release
+>
+> On iOS, `pod install` currently downloads the native iOS SDK (`ExponeaSDK`) from CocoaPods trunk. An upcoming release of the Exponea React Native SDK is planned to include the native iOS SDK in the npm package instead.
+>
+> CocoaPods trunk becomes read-only on December 2, 2026, and native iOS SDK 5.1.0 is planned to be the last version published there. Native iOS SDK versions already published to CocoaPods stay installable, so your existing builds keep working. Later native iOS SDK versions, including bug fixes and security fixes, won't be published to CocoaPods trunk. To keep receiving them, update to an Exponea React Native SDK version that includes the native iOS SDK when it's released.
+>
+> Keep using CocoaPods for the iOS app. Don't add the native iOS SDK through Swift Package Manager, even though the native iOS SDK documentation recommends it for native apps. In a React Native app, it adds a second copy of the SDK, which causes build errors or duplicate classes at runtime.
+>
+> For the minimum Xcode version and the `Podfile` changes to plan for, see the [SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update).
+
 To resolve the Exponea SDK dependencies for the iOS app, first `cd` into the `ios` directory in your project:
 
 ```shell
