@@ -699,52 +699,71 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         }
     }
 
+    /// Tracks the App Inbox message as opened. Like `markAppInboxAsRead`, it first resolves the
+    /// native `MessageItem` by id: an item rebuilt from the JS dictionary has no `customerIds`,
+    /// and the native SDK refuses to track it.
     public func trackAppInboxOpened(
         _ messageDict: [AnyHashable: Any],
-        considerConsent: Bool
-    ) -> Bool {
+        considerConsent: Bool,
+        success: @escaping () -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
         guard ExponeaBridge.exponeaInstance.isConfigured else {
-            print("ExponeaBridge: SDK not configured")
-            return false
+            failure(ExponeaError.notConfigured)
+            return
         }
-
-        do {
-            let message = try TypeConverters.parseAppInboxMessage(from: messageDict as NSDictionary)
+        fetchNativeAppInboxMessage(messageDict, failure: failure) { message in
             if considerConsent {
-                ExponeaSDK.Exponea.shared.trackAppInboxOpened(message: message)
+                ExponeaBridge.exponeaInstance.trackAppInboxOpened(message: message)
             } else {
-                ExponeaSDK.Exponea.shared.trackAppInboxOpenedWithoutTrackingConsent(message: message)
+                ExponeaBridge.exponeaInstance.trackAppInboxOpenedWithoutTrackingConsent(message: message)
             }
-            return true
-        } catch {
-            print("ExponeaBridge: Failed to parse app inbox message: \(error)")
-            return false
+            success()
         }
     }
 
+    /// Tracks a click on an App Inbox action against the native `MessageItem` resolved by id,
+    /// for the same reason as `trackAppInboxOpened`.
     public func trackAppInboxClick(
         _ actionDict: [AnyHashable: Any],
         message messageDict: [AnyHashable: Any],
-        considerConsent: Bool
-    ) -> Bool {
+        considerConsent: Bool,
+        success: @escaping () -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
         guard ExponeaBridge.exponeaInstance.isConfigured else {
-            print("ExponeaBridge: SDK not configured")
-            return false
+            failure(ExponeaError.notConfigured)
+            return
         }
-
-        do {
-            let message = try TypeConverters.parseAppInboxMessage(from: messageDict as NSDictionary)
-            let action = try TypeConverters.parseAppInboxAction(from: actionDict as NSDictionary)
-
+        let action = TypeConverters.parseAppInboxAction(from: actionDict as NSDictionary)
+        fetchNativeAppInboxMessage(messageDict, failure: failure) { message in
             if considerConsent {
-                ExponeaSDK.Exponea.shared.trackAppInboxClick(action: action, message: message)
+                ExponeaBridge.exponeaInstance.trackAppInboxClick(action: action, message: message)
             } else {
-                ExponeaSDK.Exponea.shared.trackAppInboxClickWithoutTrackingConsent(action: action, message: message)
+                ExponeaBridge.exponeaInstance.trackAppInboxClickWithoutTrackingConsent(action: action, message: message)
             }
-            return true
-        } catch {
-            print("ExponeaBridge: Failed to parse app inbox data: \(error)")
-            return false
+            success()
+        }
+    }
+
+    /// Resolves the message the native SDK knows under the id from the JS dictionary, so that
+    /// tracking gets the `customerIds` and `syncToken` the dictionary does not carry.
+    private func fetchNativeAppInboxMessage(
+        _ messageDict: [AnyHashable: Any],
+        failure: @escaping (Error) -> Void,
+        found: @escaping (ExponeaSDK.MessageItem) -> Void
+    ) {
+        guard let messageId = messageDict["id"] as? String, !messageId.isEmpty else {
+            failure(ExponeaError.invalidValue(for: "AppInbox message id"))
+            return
+        }
+        ExponeaBridge.exponeaInstance.fetchAppInboxItem(messageId) { result in
+            switch result {
+            case .success(let message):
+                found(message)
+            case .failure(let error):
+                failure(error)
+            }
         }
     }
 

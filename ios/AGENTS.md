@@ -86,7 +86,7 @@ xcodebuild -workspace ExponeaExample.xcworkspace -scheme ExponeaExample -configu
 - `ios/Tests` uses XCTest, selected by the podspec `Tests` spec in `example/ios/Podfile`.
 - The shared scheme includes `react-native-exponea-sdk-Unit-Tests` from the Pods project; `ExponeaExampleTests` is a separate placeholder.
 - Preserve `CFBundleExecutable` and the selector tests' `react_native_exponea_sdk` import.
-- Suites cover configuration, push forwarding, scene options, segmentation, carousel selection and JSON parsing.
+- Suites cover configuration, push forwarding, scene options, segmentation, App Inbox tracking, carousel selection and JSON parsing.
 - The segmentation test does not exercise async stop ordering. Runtime ICB has facade Jest coverage, not dedicated native controller tests.
 - The example Podfile.lock wrapper version lags `package.json`/native diagnostics. Regenerate it during release/dependency work rather than treating the lock label as the current release.
 - If `xcodebuild` fails with "The sandbox is not in sync with the Podfile.lock" and `diff example/ios/Podfile.lock example/ios/Pods/Manifest.lock` differs only in the `COCOAPODS:` line, edit that line in `Pods/Manifest.lock` to match instead of re-running `pod install`.
