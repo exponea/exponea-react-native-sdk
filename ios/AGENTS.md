@@ -89,5 +89,6 @@ xcodebuild -workspace ExponeaExample.xcworkspace -scheme ExponeaExample -configu
 - Suites cover configuration, push forwarding, scene options, segmentation, carousel selection and JSON parsing.
 - The segmentation test does not exercise async stop ordering. Runtime ICB has facade Jest coverage, not dedicated native controller tests.
 - The example Podfile.lock wrapper version lags `package.json`/native diagnostics. Regenerate it during release/dependency work rather than treating the lock label as the current release.
+- If `xcodebuild` fails with "The sandbox is not in sync with the Podfile.lock" and `diff example/ios/Podfile.lock example/ios/Pods/Manifest.lock` differs only in the `COCOAPODS:` line, edit that line in `Pods/Manifest.lock` to match instead of re-running `pod install`.
 - Native persistence/network/auth defects belong in [exponea-ios-sdk](https://github.com/exponea/exponea-ios-sdk) at the resolved pin: `ExponeaInternal`, configuration/tracking extensions, feature managers, `Flushing`, `Database`, `Repository`, `JWT`.
 - The older `exponea-ios` repository is unsupported legacy code.
