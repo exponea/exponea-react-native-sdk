@@ -31,7 +31,7 @@ const gradleFile = 'android/app/build.gradle';
 const gradle = read(gradleFile);
 for (const dependency of [
   'com.google.firebase:firebase-messaging:24.0.0',
-  'com.exponea.sdk:sdk:5.4.0',
+  'com.exponea.sdk:sdk:5.5.0',
   'com.squareup.okhttp3:okhttp:4.12.0',
   'com.google.code.gson:gson:2.14.0',
 ]) {

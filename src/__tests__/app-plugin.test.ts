@@ -657,9 +657,9 @@ dependencies {
   test('adds the native SDK when expo-notifications needs it', () => {
     const result = plugin._test.patchAppBuildGradle(
       GRADLE,
-      'com.exponea.sdk:sdk:5.4.0'
+      'com.exponea.sdk:sdk:5.5.0'
     );
-    expect(result).toContain('implementation("com.exponea.sdk:sdk:5.4.0")');
+    expect(result).toContain('implementation("com.exponea.sdk:sdk:5.5.0")');
   });
 
   test.each([
