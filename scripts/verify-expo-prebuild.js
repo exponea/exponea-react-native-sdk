@@ -102,7 +102,7 @@ for (const target of [
   occursOnce(podfile, target, 'ios/Podfile');
 }
 // Both extension targets pin the pod to the core SDK version from the podspec.
-occurs(podfile, "pod 'ExponeaSDK-Notifications', '5.0.0'", 2, 'ios/Podfile');
+occurs(podfile, "pod 'ExponeaSDK-Notifications', '5.1.0'", 2, 'ios/Podfile');
 
 const projectFile = 'ios/BloomreachSDKDemoExpo.xcodeproj/project.pbxproj';
 const project = read(projectFile);
