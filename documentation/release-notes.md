@@ -13,7 +13,25 @@ content:
 >
 > Refer to the [React Native SDK version update guide](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update) for details on updating to the next major version.
 
-## Release Notes
+## Release Notes for 4.3.0
+
+#### November 18, 2026
+
+- Added:
+  - Updates the native Android SDK to version 5.5.0.
+  - Updates the native iOS SDK to version 5.1.0.
+  - Adds `Exponea.inAppContentBlocksController`, a runtime controller for in-app content blocks. Its `prefetch`, `availability`, and `invalidate` methods let you prefetch placeholders whose IDs are only known at runtime, make time-bounded rendering decisions, and evict content that has changed. The controller is `null` until `configure()` succeeds and after `stopIntegration()`. For details, see [In-app content blocks](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-content-blocks#control-in-app-content-blocks-at-runtime).
+  - Adds the `InAppContentBlockAvailability` and `InAppContentBlockInvalidateMode` enums and the `RuntimeInAppContentBlockController` and `InAppContentBlockAvailabilityDecision` types.
+  - Adds experimental support for Expo SDK 57 development builds through a packaged Expo config plugin. The plugin configures the native projects at build time. On Android, it sets up Firebase push notifications. On iOS, it sets up APNs push notifications, rich push notification extensions, and universal links. It works with EAS Build and alongside `expo-notifications`. Expo Go and Huawei push aren't supported. For details, see [Expo support](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-expo).
+  - Adds `expo` as an optional peer dependency.
+  - Adds an Expo example app (`example_expo`) that demonstrates the config plugin.
+  - Adds a notice to the setup, iOS push notifications, and version update guides about a planned release that will include the native iOS SDK in the npm package. CocoaPods trunk becomes read-only on December 2, 2026. Native iOS SDK 5.1.0 is planned to be the last version published there. Later native iOS SDK versions, including bug fixes and security fixes, won't be published to CocoaPods trunk. This release still installs the native iOS SDK from CocoaPods trunk, and existing builds keep working.
+  - Adds guidance to those guides on preparing for the update. Keep using CocoaPods, and don't add the native iOS SDK through Swift Package Manager. Plan for the minimum Xcode version, and remove any explicit `pod 'ExponeaSDK'` line. Expo apps that regenerate `ios/` get the `Podfile` change from the config plugin. For details, see [SDK version update](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-version-update).
+  - Updates the setup and iOS push notifications documentation to use the packaged Expo config plugin instead of the custom config plugin examples.
+- Fixed:
+  - Fixes `getSegments()` on iOS never resolving when the backend returns an empty response or leaves out the requested category. This fix comes with the native iOS SDK 5.1.0 update.
+  - Fixes App Inbox `opened` and `clicked` tracking on iOS.
+
 ## Release Notes for 4.2.1
 
 #### October 14, 2026
