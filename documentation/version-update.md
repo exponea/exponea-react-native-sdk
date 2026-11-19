@@ -11,6 +11,20 @@ content:
 
 This guide will help you upgrade your Exponea SDK to the latest major version.
 
+> 🚧 Planned for an upcoming release
+>
+> An upcoming release is planned to include the native iOS SDK in the npm package, so `pod install` no longer downloads it from CocoaPods trunk. If you use rich push notifications, updating to that release requires a one-time change to the `ExponeaSDK-Notifications` lines in your `ios/Podfile`. This guide will describe the change.
+>
+> To plan ahead:
+>
+> * The included native iOS SDK will set a minimum Xcode version for building the iOS app. This guide will state the version.
+> * If the main application target in your `ios/Podfile` has an explicit `pod 'ExponeaSDK'` line, you'll need to remove it.
+> * If your Expo app uses the SDK's packaged config plugin, regenerate `ios/` with `npx expo prebuild --clean` to get the `Podfile` changes from the plugin.
+>
+> CocoaPods trunk becomes read-only on December 2, 2026, and native iOS SDK 5.1.0 is planned to be the last version published there. Later native iOS SDK versions, including bug fixes and security fixes, won't be published to CocoaPods trunk. To keep receiving them, update to an Exponea React Native SDK version that includes the native iOS SDK when it's released. Keep using CocoaPods, and don't add the native iOS SDK through Swift Package Manager.
+>
+> For details, see [iOS setup](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#ios-setup).
+
 ## Update to version 4.2.0 or higher
 
 Version 4.2.0 updates the native iOS SDK to version 5.0.0, which adds support for the UIKit scene-based lifecycle (UIScene). Apple requires the UIScene lifecycle for apps built with the iOS 27 SDK. Apps that don't adopt it won't launch. Apps built with an older SDK keep working without changes.

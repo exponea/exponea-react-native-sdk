@@ -1,17 +1,19 @@
 {
   "name": "react-native-exponea-sdk",
   "title": "React Native Exponea Sdk",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "React native SDK for Exponea integration",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
+  "expo": "./app.plugin.js",
   "exports": {
     ".": {
       "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./app.plugin.js": "./app.plugin.js"
   },
   "files": [
     "src",
@@ -19,8 +21,9 @@
     "android",
     "ios",
     "cpp",
+    "plugin",
+    "app.plugin.js",
     "*.podspec",
-    "react-native.config.js",
     "!ios/build",
     "!android/build",
     "!android/gradle",
@@ -30,10 +33,12 @@
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
-    "!**/.*"
+    "!**/.*",
+    "!**/AGENTS.md"
   ],
   "scripts": {
     "example": "yarn workspace react-native-exponea-sdk-example",
+    "example_expo": "yarn workspace react-native-exponea-sdk-example-expo",
     "ios": "yarn workspace react-native-exponea-sdk-example ios",
     "android": "yarn workspace react-native-exponea-sdk-example android",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
@@ -41,8 +46,12 @@
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "test": "jest",
-    "test:examples": "yarn workspace react-native-exponea-sdk-example test",
     "test:android-compat": "scripts/check-android-rn-compat.sh",
+    "test:examples": "yarn workspace react-native-exponea-sdk-example test && yarn workspace react-native-exponea-sdk-example-expo test",
+    "test:expo-plugin": "jest --no-watchman src/__tests__/app-plugin.test.ts",
+    "verify:expo": "yarn example_expo typecheck && yarn example_expo test && yarn test:expo-plugin && node scripts/verify-expo-package.js",
+    "verify:expo-prebuild": "node scripts/verify-expo-prebuild.js",
+    "sync:expo-example": "node scripts/sync-expo-example.js",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,ts,tsx,json,md}\""
   },
@@ -64,14 +73,21 @@
   "licenseFilename": "https://opensource.org/licenses/MIT",
   "readmeFilename": "README.md",
   "peerDependencies": {
+    "expo": "^57.0.0",
     "react": "^19.0.0",
     "react-native": ">=0.83.0 <=0.87.0"
+  },
+  "peerDependenciesMeta": {
+    "expo": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
     "@eslint/compat": "^1.3.2",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.35.0",
+    "@expo/config-plugins": "~57.0.1",
     "@react-native-picker/picker": "^2.4.0",
     "@react-native/babel-preset": "0.87.0",
     "@react-native/eslint-config": "0.87.0",
@@ -98,7 +114,8 @@
     "typescript": "^6.0.3"
   },
   "workspaces": [
-    "example"
+    "example",
+    "example_expo"
   ],
   "react-native-builder-bob": {
     "source": "src",

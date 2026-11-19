@@ -4,10 +4,14 @@ import android.app.NotificationManager
 import android.content.Context
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.exponea.sdk.Exponea
+import com.exponea.sdk.InAppContentBlockAvailability
+import com.exponea.sdk.InAppContentBlockAvailabilityDecision
+import com.exponea.sdk.InAppContentBlockInvalidateMode
 import com.exponea.sdk.models.CustomerIdentity
 import com.exponea.sdk.style.appinbox.StyledAppInboxProvider
 import com.exponea.style.AppInboxStyleParser
@@ -849,6 +853,144 @@ class ExponeaModule(private val reactContext: ReactApplicationContext) :
           }
           promise.resolve(null)
       }
+  }
+
+
+  // ============================================================================
+  // Runtime ICB (InAppContentBlock controller) - prefetch(), availability(), invalidate()
+  // ============================================================================
+
+
+  private fun ReadableArray.toStringList(): List<String> =
+    (0 until size()).mapNotNull { index ->
+      getString(index)
+    }
+
+  private fun InAppContentBlockAvailability.toRuntimeICBBridgeValue(): String =
+    when (this) {
+      InAppContentBlockAvailability.Ready -> "ready"
+      InAppContentBlockAvailability.Empty -> "empty"
+      InAppContentBlockAvailability.Loading -> "loading"
+
+      // Any additional non-terminal native state, such as Parsing,
+      // is intentionally collapsed into the public JS "loading" state.
+      else -> "loading"
+    }
+
+  // Runtime methods share stable JS error codes instead of platform-specific exceptions.
+  private inline fun withRuntimeInAppContentBlockController(
+    promise: Promise,
+    block: (com.exponea.sdk.RuntimeInAppContentBlockController) -> Unit
+  ) {
+    try {
+      val controller = if (Exponea.isInitialized) Exponea.inAppContentBlocksController else null
+      if (controller == null) {
+        promise.reject(
+          "RuntimeInAppContentBlockControllerUnavailable",
+          "RuntimeInAppContentBlockController is unavailable because the Exponea SDK is not configured."
+        )
+        return
+      }
+      block(controller)
+    } catch (error: Exception) {
+      promise.reject("RuntimeInAppContentBlockControllerError", error.message, error)
+    }
+  }
+
+  // Native controller callbacks run later on the main thread, outside the synchronous
+  // try/catch in withRuntimeInAppContentBlockController. A failure while building the
+  // result (e.g. the WritableMap) must reject the Promise instead of crashing the app.
+  private inline fun resolveRuntimeInAppContentBlockControllerResult(
+    promise: Promise,
+    buildResult: () -> Any?
+  ) {
+    try {
+      promise.resolve(buildResult())
+    } catch (error: Exception) {
+      promise.reject("RuntimeInAppContentBlockControllerError", error.message, error)
+    }
+  }
+
+  override fun runtimeICBPrefetch(
+    ids: ReadableArray,
+    deadlineMs: Double?,
+    promise: Promise
+  ) = withRuntimeInAppContentBlockController(promise) { controller ->
+    controller.prefetch(
+      ids = ids.toStringList(),
+      deadlineMillis = deadlineMs?.toLong()
+    ) { result ->
+      resolveRuntimeInAppContentBlockControllerResult(promise) {
+        result
+          .mapValues { (_, availability) ->
+            availability.toRuntimeICBBridgeValue()
+          }
+          .toWritableMap()
+      }
+    }
+  }
+
+  override fun runtimeICBAvailability(
+    id: String,
+    deadlineMs: Double,
+    promise: Promise
+  ) = withRuntimeInAppContentBlockController(promise) { controller ->
+    controller.availability(
+      id = id,
+      deadlineMillis = deadlineMs.toLong()
+    ) { decision ->
+      resolveRuntimeInAppContentBlockControllerResult(promise) {
+        val bridgeResult: Map<String, Any> =
+          when (decision) {
+            is InAppContentBlockAvailabilityDecision.Resolved ->
+              mapOf(
+                "status" to "resolved",
+                "availability" to
+                  decision.availability
+                    .toRuntimeICBBridgeValue()
+              )
+
+            InAppContentBlockAvailabilityDecision.TimedOut ->
+              mapOf(
+                "status" to "timedOut"
+              )
+          }
+
+        bridgeResult.toWritableMap()
+      }
+    }
+  }
+
+  override fun runtimeICBInvalidate(
+    ids: ReadableArray,
+    reason: String,
+    mode: String,
+    promise: Promise
+  ) = withRuntimeInAppContentBlockController(promise) { controller ->
+    val nativeMode =
+      when (mode.lowercase(java.util.Locale.ROOT)) {
+        "eager" ->
+          InAppContentBlockInvalidateMode.EAGER
+
+        "lazy" ->
+          InAppContentBlockInvalidateMode.LAZY
+
+        else -> {
+          promise.reject(
+            "RuntimeInAppContentBlockControllerInvalidMode",
+            "Unknown RuntimeInAppContentBlockController invalidate mode: $mode"
+          )
+          return@withRuntimeInAppContentBlockController
+        }
+      }
+
+    controller.invalidate(
+      ids = ids.toStringList(),
+      reason = reason,
+      mode = nativeMode
+    )
+
+    promise.resolve(null)
   }
 
   // ============================================================================

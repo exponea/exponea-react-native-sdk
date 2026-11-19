@@ -5,6 +5,7 @@ import EventType from '../EventType';
 jest.mock('../NativeExponea', () => ({
   __esModule: true,
   default: {
+    isConfigured: jest.fn(() => false),
     anonymize: jest.fn(() => Promise.resolve()),
   },
 }));

@@ -17,6 +17,7 @@ import type {
   IntegrationConfig,
   ProjectConfig,
 } from '../index';
+import type { RuntimeInAppContentBlockController } from '../RuntimeInAppContentBlockController';
 import {
   FlushMode,
   LogLevel,
@@ -33,6 +34,8 @@ TestUtils.mockExponeaNative();
 
 export class MockExponea implements ExponeaType {
   lastArgumentsJson = '';
+  readonly inAppContentBlocksController: RuntimeInAppContentBlockController | null =
+    null;
   configure(
     configuration: Configuration,
     customerIdentity?: CustomerIdentity

@@ -26,7 +26,7 @@ The React Native SDK relies on the [native Android SDK](https://documentation.bl
 
 > ❗️
 >
-> Please note that the integration instructions assume your app uses "bare workflow". For Expo-based apps using "managed workflow", refer to [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup#expo-managed-apps) for Android push notifications integration.
+> The integration instructions assume your app uses the bare workflow. If your app uses Expo, see [Expo support](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-expo) to integrate Android push notifications.
 
 ## Integration
 
@@ -138,7 +138,7 @@ Next, you must create and register a service that extends `FirebaseMessagingServ
 
 #### Configure the Firebase Cloud Messaging integration in {user.mkg}
 
-Follow the instructions in [Configure the Firebase Cloud Messaging integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase#configure-the-firebase-cloud-messaging-integration-in-engagement) in {user.mkg} for the Android SDK.
+Follow the instructions in [Configure the Firebase Cloud Messaging integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-firebase#configure-the-firebase-cloud-messaging-integration-in-usermkg) in {user.mkg} for the Android SDK.
 
 ### Huawei integration
 
@@ -209,7 +209,7 @@ Next, you must create and register a service that extends `HmsMessagingService`.
 
 #### Configure the Huawei Push Service integration in {user.mkg}
 
-Follow the instructions in [Configure the Huawei Push Service integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-huawei#configure-the-huawei-push-service-integration-in-engagement) in {user.mkg} for the Android SDK.
+Follow the instructions in [Configure the Huawei Push Service integration](https://documentation.bloomreach.com/engagement/docs/android-sdk-huawei#configure-the-huawei-push-service-integration-in-usermkg) in {user.mkg} for the Android SDK.
 
 ### Request notification permission
 

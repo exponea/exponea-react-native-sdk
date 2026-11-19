@@ -354,11 +354,17 @@ export class ExponeaListeners {
    * segmentation callbacks when the integration stops. Callbacks registered
    * before the stop settles are released too; register them again afterwards
    * (before or after the next `configure()`) to resume updates. A failed stop
-   * keeps all registrations intact. Concurrent calls share one native stop.
+   * keeps all registrations intact. Concurrent calls share one native stop and
+   * return the same Promise.
+   *
+   * `onStopped` runs once per successful native stop, after the segmentation
+   * callbacks are released and before the shared Promise resolves. Only the
+   * hook of the call that started the native stop runs; concurrent callers
+   * join that stop.
    *
    * @internal Called by `Exponea.stopIntegration()`; not part of the public API.
    */
-  static stopIntegration(): Promise<void> {
+  static stopIntegration(onStopped?: () => void): Promise<void> {
     if (pendingIntegrationStop) {
       return pendingIntegrationStop;
     }
@@ -371,6 +377,7 @@ export class ExponeaListeners {
     const stop: Promise<void> = nativeStop
       .then(() => {
         releaseSegmentationCallbacksAfterStop();
+        onStopped?.();
       })
       .finally(() => {
         if (pendingIntegrationStop === stop) {

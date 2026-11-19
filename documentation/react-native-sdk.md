@@ -26,6 +26,7 @@ The SDK is [available as open source on GitHub](https://github.com/exponea/expon
 ## Get started
 
 - [Initial setup for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-setup)
+  - [Expo SDK 57 support (experimental)](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-expo)
   - [Configuration for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-configuration)
   - [Authorization for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-authorization)
   - [Data flushing for React Native SDK](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-data-flushing)
