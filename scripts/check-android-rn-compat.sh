@@ -50,9 +50,10 @@ replace_in_file() {
     const fs = require("fs");
     const [file, pattern, replacement] = process.argv.slice(1);
     const before = fs.readFileSync(file, "utf8");
-    const after = before.replace(new RegExp(pattern, "m"), replacement);
-    if (after === before) { console.error(`[rn-compat] Pattern not found in ${file}: ${pattern}`); process.exit(1); }
-    fs.writeFileSync(file, after);
+    const regex = new RegExp(pattern, "m");
+    // A file that already has the target value matches but does not change.
+    if (!regex.test(before)) { console.error(`[rn-compat] Pattern not found in ${file}: ${pattern}`); process.exit(1); }
+    fs.writeFileSync(file, before.replace(regex, replacement));
   ' "$1" "$2" "$3"
 }
 
