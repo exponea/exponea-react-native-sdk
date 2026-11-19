@@ -122,16 +122,7 @@ public struct AllRecommendationData: RecommendationUserData {
         return normalized
     }
 
-    public static func parseAppInboxMessage(from dict: NSDictionary) throws -> ExponeaSDK.MessageItem {
-        // Convert NSDictionary to Data, then decode using JSONDecoder
-        let jsonData = try JSONSerialization.data(withJSONObject: dict, options: [])
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let message = try decoder.decode(ExponeaSDK.MessageItem.self, from: jsonData)
-        return message
-    }
-
-    public static func parseAppInboxAction(from dict: NSDictionary) throws -> ExponeaSDK.MessageItemAction {
+    public static func parseAppInboxAction(from dict: NSDictionary) -> ExponeaSDK.MessageItemAction {
         let action = dict["action"] as? String
         let title = dict["title"] as? String
         let url = dict["url"] as? String

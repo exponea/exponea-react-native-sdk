@@ -94,6 +94,8 @@ export const AvailableAutomationIds = {
   STOP_BACK_TO_AUTH: 'btn_stop_back_to_auth',
 
   TOGGLE_CAROUSELS: 'btn_toggle_carousels',
+  CB_TAB_CLASSIC: 'cb_tab_classic',
+  CB_TAB_RUNTIME_LAB: 'cb_tab_runtime_lab',
   CB_PLACEHOLDER_EXAMPLE_TOP: 'cb_placeholder_example_top',
   CB_PLACEHOLDER_EXAMPLE_PLATFORM: 'cb_placeholder_example_platform',
   CB_PLACEHOLDER_EXAMPLE_LIST: 'cb_placeholder_example_list',
@@ -101,6 +103,11 @@ export const AvailableAutomationIds = {
   CB_CAROUSEL_FILTERED: 'cb_carousel_filtered',
   CB_CAROUSEL_PLATFORM: 'cb_carousel_platform',
   CAROUSEL_STATUS: 'lbl_carousel_status',
+  CB_RUNTIME_PREFETCH: 'btn_cb_runtime_prefetch',
+  CB_RUNTIME_AVAILABILITY: 'btn_cb_runtime_availability',
+  CB_RUNTIME_INVALIDATE: 'btn_cb_runtime_invalidate',
+  CB_RUNTIME_LOGOUT: 'btn_cb_runtime_logout',
+  CB_RUNTIME_STATUS: 'lbl_cb_runtime_status',
 
   LOGS_COPY: 'btn_logs_copy',
   LOGS_CLEAR: 'btn_logs_clear',

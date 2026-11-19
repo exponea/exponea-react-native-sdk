@@ -28,6 +28,7 @@ export class TestUtils {
     jest.mock('react-native', () => {
       const RN = jest.requireActual('react-native');
       RN.NativeModules.Exponea = mock ?? {
+        isConfigured: jest.fn(() => false),
         onInAppMessageCallbackSet: jest.fn(),
         onSegmentationCallbackSet: jest.fn(),
         onSegmentationCallbackRemove: jest.fn(),
@@ -37,6 +38,7 @@ export class TestUtils {
           getEnforcing: jest.fn(
             () =>
               mock ?? {
+                isConfigured: jest.fn(() => false),
                 onInAppMessageCallbackSet: jest.fn(),
                 onSegmentationCallbackSet: jest.fn(),
                 onSegmentationCallbackRemove: jest.fn(),

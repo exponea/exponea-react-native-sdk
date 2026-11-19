@@ -361,6 +361,21 @@ export interface Spec extends TurboModule {
     params: Object
   ): Promise<void>;
 
+  /**
+   * Internal Runtime ICB bridge.
+   *
+   * Public consumers should use Exponea.inAppContentBlocksController.
+   */
+  runtimeICBPrefetch(ids: Array<string>, deadlineMs?: number): Promise<Object>;
+
+  runtimeICBAvailability(id: string, deadlineMs: number): Promise<Object>;
+
+  runtimeICBInvalidate(
+    ids: Array<string>,
+    reason: string,
+    mode: string
+  ): Promise<void>;
+
   /** Fetches customer segments for the given category */
   getSegments(
     exposingCategory: string,

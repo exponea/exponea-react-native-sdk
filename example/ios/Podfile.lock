@@ -4,9 +4,9 @@ PODS:
     - ReactNativeDependencies
   - DoubleConversion (1.1.6):
     - ReactNativeDependencies
-  - ExponeaSDK (5.0.0):
+  - ExponeaSDK (5.1.0):
     - SwiftSoup (< 3.0, >= 2.7.6)
-  - ExponeaSDK-Notifications (5.0.0)
+  - ExponeaSDK-Notifications (5.1.0)
   - fast_float (8.0.0):
     - ReactNativeDependencies
   - FBLazyVector (0.87.0):
@@ -1250,9 +1250,9 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-exponea-sdk (4.1.0):
+  - react-native-exponea-sdk (4.2.1):
     - AnyCodable-FlightSchool (= 0.4.0)
-    - ExponeaSDK (= 5.0.0)
+    - ExponeaSDK (= 5.1.0)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1274,9 +1274,9 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-exponea-sdk/Tests (4.1.0):
+  - react-native-exponea-sdk/Tests (4.2.1):
     - AnyCodable-FlightSchool (= 0.4.0)
-    - ExponeaSDK (= 5.0.0)
+    - ExponeaSDK (= 5.1.0)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1769,7 +1769,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNScreens (4.28.0):
+  - RNScreens (4.30.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1791,9 +1791,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNScreens/common (= 4.28.0)
+    - RNScreens/common (= 4.30.0)
     - Yoga
-  - RNScreens/common (4.28.0):
+  - RNScreens/common (4.30.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1825,7 +1825,7 @@ PODS:
 DEPENDENCIES:
   - boost (from `build/rndeps-facades/boost`)
   - DoubleConversion (from `build/rndeps-facades/DoubleConversion`)
-  - ExponeaSDK-Notifications (= 5.0.0)
+  - ExponeaSDK-Notifications (= 5.1.0)
   - fast_float (from `build/rndeps-facades/fast_float`)
   - FBLazyVector (from `build/rncore-facades/FBLazyVector`)
   - fmt (from `build/rndeps-facades/fmt`)
@@ -2111,8 +2111,8 @@ SPEC CHECKSUMS:
   AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
   boost: 8502bfdc46e2804408af2e163049ece181009af4
   DoubleConversion: 501a575c40c0b50c89685762dd3e415e6bb26fb0
-  ExponeaSDK: 1a66ce9c247109fd18aa77a3e6d8d30c4fa6f0ad
-  ExponeaSDK-Notifications: a157733a581dede7604739b7ed69cd244e224a9d
+  ExponeaSDK: c49ae2965619b2b159885564323daa2998892a9e
+  ExponeaSDK-Notifications: a4105295ac8071384f7dfeb7c66286fb02da0434
   fast_float: 7c925d1cebf8328d4018d061f49377e9f887e3b4
   FBLazyVector: 732df79fea96f10cc14477969cea05707026d2fd
   fmt: ba0886e864ebb21d14c98b2e12e164b8002f5b93
@@ -2158,7 +2158,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: acf4ac61f163f15ced7dfad7308957816b2d7abd
   React-microtasksnativemodule: 512d9f7c6b66574d90832a6b10b6102d4a8fdf30
   React-mutationobservernativemodule: 2c5abeb9a4ae316ba6d9420ef8d9baa81faa9d56
-  react-native-exponea-sdk: 359a0584f0de2c8c4c6a40d4f4290ca84f52f4ff
+  react-native-exponea-sdk: 393ea3805b9a51e278442cb132033d324bc1ac54
   react-native-safe-area-context: f2bf5d3db254014a48910436c4a58ab0c4e2fe1f
   React-NativeModulesApple: 22b2f3e1538ceb1aab1ab182ccb0666ea2ec36ad
   React-networking: b58b3098d4a626f88bbaeaf6bf5e67b18ff39089
@@ -2198,11 +2198,11 @@ SPEC CHECKSUMS:
   ReactNativeDependencies: ec5530432d8191b38e278117d498aaff05ea9d6f
   RNCPicker: ec68d66db9b3dae7563bdd5f13bdadee1ac90eba
   RNGestureHandler: f1976ee206660832241a6802c866bc4b019be94d
-  RNScreens: e74022be58c534b74dca872ebbb38c4ce8d5d80c
+  RNScreens: cffc1add7f801ca6a13eef6b112052e0cd74b26b
   SocketRocket: 37aec555668fb852ec12e3c0de59a86ca58f0871
   SwiftSoup: 959c9ac70d7053fbf476341bfac90ab228523f2a
   Yoga: d1c536142c5ff8ec8cd856ab2a7c227a1d875c8e
 
-PODFILE CHECKSUM: bf10ad48c3f44bce3fd3fd6de97914637856e647
+PODFILE CHECKSUM: f7a16d90a1217efd2a921331b76baf628df83b09
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0

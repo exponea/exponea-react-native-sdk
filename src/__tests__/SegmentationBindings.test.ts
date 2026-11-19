@@ -5,6 +5,7 @@ import { emitNativeEvent } from './NativeEventTestUtils';
 jest.mock('../NativeExponea', () => ({
   __esModule: true,
   default: {
+    isConfigured: jest.fn(() => false),
     configure: jest.fn(),
     stopIntegration: jest.fn(),
     onSegmentationCallbackSet: jest.fn(),

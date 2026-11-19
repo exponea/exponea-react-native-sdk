@@ -44,6 +44,10 @@ android.iml
 # Cocoapods
 #
 example/ios/Pods
+example_expo/android/
+example_expo/ios/
+example_expo/google-services.json
+example_expo/GoogleService-Info.plist
 
 # Ruby
 example/vendor/

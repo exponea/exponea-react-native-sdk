@@ -11,6 +11,7 @@ import NativeExponea from '../NativeExponea';
 jest.mock('../NativeExponea', () => ({
   __esModule: true,
   default: {
+    isConfigured: jest.fn(() => false),
     configure: jest.fn(() => Promise.resolve()),
   },
 }));

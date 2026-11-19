@@ -670,26 +670,26 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
                     resolve:(RCTPromiseResolveBlock)resolve
                      reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
-                                       considerConsent:YES];
-    if (success) {
+    [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
+                        considerConsent:YES
+                                success:^{
         resolve([NSNull null]);
-    } else {
-        reject(@"ExponeaError", @"Failed to track app inbox opened", nil);
-    }
+    } failure:^(NSError *error) {
+        reject(@"ExponeaError", error.localizedDescription, error);
+    }];
 }
 
 - (void)trackAppInboxOpenedWithoutTrackingConsent:(JS::NativeExponea::AppInboxMessage &)message
                                           resolve:(RCTPromiseResolveBlock)resolve
                                            reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
-                                       considerConsent:NO];
-    if (success) {
+    [_exponeaBridge trackAppInboxOpened:[self appInboxMessageToDictionary:message]
+                        considerConsent:NO
+                                success:^{
         resolve([NSNull null]);
-    } else {
-        reject(@"ExponeaError", @"Failed to track app inbox opened without consent", nil);
-    }
+    } failure:^(NSError *error) {
+        reject(@"ExponeaError", error.localizedDescription, error);
+    }];
 }
 
 - (void)trackAppInboxClick:(JS::NativeExponea::AppInboxAction &)action
@@ -697,14 +697,14 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
                    resolve:(RCTPromiseResolveBlock)resolve
                     reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
-                                              message:[self appInboxMessageToDictionary:message]
-                                      considerConsent:YES];
-    if (success) {
+    [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
+                               message:[self appInboxMessageToDictionary:message]
+                       considerConsent:YES
+                               success:^{
         resolve([NSNull null]);
-    } else {
-        reject(@"ExponeaError", @"Failed to track app inbox click", nil);
-    }
+    } failure:^(NSError *error) {
+        reject(@"ExponeaError", error.localizedDescription, error);
+    }];
 }
 
 - (void)trackAppInboxClickWithoutTrackingConsent:(JS::NativeExponea::AppInboxAction &)action
@@ -712,14 +712,14 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
                                          resolve:(RCTPromiseResolveBlock)resolve
                                           reject:(RCTPromiseRejectBlock)reject
 {
-    BOOL success = [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
-                                              message:[self appInboxMessageToDictionary:message]
-                                      considerConsent:NO];
-    if (success) {
+    [_exponeaBridge trackAppInboxClick:[self appInboxActionToDictionary:action]
+                               message:[self appInboxMessageToDictionary:message]
+                       considerConsent:NO
+                               success:^{
         resolve([NSNull null]);
-    } else {
-        reject(@"ExponeaError", @"Failed to track app inbox click without consent", nil);
-    }
+    } failure:^(NSError *error) {
+        reject(@"ExponeaError", error.localizedDescription, error);
+    }];
 }
 
 // MARK: - In-App Message Tracking Methods
@@ -919,6 +919,70 @@ integrationRouteMap:(NSDictionary *)integrationRouteMap
     } else {
         reject(@"ExponeaError", @"Failed to track content block error without consent", nil);
     }
+}
+
+// In-app Content Block controller methods prefetch(), availability(), invalidate()
+
+- (void)runtimeICBPrefetch:(NSArray<NSString *> *)ids
+                deadlineMs:(NSNumber *)deadlineMs
+                   resolve:(RCTPromiseResolveBlock)resolve
+                    reject:(RCTPromiseRejectBlock)reject
+{
+    [_exponeaBridge
+        runtimeICBPrefetchWithIds:ids
+        deadlineMs:deadlineMs
+        success:^(NSDictionary *result) {
+            resolve(result);
+        }
+        failure:^(NSError *error) {
+            reject(
+                error.userInfo[@"runtimeInAppContentBlockControllerErrorCode"] ?: @"RuntimeInAppContentBlockControllerError",
+                error.localizedDescription,
+                error
+            );
+        }];
+}
+
+- (void)runtimeICBAvailability:(NSString *)placeholderId
+                    deadlineMs:(double)deadlineMs
+                       resolve:(RCTPromiseResolveBlock)resolve
+                        reject:(RCTPromiseRejectBlock)reject
+{
+    [_exponeaBridge
+        runtimeICBAvailabilityWithId:placeholderId
+        deadlineMs:deadlineMs
+        success:^(NSDictionary *result) {
+            resolve(result);
+        }
+        failure:^(NSError *error) {
+            reject(
+                error.userInfo[@"runtimeInAppContentBlockControllerErrorCode"] ?: @"RuntimeInAppContentBlockControllerError",
+                error.localizedDescription,
+                error
+            );
+        }];
+}
+
+- (void)runtimeICBInvalidate:(NSArray<NSString *> *)ids
+                      reason:(NSString *)reason
+                        mode:(NSString *)mode
+                     resolve:(RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+{
+    [_exponeaBridge
+        runtimeICBInvalidateWithIds:ids
+        reason:reason
+        mode:mode
+        success:^{
+            resolve([NSNull null]);
+        }
+        failure:^(NSError *error) {
+            reject(
+                error.userInfo[@"runtimeInAppContentBlockControllerErrorCode"] ?: @"RuntimeInAppContentBlockControllerError",
+                error.localizedDescription,
+                error
+            );
+        }];
 }
 
 // Listener lifecycle methods for JavaScript event emitter integration

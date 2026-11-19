@@ -143,6 +143,7 @@ The following parameters are specified in an `Configuration` object. Refer to [s
 - `inAppContentBlockPlaceholdersAutoLoad`
 
   - Automatically load the contents of in-app content blocks assigned to these Placeholder IDs.
+  - To prefetch placeholders whose IDs are only known at runtime, use `Exponea.inAppContentBlocksController.prefetch()` instead. For details, see [In-app content blocks](https://documentation.bloomreach.com/engagement/docs/react-native-sdk-in-app-content-blocks#control-in-app-content-blocks-at-runtime).
 
 - `manualSessionAutoClose`
   - Determines whether the SDK automatically tracks `session_end` for sessions that remain open when `Exponea.trackSessionStart()` is called multiple times in manual session tracking mode.

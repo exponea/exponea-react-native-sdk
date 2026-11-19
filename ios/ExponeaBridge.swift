@@ -15,7 +15,7 @@ protocol IsExponeaReactNativeSDK {}
 @objc(ExponeaRNVersion)
 public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
     required public override init() {}
-    public func getVersion() -> String { "4.2.1" }
+    public func getVersion() -> String { "4.3.0" }
 }
 
 @objcMembers public class ExponeaBridge: NSObject {
@@ -699,52 +699,71 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
         }
     }
 
+    /// Tracks the App Inbox message as opened. Like `markAppInboxAsRead`, it first resolves the
+    /// native `MessageItem` by id: an item rebuilt from the JS dictionary has no `customerIds`,
+    /// and the native SDK refuses to track it.
     public func trackAppInboxOpened(
         _ messageDict: [AnyHashable: Any],
-        considerConsent: Bool
-    ) -> Bool {
+        considerConsent: Bool,
+        success: @escaping () -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
         guard ExponeaBridge.exponeaInstance.isConfigured else {
-            print("ExponeaBridge: SDK not configured")
-            return false
+            failure(ExponeaError.notConfigured)
+            return
         }
-
-        do {
-            let message = try TypeConverters.parseAppInboxMessage(from: messageDict as NSDictionary)
+        fetchNativeAppInboxMessage(messageDict, failure: failure) { message in
             if considerConsent {
-                ExponeaSDK.Exponea.shared.trackAppInboxOpened(message: message)
+                ExponeaBridge.exponeaInstance.trackAppInboxOpened(message: message)
             } else {
-                ExponeaSDK.Exponea.shared.trackAppInboxOpenedWithoutTrackingConsent(message: message)
+                ExponeaBridge.exponeaInstance.trackAppInboxOpenedWithoutTrackingConsent(message: message)
             }
-            return true
-        } catch {
-            print("ExponeaBridge: Failed to parse app inbox message: \(error)")
-            return false
+            success()
         }
     }
 
+    /// Tracks a click on an App Inbox action against the native `MessageItem` resolved by id,
+    /// for the same reason as `trackAppInboxOpened`.
     public func trackAppInboxClick(
         _ actionDict: [AnyHashable: Any],
         message messageDict: [AnyHashable: Any],
-        considerConsent: Bool
-    ) -> Bool {
+        considerConsent: Bool,
+        success: @escaping () -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
         guard ExponeaBridge.exponeaInstance.isConfigured else {
-            print("ExponeaBridge: SDK not configured")
-            return false
+            failure(ExponeaError.notConfigured)
+            return
         }
-
-        do {
-            let message = try TypeConverters.parseAppInboxMessage(from: messageDict as NSDictionary)
-            let action = try TypeConverters.parseAppInboxAction(from: actionDict as NSDictionary)
-
+        let action = TypeConverters.parseAppInboxAction(from: actionDict as NSDictionary)
+        fetchNativeAppInboxMessage(messageDict, failure: failure) { message in
             if considerConsent {
-                ExponeaSDK.Exponea.shared.trackAppInboxClick(action: action, message: message)
+                ExponeaBridge.exponeaInstance.trackAppInboxClick(action: action, message: message)
             } else {
-                ExponeaSDK.Exponea.shared.trackAppInboxClickWithoutTrackingConsent(action: action, message: message)
+                ExponeaBridge.exponeaInstance.trackAppInboxClickWithoutTrackingConsent(action: action, message: message)
             }
-            return true
-        } catch {
-            print("ExponeaBridge: Failed to parse app inbox data: \(error)")
-            return false
+            success()
+        }
+    }
+
+    /// Resolves the message the native SDK knows under the id from the JS dictionary, so that
+    /// tracking gets the `customerIds` and `syncToken` the dictionary does not carry.
+    private func fetchNativeAppInboxMessage(
+        _ messageDict: [AnyHashable: Any],
+        failure: @escaping (Error) -> Void,
+        found: @escaping (ExponeaSDK.MessageItem) -> Void
+    ) {
+        guard let messageId = messageDict["id"] as? String, !messageId.isEmpty else {
+            failure(ExponeaError.invalidValue(for: "AppInbox message id"))
+            return
+        }
+        ExponeaBridge.exponeaInstance.fetchAppInboxItem(messageId) { result in
+            switch result {
+            case .success(let message):
+                found(message)
+            case .failure(let error):
+                failure(error)
+            }
         }
     }
 
@@ -1007,6 +1026,213 @@ public class ExponeaRNVersion: NSObject, ExponeaVersionProvider {
             print("ExponeaBridge: Failed to parse content block data: \(error)")
             return false
         }
+    }
+
+    // MARK: In-App Content Block controller methods - ICB control availability(), invalidate(), prefetch()
+
+    private func runtimeInAppContentBlockControllerError(code: String, message: String) -> NSError {
+        NSError(
+            domain: "ExponeaRuntimeInAppContentBlockController",
+            code: 1,
+            userInfo: [
+                NSLocalizedDescriptionKey: message,
+                "runtimeInAppContentBlockControllerErrorCode": code
+            ]
+        )
+    }
+
+    // Bridging NSArray straight to [String] traps on a non-string element, so the
+    // cast is checked and malformed ids reject instead. The JS facade validates
+    // first; this keeps the bridge safe for callers that bypass it.
+    private func runtimeICBIds(_ rawIds: [Any], failure: (Error) -> Void) -> [String]? {
+        guard let ids = rawIds as? [String] else {
+            failure(runtimeInAppContentBlockControllerError(
+                code: "RuntimeInAppContentBlockControllerError",
+                message: "RuntimeInAppContentBlockController ids must be an array of strings."
+            ))
+            return nil
+        }
+        return ids
+    }
+
+    // Static so the controller completions below need no `self` capture. Dropping a
+    // completion (the former `[weak self]` early return) would leave the JS Promise
+    // unsettled; see the strong-capture rationale in `flushDataWithRetry`.
+    private static func runtimeICBAvailabilityValue(
+        _ availability: InAppContentBlockAvailability
+    ) -> String {
+        switch availability {
+        case .ready:
+            return "ready"
+
+        case .loading:
+            return "loading"
+
+        case .empty:
+            return "empty"
+
+        @unknown default:
+            // Preserve one RN contract for any new native
+            // non-terminal availability state.
+            return "loading"
+        }
+    }
+
+    @objc(
+        runtimeICBPrefetchWithIds:
+        deadlineMs:
+        success:
+        failure:
+    )
+    public func runtimeICBPrefetch(
+        ids rawIds: [Any],
+        deadlineMs: NSNumber?,
+        success: @escaping (NSDictionary) -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
+        guard let controller =
+            ExponeaBridge.exponeaInstance
+                .inAppContentBlocksController
+        else {
+            failure(runtimeInAppContentBlockControllerError(
+                code: "RuntimeInAppContentBlockControllerUnavailable",
+                message: "RuntimeInAppContentBlockController is unavailable because the Exponea SDK is not configured."
+            ))
+            return
+        }
+
+        guard let ids = runtimeICBIds(rawIds, failure: failure) else {
+            return
+        }
+
+        // RN uses milliseconds as deadline units,
+        // thus 1000 division here for iOS TimeInterval
+        let deadlineSeconds =
+            deadlineMs.map {
+                $0.doubleValue / 1000.0
+            }
+
+        controller.prefetch(
+            ids: ids,
+            deadline: deadlineSeconds
+        ) { result in
+            let mapped =
+                result.mapValues {
+                    Self.runtimeICBAvailabilityValue($0)
+                }
+
+            DispatchQueue.main.async {
+                success(mapped as NSDictionary)
+            }
+        }
+    }
+
+    @objc(
+        runtimeICBAvailabilityWithId:
+        deadlineMs:
+        success:
+        failure:
+    )
+    public func runtimeICBAvailability(
+        id: String,
+        deadlineMs: Double,
+        success: @escaping (NSDictionary) -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
+        guard let controller =
+            ExponeaBridge.exponeaInstance
+                .inAppContentBlocksController
+        else {
+            failure(runtimeInAppContentBlockControllerError(
+                code: "RuntimeInAppContentBlockControllerUnavailable",
+                message: "RuntimeInAppContentBlockController is unavailable because the Exponea SDK is not configured."
+            ))
+            return
+        }
+
+        controller.availability(
+            id: id,
+            deadline: deadlineMs / 1000.0
+        ) { decision in
+            switch decision {
+            case .resolved(let availability):
+                success([
+                    "status": "resolved",
+                    "availability":
+                        Self.runtimeICBAvailabilityValue(
+                            availability
+                        )
+                ])
+
+            case .timedOut:
+                success([
+                    "status": "timedOut"
+                ])
+
+            @unknown default:
+                success([
+                    "status": "timedOut"
+                ])
+            }
+        }
+    }
+
+    @objc(
+        runtimeICBInvalidateWithIds:
+        reason:
+        mode:
+        success:
+        failure:
+    )
+    public func runtimeICBInvalidate(
+        ids rawIds: [Any],
+        reason: String,
+        mode: String,
+        success: @escaping () -> Void,
+        failure: @escaping (Error) -> Void
+    ) {
+        guard let controller =
+            ExponeaBridge.exponeaInstance
+                .inAppContentBlocksController
+        else {
+            failure(runtimeInAppContentBlockControllerError(
+                code: "RuntimeInAppContentBlockControllerUnavailable",
+                message: "RuntimeInAppContentBlockController is unavailable because the Exponea SDK is not configured."
+            ))
+            return
+        }
+
+        guard let ids = runtimeICBIds(rawIds, failure: failure) else {
+            return
+        }
+
+        let nativeMode:
+            InAppContentBlockInvalidateMode
+
+        switch mode.lowercased() {
+        case "eager":
+            nativeMode = .eager
+
+        case "lazy":
+            nativeMode = .lazy
+
+        default:
+            failure(
+                runtimeInAppContentBlockControllerError(
+                    code: "RuntimeInAppContentBlockControllerInvalidMode",
+                    message: "Unknown RuntimeInAppContentBlockController invalidate mode: \(mode)"
+                )
+            )
+            return
+        }
+
+        controller.invalidate(
+            ids: ids,
+            reason: reason,
+            mode: nativeMode
+        )
+
+        success()
     }
 
     private func parseDictionary(_ value: Any?) -> NSDictionary? {
